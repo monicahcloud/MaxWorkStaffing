@@ -1,7 +1,10 @@
 import React from "react";
+import Resources from "./Resources";
 
-function page() {
-  return <div>page</div>;
+export default function ResourcePage() {
+  return (
+    <div>
+      <Resources />
+    </div>
+  );
 }
-
-export default page;
