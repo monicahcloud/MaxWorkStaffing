@@ -1,7 +1,8 @@
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
+
 type SingleResourceProps = {
   title: string;
-  image: string;
+  image: string | StaticImageData;
   info: string;
 };
 
