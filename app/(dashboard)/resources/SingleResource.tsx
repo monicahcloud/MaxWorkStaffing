@@ -1,6 +1,11 @@
 import Image from "next/image";
+type SingleResourceProps = {
+  title: string;
+  image: string;
+  info: string;
+};
 
-const SingleResource = ({ title, image, info }) => {
+const SingleResource = ({ title, image, info }: SingleResourceProps) => {
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
