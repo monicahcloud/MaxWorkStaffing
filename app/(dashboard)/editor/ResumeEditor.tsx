@@ -1,10 +1,6 @@
 "use client";
 import SectionTitle from "@/components/SectionTitle";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import React, { useState } from "react";
-import GeneralInforForm from "./forms/GeneralInfoForms";
-import PersonalInfoForm from "./forms/PersonalInfoForm";
 import { useSearchParams } from "next/navigation";
 import { steps } from "./steps";
 import Breadcrumbs from "./Breadcrumbs";
