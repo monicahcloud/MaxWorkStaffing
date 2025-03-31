@@ -6,7 +6,8 @@ import { steps } from "./steps";
 import Breadcrumbs from "./Breadcrumbs";
 import Footer from "./forms/Footer";
 import { resumeSchema, ResumeValues } from "@/lib/validation";
-import { useMemo } from "react";
+// import { useMemo } from "react";
+import ResumePreviewContainer from "./ResumePreviewContainer";
 
 function ResumeEditor() {
   const searchParams = useSearchParams();
@@ -15,10 +16,10 @@ function ResumeEditor() {
   );
 
   const currentStep = searchParams.get("step") || steps[0].key;
-  const preview = useMemo(
-    () => JSON.stringify(resumeData, null, 2),
-    [resumeData]
-  );
+  // const preview = useMemo(
+  //   () => JSON.stringify(resumeData, null, 2),
+  //   [resumeData]
+  // );
   function setStep(key: string) {
     const newSearchParams = new URLSearchParams(searchParams);
     newSearchParams.set("step", key);
@@ -53,7 +54,10 @@ function ResumeEditor() {
           </div>
           <div className="grow md:border-r" />
           <div className="hidden w-1/2 md:flex">
-            <pre>{preview}</pre>
+            <ResumePreviewContainer
+              resumeData={resumeData}
+              setResumeData={setResumeData}
+            />
           </div>
         </div>
       </main>
