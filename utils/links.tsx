@@ -31,7 +31,7 @@ const links: DashboardLinks[] = [
   {
     id: nanoid(),
     label: "Resume Builder",
-    href: "/resumeBuilder",
+    href: "/resumebuilder",
     icon: <FilePen />,
   },
   // {
