@@ -2,6 +2,9 @@ import { EditorFormProps } from "@/lib/types";
 import GeneralInforForm from "./forms/GeneralInfoForms";
 import PersonalInfoForm from "./forms/PersonalInfoForm";
 import WorkExperienceForm from "./forms/WorkExperienceForm";
+import EducationForm from "./forms/EducationForm";
+import SkillsForm from "./forms/SkillsForm";
+import SummaryForm from "./forms/SummaryForm";
 
 export const steps: {
   title: string;
@@ -14,5 +17,20 @@ export const steps: {
     title: "Work Experience ",
     component: WorkExperienceForm,
     key: "work-experience",
+  },
+  {
+    title: "Education ",
+    component: EducationForm,
+    key: "education",
+  },
+  {
+    title: "Skills ",
+    component: SkillsForm,
+    key: "skills",
+  },
+  {
+    title: "Summary ",
+    component: SummaryForm,
+    key: "summary",
   },
 ];
