@@ -51,7 +51,11 @@ function Dashboardlayout({ children }: PropsWithChildren) {
             <div className="flex items-center ml-auto gap-4">
               <ThemeToggle />
               {/* <DashboardLinks /> */}
-              <UserButton />
+              <UserButton
+                appearance={{
+                  elements: { avatarBox: { width: 35, height: 35 } },
+                }}
+              />
             </div>
           </div>
           <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-8 lg:p-8">
