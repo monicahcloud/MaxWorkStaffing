@@ -37,6 +37,7 @@ export default function Home() {
             src={LandingImg}
             alt="landing page image"
             className="hidden md:block rounded-xl max-w-2xl mx-auto px-8 pt-20 items-center shadow-sm"
+            priority
           />
           <div className="flex h-screen w-full items-center justify-center -mt-30 px-4">
             <Card className="max-w-sm">

@@ -11,16 +11,37 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-
-export default function GeneralInforForm() {
+import { EditorFormProps } from "@/lib/types";
+import { useEffect } from "react";
+import { debounce } from "lodash";
+export default function GeneralInforForm({
+  resumeData,
+  setResumeData,
+}: EditorFormProps) {
   const form = useForm<GeneralInfoValues>({
     resolver: zodResolver(generalInfoSchema),
     defaultValues: {
-      resumeTitle: "",
-      description: "",
-      resumeType: "",
+      resumeTitle: resumeData.resumeTitle || "",
+      description: resumeData.description || "",
+      resumeType: resumeData.resumeType || "",
     },
   });
+
+  useEffect(() => {
+    const debouncedUpdate = debounce((values: GeneralInfoValues) => {
+      setResumeData((prev) => ({ ...prev, ...values }));
+    }, 300);
+
+    const subscription = form.watch((values) => {
+      debouncedUpdate(values);
+    });
+
+    return () => {
+      subscription.unsubscribe();
+      debouncedUpdate.cancel(); // Clean up debounce
+    };
+  }, [form, setResumeData]);
+
   return (
     <div className="max-w-xl mx-auto space-y-6">
       <div className="space-y-1.5 text-center">
@@ -47,7 +68,7 @@ export default function GeneralInforForm() {
           />
           <FormField
             control={form.control}
-            name="resumeTitle"
+            name="resumeType"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Resume Type</FormLabel>
@@ -64,7 +85,7 @@ export default function GeneralInforForm() {
           />
           <FormField
             control={form.control}
-            name="resumeTitle"
+            name="description"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Description</FormLabel>

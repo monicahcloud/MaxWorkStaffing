@@ -12,33 +12,37 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-import React, { unstable_SuspenseList, useEffect } from "react";
+import { debounce } from "lodash";
+import React, { useEffect } from "react";
+import { EditorFormProps } from "@/lib/types";
 
-function PersonalInfoForm() {
+function PersonalInfoForm({ resumeData, setResumeData }: EditorFormProps) {
   const form = useForm<PersonalInfoValues>({
     resolver: zodResolver(personalInfoSchema),
     defaultValues: {
-      firstName: "",
-      lastName: "",
-      jobTitle: "",
-      address: "",
-      phone: "",
-      email: "",
-      website: "",
+      firstName: resumeData.firstName || "",
+      lastName: resumeData.lastName || "",
+      jobTitle: resumeData.jobTitle || "",
+      address: resumeData.address || "",
+      phone: resumeData.phone || "",
+      email: resumeData.email || "",
+      website: resumeData.website || "",
     },
   });
   useEffect(() => {
-    const unsubscribe = form.watch(async () => {
-      const isValid = await form.trigger();
-      if (!isValid) return;
-      // Update resume data
+    const debouncedUpdate = debounce((values: PersonalInfoValues) => {
+      setResumeData((prev) => ({ ...prev, ...values }));
+    }, 300);
+
+    const subscription = form.watch((values) => {
+      debouncedUpdate(values);
     });
 
     return () => {
-      unsubscribe.unsubscribe();
-      // clean up the subscription
+      subscription.unsubscribe();
+      debouncedUpdate.cancel(); // Clean up debounce
     };
-  }, [form]);
+  }, [form, setResumeData]);
 
   return (
     <div className="max-w-xl mx-auto space-y-6">

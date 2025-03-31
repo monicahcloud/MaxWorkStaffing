@@ -1,4 +1,5 @@
 "use client";
+import GeneralInforForm from "@/app/(dashboard)/editor/forms/GeneralInfoForms";
 import { z } from "zod";
 export const optionalString = z.string().trim().optional().or(z.literal(""));
 export const generalInfoSchema = z.object({
@@ -30,3 +31,13 @@ export const personalInfoSchema = z.object({
   website: optionalString,
 });
 export type PersonalInfoValues = z.infer<typeof personalInfoSchema>;
+
+export const resumeSchema = z.object({
+  ...generalInfoSchema.shape,
+  ...personalInfoSchema.shape,
+});
+
+export type ResumeValues = Omit<z.infer<typeof resumeSchema>, "photo"> & {
+  id?: string;
+  photo?: File | string | null;
+};
