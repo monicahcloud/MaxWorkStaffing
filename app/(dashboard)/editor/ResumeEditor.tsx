@@ -32,9 +32,9 @@ function ResumeEditor() {
 
   return (
     <div className="flex grow flex-col">
-      <header className=" px-3  text-center">
+      <header className=" px-3  font-semibold ">
         <SectionTitle
-          text="Design Your Resume"
+          text="Build Your Resume"
           subtext=" Follow the steps below to create your resume. Your progress will be
           saved automatically."
         />
