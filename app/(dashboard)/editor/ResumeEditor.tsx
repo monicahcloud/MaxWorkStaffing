@@ -8,12 +8,19 @@ import Footer from "./forms/Footer";
 import { resumeSchema, ResumeValues } from "@/lib/validation";
 // import { useMemo } from "react";
 import ResumePreviewContainer from "./ResumePreviewContainer";
+import { cn } from "@/lib/utils";
+import useUnloadWarning from "@/hooks/useUnloadWarning";
+import useAutoSaveResume from "./useAutoSaveResume";
 
 function ResumeEditor() {
   const searchParams = useSearchParams();
   const [resumeData, setResumeData] = useState<ResumeValues>(
     resumeSchema.parse({})
   );
+  const [showSmResumePreview, setShowSmResumePreview] = useState(false);
+
+  const { isSaving, hasUnsavedChanges } = useAutoSaveResume(resumeData);
+  useUnloadWarning(hasUnsavedChanges);
 
   const currentStep = searchParams.get("step") || steps[0].key;
   // const preview = useMemo(
@@ -41,15 +48,17 @@ function ResumeEditor() {
       </header>
       <main className="relative grow">
         <div className="absolute bottom-0 top-0 flex w-full">
-          <div className="w-full md:w-1/2 p-3 overflow-y-auto space-y-6">
+          <div
+            className={cn(
+              "w-full md:w-1/2 p-3 overflow-y-auto space-y-6 md:block",
+              showSmResumePreview && "hidden"
+            )}>
             <Breadcrumbs currentStep={currentStep} setCurrentStep={setStep} />
-            {FormComponent ? (
+            {FormComponent && (
               <FormComponent
                 resumeData={resumeData}
                 setResumeData={setResumeData}
               />
-            ) : (
-              <p className="text-center text-red-500">Invalid Step</p>
             )}
           </div>
           <div className="grow md:border-r" />
@@ -57,11 +66,18 @@ function ResumeEditor() {
             <ResumePreviewContainer
               resumeData={resumeData}
               setResumeData={setResumeData}
+              className={cn(showSmResumePreview && "flex")}
             />
           </div>
         </div>
       </main>
-      <Footer currentStep={currentStep} setCurrentStep={setStep} />
+      <Footer
+        currentStep={currentStep}
+        setCurrentStep={setStep}
+        showSmResumePreview={showSmResumePreview}
+        setShowSmResumePreview={setShowSmResumePreview}
+        isSaving={isSaving}
+      />
     </div>
   );
 }

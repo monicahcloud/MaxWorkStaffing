@@ -29,7 +29,7 @@ function ResumePreview({
       )}
       ref={containerRef}>
       <div
-        className={cn("space-y-6 p-6 origin-top-left", !width && "invisible")}
+        className={cn("space-y-6 p-6 origin-top-left ", !width && "invisible")}
         style={{
           width: "794px", // Lock original width
           transform: `scale(${width / 794})`,
@@ -61,7 +61,7 @@ function PersonalInfoHeader({ resumeData }: ResumePreviewProps) {
     phone,
     email,
     website,
-    colorHex,
+    themeColor,
     borderStyle,
   } = resumeData;
 
@@ -83,6 +83,14 @@ function PersonalInfoHeader({ resumeData }: ResumePreviewProps) {
           height={100}
           alt="Author photo"
           className="aspect-square object-cover"
+          style={{
+            borderRadius:
+              borderStyle === BorderStyles.SQUARE
+                ? "0px"
+                : borderStyle === BorderStyles.CIRCLE
+                ? "9999px"
+                : "10%",
+          }}
         />
       )}
       <div className="space-y-2.5">
@@ -90,14 +98,14 @@ function PersonalInfoHeader({ resumeData }: ResumePreviewProps) {
           <p
             className="text-3xl font-bold"
             style={{
-              color: colorHex,
+              color: themeColor,
             }}>
             {firstName} {lastName}
           </p>
           <p
             className="font-medium"
             style={{
-              color: colorHex,
+              color: themeColor,
             }}>
             {jobTitle}
           </p>
@@ -113,7 +121,7 @@ function PersonalInfoHeader({ resumeData }: ResumePreviewProps) {
   );
 }
 function SummarySection({ resumeData }: ResumePreviewProps) {
-  const { summary, colorHex } = resumeData;
+  const { summary, themeColor } = resumeData;
 
   if (!summary) return null;
 
@@ -122,14 +130,14 @@ function SummarySection({ resumeData }: ResumePreviewProps) {
       <hr
         className="border-2"
         style={{
-          borderColor: colorHex,
+          borderColor: themeColor,
         }}
       />
       <div className="break-inside-avoid space-y-3">
         <p
           className="text-lg font-semibold"
           style={{
-            color: colorHex,
+            color: themeColor,
           }}>
           Professional profile
         </p>
@@ -139,7 +147,7 @@ function SummarySection({ resumeData }: ResumePreviewProps) {
   );
 }
 function WorkExperienceSection({ resumeData }: ResumePreviewProps) {
-  const { workExperiences, colorHex } = resumeData;
+  const { workExperiences, themeColor } = resumeData;
 
   const workExperiencesNotEmpty = workExperiences?.filter(
     (exp) => Object.values(exp).filter(Boolean).length > 0
@@ -152,14 +160,14 @@ function WorkExperienceSection({ resumeData }: ResumePreviewProps) {
       <hr
         className="border-2"
         style={{
-          borderColor: colorHex,
+          borderColor: themeColor,
         }}
       />
       <div className="space-y-3">
         <p
           className="text-lg font-semibold"
           style={{
-            color: colorHex,
+            color: themeColor,
           }}>
           Work experience
         </p>
@@ -168,7 +176,7 @@ function WorkExperienceSection({ resumeData }: ResumePreviewProps) {
             <div
               className="flex items-center justify-between text-sm font-semibold"
               style={{
-                color: colorHex,
+                color: themeColor,
               }}>
               <span>{exp.position}</span>
               {exp.startDate && (
@@ -186,9 +194,8 @@ function WorkExperienceSection({ resumeData }: ResumePreviewProps) {
     </>
   );
 }
-
 function EducationSection({ resumeData }: ResumePreviewProps) {
-  const { education, colorHex } = resumeData;
+  const { education, themeColor } = resumeData;
 
   const educationsNotEmpty = education?.filter(
     (edu) => Object.values(edu).filter(Boolean).length > 0
@@ -201,14 +208,14 @@ function EducationSection({ resumeData }: ResumePreviewProps) {
       <hr
         className="border-2"
         style={{
-          borderColor: colorHex,
+          borderColor: themeColor,
         }}
       />
       <div className="space-y-3">
         <p
           className="text-lg font-semibold"
           style={{
-            color: colorHex,
+            color: themeColor,
           }}>
           Education
         </p>
@@ -217,7 +224,7 @@ function EducationSection({ resumeData }: ResumePreviewProps) {
             <div
               className="flex items-center justify-between text-sm font-semibold"
               style={{
-                color: colorHex,
+                color: themeColor,
               }}>
               <span>{edu.degree}</span>
               {edu.startDate && (
@@ -238,9 +245,8 @@ function EducationSection({ resumeData }: ResumePreviewProps) {
     </>
   );
 }
-
 function SkillsSection({ resumeData }: ResumePreviewProps) {
-  const { skills, colorHex, borderStyle } = resumeData;
+  const { skills, themeColor, borderStyle } = resumeData;
 
   if (!skills?.length) return null;
 
@@ -249,14 +255,14 @@ function SkillsSection({ resumeData }: ResumePreviewProps) {
       <hr
         className="border-2"
         style={{
-          borderColor: colorHex,
+          borderColor: themeColor,
         }}
       />
       <div className="break-inside-avoid space-y-3">
         <p
           className="text-lg font-semibold"
           style={{
-            color: colorHex,
+            color: themeColor,
           }}>
           Skills
         </p>
@@ -266,7 +272,7 @@ function SkillsSection({ resumeData }: ResumePreviewProps) {
               key={index}
               className="rounded-md bg-black text-white hover:bg-black"
               style={{
-                backgroundColor: colorHex,
+                backgroundColor: themeColor,
                 borderRadius:
                   borderStyle === BorderStyles.SQUARE
                     ? "0px"

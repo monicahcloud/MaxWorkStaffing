@@ -37,6 +37,7 @@ firstName   String?
   email       String?
   userEmail   String?
   userName    String?
+  website String?
 
 workExperience WorkExperience[]
 education Education[]

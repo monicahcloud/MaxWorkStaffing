@@ -1,4 +1,3 @@
-"use client";
 import { z } from "zod";
 export const optionalString = z.string().trim().optional().or(z.literal(""));
 export const generalInfoSchema = z.object({
@@ -81,7 +80,7 @@ export const resumeSchema = z.object({
   ...educationSchema.shape,
   ...skillsSchema.shape,
   ...summarySchema.shape,
-  colorHex: optionalString,
+  themeColor: optionalString,
   borderStyle: optionalString,
 });
 
