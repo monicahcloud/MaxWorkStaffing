@@ -17,15 +17,17 @@ import LandingImg from "../assets/LandingImg.jpg";
 import Link from "next/link";
 
 export default function Home() {
-  const { isSignedIn } = useAuth();
+  const { isSignedIn, isLoaded } = useAuth();
   const router = useRouter();
 
   // Redirect authenticated users to /home
   useEffect(() => {
-    if (isSignedIn) {
+    if (isLoaded && isSignedIn) {
       router.push("/home");
     }
-  }, [isSignedIn, router]);
+  }, [isSignedIn, isLoaded, router]);
+
+  if (!isLoaded || isSignedIn) return null;
   return (
     <main className="">
       <header className="max-w-2xl mx-auto md:px-4 px-8 py-6">
@@ -61,21 +63,7 @@ export default function Home() {
               </CardContent>
             </Card>
           </div>
-
-          {/* <p className="leading-loose max-w-md mt-4 text-center mx-auto">
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sunt hic,
-            error dolor, officiis aliquam molestiae quo voluptatum possimus
-            eligendi quod placeat deserunt tempora ducimus impedit tenetur
-            molestias cum voluptates officia.
-          </p>
-
-          <Button
-            asChild
-            className="mt-4 mx-auto items-center"
-            variant="outline">
-            <Link href="/home">Get Started</Link>
-          </Button> */}
-        </div>{" "}
+        </div>
       </section>
     </main>
   );
