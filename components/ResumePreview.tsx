@@ -24,7 +24,7 @@ function ResumePreview({
   return (
     <div
       className={cn(
-        "bg-white text-black h-fit w-full aspect-[210/297]",
+        " aspect-[210/297] bg-white text-black h-fit w-full",
         className
       )}
       ref={containerRef}>

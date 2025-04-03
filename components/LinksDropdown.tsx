@@ -9,7 +9,6 @@ function LinksDropdown() {
   const pathname = usePathname();
   return (
     <>
-      {" "}
       {links.map((link) => (
         <Link
           className={cn(
