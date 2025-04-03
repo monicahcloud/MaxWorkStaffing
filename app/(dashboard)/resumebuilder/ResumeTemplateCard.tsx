@@ -1,12 +1,12 @@
 "use client";
 
-import Image from "next/image";
+import Image, { StaticImageData } from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 interface ResumeTemplate {
   title: string;
-  image: string;
+  image: string | StaticImageData;
   href: string;
   description: string[];
   resumeType: string;

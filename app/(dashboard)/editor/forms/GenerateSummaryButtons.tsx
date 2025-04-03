@@ -1,10 +1,10 @@
 import { toast } from "sonner";
-import usePremiumModal from "@/hooks/usePremiumModal";
+//import usePremiumModal from "@/hooks/usePremiumModal";
 // import { canUseAITools } from "@/lib/permissions";
 import { ResumeValues } from "@/lib/validation";
 import { Brain } from "lucide-react";
 import { useState } from "react";
-import { useSubscriptionLevel } from "../../SubscriptionLevelProvider";
+// import { useSubscriptionLevel } from "../../SubscriptionLevelProvider";
 import { generateSummary } from "./action";
 import LoadingButton from "@/components/LoadingButton";
 
@@ -17,8 +17,8 @@ export default function GenerateSummaryButton({
   resumeData,
   onSummaryGenerated,
 }: GenerateSummaryButtonProps) {
-  const subscriptionLevel = useSubscriptionLevel();
-  const premiumModal = usePremiumModal();
+  // const subscriptionLevel = useSubscriptionLevel();
+  // const premiumModal = usePremiumModal();
   const [loading, setLoading] = useState(false);
 
   async function handleClick() {

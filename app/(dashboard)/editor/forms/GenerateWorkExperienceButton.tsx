@@ -1,4 +1,4 @@
-import { toast } from "sonner"; // ✅ Add this line!
+import { toast } from "sonner";
 import LoadingButton from "@/components/LoadingButton";
 import { Button } from "@/components/ui/button";
 import {
@@ -16,8 +16,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Textarea } from "@/components/ui/textarea";
-import usePremiumModal from "@/hooks/usePremiumModal";
+// import usePremiumModal from "@/hooks/usePremiumModal";
 // import { canUseAITools } from "@/lib/permissions";
 import {
   GenerateWorkExperienceInput,
@@ -27,9 +26,10 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Brain } from "lucide-react";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { useSubscriptionLevel } from "../../SubscriptionLevelProvider";
+// import { useSubscriptionLevel } from "../../SubscriptionLevelProvider";
 import { generateWorkExperience } from "./action";
+import { Textarea } from "@/components/ui/textarea";
+import { useForm } from "react-hook-form";
 
 interface GenerateWorkExperienceButtonProps {
   onWorkExperienceGenerated: (workExperience: WorkExperience) => void;
@@ -38,8 +38,8 @@ interface GenerateWorkExperienceButtonProps {
 export default function GenerateWorkExperienceButton({
   onWorkExperienceGenerated,
 }: GenerateWorkExperienceButtonProps) {
-  const subscriptionLevel = useSubscriptionLevel();
-  const premiumModal = usePremiumModal();
+  // const subscriptionLevel = useSubscriptionLevel();
+  // const premiumModal = usePremiumModal();
   const [showInputDialog, setShowInputDialog] = useState(false);
 
   return (
