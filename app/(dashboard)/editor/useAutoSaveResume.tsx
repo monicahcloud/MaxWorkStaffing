@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { saveResume } from "./actions";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { fileReplacer } from "@/lib/utils";
 
 export default function useAutoSaveResume(resumeData: ResumeValues) {
   const searchParams = useSearchParams();
@@ -32,7 +33,8 @@ export default function useAutoSaveResume(resumeData: ResumeValues) {
 
         const updatedResume = await saveResume({
           ...newData,
-          ...(lastSaveData.photo?.toString() === newData.photo?.toString() && {
+          ...(JSON.stringify(lastSaveData.photo, fileReplacer) ===
+            JSON.stringify(newData.photo, fileReplacer) && {
             photo: undefined,
           }),
           id: resumeId,
@@ -74,7 +76,8 @@ export default function useAutoSaveResume(resumeData: ResumeValues) {
     // console.log("lastSavedData", JSON.stringify(lastSaveData, fileReplacer));
 
     const hasUnsavedChanges =
-      JSON.stringify(debounceResumeData) !== JSON.stringify(lastSaveData);
+      JSON.stringify(debounceResumeData, fileReplacer) !==
+      JSON.stringify(lastSaveData, fileReplacer);
 
     if (hasUnsavedChanges && debounceResumeData && !isSaving && !isError) {
       save();
@@ -86,7 +89,6 @@ export default function useAutoSaveResume(resumeData: ResumeValues) {
     isError,
     resumeId,
     searchParams,
-    toast,
   ]);
 
   return {

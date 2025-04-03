@@ -5,17 +5,22 @@ import { useSearchParams } from "next/navigation";
 import { steps } from "./steps";
 import Breadcrumbs from "./Breadcrumbs";
 import Footer from "./forms/Footer";
-import { resumeSchema, ResumeValues } from "@/lib/validation";
+import { ResumeValues } from "@/lib/validation";
 // import { useMemo } from "react";
 import ResumePreviewContainer from "./ResumePreviewContainer";
-import { cn } from "@/lib/utils";
+import { cn, mapToResumeValues } from "@/lib/utils";
 import useUnloadWarning from "@/hooks/useUnloadWarning";
 import useAutoSaveResume from "./useAutoSaveResume";
+import { ResumeServerData } from "@/lib/types";
 
-function ResumeEditor() {
+interface ResumeEditorProps {
+  resumeToEdit: ResumeServerData | null;
+}
+
+function ResumeEditor({ resumeToEdit }: ResumeEditorProps) {
   const searchParams = useSearchParams();
   const [resumeData, setResumeData] = useState<ResumeValues>(
-    resumeSchema.parse({})
+    resumeToEdit ? mapToResumeValues(resumeToEdit) : {}
   );
   const [showSmResumePreview, setShowSmResumePreview] = useState(false);
 
@@ -62,7 +67,7 @@ function ResumeEditor() {
             )}
           </div>
           <div className="grow md:border-r" />
-          <div className="hidden w-1/2 md:flex">
+          <div className="">
             <ResumePreviewContainer
               resumeData={resumeData}
               setResumeData={setResumeData}

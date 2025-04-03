@@ -38,9 +38,12 @@ firstName   String?
   userEmail   String?
   userName    String?
   website String?
+  summary String?
+
 
 workExperience WorkExperience[]
 education Education[]
+  skills String[]
 }
 
 model WorkExperience {
@@ -48,6 +51,7 @@ model WorkExperience {
   position String?
   company String?
   startDate DateTime?
+  endDate DateTime?
 description String?
 
 resumeId String
@@ -61,10 +65,26 @@ model Education {
   degree String?
   school String?
   startDate DateTime?
+  endDate DateTime?
 description String?
 
 resumeId String
 resume Resume @relation(fields: [resumeId], references: [id])
 createdAt      DateTime        @default(now())
  updatedAt   DateTime @updatedAt
+}
+
+model UserSubscription {
+  id                      String   @id @default(cuid())
+  userId                  String   @unique
+  stripeCustomerId        String   @unique
+  stripeSubscriptionId    String   @unique
+  stripePriceId           String
+  stripeCurrentPeriodEnd  DateTime
+  stripeCancelAtPeriodEnd Boolean  @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("user_subscriptions")
 }

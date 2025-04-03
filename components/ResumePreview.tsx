@@ -36,6 +36,7 @@ function ResumePreview({
         }}
         ref={contentRef}
         id="resumePreviewContent">
+        {/* <pre>{JSON.stringify(resumeData, null, 2)}</pre>; */}
         <PersonalInfoHeader resumeData={resumeData} />
         <SummarySection resumeData={resumeData} />
         <WorkExperienceSection resumeData={resumeData} />
@@ -51,6 +52,7 @@ export default ResumePreview;
 interface ResumePreviewProps {
   resumeData: ResumeValues;
 }
+
 function PersonalInfoHeader({ resumeData }: ResumePreviewProps) {
   const {
     photo,

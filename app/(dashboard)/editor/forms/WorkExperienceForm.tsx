@@ -36,6 +36,7 @@ import {
 import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
 import { CSS } from "@dnd-kit/utilities";
 import { cn } from "@/lib/utils";
+import GenerateWorkExperienceButton from "./GenerateWorkExperienceButton";
 function WorkExperienceForm({ resumeData, setResumeData }: EditorFormProps) {
   const form = useForm<WorkExperiencesValues>({
     resolver: zodResolver(workExperienceSchema),
@@ -239,6 +240,11 @@ function WorkExperienceItem({
         Leave <span className="font-semibold">end date</span> empty if you this
         is your current job.
       </FormDescription>
+      <GenerateWorkExperienceButton
+        onWorkExperienceGenerated={(exp) =>
+          form.setValue(`workExperiences.${index}`, exp)
+        }
+      />
       <FormField
         control={form.control}
         name={`workExperiences.${index}.description`}

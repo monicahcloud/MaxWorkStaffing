@@ -11,6 +11,7 @@ import { summarySchema, SummaryValues } from "@/lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import GenerateSummaryButton from "./GenerateSummaryButtons";
 
 export default function SummaryForm({
   resumeData,
@@ -52,6 +53,12 @@ export default function SummaryForm({
             name="summary"
             render={({ field }) => (
               <FormItem>
+                <GenerateSummaryButton
+                  resumeData={resumeData}
+                  onSummaryGenerated={(summary) =>
+                    form.setValue("summary", summary)
+                  }
+                />
                 <FormControl>
                   <Textarea
                     {...field}

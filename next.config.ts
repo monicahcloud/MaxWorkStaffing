@@ -6,6 +6,10 @@ const nextConfig = {
         protocol: "https", // Clerk images use HTTPS
         hostname: "img.clerk.com",
       },
+      {
+        protocol: "https",
+        hostname: "oqzhjtzfxcjutd5r.public.blob.vercel-storage.com",
+      },
     ],
   },
   env: {
