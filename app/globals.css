@@ -123,8 +123,10 @@
 
 @media print {
   #resumePreviewContent {
+    transform: none !important;
     zoom: 1 !important;
-    padding: 0;
+    width: 794px !important;
+    padding: 5;
   }
 }
 
