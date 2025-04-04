@@ -13,7 +13,7 @@ import {
 import Image from "next/image";
 import logo from "../assets/maxworklogo.png";
 import { Button } from "@/components/ui/button";
-import LandingImg from "../assets/LandingImg.jpg";
+// import LandingImg from "../assets/LandingImg.jpg";
 import Link from "next/link";
 
 export default function Home() {
@@ -35,12 +35,12 @@ export default function Home() {
       </header>
       <section className="max-w-6xl mx-auto md:px-4 px-8 h-screen -mt-20 items-center">
         <div>
-          <Image
+          {/* <Image
             src={LandingImg}
             alt="landing page image"
             className="hidden md:block rounded-xl max-w-2xl mx-auto px-8 pt-20 items-center shadow-sm"
             priority
-          />
+          /> */}
           <div className="flex h-screen w-full items-center justify-center -mt-30 px-4">
             <Card className="max-w-sm">
               <CardHeader>
