@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: "standalone",
   images: {
     remotePatterns: [
       {
@@ -18,7 +19,6 @@ const nextConfig = {
     serverActions: {
       bodySizeLimit: "4mb",
     },
-    output: "standalone", // Key setting!
   },
 };
 
