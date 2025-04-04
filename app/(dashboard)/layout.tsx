@@ -10,6 +10,7 @@ import Logo from "../../assets/maxworklogo.png";
 import LinksDropdown from "@/components/LinksDropdown";
 import { DashboardLinks } from "@/components/DashboardLink";
 import { UserButton } from "@clerk/nextjs";
+import PremiumModal from "@/components/premium/PremiumModal";
 
 function Dashboardlayout({ children }: PropsWithChildren) {
   return (
@@ -59,6 +60,7 @@ function Dashboardlayout({ children }: PropsWithChildren) {
           </div>
           <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-8 lg:p-8">
             {children}
+            <PremiumModal />
           </main>
         </div>
       </main>
