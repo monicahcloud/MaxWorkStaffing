@@ -18,6 +18,7 @@ const nextConfig = {
     serverActions: {
       bodySizeLimit: "4mb",
     },
+    output: "standalone", // Key setting!
   },
 };
 
