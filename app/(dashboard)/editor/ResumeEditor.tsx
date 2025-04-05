@@ -28,10 +28,7 @@ function ResumeEditor({ resumeToEdit }: ResumeEditorProps) {
   useUnloadWarning(hasUnsavedChanges);
 
   const currentStep = searchParams.get("step") || steps[0].key;
-  // const preview = useMemo(
-  //   () => JSON.stringify(resumeData, null, 2),
-  //   [resumeData]
-  // );
+
   function setStep(key: string) {
     const newSearchParams = new URLSearchParams(searchParams);
     newSearchParams.set("step", key);
@@ -55,7 +52,7 @@ function ResumeEditor({ resumeToEdit }: ResumeEditorProps) {
         <div className="absolute bottom-0 top-0 flex w-full">
           <div
             className={cn(
-              "w-full md:w-1/2 p-3 overflow-y-auto space-y-6 md:block",
+              "w-full space-y-6 md:w-1/2 p-3 overflow-y-auto  ",
               showSmResumePreview && "hidden"
             )}>
             <Breadcrumbs currentStep={currentStep} setCurrentStep={setStep} />
@@ -67,13 +64,12 @@ function ResumeEditor({ resumeToEdit }: ResumeEditorProps) {
             )}
           </div>
           <div className="grow md:border-r" />
-          <div className="">
-            <ResumePreviewContainer
-              resumeData={resumeData}
-              setResumeData={setResumeData}
-              className={cn(showSmResumePreview && "flex")}
-            />
-          </div>
+
+          <ResumePreviewContainer
+            resumeData={resumeData}
+            setResumeData={setResumeData}
+            className={cn(showSmResumePreview && "flex")}
+          />
         </div>
       </main>
       <Footer

@@ -11,6 +11,7 @@ interface PageProps {
 export const metadata: Metadata = {
   title: "Build your resume",
 };
+export const dynamic = "force-dynamic";
 
 export default async function Page({ searchParams }: PageProps) {
   const { resumeId } = await searchParams;
