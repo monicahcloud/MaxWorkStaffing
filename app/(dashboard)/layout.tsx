@@ -11,10 +11,20 @@ import LinksDropdown from "@/components/LinksDropdown";
 import { DashboardLinks } from "@/components/DashboardLink";
 import { UserButton } from "@clerk/nextjs";
 import PremiumModal from "@/components/premium/PremiumModal";
+import { auth } from "@clerk/nextjs/server";
+import { getUserSubscriptionLevel } from "@/lib/subscription";
+import SubscriptionLevelProvider from "./SubscriptionLevelProvider";
 
-function Dashboardlayout({ children }: PropsWithChildren) {
+async function Dashboardlayout({ children }: PropsWithChildren) {
+  const { userId } = await auth();
+
+  if (!userId) {
+    return null;
+  }
+
+  const userSubscriptionLevel = await getUserSubscriptionLevel(userId);
   return (
-    <>
+    <SubscriptionLevelProvider userSubscriptionLevel={userSubscriptionLevel}>
       <main className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
         <div className="hidden border-r bg-muted/40 md:block">
           <div className="flex flex-col max-h-screen h-full gap-2">
@@ -65,7 +75,7 @@ function Dashboardlayout({ children }: PropsWithChildren) {
         </div>
       </main>
       <Toaster richColors closeButton theme="light" />
-    </>
+    </SubscriptionLevelProvider>
   );
 }
 

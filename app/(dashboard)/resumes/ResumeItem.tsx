@@ -48,12 +48,12 @@ function ResumeItem({ resume }: ResumeItemProps) {
           <p className="font-semibold line-clamp-1">
             {resume.resumeTitle || "No Title"}
           </p>
-          {resume.resumeType && (
+          {/* {resume.resumeType && (
             <p className=" line-clamp-1 text-xs">{resume.resumeType}</p>
-          )}
+          )} 
           {resume.description && (
             <p className="text-xs line-clamp-1">{resume.description}</p>
-          )}
+          )}*/}
           <p className="text-xs text-muted-foreground">
             {wasUpdated ? "Updated" : "Created"} on{" "}
             {formatDate(resume.updatedAt, "MMM d, yyyy h:mm a")}

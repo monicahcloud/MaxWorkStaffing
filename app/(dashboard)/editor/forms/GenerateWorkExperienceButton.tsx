@@ -16,8 +16,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-// import usePremiumModal from "@/hooks/usePremiumModal";
-// import { canUseAITools } from "@/lib/permissions";
 import {
   GenerateWorkExperienceInput,
   generateWorkExperienceSchema,
@@ -26,10 +24,12 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Brain } from "lucide-react";
 import { useState } from "react";
-// import { useSubscriptionLevel } from "../../SubscriptionLevelProvider";
 import { generateWorkExperience } from "./action";
 import { Textarea } from "@/components/ui/textarea";
 import { useForm } from "react-hook-form";
+import usePremiumModal from "@/hooks/usePremiumModal";
+import { useSubscriptionLevel } from "../../SubscriptionLevelProvider";
+import { canUseAITools } from "@/lib/permissions";
 
 interface GenerateWorkExperienceButtonProps {
   onWorkExperienceGenerated: (workExperience: WorkExperience) => void;
@@ -38,8 +38,8 @@ interface GenerateWorkExperienceButtonProps {
 export default function GenerateWorkExperienceButton({
   onWorkExperienceGenerated,
 }: GenerateWorkExperienceButtonProps) {
-  // const subscriptionLevel = useSubscriptionLevel();
-  // const premiumModal = usePremiumModal();
+  const subscriptionLevel = useSubscriptionLevel();
+  const premiumModal = usePremiumModal();
   const [showInputDialog, setShowInputDialog] = useState(false);
 
   return (
@@ -48,10 +48,10 @@ export default function GenerateWorkExperienceButton({
         variant="outline"
         type="button"
         onClick={() => {
-          // if (!canUseAITools(subscriptionLevel)) {
-          //   premiumModal.setOpen(true);
-          //   return;
-          // }
+          if (!canUseAITools(subscriptionLevel)) {
+            premiumModal.setOpen(true);
+            return;
+          }
           setShowInputDialog(true);
         }}>
         <Brain className="size-4" />

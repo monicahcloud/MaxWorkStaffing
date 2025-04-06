@@ -1,6 +1,6 @@
 import { cache } from "react";
 import prisma from "./prisma";
-import { env } from "process";
+import { env } from "@/env";
 
 export type SubscriptionLevel = "free" | "pro" | "pro_plus";
 
