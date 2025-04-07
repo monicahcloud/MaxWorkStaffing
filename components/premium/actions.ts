@@ -15,14 +15,11 @@ async function createCheckoutSession(priceId: string) {
     | string
     | undefined;
   const session = await stripe.checkout.sessions.create({
-    line_items: [{ price: priceId, quantity: 1 }],
     mode: "subscription",
+    line_items: [{ price: priceId, quantity: 1 }],
+
     success_url: `${env.NEXT_PUBLIC_BASE_URL}/billing/success`,
     cancel_url: `${env.NEXT_PUBLIC_BASE_URL}/billing/`,
-    customer: stripeCustomerId,
-    customer_email: stripeCustomerId
-      ? undefined
-      : user.emailAddresses[0].emailAddress,
     metadata: {
       userId: user.id,
     },
@@ -31,6 +28,11 @@ async function createCheckoutSession(priceId: string) {
         userId: user.id,
       },
     },
+    customer: stripeCustomerId,
+    customer_email: stripeCustomerId
+      ? undefined
+      : user.emailAddresses[0].emailAddress,
+
     custom_text: {
       terms_of_service_acceptance: {
         message: `I have read MaxWork Saaffing [terms of services](${env.NEXT_PUBLIC_BASE_URL}/tos) and agree to them.`,
