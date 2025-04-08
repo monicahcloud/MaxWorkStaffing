@@ -11,10 +11,11 @@ export const metadata: Metadata = {
 };
 
 interface PageProps {
-  searchParams: { resumeId?: string };
+  searchParams: Promise<{ resumeId?: string }>;
 }
 
-export default async function Page({ searchParams }: PageProps) {
+export default async function Page(props: PageProps) {
+  const searchParams = await props.searchParams;
   const { resumeId } = searchParams;
 
   const { userId } = await auth();

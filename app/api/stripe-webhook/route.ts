@@ -47,12 +47,12 @@ export async function POST(req: NextRequest) {
 
 async function handleSessionCompleted(session: Stripe.Checkout.Session) {
   const userId = session.metadata?.userId;
-
+  const client = await clerkClient();
   if (!userId) {
     throw new Error("User ID is missing in session metadata");
   }
 
-  await clerkClient.users.updateUserMetadata(userId, {
+  await client.users.updateUserMetadata(userId, {
     privateMetadata: {
       stripeCustomerId: session.customer as string,
     },
@@ -61,17 +61,17 @@ async function handleSessionCompleted(session: Stripe.Checkout.Session) {
 
 async function handleSubscriptionCreatedOrUpdated(subscriptionId: string) {
   const subscription = await stripe.subscriptions.retrieve(subscriptionId);
-  const rawPeriodEnd = subscription.current_period_end;
+  // const rawPeriodEnd = subscription.ended_at;
 
-  if (!rawPeriodEnd || isNaN(rawPeriodEnd)) {
-    throw new Error("Missing or invalid subscription.current_period_end");
-  }
+  // if (!rawPeriodEnd || isNaN(rawPeriodEnd)) {
+  //   throw new Error("Missing or invalid subscription.current_period_end");
+  // }
   console.log(
     "🧾 Stripe Subscription Object:",
     JSON.stringify(subscription, null, 2)
   );
 
-  const stripeCurrentPeriodEnd = new Date(rawPeriodEnd * 1000);
+  //const stripeCurrentPeriodEnd = new Date(rawPeriodEnd * 1000);
   console.log(
     "📦 Subscription received:",
     JSON.stringify(subscription, null, 2)
@@ -92,12 +92,16 @@ async function handleSubscriptionCreatedOrUpdated(subscriptionId: string) {
         stripeSubscriptionId: subscription.id,
         stripeCustomerId: subscription.customer as string,
         stripePriceId: subscription.items.data[0].price.id,
-        stripeCurrentPeriodEnd,
+        stripeCurrentPeriodEnd: new Date(
+          subscription.current_period_end * 1000
+        ),
         stripeCancelAtPeriodEnd: subscription.cancel_at_period_end,
       },
       update: {
         stripePriceId: subscription.items.data[0].price.id,
-        stripeCurrentPeriodEnd,
+        stripeCurrentPeriodEnd: new Date(
+          subscription.current_period_end * 1000
+        ),
         stripeCancelAtPeriodEnd: subscription.cancel_at_period_end,
       },
     });
