@@ -49,6 +49,7 @@ export default function GenerateWorkExperienceButton({
         type="button"
         onClick={() => {
           if (!canUseAITools(subscriptionLevel)) {
+            toast.error("Upgrade your subscription to use this feature");
             premiumModal.setOpen(true);
             return;
           }

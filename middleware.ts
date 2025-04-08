@@ -1,12 +1,3 @@
-// import { authMiddleware } from "@clerk/nextjs";
-
-// export default authMiddleware({
-//   publicRoutes: ["/", "/sign-in(.*)", "/sign-out(.*)", "/api/stripe-webhook"],
-// });
-
-// export const config = {
-//   matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
-// };
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
@@ -20,16 +11,16 @@ const isPublicRoute = createRouteMatcher([
 export default clerkMiddleware(async (auth, req) => {
   const { userId } = await auth(); // Get the user ID from Clerk
   console.log(
-    `🛑 Middleware triggered: ${req.url} | UserID: ${userId || "Guest"}`
+    `Middleware triggered: ${req.url} | UserID: ${userId || "Guest"}`
   );
 
   // Prevent redirect loop: Don't redirect users who are already on a public page
   if (!userId && !isPublicRoute(req)) {
     console.log("🔄 Redirecting unauthenticated user to /sign-in");
-    return NextResponse.redirect(new URL("/sign-in", req.url)); // ✅ Redirect to a sign-in page instead
+    return NextResponse.redirect(new URL("/sign-in", req.url)); // Redirect to a sign-in page instead
   }
 
-  return NextResponse.next(); // ✅ Continue request as normal
+  return NextResponse.next(); // Continue request as normal
 });
 
 export const config = {

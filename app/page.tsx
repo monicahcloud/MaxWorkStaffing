@@ -11,7 +11,7 @@ import {
   CardContent,
 } from "@/components/ui/card";
 import Image from "next/image";
-import logo from "../assets/maxworklogo.png";
+import logo from "../assets/logo.png";
 import { Button } from "@/components/ui/button";
 // import LandingImg from "../assets/LandingImg.jpg";
 import Link from "next/link";

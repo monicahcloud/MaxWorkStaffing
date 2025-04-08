@@ -7,7 +7,7 @@ import Link from "next/link";
 import React, { PropsWithChildren } from "react";
 import { Toaster } from "sonner";
 import Image from "next/image";
-import Logo from "../../assets/maxworklogo.png";
+import Logo from "../../assets/logo.png";
 import LinksDropdown from "@/components/LinksDropdown";
 import { DashboardLinks } from "@/components/DashboardLink";
 import { UserButton } from "@clerk/nextjs";

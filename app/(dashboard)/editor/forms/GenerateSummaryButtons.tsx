@@ -23,6 +23,7 @@ export default function GenerateSummaryButton({
 
   async function handleClick() {
     if (!canUseAITools(subscriptionLevel)) {
+      toast.error("Upgrade your subscription to use this feature");
       premiumModal.setOpen(true);
       return;
     }

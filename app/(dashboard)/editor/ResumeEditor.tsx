@@ -52,7 +52,7 @@ function ResumeEditor({ resumeToEdit }: ResumeEditorProps) {
         <div className="absolute bottom-0 top-0 flex w-full">
           <div
             className={cn(
-              "w-full space-y-6 md:w-1/2 p-3 overflow-y-auto  ",
+              "p-3 space-y-6 overflow-y-auto w-full md:w-1/2", // Ensure it's half on medium+
               showSmResumePreview && "hidden"
             )}>
             <Breadcrumbs currentStep={currentStep} setCurrentStep={setStep} />
@@ -63,15 +63,17 @@ function ResumeEditor({ resumeToEdit }: ResumeEditorProps) {
               />
             )}
           </div>
-          <div className="grow md:border-r" />
 
-          <ResumePreviewContainer
-            resumeData={resumeData}
-            setResumeData={setResumeData}
-            className={cn(showSmResumePreview && "flex")}
-          />
+          <div className=" md:block md:w-1/2 border-l">
+            <ResumePreviewContainer
+              resumeData={resumeData}
+              setResumeData={setResumeData}
+              className={cn("h-full w-full", showSmResumePreview && "flex")}
+            />
+          </div>
         </div>
       </main>
+
       <Footer
         currentStep={currentStep}
         setCurrentStep={setStep}

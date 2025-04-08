@@ -6,6 +6,8 @@ import { NextRequest } from "next/server";
 import Stripe from "stripe";
 
 export async function POST(req: NextRequest) {
+  console.log("🔥 Stripe Webhook Triggered");
+
   try {
     const payload = await req.text();
     const signature = req.headers.get("stripe-signature");
@@ -49,8 +51,23 @@ async function handleSessionCompleted(session: Stripe.Checkout.Session) {
   const userId = session.metadata?.userId;
   const client = await clerkClient();
   if (!userId) {
-    throw new Error("User ID is missing in session metadata");
+    throw new Error("User ID is missing in session metadata"); //developer error means I forgot something
   }
+  //const subscriptionId = session.subscription as string;
+
+  // Attach the userId metadata directly to the subscription
+  // await stripe.subscriptions.update(subscriptionId, {
+  //   metadata: {
+  //     userId,
+  //   },
+  // });
+
+  // Optionally attach it to the customer too
+  // await stripe.customers.update(session.customer as string, {
+  //   metadata: {
+  //     userId,
+  //   },
+  // });
 
   await client.users.updateUserMetadata(userId, {
     privateMetadata: {
@@ -61,17 +78,12 @@ async function handleSessionCompleted(session: Stripe.Checkout.Session) {
 
 async function handleSubscriptionCreatedOrUpdated(subscriptionId: string) {
   const subscription = await stripe.subscriptions.retrieve(subscriptionId);
-  // const rawPeriodEnd = subscription.ended_at;
 
-  // if (!rawPeriodEnd || isNaN(rawPeriodEnd)) {
-  //   throw new Error("Missing or invalid subscription.current_period_end");
-  // }
   console.log(
     "🧾 Stripe Subscription Object:",
     JSON.stringify(subscription, null, 2)
   );
 
-  //const stripeCurrentPeriodEnd = new Date(rawPeriodEnd * 1000);
   console.log(
     "📦 Subscription received:",
     JSON.stringify(subscription, null, 2)
