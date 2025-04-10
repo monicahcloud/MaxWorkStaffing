@@ -2,7 +2,7 @@ export const dynamic = "force-dynamic";
 import ThemeToggle from "@/components/ThemeToggle";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu } from "lucide-react";
+// import { CreditCard, Menu } from "lucide-react";
 import Link from "next/link";
 import React, { PropsWithChildren } from "react";
 import { Toaster } from "sonner";
@@ -15,6 +15,7 @@ import PremiumModal from "@/components/premium/PremiumModal";
 import { auth } from "@clerk/nextjs/server";
 import { getUserSubscriptionLevel } from "@/lib/subscription";
 import SubscriptionLevelProvider from "./SubscriptionLevelProvider";
+import { Menu } from "lucide-react";
 
 async function Dashboardlayout({ children }: PropsWithChildren) {
   const { userId } = await auth();
@@ -65,8 +66,15 @@ async function Dashboardlayout({ children }: PropsWithChildren) {
               <UserButton
                 appearance={{
                   elements: { avatarBox: { width: 35, height: 35 } },
-                }}
-              />
+                }}>
+                {/* <UserButton.MenuItems>
+                  <UserButton.UserProfileLink
+                    label="Billing"
+                    labelIcon={<CreditCard className="size-4" />}
+                    href="/billing"
+                  />
+                </UserButton.MenuItems> */}
+              </UserButton>
             </div>
           </div>
           <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-8 lg:p-8">

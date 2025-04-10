@@ -1,21 +1,25 @@
-import { env } from "@/env";
-import prisma from "@/lib/prisma";
-import stripe from "@/lib/stripe";
-import { clerkClient } from "@clerk/nextjs/server";
-import { NextRequest } from "next/server";
-import Stripe from "stripe";
-
+import { env } from "@/env"; // Environment variables including the Stripe webhook secret
+import prisma from "@/lib/prisma"; // Prisma ORM instance for database interactions
+import stripe from "@/lib/stripe"; // Stripe SDK instance
+import { clerkClient } from "@clerk/nextjs/server"; // Clerk SDK for user management
+import { NextRequest } from "next/server"; // Type for Next.js API route request
+import Stripe from "stripe"; // Stripe types
+// Webhook handler for POST requests from Stripe
 export async function POST(req: NextRequest) {
-  console.log("🔥 Stripe Webhook Triggered");
-
+  console.log("Webhook reached");
   try {
+    // Read the raw body payload from the request
     const payload = await req.text();
-    const signature = req.headers.get("stripe-signature");
+    const signature = req.headers.get("stripe-signature"); // Retrieve Stripe signature from headers
 
+    // If signature is missing, respond with error
     if (!signature) {
       return new Response("Signature is missing", { status: 400 });
     }
 
+    console.log("🧪 Raw body:", payload);
+
+    // Verify the event using Stripe's webhook secret
     const event = stripe.webhooks.constructEvent(
       payload,
       signature,
@@ -24,16 +28,17 @@ export async function POST(req: NextRequest) {
 
     console.log(`Received event: ${event.type}`, event.data.object);
 
+    // Handle event based on type
     switch (event.type) {
       case "checkout.session.completed":
-        await handleSessionCompleted(event.data.object);
+        await handleSessionCompleted(event.data.object); // New session completed
         break;
       case "customer.subscription.created":
       case "customer.subscription.updated":
-        await handleSubscriptionCreatedOrUpdated(event.data.object.id);
+        await handleSubscriptionCreatedOrUpdated(event.data.object.id); // Subscription created or updated
         break;
       case "customer.subscription.deleted":
-        await handleSubscriptionDeleted(event.data.object);
+        await handleSubscriptionDeleted(event.data.object); // Subscription deleted
         break;
       default:
         console.log(`Unhandled event type: ${event.type}`);
@@ -47,28 +52,16 @@ export async function POST(req: NextRequest) {
   }
 }
 
+// Handles when a checkout session is completed
 async function handleSessionCompleted(session: Stripe.Checkout.Session) {
-  const userId = session.metadata?.userId;
-  const client = await clerkClient();
+  const userId = session.metadata?.userId; // Extract userId from session metadata
+  const client = await clerkClient(); // Clerk client instance
+
   if (!userId) {
-    throw new Error("User ID is missing in session metadata"); //developer error means I forgot something
+    throw new Error("User ID is missing in session metadata");
   }
-  //const subscriptionId = session.subscription as string;
 
-  // Attach the userId metadata directly to the subscription
-  // await stripe.subscriptions.update(subscriptionId, {
-  //   metadata: {
-  //     userId,
-  //   },
-  // });
-
-  // Optionally attach it to the customer too
-  // await stripe.customers.update(session.customer as string, {
-  //   metadata: {
-  //     userId,
-  //   },
-  // });
-
+  // Update Clerk private metadata with Stripe customer ID
   await client.users.updateUserMetadata(userId, {
     privateMetadata: {
       stripeCustomerId: session.customer as string,
@@ -76,20 +69,11 @@ async function handleSessionCompleted(session: Stripe.Checkout.Session) {
   });
 }
 
+// Handles creation or update of a subscription
 async function handleSubscriptionCreatedOrUpdated(subscriptionId: string) {
-  const subscription = await stripe.subscriptions.retrieve(subscriptionId);
+  const subscription = await stripe.subscriptions.retrieve(subscriptionId); // Get full subscription object
 
-  console.log(
-    "🧾 Stripe Subscription Object:",
-    JSON.stringify(subscription, null, 2)
-  );
-
-  console.log(
-    "📦 Subscription received:",
-    JSON.stringify(subscription, null, 2)
-  );
-  console.log("🧠 Subscription metadata:", subscription.metadata);
-
+  // If subscription is active, trialing, or past due, upsert record into DB
   if (
     subscription.status === "active" ||
     subscription.status === "trialing" ||
@@ -118,6 +102,7 @@ async function handleSubscriptionCreatedOrUpdated(subscriptionId: string) {
       },
     });
   } else {
+    // If subscription is not active, remove it from the DB
     await prisma.userSubscription.deleteMany({
       where: {
         stripeCustomerId: subscription.customer as string,
@@ -125,6 +110,8 @@ async function handleSubscriptionCreatedOrUpdated(subscriptionId: string) {
     });
   }
 }
+
+// Handles subscription cancellation
 async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
   await prisma.userSubscription.deleteMany({
     where: {
