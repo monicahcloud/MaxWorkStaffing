@@ -31,7 +31,7 @@ export default function Home() {
   return (
     <main className="">
       <header className="max-w-2xl mx-auto md:px-4 px-8 py-6">
-        <Image src={logo} alt="logo" />
+        <Image src={logo} alt="logo" priority />
       </header>
       <section className="max-w-6xl mx-auto md:px-4 px-8 h-screen -mt-10 items-center">
         <div>
