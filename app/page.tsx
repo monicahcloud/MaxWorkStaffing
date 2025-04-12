@@ -29,7 +29,7 @@ export default function Home() {
 
   if (!isLoaded || isSignedIn) return null;
   return (
-    <main className="">
+    <main className="mt-10">
       <header className="max-w-2xl mx-auto md:px-4 px-8 py-6">
         <Image src={logo} alt="logo" priority />
       </header>
