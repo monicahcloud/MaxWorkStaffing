@@ -16,12 +16,13 @@ import { auth } from "@clerk/nextjs/server";
 import { getUserSubscriptionLevel } from "@/lib/subscription";
 import SubscriptionLevelProvider from "./SubscriptionLevelProvider";
 import { Menu } from "lucide-react";
+import { redirect } from "next/navigation";
 
 async function Dashboardlayout({ children }: PropsWithChildren) {
   const { userId } = await auth();
 
   if (!userId) {
-    return null;
+    redirect("/sign-in");
   }
 
   const userSubscriptionLevel = await getUserSubscriptionLevel(userId);
