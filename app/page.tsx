@@ -76,18 +76,16 @@ export default function Home() {
               </div>
             </CardContent>
           </Card> */}
-          <div className="w-full  h-full flex items-center justify-center">
+          <div className="w-full h-full flex flex-col items-center justify-center gap-6 text-center">
             <Image
               src={logo}
               alt="logo"
               priority
-              className="md:max-w-lg lg:max-w-xl  max-w-md "
+              className="w-40 md:w-64 lg:w-72"
             />
-            <div>
-              <Button asChild className="mt-4">
-                <Link href="/sign-in">Let&apos;s Get Started</Link>
-              </Button>
-            </div>
+            <Button asChild className="text-lg px-8 py-4 rounded-xl">
+              <Link href="/sign-in">Let&apos;s Get Started</Link>
+            </Button>
           </div>
         </div>
       </section>
