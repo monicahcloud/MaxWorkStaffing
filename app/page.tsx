@@ -33,10 +33,10 @@ export default function Home() {
     <main className="h-screen w-full flex flex-col">
       {/* Header with logo */}
       <header className="max-w-2xl mx-auto px-8 py-4 mt-5">
-        <h1 className="text-4xl text-center whitespace-nowrap">
+        <h1 className="text-5xl text-center whitespace-nowrap">
           Welcome To Your
         </h1>
-        <h1 className="capitalize text-6xl md:text-6xl font-bold text-center my-3">
+        <h1 className="capitalize text-7xl md:text-6xl font-bold text-center my-3">
           Client <span className="text-red-700">Portal</span>
         </h1>
       </header>
@@ -77,8 +77,13 @@ export default function Home() {
             </CardContent>
           </Card> */}
           <div className="w-full h-full flex flex-col items-center justify-center gap-6 text-center">
-            <Image src={logo} alt="logo" priority className="" />
-            <Button asChild className="text-lg px-2 py-4 rounded-xl">
+            <Image
+              src={logo}
+              alt="logo"
+              priority
+              className="rounded-xl shadow-lg w-full md:max-w-lg lg:max-w-xl  max-w-md object-contain"
+            />
+            <Button asChild className="text-3xl px-2 py-4 rounded-xl">
               <Link href="/sign-in">Let&apos;s Get Started</Link>
             </Button>
           </div>
