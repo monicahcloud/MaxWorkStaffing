@@ -37,7 +37,7 @@ export default function Home() {
       </header>
 
       {/* Full height two-column section */}
-      <section className="flex-1 flex flex-col md:flex-row items-center justify-center  px-4 md:px-8">
+      <section className="flex-1 flex flex-col md:flex-row items-center justify-center  px-4 md:px-5">
         {/* Left column - Image */}
         <div className="w-full  h-full flex items-center justify-center">
           <Image
