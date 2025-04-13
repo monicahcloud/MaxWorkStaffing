@@ -5,6 +5,7 @@ const isPublicRoute = createRouteMatcher([
   "/",
   "/sign-in(.*)",
   "/sign-out(.*)",
+  "/sso-callback(.*)",
   "/api/stripe-webhook",
 ]); // Allow "/sign-in" to prevent redirect loops
 
@@ -16,7 +17,7 @@ export default clerkMiddleware(async (auth, req) => {
 
   // Prevent redirect loop: Don't redirect users who are already on a public page
   if (!userId && !isPublicRoute(req)) {
-    console.log("🔄 Redirecting unauthenticated user to /sign-in");
+    console.log("Redirecting unauthenticated user to /sign-in");
     return NextResponse.redirect(new URL("/sign-in", req.url)); // Redirect to a sign-in page instead
   }
 

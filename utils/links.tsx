@@ -31,8 +31,8 @@ const links: DashboardLinks[] = [
   },
   // {
   //   id: nanoid(),
-  //   label: "Add A Job",
-  //   href: "/add-job",
+  //   label: "Job Tracker",
+  //   href: "/jobTracker",
   //   icon: <Blocks />,
   // },
   // {
