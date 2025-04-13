@@ -31,14 +31,14 @@ export default function Home() {
   if (!isLoaded || isSignedIn) return null;
 
   return (
-    <main className="mt-10">
+    <main className="">
       {/* Header with logo */}
-      <header className="max-w-2xl mx-auto px-8 py-6">
+      <header className="max-w-2xl mx-auto px-8 py-4">
         <Image src={logo} alt="logo" priority />
       </header>
 
       {/* Two-column layout section */}
-      <section className="max-w-7xl mx-auto px-4 md:px-8 h-screen flex flex-col md:flex-row items-center justify-center gap-10">
+      <section className="max-w-7xl mx-auto px-4 md:px-8 flex flex-col md:flex-row items-center justify-center gap-10 min-h-[calc(100vh-150px)]">
         {/* Left column - Image */}
         <div className="w-full md:w-1/2 flex justify-center">
           <Image
