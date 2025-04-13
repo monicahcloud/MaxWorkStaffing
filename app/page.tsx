@@ -38,7 +38,7 @@ export default function Home() {
       </header>
 
       {/* Two-column layout section */}
-      <section className="max-w-7xl mx-auto px-4 md:px-8 flex flex-col md:flex-row items-center justify-center gap-10 py-10">
+      <section className="max-w-7xl mx-auto px-4 md:px-8 flex flex-col md:flex-row items-center justify-center gap-10 pt-10">
         {/* Left column - Image */}
         <div className="w-full md:w-1/2 flex justify-center">
           <Image
