@@ -32,19 +32,19 @@ export default function Home() {
   return (
     <main className="h-screen w-full flex flex-col">
       {/* Header with logo */}
-      <header className="max-w-2xl mx-auto px-8 py-4">
-        <h1 className="text-3xl text-center whitespace-nowrap">
+      <header className="max-w-2xl mx-auto px-8 py-4 mt-5">
+        <h1 className="text-4xl text-center whitespace-nowrap">
           Welcome To Your
         </h1>
-        <h1 className="capitalize text-5xl md:text-6xl font-bold text-center my-3">
+        <h1 className="capitalize text-6xl md:text-6xl font-bold text-center my-3">
           Client <span className="text-red-700">Portal</span>
         </h1>
       </header>
 
       {/* Full height two-column section */}
-      <section className="flex-1 flex flex-col md:flex-row items-center justify-center  px-4 ">
+      <section className="flex-1 flex flex-col md:flex-row items-center justify-center px-4">
         {/* Left column - Image */}
-        <div className="w-full  h-full flex items-center justify-center">
+        <div className="w-full h-full flex items-center justify-center">
           <Image
             src={LandingImg}
             alt="Landing page visual"
@@ -57,7 +57,7 @@ export default function Home() {
         </div>
 
         {/* Right column - Card */}
-        <div className="w-full  h-full flex items-center justify-center">
+        <div className="w-full h-full flex items-center justify-center">
           {/* <Card className="w-full max-w-md">
             <CardHeader>
               <CardTitle className="text-2xl text-center whitespace-nowrap">
@@ -77,13 +77,8 @@ export default function Home() {
             </CardContent>
           </Card> */}
           <div className="w-full h-full flex flex-col items-center justify-center gap-6 text-center">
-            <Image
-              src={logo}
-              alt="logo"
-              priority
-              className="w-40 md:w-64 lg:w-72"
-            />
-            <Button asChild className="text-lg px-8 py-4 rounded-xl">
+            <Image src={logo} alt="logo" priority className="" />
+            <Button asChild className="text-lg px-2 py-4 rounded-xl">
               <Link href="/sign-in">Let&apos;s Get Started</Link>
             </Button>
           </div>
