@@ -32,7 +32,7 @@ export default function Home() {
   return (
     <main className="h-screen w-full flex flex-col">
       {/* Header with logo */}
-      <header className="max-w-2xl mx-auto px-8 py-4 mt-5">
+      <header className="max-w-2xl mx-auto px-8  mt-10">
         <h1 className="text-5xl text-center whitespace-nowrap">
           Welcome To Your
         </h1>
@@ -76,14 +76,14 @@ export default function Home() {
               </div>
             </CardContent>
           </Card> */}
-          <div className="w-full h-full flex flex-col items-center justify-center gap-6 text-center">
+          <div className="w-full h-full flex flex-col -mt-8 items-center justify-center gap-6 text-center">
             <Image
               src={logo}
               alt="logo"
               priority
-              className="rounded-xl shadow-lg w-full md:max-w-lg lg:max-w-xl  max-w-md object-contain"
+              className=" w-full md:max-w-lg lg:max-w-xl  max-w-md object-contain"
             />
-            <Button asChild className="text-3xl px-2 py-4 rounded-xl">
+            <Button asChild className="text-3xl rounded-xl">
               <Link href="/sign-in">Let&apos;s Get Started</Link>
             </Button>
           </div>
