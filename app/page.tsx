@@ -32,8 +32,8 @@ export default function Home() {
   return (
     <main className="h-screen w-full flex flex-col">
       {/* Header with logo */}
-      <header className="px-8 py-4">
-        <Image src={logo} alt="logo" priority className="h-12 w-auto" />
+      <header className="max-w-2xl mx-auto px-8 py-4">
+        <Image src={logo} alt="logo" priority className="" />
       </header>
 
       {/* Full height two-column section */}
@@ -45,6 +45,9 @@ export default function Home() {
             alt="Landing page visual"
             className="rounded-xl shadow-lg w-full max-w-md object-contain"
             priority
+            style={{
+              transform: "rotate(-8deg)", // tilt counter-clockwise (use positive for clockwise)
+            }}
           />
         </div>
 
