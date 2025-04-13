@@ -20,6 +20,7 @@ export default function Home() {
   const { isSignedIn, isLoaded } = useAuth();
   const router = useRouter();
 
+  // Redirect authenticated users to /home
   useEffect(() => {
     if (isLoaded && isSignedIn) {
       router.push("/home");
@@ -31,25 +32,28 @@ export default function Home() {
   return (
     <main className="h-screen w-full flex flex-col">
       {/* Header with logo */}
-      <header className="px-8 py-4">
-        <Image src={logo} alt="logo" priority className="h-12 w-auto" />
+      <header className="max-w-2xl mx-auto px-8 py-4">
+        <Image src={logo} alt="logo" priority className="" />
       </header>
 
-      {/* Two-column layout on md+, stacked on small */}
-      <section className="flex-1 flex flex-col md:flex-row items-center justify-center gap-10 px-4 md:px-8">
+      {/* Full height two-column section */}
+      <section className="flex-1 flex flex-col md:flex-row items-center justify-center  px-4 md:px-8">
         {/* Left column - Image */}
-        <div className="w-full md:w-1/2 h-full flex items-center justify-center">
+        <div className="w-full  h-full flex items-center justify-center">
           <Image
             src={LandingImg}
             alt="Landing page visual"
-            className="rounded-xl shadow-lg w-full max-w-xs sm:max-w-md md:max-w-lg lg:max-w-xl object-contain transition-all duration-300"
+            className="rounded-xl shadow-lg w-full md:max-w-lg lg:max-w-xl  max-w-md object-contain"
             priority
+            style={{
+              transform: "rotate(-8deg)", // tilt counter-clockwise (use positive for clockwise)
+            }}
           />
         </div>
 
         {/* Right column - Card */}
-        <div className="w-full md:w-1/2 h-full flex items-center justify-center">
-          <Card className="w-full max-w-xs sm:max-w-md md:max-w-lg lg:max-w-xl p-4">
+        <div className="w-full  h-full flex items-center justify-center">
+          <Card className="w-full max-w-md">
             <CardHeader>
               <CardTitle className="text-2xl text-center whitespace-nowrap">
                 Welcome To Your
@@ -61,7 +65,7 @@ export default function Home() {
                 <h1 className="capitalize text-4xl md:text-6xl font-bold text-center my-3">
                   Client <span className="text-red-700">Portal</span>
                 </h1>
-                <Button asChild className="mt-4 text-lg md:text-xl px-6 py-3">
+                <Button asChild className="mt-4">
                   <Link href="/sign-in">Let&apos;s Get Started</Link>
                 </Button>
               </div>
