@@ -1,9 +1,8 @@
 import { StaticImageData } from "next/image";
-import federal from "../../../assets/federal.png";
+// import federal from "../../../assets/federal.png";
+// import functional from "../../../assets/functional.png";
+// import combination from "../../../assets/combination.png";
 import chronological from "../../../assets/chronological.png";
-import functional from "../../../assets/functional.png";
-import combination from "../../../assets/combination.png";
-
 export interface ResumeTemplate {
   title: string;
   image: string | StaticImageData;

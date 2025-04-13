@@ -27,9 +27,9 @@ import { useState } from "react";
 import { generateWorkExperience } from "./action";
 import { Textarea } from "@/components/ui/textarea";
 import { useForm } from "react-hook-form";
-import usePremiumModal from "@/hooks/usePremiumModal";
-import { useSubscriptionLevel } from "../../SubscriptionLevelProvider";
-import { canUseAITools } from "@/lib/permissions";
+// import usePremiumModal from "@/hooks/usePremiumModal";
+// import { useSubscriptionLevel } from "../../SubscriptionLevelProvider";
+// import { canUseAITools } from "@/lib/permissions";
 
 interface GenerateWorkExperienceButtonProps {
   onWorkExperienceGenerated: (workExperience: WorkExperience) => void;
@@ -38,8 +38,8 @@ interface GenerateWorkExperienceButtonProps {
 export default function GenerateWorkExperienceButton({
   onWorkExperienceGenerated,
 }: GenerateWorkExperienceButtonProps) {
-  const subscriptionLevel = useSubscriptionLevel();
-  const premiumModal = usePremiumModal();
+  // const subscriptionLevel = useSubscriptionLevel();
+  // const premiumModal = usePremiumModal();
   const [showInputDialog, setShowInputDialog] = useState(false);
 
   return (
@@ -48,11 +48,11 @@ export default function GenerateWorkExperienceButton({
         variant="outline"
         type="button"
         onClick={() => {
-          if (!canUseAITools(subscriptionLevel)) {
-            toast.error("Upgrade your subscription to use this feature");
-            premiumModal.setOpen(true);
-            return;
-          }
+          // if (!canUseAITools(subscriptionLevel)) {
+          //   toast.error("Upgrade your subscription to use this feature");
+          //   premiumModal.setOpen(true);
+          //   return;
+          // }
           setShowInputDialog(true);
         }}>
         <Brain className="size-4" />
