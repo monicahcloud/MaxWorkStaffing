@@ -156,7 +156,9 @@ function EducationItem({ form, index, remove, id }: EducationItemProps) {
         transition,
       }}>
       <div className="flex justify-between gap-2">
-        <span className="font-semibold">Education {index + 1}</span>
+        <span className="font-semibold">
+          Education/Certification {index + 1}
+        </span>
 
         <GripHorizontal
           className="size-5 cursor-grab text-muted-foreground focus:outline-none"
@@ -169,7 +171,7 @@ function EducationItem({ form, index, remove, id }: EducationItemProps) {
         name={`education.${index}.degree`}
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Degree</FormLabel>
+            <FormLabel>Degree/Certificate</FormLabel>
             <FormControl>
               <Input {...field} autoFocus />
             </FormControl>
