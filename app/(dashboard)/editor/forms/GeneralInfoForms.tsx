@@ -66,7 +66,7 @@ export default function GeneralInforForm({
               </FormItem>
             )}
           />
-          <FormField
+          {/* <FormField
             control={form.control}
             name="resumeType"
             render={({ field }) => (
@@ -82,7 +82,7 @@ export default function GeneralInforForm({
                 <FormMessage />
               </FormItem>
             )}
-          />
+          /> */}
           <FormField
             control={form.control}
             name="description"

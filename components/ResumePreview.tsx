@@ -77,7 +77,10 @@ function PersonalInfoHeader({ resumeData }: ResumePreviewProps) {
   }, [photo]);
 
   return (
-    <div className="flex items-center gap-6">
+    <div
+      className={`flex items-center gap-6 ${
+        !photoSrc ? "justify-center" : ""
+      }`}>
       {photoSrc && (
         <Image
           src={photoSrc}
@@ -95,7 +98,7 @@ function PersonalInfoHeader({ resumeData }: ResumePreviewProps) {
           }}
         />
       )}
-      <div className="space-y-2.5">
+      <div className="space-y-2.5 text-center md:text-left">
         <div className="space-y-1">
           <p
             className="text-3xl font-bold"

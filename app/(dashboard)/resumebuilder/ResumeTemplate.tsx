@@ -14,15 +14,15 @@ export interface ResumeTemplate {
 
 //  Resume Templates Data
 export const resumeTemplates: ResumeTemplate[] = [
-  {
-    title: "Federal Resume",
-    image: federal,
-    href: "/editor",
-    description: [
-      "Ideal for government jobs with strict formatting. Emphasizes detailed job history and accomplishments.",
-    ],
-    resumeType: "federal",
-  },
+  // {
+  //   title: "Federal Resume",
+  //   image: federal,
+  //   href: "/editor",
+  //   description: [
+  //     "Ideal for government jobs with strict formatting. Emphasizes detailed job history and accomplishments.",
+  //   ],
+  //   resumeType: "federal",
+  // },
   {
     title: "Chronological Resume",
     image: chronological,
@@ -32,22 +32,22 @@ export const resumeTemplates: ResumeTemplate[] = [
     ],
     resumeType: "chronological",
   },
-  {
-    title: "Functional Resume",
-    image: functional,
-    href: "/editor",
-    description: [
-      "Great for career changers or gaps. Focuses on skills rather than job timelines.",
-    ],
-    resumeType: "functional",
-  },
-  {
-    title: "Combination Resume",
-    image: combination,
-    href: "/editor",
-    description: [
-      "Blends work experience and skills. Suitable for seasoned professionals who want the best of both worlds.",
-    ],
-    resumeType: "combination",
-  },
+  // {
+  //   title: "Functional Resume",
+  //   image: functional,
+  //   href: "/editor",
+  //   description: [
+  //     "Great for career changers or gaps. Focuses on skills rather than job timelines.",
+  //   ],
+  //   resumeType: "functional",
+  // },
+  // {
+  //   title: "Combination Resume",
+  //   image: combination,
+  //   href: "/editor",
+  //   description: [
+  //     "Blends work experience and skills. Suitable for seasoned professionals who want the best of both worlds.",
+  //   ],
+  //   resumeType: "combination",
+  // },
 ];
