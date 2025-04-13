@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/card";
 import Image from "next/image";
 import logo from "../assets/logo.png";
-import LandingImg from "../assets/landingpage.png"; // Uncomment or replace with your actual image
+import LandingImg from "../assets/landingpage.png";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
@@ -27,30 +27,29 @@ export default function Home() {
     }
   }, [isSignedIn, isLoaded, router]);
 
-  // Prevent rendering until auth state is loaded
   if (!isLoaded || isSignedIn) return null;
 
   return (
-    <main className="">
+    <main className="h-screen w-full flex flex-col">
       {/* Header with logo */}
-      <header className="max-w-2xl mx-auto px-8 ">
-        <Image src={logo} alt="logo" priority />
+      <header className="px-8 py-4">
+        <Image src={logo} alt="logo" priority className="h-12 w-auto" />
       </header>
 
-      {/* Two-column layout section */}
-      <section className="max-w-7xl mx-auto px-4 md:px-8 flex flex-col md:flex-row items-center justify-center gap-10 h-screen">
+      {/* Full height two-column section */}
+      <section className="flex-1 flex flex-col md:flex-row items-center justify-center gap-10 px-4 md:px-8">
         {/* Left column - Image */}
-        <div className="w-full md:w-1/2 flex justify-center">
+        <div className="w-full md:w-1/2 h-full flex items-center justify-center">
           <Image
             src={LandingImg}
             alt="Landing page visual"
-            className="rounded-xl shadow-lg w-full max-w-md"
+            className="rounded-xl shadow-lg w-full max-w-md object-contain"
             priority
           />
         </div>
 
         {/* Right column - Card */}
-        <div className="w-full md:w-1/2 flex justify-center">
+        <div className="w-full md:w-1/2 h-full flex items-center justify-center">
           <Card className="w-full max-w-md">
             <CardHeader>
               <CardTitle className="text-2xl text-center whitespace-nowrap">
