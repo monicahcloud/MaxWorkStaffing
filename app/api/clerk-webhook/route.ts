@@ -1,8 +1,12 @@
 import prisma from "@/lib/prisma";
-import { WebhookEvent } from "@clerk/nextjs/server";
+import type {
+  WebhookEvent,
+  UserJSON,
+  DeletedObjectJSON,
+} from "@clerk/nextjs/server";
+
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
-import type { UserJSON, DeletedObjectJSON } from "@clerk/backend";
 
 export async function POST(req: Request) {
   const rawBody = await req.text();
