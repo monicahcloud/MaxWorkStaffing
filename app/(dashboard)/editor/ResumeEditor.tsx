@@ -6,7 +6,6 @@ import { steps } from "./steps";
 import Breadcrumbs from "./Breadcrumbs";
 import Footer from "./forms/Footer";
 import { ResumeValues } from "@/lib/validation";
-// import { useMemo } from "react";
 import ResumePreviewContainer from "./ResumePreviewContainer";
 import { cn, mapToResumeValues } from "@/lib/utils";
 import useUnloadWarning from "@/hooks/useUnloadWarning";

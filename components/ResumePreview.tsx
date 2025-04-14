@@ -191,8 +191,11 @@ function WorkExperienceSection({ resumeData }: ResumePreviewProps) {
                 </span>
               )}
             </div>
-            <p className="text-xs font-semibold">{exp.company}</p>
-            <p className="text-xs font-semibold">{exp.location}</p>
+            <div className="flex items-center justify-between text-xs font-semibold">
+              <span>{exp.company}</span>
+
+              <span>{exp.location}</span>
+            </div>
             <div className="whitespace-pre-line text-xs">{exp.description}</div>
           </div>
         ))}
