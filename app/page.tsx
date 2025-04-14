@@ -3,13 +3,6 @@
 import { useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-// import {
-//   CardDescription,
-//   Card,
-//   CardHeader,
-//   CardTitle,
-//   CardContent,
-// } from "@/components/ui/card";
 import Image from "next/image";
 import logo from "../assets/logo.png";
 import LandingImg from "../assets/LandingImg.jpg";
@@ -36,13 +29,12 @@ export default function Home() {
         <Image
           src={logo}
           alt="Client portal hero image"
-          width={30}
-          height={300}
+          width={500}
+          height={500}
           className="mx-auto md:ms-0 rounded-2xl shadow-lg"
-        />{" "}
+        />
         <h1 className="text-5xl font-bold">
-          {" "}
-          Welcome to the <br /> MaxWork{" "}
+          Welcome to the <br /> MaxWork
           <span className="text-red-700">Client </span>
           Portal
         </h1>
@@ -57,7 +49,7 @@ export default function Home() {
         alt="Client portal hero image"
         width={700}
         height={700}
-        className="mx-auto md:ms-0 rounded-2xl shadow-lg"
+        className="mx-auto md:ms-0 rounded-2xl shadow-lg justify-center items-center text-center"
       />
       <Button asChild className="text-3xl rounded-xl">
         <Link href="/sign-in">Let&apos;s Get Started</Link>
