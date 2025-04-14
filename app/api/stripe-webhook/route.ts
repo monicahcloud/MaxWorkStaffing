@@ -6,7 +6,6 @@ import { NextRequest } from "next/server"; // Type for Next.js API route request
 import Stripe from "stripe"; // Stripe types
 // Webhook handler for POST requests from Stripe
 export async function POST(req: NextRequest) {
-  console.log("Webhook reached");
   try {
     // Read the raw body payload from the request
     const payload = await req.text();
@@ -16,7 +15,6 @@ export async function POST(req: NextRequest) {
     if (!signature) {
       return new Response("Signature is missing", { status: 400 });
     }
-
     console.log("🧪 Raw body:", payload);
 
     // Verify the event using Stripe's webhook secret
