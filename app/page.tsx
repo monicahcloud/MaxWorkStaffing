@@ -50,9 +50,9 @@ export default function Home() {
             alt="Landing page visual"
             className="rounded-xl shadow-lg w-full md:max-w-lg lg:max-w-xl  max-w-md object-contain"
             priority
-            style={{
-              transform: "rotate(-8deg)", // tilt counter-clockwise (use positive for clockwise)
-            }}
+            // style={{
+            //   transform: "rotate(-8deg)", // tilt counter-clockwise (use positive for clockwise)
+            // }}
           />
         </div>
 
