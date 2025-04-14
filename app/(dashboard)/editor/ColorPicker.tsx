@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Compact, ColorChangeHandler, Color } from "react-color";
+import { ColorChangeHandler, Color } from "react-color";
 import { Button } from "@/components/ui/button";
 import {
   Popover,
@@ -10,6 +10,7 @@ import { Palette } from "lucide-react";
 import usePremiumModal from "@/hooks/usePremiumModal";
 import { canUseCustomizations } from "@/lib/permissions";
 import { useSubscriptionLevel } from "../SubscriptionLevelProvider";
+import Compact from "react-color/lib/components/compact/Compact";
 
 interface ColorPickerProps {
   color: Color | undefined;
