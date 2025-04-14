@@ -247,8 +247,11 @@ function EducationSection({ resumeData }: ResumePreviewProps) {
                 </span>
               )}
             </div>
-            <p className="text-xs font-semibold">{edu.school}</p>
-            <p className="text-xs font-semibold">{edu.location}</p>
+            <div className="flex items-center justify-between text-sm font-semibold">
+              <span>{edu.school}</span>
+
+              <span>{edu.location}</span>
+            </div>
           </div>
         ))}
       </div>
