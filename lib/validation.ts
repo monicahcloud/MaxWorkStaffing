@@ -38,6 +38,7 @@ export const workExperienceSchema = z.object({
         company: optionalString,
         startDate: optionalString,
         endDate: optionalString,
+        location: optionalString,
         description: optionalString,
       })
     )
@@ -48,6 +49,7 @@ export type WorkExperiencesValues = z.infer<typeof workExperienceSchema>;
 export type WorkExperience = NonNullable<
   z.infer<typeof workExperienceSchema>["workExperiences"]
 >[number];
+
 export const educationSchema = z.object({
   education: z
     .array(
@@ -56,6 +58,7 @@ export const educationSchema = z.object({
         school: optionalString,
         startDate: optionalString,
         endDate: optionalString,
+        location: optionalString,
       })
     )
     .optional(),

@@ -197,6 +197,19 @@ function WorkExperienceItem({
           </FormItem>
         )}
       />
+      <FormField
+        control={form.control}
+        name={`workExperiences.${index}.location`}
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>Location</FormLabel>
+            <FormControl>
+              <Input {...field} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
       <div className="grid grid-cols-2 gap-3">
         <FormField
           control={form.control}

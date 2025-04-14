@@ -192,6 +192,7 @@ function WorkExperienceSection({ resumeData }: ResumePreviewProps) {
               )}
             </div>
             <p className="text-xs font-semibold">{exp.company}</p>
+            <p className="text-xs font-semibold">{exp.location}</p>
             <div className="whitespace-pre-line text-xs">{exp.description}</div>
           </div>
         ))}
@@ -244,6 +245,7 @@ function EducationSection({ resumeData }: ResumePreviewProps) {
               )}
             </div>
             <p className="text-xs font-semibold">{edu.school}</p>
+            <p className="text-xs font-semibold">{edu.location}</p>
           </div>
         ))}
       </div>

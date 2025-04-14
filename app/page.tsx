@@ -32,11 +32,11 @@ export default function Home() {
   return (
     <main className="h-screen w-full flex flex-col">
       {/* Header with logo */}
-      <header className="max-w-2xl mx-auto px-8  mt-10">
+      <header className="max-w-2xl mx-auto px-8  mt-15">
         <h1 className="text-5xl text-center whitespace-nowrap">
           Welcome To Your
         </h1>
-        <h1 className="capitalize text-7xl md:text-6xl font-bold text-center my-3">
+        <h1 className="capitalize text-5xl md:text-7xl font-bold text-center my-3">
           Client <span className="text-red-700">Portal</span>
         </h1>
       </header>
