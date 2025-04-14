@@ -1,50 +1,52 @@
 import prisma from "@/lib/prisma";
-import type {
+import {
   WebhookEvent,
   UserJSON,
   DeletedObjectJSON,
 } from "@clerk/nextjs/server";
-
+import { NextRequest, NextResponse } from "next/server";
 import { headers } from "next/headers";
-import { NextResponse } from "next/server";
 
-export async function POST(req: Request) {
-  const rawBody = await req.text();
-  const headerPayload = await headers();
-  const signature = headerPayload.get("svix-signature") as string;
-  const webhookSecret = process.env.CLERK_WEBHOOK_SIGNING_SECRET || "";
-
-  const evt: WebhookEvent = JSON.parse(rawBody);
-
-  if (!signature || !webhookSecret) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
-  console.log("🔔 Clerk Webhook received:", evt);
-
+export async function POST(req: NextRequest) {
   try {
-    switch (evt.type) {
+    // Read raw body
+    const rawBody = await req.text();
+
+    // Headers & Signature
+    const headerPayload = await headers();
+    const signature = headerPayload.get("svix-signature");
+    const webhookSecret = process.env.CLERK_WEBHOOK_SIGNING_SECRET;
+
+    if (!signature || !webhookSecret) {
+      return new NextResponse("Unauthorized: Missing signature or secret", {
+        status: 401,
+      });
+    }
+
+    // Parse event
+    const event: WebhookEvent = JSON.parse(rawBody);
+    console.log(`📥 Clerk webhook received: ${event.type}`);
+
+    // Route the event
+    switch (event.type) {
       case "user.created":
-        await handleUserCreated(evt.data);
+        await handleUserCreated(event.data as UserJSON);
         break;
       case "user.updated":
-        await handleUserUpdated(evt.data);
+        await handleUserUpdated(event.data as UserJSON);
         break;
       case "user.deleted":
-        await handleUserDeleted(evt.data);
+        await handleUserDeleted(event.data as DeletedObjectJSON);
         break;
       default:
-        console.log(`⚠️ Unhandled event type: ${evt.type}`);
+        console.log(`⚠️ Unhandled Clerk event type: ${event.type}`);
         break;
     }
 
-    return NextResponse.json({ success: true });
+    return new NextResponse("Event processed", { status: 200 });
   } catch (error) {
-    console.error("❌ Error handling webhook:", error);
-    return NextResponse.json(
-      { error: "Internal Server Error: Clerk Webhook" },
-      { status: 500 }
-    );
+    console.error("❌ Clerk Webhook Error:", error);
+    return new NextResponse("Internal Server Error", { status: 500 });
   }
 }
 
