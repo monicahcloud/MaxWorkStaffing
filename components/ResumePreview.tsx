@@ -36,7 +36,6 @@ function ResumePreview({
         }}
         ref={contentRef}
         id="resumePreviewContent">
-        {/* <pre>{JSON.stringify(resumeData, null, 2)}</pre>; */}
         <PersonalInfoHeader resumeData={resumeData} />
         <SummarySection resumeData={resumeData} />
         <WorkExperienceSection resumeData={resumeData} />
@@ -98,7 +97,7 @@ function PersonalInfoHeader({ resumeData }: ResumePreviewProps) {
           }}
         />
       )}
-      <div className="space-y-2.5 text-center md:text-left">
+      <div className="space-y-2.5 text-center md:text-center">
         <div className="space-y-1">
           <p
             className="text-3xl font-bold"
@@ -117,7 +116,6 @@ function PersonalInfoHeader({ resumeData }: ResumePreviewProps) {
         </div>
         <p className="text-xs text-gray-500">
           {address}
-
           {address && (phone || email || website) ? " • " : ""}
           {[phone, email, website].filter(Boolean).join(" • ")}
         </p>
