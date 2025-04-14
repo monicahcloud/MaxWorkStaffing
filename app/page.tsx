@@ -12,7 +12,7 @@ import { useEffect } from "react";
 // } from "@/components/ui/card";
 import Image from "next/image";
 import logo from "../assets/logo.png";
-import LandingImg from "../assets/landingpage.png";
+import LandingImg from "../assets/LandingImg.jpg";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
@@ -30,65 +30,38 @@ export default function Home() {
   if (!isLoaded || isSignedIn) return null;
 
   return (
-    <main className="h-screen w-full flex flex-col">
+    <main className="flex min-h-screen flex-col items-center justify-center gap-6 -mt-30">
       {/* Header with logo */}
-      <header className="max-w-2xl mx-auto px-8  mt-15">
-        <h1 className="text-5xl text-center whitespace-nowrap">
-          Welcome To Your
+      <header className="max-w-prose space-y-3 text-center">
+        <Image
+          src={logo}
+          alt="Client portal hero image"
+          width={30}
+          height={300}
+          className="mx-auto md:ms-0 rounded-2xl shadow-lg"
+        />{" "}
+        <h1 className="text-5xl font-bold">
+          {" "}
+          Welcome to the <br /> MaxWork{" "}
+          <span className="text-red-700">Client </span>
+          Portal
         </h1>
-        <h1 className="capitalize text-5xl md:text-7xl font-bold text-center my-3">
-          Client <span className="text-red-700">Portal</span>
-        </h1>
+        <h3 className="text-lg text-gray-700">
+          Your journey to career success starts here. Build a standout resume,
+          stay on top of your job search, and walk into every interview with
+          confidence. Let’s get to work!
+        </h3>
       </header>
-
-      {/* Full height two-column section */}
-      <section className="flex-1 flex flex-col md:flex-row items-center justify-center px-4">
-        {/* Left column - Image */}
-        <div className="w-full h-full flex items-center justify-center">
-          <Image
-            src={LandingImg}
-            alt="Landing page visual"
-            className="rounded-xl shadow-lg w-full md:max-w-lg lg:max-w-xl  max-w-md object-contain"
-            priority
-            // style={{
-            //   transform: "rotate(-8deg)", // tilt counter-clockwise (use positive for clockwise)
-            // }}
-          />
-        </div>
-
-        {/* Right column - Card */}
-        <div className="w-full h-full flex items-center justify-center">
-          {/* <Card className="w-full max-w-md">
-            <CardHeader>
-              <CardTitle className="text-2xl text-center whitespace-nowrap">
-                Welcome To Your
-              </CardTitle>
-              <CardDescription />
-            </CardHeader>
-            <CardContent>
-              <div className="flex flex-col gap-y-4 text-2xl text-black items-center">
-                <h1 className="capitalize text-4xl md:text-6xl font-bold text-center my-3">
-                  Client <span className="text-red-700">Portal</span>
-                </h1>
-                <Button asChild className="mt-4">
-                  <Link href="/sign-in">Let&apos;s Get Started</Link>
-                </Button>
-              </div>
-            </CardContent>
-          </Card> */}
-          <div className="w-full h-full flex flex-col -mt-8 items-center justify-center gap-6 text-center">
-            <Image
-              src={logo}
-              alt="logo"
-              priority
-              className=" w-full md:max-w-lg lg:max-w-xl  max-w-md object-contain"
-            />
-            <Button asChild className="text-3xl rounded-xl">
-              <Link href="/sign-in">Let&apos;s Get Started</Link>
-            </Button>
-          </div>
-        </div>
-      </section>
+      <Image
+        src={LandingImg}
+        alt="Client portal hero image"
+        width={700}
+        height={700}
+        className="mx-auto md:ms-0 rounded-2xl shadow-lg"
+      />
+      <Button asChild className="text-3xl rounded-xl">
+        <Link href="/sign-in">Let&apos;s Get Started</Link>
+      </Button>
     </main>
   );
 }
