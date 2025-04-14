@@ -23,7 +23,7 @@ export default function Home() {
   if (!isLoaded || isSignedIn) return null;
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center gap-6 -mt-30">
+    <main className="flex min-h-screen flex-col items-center justify-center gap-6 ">
       {/* Header with logo */}
       <header className="max-w-prose space-y-3 text-center">
         <Image
@@ -31,7 +31,7 @@ export default function Home() {
           alt="Client portal hero image"
           width={500}
           height={500}
-          className="mx-auto md:ms-0 rounded-2xl shadow-lg"
+          className="mx-auto"
         />
         <h1 className="text-5xl font-bold">
           Welcome to the <br /> MaxWork
@@ -44,16 +44,19 @@ export default function Home() {
           confidence. Let’s get to work!
         </h3>
       </header>
-      <Image
-        src={LandingImg}
-        alt="Client portal hero image"
-        width={700}
-        height={700}
-        className="mx-auto md:ms-0 rounded-2xl shadow-lg justify-center items-center text-center"
-      />
-      <Button asChild className="text-3xl rounded-xl">
-        <Link href="/sign-in">Let&apos;s Get Started</Link>
-      </Button>
+      <section className="mx-auto justify-center items-center flex">
+        {" "}
+        <Image
+          src={LandingImg}
+          alt="Client portal hero image"
+          width={700}
+          height={700}
+          className="mx-auto md:ms-0 rounded-2xl shadow-lg justify-center items-center text-center"
+        />
+        <Button asChild className="text-3xl rounded-xl">
+          <Link href="/sign-in">Let&apos;s Get Started</Link>
+        </Button>
+      </section>
     </main>
   );
 }
