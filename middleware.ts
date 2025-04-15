@@ -19,7 +19,7 @@ export default clerkMiddleware(async (auth, req) => {
   // Prevent redirect loop: Don't redirect users who are already on a public page
   if (!userId && !isPublicRoute(req)) {
     console.log("Redirecting unauthenticated user to /sign-in");
-    return NextResponse.redirect(new URL("/", req.url)); // Redirect to a sign-in page instead
+    return NextResponse.redirect(new URL("/sign-in", req.url)); // Redirect to a sign-in page instead
   }
 
   return NextResponse.next(); // Continue request as normal

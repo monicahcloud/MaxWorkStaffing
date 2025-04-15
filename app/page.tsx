@@ -44,23 +44,22 @@ export default function Home() {
           confidence. Let&apos;s get to work!
         </h3>
       </header>
-      <section className="mx-auto justify-center items-center flex flex-col md:flex-row gap-4">
-        <div className="flex mx-auto justify-center">
-          <Image
-            src={LandingImg}
-            alt="Client portal hero image"
-            width={700}
-            height={700}
-            className="mx-auto md:ms-0 rounded-2xl shadow-lg justify-center items-center text-center"
-          />
 
-          <Button
-            asChild
-            className="text-3xl rounded-xl px-4 py-2 border border-black bg-red-700 text-white hover:shadow-[4px_4px_0px_0px_rgba(0,0,0)] transition duration-200">
-            <Link href="/sign-in">Let&apos;s Get Started</Link>
-          </Button>
-        </div>
-      </section>
+      <div className=" mx-auto justify-center">
+        <Image
+          src={LandingImg}
+          alt="Client portal hero image"
+          width={700}
+          height={700}
+          className="mx-auto md:ms-0 rounded-2xl shadow-lg justify-center items-center text-center"
+        />
+
+        <Button
+          asChild
+          className="text-3xl rounded-xl px-4 py-2 border border-black bg-red-700 text-white hover:shadow-[4px_4px_0px_0px_rgba(0,0,0)] transition duration-200">
+          <Link href="/sign-in">Let&apos;s Get Started</Link>
+        </Button>
+      </div>
     </main>
   );
 }
