@@ -57,7 +57,7 @@ export default function Home() {
 
         <Button
           asChild
-          className="text-3xl mx-auto mt-4 rounded-xl px-4 py-5 border border-black bg-red-700 text-white hover:shadow-[4px_4px_0px_0px_rgba(0,0,0)] transition duration-200">
+          className="text-3xl mx-auto mt-4 flex rounded-xl px-4 py-5 border border-black bg-red-700 text-white hover:shadow-[4px_4px_0px_0px_rgba(0,0,0)] transition duration-200">
           <Link href="/sign-in">Let&apos;s Get Started</Link>
         </Button>
       </div>
