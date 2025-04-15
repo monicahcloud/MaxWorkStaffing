@@ -25,6 +25,7 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center gap-6 ">
       {/* Header with logo */}
+      <div className="absolute top-0 z-[-2] h-screen w-screen bg-white bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(234, 1, 1, 0.709),rgba(255,255,255,0))]"></div>
       <header className="max-w-prose space-y-3 text-center">
         <Image
           src={logo}
