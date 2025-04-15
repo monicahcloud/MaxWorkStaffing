@@ -42,7 +42,8 @@ export default function Home() {
         <h3 className="text-lg text-gray-700">
           Your journey to career success starts here. Build a standout resume,
           stay on top of your job search, and walk into every interview with
-          confidence. Let&apos;s get to work!
+          confidence. <br />
+          Let&apos;s get to work!
         </h3>
       </header>
 
