@@ -26,13 +26,13 @@ export default function Home() {
     <main className="flex min-h-screen flex-col items-center justify-center gap-6 ">
       {/* Header with logo */}
 
-      <header className="max-w-prose space-y-3 text-center">
+      <header className="max-w-prose space-y-3 text-center ">
         <Image
           src={logo}
           alt="Client portal hero image"
-          width={350}
-          height={350}
-          className="mx-auto -mt-10 mb-10"
+          width={450}
+          height={450}
+          className="mx-auto mt-10 mb-5"
         />
         <h1 className="text-5xl font-bold">
           Welcome to the <br /> MaxWork

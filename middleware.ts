@@ -8,6 +8,8 @@ const isPublicRoute = createRouteMatcher([
   "/sso-callback(.*)",
   "/api/stripe-webhook",
   "/api/clerk-webhook(.*)",
+  "maxworkstaffing.com",
+  "www.maxworkstaffing.com",
 ]); // Allow "/sign-in" to prevent redirect loops
 
 export default clerkMiddleware(async (auth, req) => {
