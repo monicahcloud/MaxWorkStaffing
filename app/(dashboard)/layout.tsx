@@ -22,7 +22,7 @@ async function Dashboardlayout({ children }: PropsWithChildren) {
   const { userId } = await auth();
 
   if (!userId) {
-    redirect("/sign-in");
+    redirect("/");
   }
 
   const userSubscriptionLevel = await getUserSubscriptionLevel(userId);
