@@ -30,8 +30,8 @@ export default function Home() {
         <Image
           src={logo}
           alt="Client portal hero image"
-          width={400}
-          height={400}
+          width={350}
+          height={350}
           className="mx-auto -mt-10 mb-10"
         />
         <h1 className="text-5xl font-bold">
