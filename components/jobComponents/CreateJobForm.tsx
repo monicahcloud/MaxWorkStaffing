@@ -62,8 +62,11 @@ function CreateJobForm() {
       <form
         onSubmit={form.handleSubmit(onSubmit)}
         className="bg-muted p-8 rounded shadow-2xl">
-        <SectionTitle text="Add Job" subtext="" />
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 items-start">
+        <SectionTitle
+          text="Add Job"
+          subtext="Track your job applications by entering key details for each position you've applied to."
+        />
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 items-start mt-5">
           {/* position */}
           <CustomFormField name="position" control={form.control} />
           {/* company */}

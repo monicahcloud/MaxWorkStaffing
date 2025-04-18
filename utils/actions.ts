@@ -85,6 +85,9 @@ export async function getAllJobsAction({
         status: jobStatus,
       };
     }
+    const count = await prisma.job.count({
+      where: whereClause,
+    });
 
     const jobs: JobType[] = await prisma.job.findMany({
       where: whereClause,
@@ -93,7 +96,7 @@ export async function getAllJobsAction({
       },
     });
 
-    return { jobs, count: 0, page: 1, totalPages: 0 };
+    return { jobs, count, page: 1, totalPages: 0 };
   } catch (error) {
     console.error(error);
     return { jobs: [], count: 0, page: 1, totalPages: 0 };

@@ -27,12 +27,12 @@ export default function JobCard({ job }: { job: JobType }) {
         </CardHeader>
         <CardContent className=" gap-4">
           <JobInfo icon={<Briefcase />} text={job.mode} />
-          <CardDescription>
+          {/* <CardDescription>
             Lorem, ipsum dolor sit amet consectetur adipisicing elit. Facilis
             laboriosam porro, dicta sed inventore tenetur numquam ipsam in et
             laborum exercitationem, nulla quae fuga, aperiam nisi est corrupti
             provident labore?
-          </CardDescription>
+          </CardDescription> */}
           <Badge className="w-32  mx-50 justify-center mt-2">
             <JobInfo
               icon={<RadioTower className="w-4 h-4" />}

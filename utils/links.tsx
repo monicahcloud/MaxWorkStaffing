@@ -1,10 +1,11 @@
 "use client";
 
 import {
-  Blocks,
+  AppWindow,
   CreditCard,
   FilePen,
   HomeIcon,
+  Layers,
   List,
   Users2,
 } from "lucide-react";
@@ -41,13 +42,13 @@ const links: DashboardLinks[] = [
     id: nanoid(),
     label: "Add Job",
     href: "/addJob",
-    icon: <Blocks />,
+    icon: <Layers />,
   },
   {
     id: nanoid(),
     label: "All Jobs",
     href: "/jobs",
-    icon: <Blocks />,
+    icon: <AppWindow />,
   },
   {
     id: nanoid(),

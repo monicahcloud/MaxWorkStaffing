@@ -21,6 +21,7 @@ function DeleteJobBtn({ id }: { id: string }) {
   });
   return (
     <Button
+      variant="destructive"
       size="sm"
       disabled={isPending}
       onClick={() => {
