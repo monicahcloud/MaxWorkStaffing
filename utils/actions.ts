@@ -97,7 +97,7 @@ export async function getAllJobsAction({
         createdAt: "desc",
       },
     });
-    const count = await prisma.job.count({
+    const count: number = await prisma.job.count({
       where: whereClause,
     });
     const totalPages = Math.ceil(count / limit);
