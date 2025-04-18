@@ -1,6 +1,13 @@
 "use client";
 
-import { CreditCard, FilePen, HomeIcon, List, Users2 } from "lucide-react";
+import {
+  Blocks,
+  CreditCard,
+  FilePen,
+  HomeIcon,
+  List,
+  Users2,
+} from "lucide-react";
 import { nanoid } from "nanoid";
 type DashboardLinks = {
   id: string;
@@ -29,18 +36,18 @@ const links: DashboardLinks[] = [
     href: "/resumebuilder",
     icon: <FilePen />,
   },
-  // {
-  //   id: nanoid(),
-  //   label: "Job Tracker",
-  //   href: "/jobTracker",
-  //   icon: <Blocks />,
-  // },
-  // {
-  //   id: nanoid(),
-  //   label: "Jobs",
-  //   href: "/jobs",
-  //   icon: <Blocks />,
-  // },
+  {
+    id: nanoid(),
+    label: "Job Tracker",
+    href: "/jobs",
+    icon: <Blocks />,
+  },
+  {
+    id: nanoid(),
+    label: "Add Job",
+    href: "/addJob",
+    icon: <Blocks />,
+  },
   {
     id: nanoid(),
     label: "Interview Prep",

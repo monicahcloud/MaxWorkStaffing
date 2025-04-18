@@ -101,3 +101,24 @@ model UserSubscription {
 
   @@map("user_subscriptions")
 }
+
+model Job {
+  id        String   @id @default(uuid())
+  clerkId   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  position  String
+  company   String
+  location  String
+  mode      Mode
+  status    String
+}
+
+enum Mode {
+  FULLTIME
+  PARTTIME
+  INTERNSHIP
+  CONTRACT
+  APPRENTICESHIP
+  SEASONAL
+}
