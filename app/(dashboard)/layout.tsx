@@ -41,6 +41,7 @@ async function Dashboardlayout({ children }: PropsWithChildren) {
                   priority
                   width={400}
                   height={400}
+                  className="px-4 my-2"
                 />
               </Link>
             </div>
