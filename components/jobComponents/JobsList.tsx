@@ -18,8 +18,8 @@ function JobList() {
   });
   const jobs = data?.jobs || [];
   const count = data?.count || 0;
-  const page = data?.page || 0;
-  const totalPages = data?.totalPages || 0;
+  // const page = data?.page || 0;
+  // const totalPages = data?.totalPages || 0;
 
   if (isPending) return <h2 className="text-xl">Please Wait...</h2>;
 
