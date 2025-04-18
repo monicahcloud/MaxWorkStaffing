@@ -5,9 +5,11 @@ import { auth } from "@clerk/nextjs/server";
 import stripe from "@/lib/stripe";
 import Stripe from "stripe";
 import SectionTitle from "@/components/SectionTitle";
-import GetSubscriptionButton from "./GetSubscriptionButton";
-import ManageSubscriptionButton from "./ManageSubscriptionButton";
-import { formatDate } from "date-fns";
+import comingSoon from "../../../assets/comingsoon.jpg";
+import Image from "next/image";
+// import GetSubscriptionButton from "./GetSubscriptionButton";
+// import ManageSubscriptionButton from "./ManageSubscriptionButton";
+// import { formatDate } from "date-fns";
 
 export const metadata: Metadata = {
   title: "Billing",
@@ -37,8 +39,8 @@ async function BillingPage() {
           }`}
         />
       </div>
-
-      <div className="mt-5">
+      <Image src={comingSoon} alt="Coming Soon" />
+      {/* <div className="mt-5">
         {subscription ? (
           <>
             {subscription.stripeCancelAtPeriodEnd && (
@@ -55,7 +57,7 @@ async function BillingPage() {
         ) : (
           <GetSubscriptionButton />
         )}
-      </div>
+      </div> */}
     </main>
   );
 }
