@@ -1,5 +1,5 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
-// import { NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 const isPublicRoute = createRouteMatcher([
   "/",
@@ -8,8 +8,6 @@ const isPublicRoute = createRouteMatcher([
   "/sso-callback(.*)",
   "/api/stripe-webhook",
   "/api/clerk-webhook(.*)",
-  "maxworkstaffing.com",
-  "www.maxworkstaffing.com",
 ]); // Allow "/sign-in" to prevent redirect loops
 
 export default clerkMiddleware(async (auth, req) => {
@@ -28,10 +26,9 @@ export default clerkMiddleware(async (auth, req) => {
     await auth.protect();
   }
   // Removed the return of NextRequest as there's no need to return anything if the request is valid.
-});
 
-//   return NextResponse.next(); // Continue request as normal
-// });
+  return NextResponse.next(); // Continue request as normal
+});
 
 export const config = {
   matcher: ["/((?!_next|.*\\..*).*)"], // Apply middleware to all routes except static files
