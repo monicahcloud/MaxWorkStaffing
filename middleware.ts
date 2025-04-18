@@ -4,10 +4,12 @@ import { NextResponse } from "next/server";
 const isPublicRoute = createRouteMatcher([
   "/",
   "/sign-in(.*)",
+  "/sign-up(.*)",
   "/sign-out(.*)",
   "/sso-callback(.*)",
   "/api/stripe-webhook",
   "/api/clerk-webhook(.*)",
+  "/verify",
 ]); // Allow "/sign-in" to prevent redirect loops
 
 export default clerkMiddleware(async (auth, req) => {
