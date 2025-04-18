@@ -1,6 +1,7 @@
 export const dynamic = "force-dynamic";
 import Image from "next/image";
 import logo from "../../../assets/landingpage.png";
+import StatsPage from "../stats/page";
 
 function page() {
   return (
@@ -24,6 +25,7 @@ function page() {
           className="mx-auto md:ms-0 rounded-2xl shadow-lg"
         />
       </div>
+      <StatsPage />
     </main>
   );
 }
