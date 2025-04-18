@@ -4,7 +4,7 @@ import { getAllJobsAction } from "@/utils/actions";
 import { useQuery } from "@tanstack/react-query";
 import JobCard from "./JobCard";
 import ComplexButtonContainer from "./ComplexButtonContainer";
-// import ButtonContainer from "./ButtonContainer";
+
 function JobList() {
   const searchParams = useSearchParams();
   const search = searchParams.get("search") || "";

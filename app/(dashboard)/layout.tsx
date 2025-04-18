@@ -34,7 +34,13 @@ async function Dashboardlayout({ children }: PropsWithChildren) {
           <div className="flex flex-col max-h-screen h-full gap-2">
             <div className="h-14 flex items-center border-b px-4 lg:h-[60px] lg:px-6">
               <Link href="/home" className="flex items-center gap-2">
-                <Image src={Logo} alt="Logo" priority />
+                <Image
+                  src={Logo}
+                  alt="Logo"
+                  priority
+                  width={400}
+                  height={400}
+                />
               </Link>
             </div>
             <div className="flex-1">
