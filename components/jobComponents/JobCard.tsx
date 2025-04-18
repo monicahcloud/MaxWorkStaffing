@@ -28,12 +28,14 @@ export default function JobCard({ job }: { job: JobType }) {
           <CardTitle className="capitalize text-2xl">{job.position}</CardTitle>
         </CardHeader> */}
         <CardHeader>
-          <CardTitle>{job.position}</CardTitle>
-          <CardDescription>{job.company}</CardDescription>
+          <CardTitle className="capitalize text-2xl">{job.position}</CardTitle>
+          <CardDescription className="uppercase text-xl font-bold">
+            {job.company}
+          </CardDescription>
         </CardHeader>
 
         <Separator />
-        <CardContent className="mt-4 grid grid-cols-2 gap-4">
+        <CardContent className="mt-1 grid grid-cols-2 gap-4">
           <JobInfo icon={<Briefcase />} text={job.mode} />
           <JobInfo icon={<MapPin />} text={job.location} />
           <JobInfo icon={<CalendarDays />} text={date} />
@@ -43,7 +45,7 @@ export default function JobCard({ job }: { job: JobType }) {
             laborum exercitationem, nulla quae fuga, aperiam nisi est corrupti
             provident labore?
           </CardDescription> */}
-          <Badge className="w-32  mx-50 justify-center mt-2">
+          <Badge className="w-32 justify-center">
             <JobInfo
               icon={<RadioTower className="w-4 h-4" />}
               text={job.status}
