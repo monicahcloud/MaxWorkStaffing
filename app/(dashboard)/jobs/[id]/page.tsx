@@ -7,12 +7,7 @@ import {
   QueryClient,
 } from "@tanstack/react-query";
 
-export default async function JobDetailPage(
-  props: {
-    params: Promise<{ id: string }>;
-  }
-) {
-  const params = await props.params;
+async function JobDetailPage({ params }: { params: { id: string } }) {
   const queryClient = new QueryClient();
 
   await queryClient.prefetchQuery({
@@ -26,3 +21,4 @@ export default async function JobDetailPage(
     </HydrationBoundary>
   );
 }
+export default JobDetailPage;

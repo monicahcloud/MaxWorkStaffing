@@ -145,42 +145,23 @@ export async function updateJobAction(
   }
 }
 
-// export async function getSingleJobAction(id: string): Promise<JobType | null> {
-//   let job: JobType | null = null;
-//   const userId = await authenticateAndRedirect();
-
-//   try {
-//     job = await prisma.job.findUnique({
-//       where: {
-//         id,
-//         clerkId: userId,
-//       },
-//     });
-//   } catch (error) {
-//     console.error(error);
-//     job = null;
-//   }
-//   if (!job) {
-//     redirect("/jobs");
-//   }
-//   return job;
-// }
 export async function getSingleJobAction(id: string): Promise<JobType | null> {
+  let job: JobType | null = null;
   const userId = await authenticateAndRedirect();
 
   try {
-    const job = await prisma.job.findUnique({
+    job = await prisma.job.findUnique({
       where: {
         id,
         clerkId: userId,
       },
     });
-
-    return job; // return null if not found
   } catch (error) {
     console.error(error);
-    return null;
-  } finally {
-    console.log(`🔍 getSingleJobAction completed for jobId: ${id}`);
+    job = null;
   }
+  if (!job) {
+    redirect("/jobs");
+  }
+  return job;
 }
