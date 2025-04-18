@@ -17,6 +17,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import CustomFormSelect, { CustomFormField } from "./FormComponentFile";
 import { createJobAction } from "@/utils/actions";
+import SectionTitle from "./SectionTitle";
 
 function CreateJobForm() {
   // 1. Define your form.
@@ -60,7 +61,8 @@ function CreateJobForm() {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="bg-muted p-8 rounded">
+        className="bg-muted p-8 rounded shadow-2xl">
+        <SectionTitle text="Add Job" subtext="" />
         <h2 className="capitalize font-semibold text-4xl mb-6">add job</h2>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 items-start">
           {/* position */}

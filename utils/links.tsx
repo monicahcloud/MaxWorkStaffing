@@ -36,16 +36,17 @@ const links: DashboardLinks[] = [
     href: "/resumebuilder",
     icon: <FilePen />,
   },
-  {
-    id: nanoid(),
-    label: "Job Tracker",
-    href: "/jobs",
-    icon: <Blocks />,
-  },
+
   {
     id: nanoid(),
     label: "Add Job",
     href: "/addJob",
+    icon: <Blocks />,
+  },
+  {
+    id: nanoid(),
+    label: "All Jobs",
+    href: "/jobs",
     icon: <Blocks />,
   },
   {
