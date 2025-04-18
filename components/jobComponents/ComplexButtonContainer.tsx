@@ -132,11 +132,3 @@
 //   );
 // }
 // export default ButtonContainer;
-
-import React from "react";
-
-function ComplexButtonContainer() {
-  return <div>ComplexButtonContainer</div>;
-}
-
-export default ComplexButtonContainer;
