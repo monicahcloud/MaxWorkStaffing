@@ -31,7 +31,7 @@ async function BillingPage() {
     : null;
   return (
     <main className="">
-      <div className="mx-auto text-center justify-center item-center">
+      <div>
         <SectionTitle
           text="Billing"
           subtext={`Subscription Level: ${
@@ -40,10 +40,11 @@ async function BillingPage() {
         />
       </div>
       <Image
+        className="mx-auto text-center justify-center item-center"
         src={comingSoon}
         alt="Coming Soon"
-        width={300}
-        height={300}
+        width={600}
+        height={600}
         priority
       />
       {/* <div className="mt-5">
