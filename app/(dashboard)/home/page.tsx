@@ -2,7 +2,7 @@ export const dynamic = "force-dynamic";
 import Image from "next/image";
 import logo from "../../../assets/landingpage.png";
 
-function page() {
+function HomePage() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center gap-6 -mt-30">
       <div className="max-w-prose space-y-3 text-center">
@@ -28,4 +28,4 @@ function page() {
   );
 }
 
-export default page;
+export default HomePage;

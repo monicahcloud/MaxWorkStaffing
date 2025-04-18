@@ -3,7 +3,7 @@
     "position": "Account Coordinator",
     "company": "Kwimbee",
     "location": "Ardazubre",
-    "status": "pending",
+    "status": "Pending",
     "mode": "PARTTIME",
     "createdAt": "2024-09-20T12:05:50Z"
   },
@@ -11,7 +11,7 @@
     "position": "Legal Assistant",
     "company": "Thoughtstorm",
     "location": "Rawa Mazowiecka",
-    "status": "declined",
+    "status": "Declined",
     "mode": "FULLTIME",
     "createdAt": "2024-06-19T00:43:25Z"
   },
@@ -19,7 +19,7 @@
     "position": "Software Consultant",
     "company": "Camido",
     "location": "Dahu Satu",
-    "status": "declined",
+    "status": "Declined",
     "mode": "FULLTIME",
     "createdAt": "2024-06-17T15:57:54Z"
   },
@@ -27,7 +27,7 @@
     "position": "Engineer IV",
     "company": "Eayo",
     "location": "Viga",
-    "status": "declined",
+    "status": "Declined",
     "mode": "SEASONAL",
     "createdAt": "2024-08-16T12:02:05Z"
   },
@@ -35,7 +35,7 @@
     "position": "General Manager",
     "company": "Skyble",
     "location": "Banyo",
-    "status": "interview",
+    "status": "Interview",
     "mode": "SEASONAL",
     "createdAt": "2025-04-06T04:07:06Z"
   },
@@ -43,7 +43,7 @@
     "position": "Dental Hygienist",
     "company": "Browsedrive",
     "location": "Taimaman",
-    "status": "hired",
+    "status": "Hired",
     "mode": "PARTTIME",
     "createdAt": "2024-07-06T05:40:11Z"
   },
@@ -51,7 +51,7 @@
     "position": "Information Systems Manager",
     "company": "Katz",
     "location": "Koundara",
-    "status": "offer extended",
+    "status": "Offered",
     "mode": "APPRENTICESHIP",
     "createdAt": "2024-12-28T09:01:49Z"
   },
@@ -67,7 +67,7 @@
     "position": "Information Systems Manager",
     "company": "InnoZ",
     "location": "Kuidou",
-    "status": "hired",
+    "status": "Hired",
     "mode": "PARTTIME",
     "createdAt": "2024-09-10T21:04:37Z"
   },
@@ -75,7 +75,7 @@
     "position": "Technical Writer",
     "company": "Fanoodle",
     "location": "Jiuxian",
-    "status": "hired",
+    "status": "Hired",
     "mode": "SEASONAL",
     "createdAt": "2024-07-18T01:33:52Z"
   },
@@ -83,7 +83,7 @@
     "position": "Physical Therapy Assistant",
     "company": "Mita",
     "location": "Bitaogan",
-    "status": "hired",
+    "status": "Hired",
     "mode": "PARTTIME",
     "createdAt": "2024-07-17T11:53:52Z"
   },
@@ -91,7 +91,7 @@
     "position": "Civil Engineer",
     "company": "Meeveo",
     "location": "Afonsoeiro",
-    "status": "offer extended",
+    "status": "Offered",
     "mode": "SEASONAL",
     "createdAt": "2024-08-02T09:28:09Z"
   },
@@ -99,7 +99,7 @@
     "position": "Senior Editor",
     "company": "Browseblab",
     "location": "Satipo",
-    "status": "hired",
+    "status": "Hired",
     "mode": "FULLTIME",
     "createdAt": "2025-04-05T19:24:01Z"
   },
@@ -107,7 +107,7 @@
     "position": "Marketing Assistant",
     "company": "Twiyo",
     "location": "Xipingle",
-    "status": "interview",
+    "status": "Interview",
     "mode": "INTERNSHIP",
     "createdAt": "2025-03-29T23:22:07Z"
   },
@@ -115,7 +115,7 @@
     "position": "Structural Analysis Engineer",
     "company": "Fadeo",
     "location": "Portland",
-    "status": "offer extended",
+    "status": "Offered",
     "mode": "FULLTIME",
     "createdAt": "2024-11-09T03:09:44Z"
   },
@@ -123,7 +123,7 @@
     "position": "Business Systems Development Analyst",
     "company": "Ntags",
     "location": "Peishe",
-    "status": "offer extended",
+    "status": "Offered",
     "mode": "SEASONAL",
     "createdAt": "2025-01-07T11:43:30Z"
   },
@@ -139,7 +139,7 @@
     "position": "Media Manager III",
     "company": "Gigabox",
     "location": "Poputnaya",
-    "status": "declined",
+    "status": "Declined",
     "mode": "APPRENTICESHIP",
     "createdAt": "2024-11-04T22:26:02Z"
   },
@@ -147,7 +147,7 @@
     "position": "Occupational Therapist",
     "company": "Kazio",
     "location": "Alexandria",
-    "status": "pending",
+    "status": "Pending",
     "mode": "CONTRACT",
     "createdAt": "2024-06-11T07:09:25Z"
   },
@@ -155,7 +155,7 @@
     "position": "Tax Accountant",
     "company": "Zoomzone",
     "location": "Milwaukee",
-    "status": "interview",
+    "status": "Interview",
     "mode": "PARTTIME",
     "createdAt": "2024-08-17T08:31:02Z"
   },
@@ -163,7 +163,7 @@
     "position": "Compensation Analyst",
     "company": "Jayo",
     "location": "Aktau",
-    "status": "pending",
+    "status": "Pending",
     "mode": "INTERNSHIP",
     "createdAt": "2024-05-14T23:31:16Z"
   },
@@ -171,7 +171,7 @@
     "position": "Environmental Tech",
     "company": "Quinu",
     "location": "Lisala",
-    "status": "hired",
+    "status": "Hired",
     "mode": "INTERNSHIP",
     "createdAt": "2025-03-07T02:12:28Z"
   },
@@ -179,7 +179,7 @@
     "position": "Senior Financial Analyst",
     "company": "Meedoo",
     "location": "Ananea",
-    "status": "interview",
+    "status": "Interview",
     "mode": "INTERNSHIP",
     "createdAt": "2024-10-09T08:58:19Z"
   },
@@ -187,7 +187,7 @@
     "position": "Information Systems Manager",
     "company": "Tagchat",
     "location": "Mikulášovice",
-    "status": "offer extended",
+    "status": "Offered",
     "mode": "INTERNSHIP",
     "createdAt": "2024-12-04T18:46:21Z"
   },
@@ -195,7 +195,7 @@
     "position": "Registered Nurse",
     "company": "Jabbersphere",
     "location": "Telouet",
-    "status": "declined",
+    "status": "Declined",
     "mode": "CONTRACT",
     "createdAt": "2025-01-25T09:49:52Z"
   },
@@ -203,7 +203,7 @@
     "position": "Civil Engineer",
     "company": "Feedmix",
     "location": "Juvisy-sur-Orge",
-    "status": "interview",
+    "status": "Interview",
     "mode": "PARTTIME",
     "createdAt": "2024-08-29T02:19:28Z"
   },
@@ -211,7 +211,7 @@
     "position": "Health Coach III",
     "company": "Chatterbridge",
     "location": "Maythalūn",
-    "status": "hired",
+    "status": "Hired",
     "mode": "INTERNSHIP",
     "createdAt": "2025-04-06T14:03:02Z"
   },
@@ -219,7 +219,7 @@
     "position": "Senior Quality Engineer",
     "company": "Fanoodle",
     "location": "Zhongzhang",
-    "status": "pending",
+    "status": "Pending",
     "mode": "SEASONAL",
     "createdAt": "2024-07-28T22:25:54Z"
   },
@@ -227,7 +227,7 @@
     "position": "Sales Representative",
     "company": "Aivee",
     "location": "Fanrong",
-    "status": "hired",
+    "status": "Hired",
     "mode": "SEASONAL",
     "createdAt": "2024-11-17T15:33:38Z"
   },
@@ -235,7 +235,7 @@
     "position": "Data Coordinator",
     "company": "Rhyloo",
     "location": "Chernomorets",
-    "status": "offer extended",
+    "status": "Offered",
     "mode": "PARTTIME",
     "createdAt": "2024-10-05T00:57:52Z"
   },
@@ -243,7 +243,7 @@
     "position": "Research Associate",
     "company": "Dabjam",
     "location": "Kyaikto",
-    "status": "offer extended",
+    "status": "Offered",
     "mode": "SEASONAL",
     "createdAt": "2024-05-29T16:58:28Z"
   },
@@ -251,7 +251,7 @@
     "position": "Quality Engineer",
     "company": "Vidoo",
     "location": "Toulouse",
-    "status": "pending",
+    "status": "Pending",
     "mode": "SEASONAL",
     "createdAt": "2024-06-05T02:21:23Z"
   },
@@ -259,7 +259,7 @@
     "position": "Pharmacist",
     "company": "Avamba",
     "location": "Ostrów Lubelski",
-    "status": "offer extended",
+    "status": "Offered",
     "mode": "CONTRACT",
     "createdAt": "2024-05-20T16:55:54Z"
   },
@@ -267,7 +267,7 @@
     "position": "GIS Technical Architect",
     "company": "InnoZ",
     "location": "Kahama",
-    "status": "pending",
+    "status": "Pending",
     "mode": "FULLTIME",
     "createdAt": "2025-02-06T08:51:39Z"
   },
@@ -275,7 +275,7 @@
     "position": "Compensation Analyst",
     "company": "Voomm",
     "location": "Nowosielce-Gniewosz",
-    "status": "pending",
+    "status": "Pending",
     "mode": "FULLTIME",
     "createdAt": "2024-09-28T07:30:36Z"
   },
@@ -283,7 +283,7 @@
     "position": "Database Administrator IV",
     "company": "Browsetype",
     "location": "Beirut",
-    "status": "offer extended",
+    "status": "Offered",
     "mode": "SEASONAL",
     "createdAt": "2025-01-10T16:54:46Z"
   },
@@ -291,7 +291,7 @@
     "position": "Librarian",
     "company": "Yodo",
     "location": "Tiaodeng",
-    "status": "pending",
+    "status": "Pending",
     "mode": "INTERNSHIP",
     "createdAt": "2025-02-27T03:54:04Z"
   },
@@ -299,7 +299,7 @@
     "position": "Paralegal",
     "company": "Avaveo",
     "location": "Lupao",
-    "status": "declined",
+    "status": "Declined",
     "mode": "APPRENTICESHIP",
     "createdAt": "2024-08-25T01:43:41Z"
   },
@@ -307,7 +307,7 @@
     "position": "Compensation Analyst",
     "company": "Topicware",
     "location": "Río Cauto",
-    "status": "interview",
+    "status": "Interview",
     "mode": "INTERNSHIP",
     "createdAt": "2024-07-15T14:32:33Z"
   },
@@ -315,7 +315,7 @@
     "position": "Staff Accountant I",
     "company": "Dabvine",
     "location": "Slobodka",
-    "status": "pending",
+    "status": "Pending",
     "mode": "CONTRACT",
     "createdAt": "2025-01-09T07:58:56Z"
   },
@@ -323,7 +323,7 @@
     "position": "Web Designer IV",
     "company": "Muxo",
     "location": "Timpas",
-    "status": "declined",
+    "status": "Declined",
     "mode": "FULLTIME",
     "createdAt": "2025-02-11T18:45:29Z"
   },
@@ -331,7 +331,7 @@
     "position": "Electrical Engineer",
     "company": "Browsedrive",
     "location": "Croix",
-    "status": "pending",
+    "status": "Pending",
     "mode": "APPRENTICESHIP",
     "createdAt": "2024-07-10T16:59:11Z"
   },
@@ -339,7 +339,7 @@
     "position": "Structural Analysis Engineer",
     "company": "Shuffledrive",
     "location": "Irshava",
-    "status": "hired",
+    "status": "Hired",
     "mode": "PARTTIME",
     "createdAt": "2024-09-21T22:10:50Z"
   },
@@ -363,7 +363,7 @@
     "position": "Senior Sales Associate",
     "company": "Meeveo",
     "location": "Hashaat",
-    "status": "interview",
+    "status": "Interview",
     "mode": "CONTRACT",
     "createdAt": "2024-12-09T18:44:31Z"
   },
@@ -371,7 +371,7 @@
     "position": "Executive Secretary",
     "company": "Eabox",
     "location": "Lumil",
-    "status": "pending",
+    "status": "Pending",
     "mode": "INTERNSHIP",
     "createdAt": "2024-07-28T12:45:06Z"
   },
@@ -379,7 +379,7 @@
     "position": "Occupational Therapist",
     "company": "Mynte",
     "location": "Văn Giang",
-    "status": "declined",
+    "status": "Declined",
     "mode": "PARTTIME",
     "createdAt": "2024-10-06T07:29:59Z"
   },
@@ -387,7 +387,7 @@
     "position": "VP Sales",
     "company": "Kimia",
     "location": "Las Lomas",
-    "status": "declined",
+    "status": "Declined",
     "mode": "INTERNSHIP",
     "createdAt": "2024-04-23T01:37:46Z"
   },
@@ -395,7 +395,7 @@
     "position": "VP Marketing",
     "company": "Riffpedia",
     "location": "Stocksund",
-    "status": "hired",
+    "status": "Hired",
     "mode": "INTERNSHIP",
     "createdAt": "2024-08-14T10:18:06Z"
   },
@@ -403,7 +403,7 @@
     "position": "Sales Representative",
     "company": "Latz",
     "location": "Chesapeake",
-    "status": "interview",
+    "status": "Interview",
     "mode": "SEASONAL",
     "createdAt": "2024-05-01T11:10:03Z"
   },
@@ -411,7 +411,7 @@
     "position": "Legal Assistant",
     "company": "Avavee",
     "location": "Cervantes",
-    "status": "interview",
+    "status": "Interview",
     "mode": "APPRENTICESHIP",
     "createdAt": "2025-02-07T20:28:28Z"
   },
@@ -419,7 +419,7 @@
     "position": "Computer Systems Analyst IV",
     "company": "Youopia",
     "location": "Abbotsford",
-    "status": "declined",
+    "status": "Declined",
     "mode": "FULLTIME",
     "createdAt": "2024-09-21T14:30:30Z"
   },
@@ -427,7 +427,7 @@
     "position": "Research Associate",
     "company": "Jaxnation",
     "location": "Lindavista",
-    "status": "interview",
+    "status": "Interview",
     "mode": "FULLTIME",
     "createdAt": "2024-12-15T15:04:41Z"
   },
@@ -435,7 +435,7 @@
     "position": "Product Engineer",
     "company": "Vimbo",
     "location": "Longquan",
-    "status": "interview",
+    "status": "Interview",
     "mode": "APPRENTICESHIP",
     "createdAt": "2024-08-05T09:02:38Z"
   },
@@ -443,7 +443,7 @@
     "position": "Geological Engineer",
     "company": "Buzzbean",
     "location": "Cengjia",
-    "status": "hired",
+    "status": "Hired",
     "mode": "APPRENTICESHIP",
     "createdAt": "2024-10-28T10:59:08Z"
   },
@@ -459,7 +459,7 @@
     "position": "Senior Cost Accountant",
     "company": "Meevee",
     "location": "Côn Sơn",
-    "status": "pending",
+    "status": "Pending",
     "mode": "CONTRACT",
     "createdAt": "2024-08-24T19:32:29Z"
   },
@@ -475,7 +475,7 @@
     "position": "Executive Secretary",
     "company": "LiveZ",
     "location": "Rublëvo",
-    "status": "interview",
+    "status": "Interview",
     "mode": "SEASONAL",
     "createdAt": "2024-05-17T23:37:07Z"
   },
@@ -483,7 +483,7 @@
     "position": "Technical Writer",
     "company": "Topiclounge",
     "location": "Vigan",
-    "status": "offer extended",
+    "status": "Offered",
     "mode": "PARTTIME",
     "createdAt": "2024-05-05T16:10:44Z"
   },
@@ -491,7 +491,7 @@
     "position": "Financial Advisor",
     "company": "Abata",
     "location": "Boshkengash",
-    "status": "declined",
+    "status": "Declined",
     "mode": "CONTRACT",
     "createdAt": "2025-04-11T01:56:33Z"
   },
@@ -507,7 +507,7 @@
     "position": "Assistant Professor",
     "company": "Vinder",
     "location": "Kardítsa",
-    "status": "interview",
+    "status": "Interview",
     "mode": "INTERNSHIP",
     "createdAt": "2025-04-09T03:12:57Z"
   },
@@ -523,7 +523,7 @@
     "position": "Mechanical Systems Engineer",
     "company": "Thoughtstorm",
     "location": "Atins",
-    "status": "interview",
+    "status": "Interview",
     "mode": "PARTTIME",
     "createdAt": "2024-06-30T03:43:02Z"
   },
@@ -531,7 +531,7 @@
     "position": "Computer Systems Analyst IV",
     "company": "Brainverse",
     "location": "Enschede",
-    "status": "pending",
+    "status": "Pending",
     "mode": "APPRENTICESHIP",
     "createdAt": "2025-04-16T02:27:22Z"
   },
@@ -539,7 +539,7 @@
     "position": "Environmental Specialist",
     "company": "Livefish",
     "location": "Hyattsville",
-    "status": "declined",
+    "status": "Declined",
     "mode": "CONTRACT",
     "createdAt": "2025-01-30T03:18:02Z"
   },
@@ -547,7 +547,7 @@
     "position": "Registered Nurse",
     "company": "Zoozzy",
     "location": "Mombetsu",
-    "status": "hired",
+    "status": "Hired",
     "mode": "SEASONAL",
     "createdAt": "2024-07-05T08:44:47Z"
   },
@@ -555,7 +555,7 @@
     "position": "Developer III",
     "company": "Riffwire",
     "location": "Hejiayan",
-    "status": "offer extended",
+    "status": "Offered",
     "mode": "FULLTIME",
     "createdAt": "2024-08-01T06:26:30Z"
   },
@@ -563,7 +563,7 @@
     "position": "Occupational Therapist",
     "company": "Feedfish",
     "location": "Muaraenim",
-    "status": "hired",
+    "status": "Hired",
     "mode": "APPRENTICESHIP",
     "createdAt": "2024-10-03T19:03:27Z"
   },
@@ -571,7 +571,7 @@
     "position": "Systems Administrator IV",
     "company": "Divape",
     "location": "Taber",
-    "status": "interview",
+    "status": "Interview",
     "mode": "SEASONAL",
     "createdAt": "2024-09-23T09:49:04Z"
   },
@@ -579,7 +579,7 @@
     "position": "Editor",
     "company": "Chatterbridge",
     "location": "Gayamsari",
-    "status": "declined",
+    "status": "Declined",
     "mode": "FULLTIME",
     "createdAt": "2025-03-27T21:50:07Z"
   },
@@ -587,7 +587,7 @@
     "position": "Pharmacist",
     "company": "Photofeed",
     "location": "Huating",
-    "status": "interview",
+    "status": "Interview",
     "mode": "PARTTIME",
     "createdAt": "2024-10-28T14:07:26Z"
   },
@@ -595,7 +595,7 @@
     "position": "Help Desk Technician",
     "company": "Feednation",
     "location": "Shahrak",
-    "status": "interview",
+    "status": "Interview",
     "mode": "INTERNSHIP",
     "createdAt": "2024-06-25T01:19:51Z"
   },
@@ -603,7 +603,7 @@
     "position": "Health Coach III",
     "company": "Lajo",
     "location": "Salto de Pirapora",
-    "status": "interview",
+    "status": "Interview",
     "mode": "FULLTIME",
     "createdAt": "2024-08-31T11:13:30Z"
   },
@@ -611,7 +611,7 @@
     "position": "Research Associate",
     "company": "Gabtune",
     "location": "Crépy-en-Valois",
-    "status": "pending",
+    "status": "Pending",
     "mode": "INTERNSHIP",
     "createdAt": "2025-02-17T21:17:20Z"
   },
@@ -619,7 +619,7 @@
     "position": "Programmer II",
     "company": "Wikido",
     "location": "Yubilyeyny",
-    "status": "interview",
+    "status": "Interview",
     "mode": "CONTRACT",
     "createdAt": "2025-03-03T03:45:56Z"
   },
@@ -627,7 +627,7 @@
     "position": "VP Quality Control",
     "company": "Photobug",
     "location": "Ndofane",
-    "status": "offer extended",
+    "status": "Offered",
     "mode": "APPRENTICESHIP",
     "createdAt": "2024-05-21T02:34:15Z"
   },
@@ -643,7 +643,7 @@
     "position": "GIS Technical Architect",
     "company": "Jabberbean",
     "location": "Roubaix",
-    "status": "offer extended",
+    "status": "Offered",
     "mode": "FULLTIME",
     "createdAt": "2024-11-22T06:46:04Z"
   },
@@ -651,7 +651,7 @@
     "position": "Chemical Engineer",
     "company": "Topicblab",
     "location": "Guanting",
-    "status": "declined",
+    "status": "Declined",
     "mode": "FULLTIME",
     "createdAt": "2024-08-03T09:29:22Z"
   },
@@ -659,7 +659,7 @@
     "position": "Financial Advisor",
     "company": "Mybuzz",
     "location": "Gibara",
-    "status": "declined",
+    "status": "Declined",
     "mode": "INTERNSHIP",
     "createdAt": "2024-09-05T15:52:56Z"
   },
@@ -667,7 +667,7 @@
     "position": "Registered Nurse",
     "company": "Flashdog",
     "location": "Skuratovskiy",
-    "status": "declined",
+    "status": "Declined",
     "mode": "APPRENTICESHIP",
     "createdAt": "2024-12-31T13:02:33Z"
   },
@@ -675,7 +675,7 @@
     "position": "Structural Engineer",
     "company": "Voomm",
     "location": "Ciulu",
-    "status": "hired",
+    "status": "Hired",
     "mode": "INTERNSHIP",
     "createdAt": "2024-10-30T03:30:14Z"
   },
@@ -683,7 +683,7 @@
     "position": "Operator",
     "company": "Eidel",
     "location": "Kebon Tengah",
-    "status": "offer extended",
+    "status": "Offered",
     "mode": "APPRENTICESHIP",
     "createdAt": "2024-09-11T02:56:07Z"
   },
@@ -691,7 +691,7 @@
     "position": "Assistant Professor",
     "company": "Yacero",
     "location": "Charleville-Mézières",
-    "status": "offer extended",
+    "status": "Offered",
     "mode": "INTERNSHIP",
     "createdAt": "2024-05-14T07:26:59Z"
   },
@@ -699,7 +699,7 @@
     "position": "Environmental Specialist",
     "company": "Kanoodle",
     "location": "Sukamulia",
-    "status": "offer extended",
+    "status": "Offered",
     "mode": "APPRENTICESHIP",
     "createdAt": "2025-03-06T11:09:13Z"
   },
@@ -715,7 +715,7 @@
     "position": "Financial Advisor",
     "company": "Gigabox",
     "location": "Anuchino",
-    "status": "pending",
+    "status": "Pending",
     "mode": "PARTTIME",
     "createdAt": "2024-09-02T16:44:25Z"
   },
@@ -723,7 +723,7 @@
     "position": "Clinical Specialist",
     "company": "Yombu",
     "location": "Villa del Rosario",
-    "status": "hired",
+    "status": "Hired",
     "mode": "FULLTIME",
     "createdAt": "2024-11-12T22:50:11Z"
   },
@@ -731,7 +731,7 @@
     "position": "Account Representative II",
     "company": "Oyope",
     "location": "Talata Mafara",
-    "status": "offer extended",
+    "status": "Offered",
     "mode": "INTERNSHIP",
     "createdAt": "2024-12-17T11:14:59Z"
   },
@@ -739,7 +739,7 @@
     "position": "Geological Engineer",
     "company": "Zoomcast",
     "location": "Pinglumiao",
-    "status": "offer extended",
+    "status": "Offered",
     "mode": "SEASONAL",
     "createdAt": "2024-07-29T10:07:19Z"
   },
@@ -747,7 +747,7 @@
     "position": "Staff Scientist",
     "company": "Buzzshare",
     "location": "Boquira",
-    "status": "pending",
+    "status": "Pending",
     "mode": "INTERNSHIP",
     "createdAt": "2024-08-04T02:34:45Z"
   },
@@ -755,7 +755,7 @@
     "position": "Research Assistant III",
     "company": "Skimia",
     "location": "Lutun",
-    "status": "offer extended",
+    "status": "Offered",
     "mode": "APPRENTICESHIP",
     "createdAt": "2024-12-19T04:24:52Z"
   },
@@ -763,7 +763,7 @@
     "position": "Nurse Practicioner",
     "company": "Babbleopia",
     "location": "Ilanskiy",
-    "status": "declined",
+    "status": "Declined",
     "mode": "PARTTIME",
     "createdAt": "2024-11-04T08:42:00Z"
   },
@@ -771,7 +771,7 @@
     "position": "Senior Financial Analyst",
     "company": "Voomm",
     "location": "Taisen-ri",
-    "status": "hired",
+    "status": "Hired",
     "mode": "SEASONAL",
     "createdAt": "2025-02-04T16:13:57Z"
   },
@@ -779,7 +779,7 @@
     "position": "Recruiter",
     "company": "Edgepulse",
     "location": "Libei",
-    "status": "interview",
+    "status": "Interview",
     "mode": "SEASONAL",
     "createdAt": "2024-06-28T01:18:46Z"
   },
@@ -787,7 +787,7 @@
     "position": "Payment Adjustment Coordinator",
     "company": "Oyoba",
     "location": "Mlanggeng",
-    "status": "pending",
+    "status": "Pending",
     "mode": "INTERNSHIP",
     "createdAt": "2024-07-27T20:41:17Z"
   },
@@ -795,7 +795,7 @@
     "position": "Professor",
     "company": "Skimia",
     "location": "Sarilhos Grandes",
-    "status": "pending",
+    "status": "Pending",
     "mode": "CONTRACT",
     "createdAt": "2024-07-08T01:23:53Z"
   }

@@ -45,7 +45,7 @@ export default function JobCard({ job }: { job: JobType }) {
             laborum exercitationem, nulla quae fuga, aperiam nisi est corrupti
             provident labore?
           </CardDescription> */}
-          <Badge className="w-32 justify-center">
+          <Badge className="inline-flex items-center px-3 py-1">
             <JobInfo
               icon={<RadioTower className="w-4 h-4" />}
               text={job.status}
