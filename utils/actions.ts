@@ -180,5 +180,7 @@ export async function getSingleJobAction(id: string): Promise<JobType | null> {
   } catch (error) {
     console.error(error);
     return null;
+  } finally {
+    console.log(`🔍 getSingleJobAction completed for jobId: ${id}`);
   }
 }

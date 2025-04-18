@@ -1,7 +1,6 @@
-// app/(dashboard)/jobs/[id]/page.tsx
-import { redirect } from "next/navigation";
 import EditJobForm from "@/components/jobComponents/EditJobForm";
 import { getSingleJobAction } from "@/utils/actions";
+
 import {
   dehydrate,
   HydrationBoundary,
@@ -15,14 +14,10 @@ export default async function JobDetailPage({
 }) {
   const queryClient = new QueryClient();
 
-  const job = await getSingleJobAction(params.id);
-
-  // ✅ Safe to use redirect here
-  if (!job) {
-    redirect("/jobs");
-  }
-
-  queryClient.setQueryData(["job", params.id], job);
+  await queryClient.prefetchQuery({
+    queryKey: ["job", params.id],
+    queryFn: () => getSingleJobAction(params.id),
+  });
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
