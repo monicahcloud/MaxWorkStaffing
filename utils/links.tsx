@@ -2,6 +2,7 @@
 
 import {
   AppWindow,
+  AreaChart,
   CreditCard,
   FilePen,
   HomeIcon,
@@ -49,6 +50,12 @@ const links: DashboardLinks[] = [
     label: "All Jobs",
     href: "/jobs",
     icon: <AppWindow />,
+  },
+  {
+    id: nanoid(),
+    label: "Stats",
+    href: "/stats",
+    icon: <AreaChart />,
   },
   {
     id: nanoid(),
