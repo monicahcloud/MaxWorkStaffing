@@ -79,7 +79,7 @@ export async function getAllJobsAction({
         ],
       };
     }
-    if (jobStatus && jobStatus !== "all") {
+    if (jobStatus && jobStatus !== "All") {
       whereClause = {
         ...whereClause,
         status: jobStatus,
@@ -88,9 +88,11 @@ export async function getAllJobsAction({
     const count = await prisma.job.count({
       where: whereClause,
     });
-
+    //const skip = (page - 1) * limit;
     const jobs: JobType[] = await prisma.job.findMany({
       where: whereClause,
+      //   skip,
+      //   take: limit,
       orderBy: {
         createdAt: "desc",
       },
