@@ -16,7 +16,7 @@ import { Input } from "@/components/ui/input";
 function SearchContainer() {
   const searchParams = useSearchParams();
   const search = searchParams.get("search") || "";
-  const jobStatusParam = searchParams.get("jobStatus") || "All";
+  const jobStatusParam = searchParams.get("jobStatus") || "";
   const router = useRouter();
   const pathname = usePathname();
 
@@ -29,6 +29,9 @@ function SearchContainer() {
 
     const formData = new FormData(e.currentTarget);
     const search = formData.get("search") as string;
+    if (jobStatus) {
+      params.set("jobStatus", jobStatus);
+    }
 
     params.set("search", search);
     params.set("jobStatus", jobStatus); // Use state value
@@ -51,7 +54,7 @@ function SearchContainer() {
           <SelectValue placeholder="Select Job Status" />
         </SelectTrigger>
         <SelectContent className="w-full">
-          {["all", ...Object.values(JobStatus)].map((status) => (
+          {["All", ...Object.values(JobStatus)].map((status) => (
             <SelectItem key={status} value={status}>
               {status}
             </SelectItem>
