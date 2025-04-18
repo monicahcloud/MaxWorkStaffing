@@ -4,7 +4,7 @@ import {
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
-import CreateJobForm from "@/components/CreateJobForm";
+import CreateJobForm from "@/components/jobComponents/CreateJobForm";
 
 export default function AddJobPage() {
   const queryClient = new QueryClient();
