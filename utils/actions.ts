@@ -141,19 +141,22 @@ export async function updateJobAction(
 }
 
 export async function getSingleJobAction(id: string): Promise<JobType | null> {
+  let job: JobType | null = null;
   const userId = await authenticateAndRedirect();
 
   try {
-    const job = await prisma.job.findUnique({
+    job = await prisma.job.findUnique({
       where: {
         id,
         clerkId: userId,
       },
     });
-
-    return job;
   } catch (error) {
     console.error(error);
-    return null;
+    job = null;
   }
+  if (!job) {
+    redirect("/jobs");
+  }
+  return job;
 }
