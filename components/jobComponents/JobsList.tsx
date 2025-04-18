@@ -26,7 +26,7 @@ function JobList() {
   if (jobs.length < 1) return <h2 className="text-xl">No Jobs Found...</h2>;
   return (
     <>
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex items-center justify-between mb-2">
         <h2 className="text-xl font-semibold capitalize ">
           {count} jobs found
         </h2>

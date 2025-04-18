@@ -58,7 +58,7 @@ function EditJobForm({ jobId }: { jobId: string }) {
   // 2. Define a submit handler.
   function onSubmit(values: CreateAndEditJobType) {
     // Do something with the form values.
-    // ✅ This will be type-safe and validated.
+    // This will be type-safe and validated.
     mutate(values);
   }
 
@@ -75,7 +75,6 @@ function EditJobForm({ jobId }: { jobId: string }) {
           <CustomFormField name="company" control={form.control} />
           {/* location */}
           <CustomFormField name="location" control={form.control} />
-
           {/* job status */}
           <CustomFormSelect
             name="status"
