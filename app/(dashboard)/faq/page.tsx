@@ -7,12 +7,12 @@ import SectionTitle from "@/components/SectionTitle";
 
 export default function FAQPage() {
   return (
-    <div className="max-w-7xl mx-auto py-12 px-4">
+    <div className="w-full mx-auto py-12 px-4">
       <SectionTitle text="Frequently Asked Questions" subtext="" />
-      <span className="text-muted-foreground text-sm mt-2 block">
+      <span className="text-muted-foreground text-md mt-2 block">
         Still need assistance?{" "}
         <Link href="/support" className="text-blue-600 underline">
-          Return to the support page
+          Contact Support
         </Link>
       </span>
       <FAQSection />

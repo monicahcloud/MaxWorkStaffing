@@ -71,12 +71,12 @@ const links: DashboardLinks[] = [
     href: "/billing",
     icon: <CreditCard />,
   },
-  {
-    id: nanoid(),
-    label: "Support",
-    href: "/support",
-    icon: <CircleHelp />,
-  },
+  // {
+  //   id: nanoid(),
+  //   label: "Support",
+  //   href: "/support",
+  //   icon: <CircleHelp />,
+  // },
   {
     id: nanoid(),
     label: "FAQs",
