@@ -9,6 +9,7 @@ import {
   HomeIcon,
   Layers,
   List,
+  MessageCircleQuestion,
   Users2,
 } from "lucide-react";
 import { nanoid } from "nanoid";
@@ -75,6 +76,12 @@ const links: DashboardLinks[] = [
     label: "Support",
     href: "/support",
     icon: <CircleHelp />,
+  },
+  {
+    id: nanoid(),
+    label: "FAQs",
+    href: "/faq",
+    icon: <MessageCircleQuestion />,
   },
 ];
 

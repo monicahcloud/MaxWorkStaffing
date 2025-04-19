@@ -20,17 +20,17 @@ const faqData: FAQCategory[] = [
       {
         question: "How do I create a resume?",
         answer:
-          "Navigate to the 'Resume Builder' tab and follow the step-by-step prompts to enter your details. You can save your progress and return at any time.",
+          "Navigate to the 'Resume Builder' tab and follow the step-by-step prompts to enter your details. Your progress  is saved automaticly and return at any time.",
       },
       {
         question: "Can I upload an existing resume?",
         answer:
-          "Yes, you can upload a PDF or Word document using the 'Upload Resume' feature located in the Resume Builder section.",
+          "This feature is coming soon where you will be able to upload a PDF or Word document using the 'Upload Resume' feature located in the Resumes section.",
       },
       {
         question: "How can I download or print my resume?",
         answer:
-          "Once your resume is complete, select the 'Download' or 'Print' option at the top of the page.",
+          "Once your resume is complete, select the three menu buttons and choose Print. There you are print, save or download your resume.",
       },
     ],
   },
@@ -40,12 +40,12 @@ const faqData: FAQCategory[] = [
       {
         question: "How do I track my job applications?",
         answer:
-          "Each time you apply for a job through the portal, it is automatically added to your 'Applications' tab with its current status.",
+          "Each time you apply for a job, click on the Add Job link and enter the information. Then click on the All Jobs link to view all jobs you have entered information for.",
       },
       {
-        question: "What do the status labels mean?",
+        question: "What do the Stats link mean?",
         answer:
-          "'Submitted' means your application was sent, 'In Review' indicates an employer is reviewing it, 'Interview' means you're selected for an interview, and 'Closed' signifies the position is filled.",
+          "The Stats link gives you a visual representation of your job application activity at a glance with real-time stats ",
       },
     ],
   },
@@ -60,7 +60,7 @@ const faqData: FAQCategory[] = [
       {
         question: "How do I update my email or profile information?",
         answer:
-          "Go to 'Account Settings' and update your contact details and preferences as needed.",
+          "Once logged in click on your profile image at the top right of the screen. Go to 'Manage Account' and update your contact details and preferences as needed.",
       },
     ],
   },
@@ -70,7 +70,7 @@ const faqData: FAQCategory[] = [
       {
         question: "My dashboard isn’t loading. What should I do?",
         answer:
-          "Please refresh the page or clear your browser cache. If the issue persists, contact our support team using the form below.",
+          "Please refresh the page or clear your browser cache. If the issue persists, contact our support team.",
       },
       {
         question: "I submitted a form but didn’t receive confirmation.",
