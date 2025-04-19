@@ -63,7 +63,7 @@ function Sidebar({ resumeData }: { resumeData: ResumeValues }) {
     website,
     photo,
     linkedin,
-    github,
+    gitHub,
     themeColor,
     borderStyle,
   } = resumeData;
@@ -122,9 +122,9 @@ function Sidebar({ resumeData }: { resumeData: ResumeValues }) {
             <Linkedin size={14} /> {linkedin}
           </p>
         )}
-        {github && (
+        {gitHub && (
           <p className="flex items-center gap-2">
-            <Github size={14} /> {github}
+            <Github size={14} /> {gitHub}
           </p>
         )}
       </div>
