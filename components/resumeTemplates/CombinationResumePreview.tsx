@@ -64,7 +64,6 @@ function Sidebar({ resumeData }: { resumeData: ResumeValues }) {
     photo,
     // linkedin,
     // github,
-    // skills,
     // interests,
     themeColor,
     borderStyle,
@@ -79,7 +78,6 @@ function Sidebar({ resumeData }: { resumeData: ResumeValues }) {
     return () => URL.revokeObjectURL(objectUrl);
   }, [photo]);
 
-  // if (!skills?.length) return null;
   return (
     <div className="space-y-6 ">
       {photoSrc && (
@@ -154,16 +152,20 @@ function MainContent({ resumeData }: { resumeData: ResumeValues }) {
   return (
     <div>
       <div className="p-4 text-white" style={{ backgroundColor: themeColor }}>
-        <h1 className="text-2xl font-semibold">
+        <h1 className="text-4xl ">
           {firstName} {lastName}
         </h1>
-        <p className="text-lg font-semibold underline underline-offset-2">
-          {jobTitle}
-        </p>
+        <p className="text-lg font-semibold underline-offset-4">{jobTitle}</p>
         <p className="text-sm whitespace-pre-line text-slate-200">{summary}</p>
       </div>
-      <WorkExperienceSection resumeData={resumeData} />
-      <EducationSection resumeData={resumeData} />
+      <div className="my-5">
+        {" "}
+        <WorkExperienceSection resumeData={resumeData} />
+      </div>
+      <div>
+        {" "}
+        <EducationSection resumeData={resumeData} />
+      </div>
     </div>
   );
 }
