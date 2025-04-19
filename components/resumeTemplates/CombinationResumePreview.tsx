@@ -403,24 +403,22 @@ function Sidebar({ resumeData }: { resumeData: ResumeValues }) {
       <div className="space-y-2">
         {email && (
           <p className="flex items-center gap-2">
-            <Mail size={14} style={{ backgroundColor: themeColor }} /> {email}
+            <Mail size={14} style={{ color: themeColor }} /> {email}
           </p>
         )}
         {phone && (
           <p className="flex items-center gap-2">
-            <Phone size={14} style={{ backgroundColor: themeColor }} /> {phone}
+            <Phone size={14} style={{ color: themeColor }} /> {phone}
           </p>
         )}
         {address && (
           <p className="flex items-center gap-2">
-            <MapPin size={14} style={{ backgroundColor: themeColor }} />{" "}
-            {address}
+            <MapPin size={14} style={{ color: themeColor }} /> {address}
           </p>
         )}
         {website && (
           <p className="flex items-center gap-2">
-            <Globe size={14} style={{ backgroundColor: themeColor }} />{" "}
-            {website}
+            <Globe size={14} style={{ color: themeColor }} /> {website}
           </p>
         )}
         {/* {linkedin && (
