@@ -105,9 +105,6 @@ export default function FAQSection() {
 
   return (
     <div id="faq" className="max-w-4xl mx-auto mt-16 p-4 scroll-mt-24">
-      <h2 className="text-3xl font-semibold text-center mb-10">
-        Frequently Asked Questions
-      </h2>
       {faqData.map((category, i) => (
         <div key={i} className="mb-8">
           <h3 className="text-xl font-semibold text-gray-800 mb-4">

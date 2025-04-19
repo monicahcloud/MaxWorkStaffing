@@ -71,7 +71,7 @@ function SupportContact() {
 
       <div className="text-center mt-6">
         <Link
-          href="#faq"
+          href="/faq"
           className="text-muted-foreground text-lg hover:underline">
           Need more help? View our FAQs
         </Link>
