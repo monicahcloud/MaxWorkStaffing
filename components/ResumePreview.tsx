@@ -2,6 +2,9 @@ import { ResumeValues } from "@/lib/validation";
 import { Ref } from "react";
 import ChronologicalResumePreview from "./resumeTemplates/ChronologicalResumePreview";
 import FederalResumePreview from "./resumeTemplates/FederalResumePreview";
+import CombinationResumePreview from "./resumeTemplates/CombinationResumePreview";
+import FunctionalResumePreview from "./resumeTemplates/FunctionalResumePreview";
+
 interface ResumePreviewProps {
   resumeData: ResumeValues;
   className?: string;
@@ -28,6 +31,22 @@ export default function ResumePreview({
     default:
       return (
         <ChronologicalResumePreview
+          resumeData={resumeData}
+          contentRef={contentRef}
+          className={className}
+        />
+      );
+    case "combination":
+      return (
+        <CombinationResumePreview
+          resumeData={resumeData}
+          contentRef={contentRef}
+          className={className}
+        />
+      );
+    case "functional":
+      return (
+        <FunctionalResumePreview
           resumeData={resumeData}
           contentRef={contentRef}
           className={className}
