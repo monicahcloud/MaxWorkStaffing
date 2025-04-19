@@ -299,6 +299,7 @@
 //     </>
 //   );
 // }
+
 "use client";
 
 import { ResumeValues } from "@/lib/validation";
@@ -364,7 +365,7 @@ function Sidebar({ resumeData }: { resumeData: ResumeValues }) {
     photo,
     // linkedin,
     // github,
-    skills,
+    // skills,
     // interests,
     themeColor,
     borderStyle,
@@ -379,7 +380,7 @@ function Sidebar({ resumeData }: { resumeData: ResumeValues }) {
     return () => URL.revokeObjectURL(objectUrl);
   }, [photo]);
 
-  if (!skills?.length) return null;
+  // if (!skills?.length) return null;
   return (
     <div className="space-y-6 ">
       {photoSrc && (
@@ -433,8 +434,8 @@ function Sidebar({ resumeData }: { resumeData: ResumeValues }) {
           </p>
         )} */}
       </div>
-
-      {skills?.length > 0 && (
+      <SkillsSection resumeData={resumeData} />;
+      {/* {skills?.length > 0 && (
         <div>
           <h4 className="text-md font-semibold" style={{ color: themeColor }}>
             Technical Skills
@@ -458,8 +459,7 @@ function Sidebar({ resumeData }: { resumeData: ResumeValues }) {
             ))}
           </div>
         </div>
-      )}
-
+      )} */}
       {/* {interests?.length > 0 && (
         <div>
           <h4 className="text-md font-semibold" style={{ color: themeColor }}>
@@ -555,5 +555,49 @@ function MainContent({ resumeData }: { resumeData: ResumeValues }) {
         </section>
       )}*/}
     </div>
+  );
+}
+
+function SkillsSection({ resumeData }: ResumePreviewProps) {
+  const { skills, themeColor, borderStyle } = resumeData;
+
+  if (!skills?.length) return null;
+
+  return (
+    <>
+      <hr
+        className="border-2"
+        style={{
+          borderColor: themeColor,
+        }}
+      />
+      <div className="break-inside-avoid space-y-3">
+        <p
+          className="text-lg font-semibold"
+          style={{
+            color: themeColor,
+          }}>
+          Skills
+        </p>
+        <div className="flex break-inside-avoid flex-wrap gap-2">
+          {skills.map((skill, index) => (
+            <Badge
+              key={index}
+              className="rounded-md bg-black text-white hover:bg-black"
+              style={{
+                backgroundColor: themeColor,
+                borderRadius:
+                  borderStyle === BorderStyles.SQUARE
+                    ? "0px"
+                    : borderStyle === BorderStyles.CIRCLE
+                    ? "9999px"
+                    : "8px",
+              }}>
+              {skill}
+            </Badge>
+          ))}
+        </div>
+      </div>
+    </>
   );
 }
