@@ -7,7 +7,7 @@ import SectionTitle from "@/components/SectionTitle";
 
 export default function FAQPage() {
   return (
-    <div className="max-w-4xl mx-auto py-12 px-4">
+    <div className="max-w-7xl mx-auto py-12 px-4">
       <SectionTitle text="Frequently Asked Questions" subtext="" />
       <span className="text-muted-foreground text-sm mt-2 block">
         Still need assistance?{" "}

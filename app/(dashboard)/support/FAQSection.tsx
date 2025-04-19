@@ -150,11 +150,11 @@ export default function FAQPage() {
         ))}
       </div>
 
-      <div className="text-center mt-12">
+      {/* <div className="text-center mt-12">
         <Link href="/support" className="text-blue-600 hover:underline text-lg">
           ← Back to Support
         </Link>
-      </div>
+      </div> */}
     </div>
   );
 }
