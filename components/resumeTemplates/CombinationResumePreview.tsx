@@ -130,18 +130,7 @@ function Sidebar({ resumeData }: { resumeData: ResumeValues }) {
         )} */}
       </div>
       <SkillsSection resumeData={resumeData} />
-      {/* {interests?.length > 0 && (
-        <div>
-          <h4 className="text-md font-semibold" style={{ color: themeColor }}>
-            Interests
-          </h4>
-          <ul className="list-disc list-inside text-sm mt-1">
-            {interests.map((item, idx) => (
-              <li key={idx}>{item}</li>
-            ))}
-          </ul>
-        </div>
-      )} */}
+      <InterestSection resumeData={resumeData} />
     </div>
   );
 }
@@ -213,6 +202,49 @@ function SkillsSection({ resumeData }: ResumePreviewProps) {
     </>
   );
 }
+function InterestSection({ resumeData }: ResumePreviewProps) {
+  const { interest, themeColor, borderStyle } = resumeData;
+
+  if (!interest?.length) return null;
+
+  return (
+    <>
+      <hr
+        className="border-2"
+        style={{
+          borderColor: themeColor,
+        }}
+      />
+      <div className="break-inside-avoid space-y-3">
+        <p
+          className="text-lg font-semibold"
+          style={{
+            color: themeColor,
+          }}>
+          Interest
+        </p>
+        <div className="flex break-inside-avoid flex-wrap gap-2">
+          {interest.map((interest, index) => (
+            <Badge
+              key={index}
+              className="rounded-md bg-black text-white hover:bg-black"
+              style={{
+                backgroundColor: themeColor,
+                borderRadius:
+                  borderStyle === BorderStyles.SQUARE
+                    ? "0px"
+                    : borderStyle === BorderStyles.CIRCLE
+                    ? "9999px"
+                    : "8px",
+              }}>
+              {interest}
+            </Badge>
+          ))}
+        </div>
+      </div>
+    </>
+  );
+}
 function EducationSection({ resumeData }: ResumePreviewProps) {
   const { education, themeColor } = resumeData;
 
@@ -230,7 +262,7 @@ function EducationSection({ resumeData }: ResumePreviewProps) {
           style={{
             color: themeColor,
           }}>
-          Education
+          Education/Certifications
         </p>
         <hr
           className="border-1"

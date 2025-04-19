@@ -15,27 +15,20 @@ model User {
   firstName String?
   lastName  String?
   imageUrl  String?
-
   resumes   Resume[] // optional relationship if you want to link them
-
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model Resume {
-
 id String @id @default(cuid())
-
 userId String
-
 resumeType     String?
 resumeTitle String?
 description String?
-
 photoUrl String?
 themeColor String @default("#000000")
 borderStyle String @default("squircle")
-
 createdAt      DateTime        @default(now())
  updatedAt   DateTime @updatedAt
 firstName   String?
@@ -48,12 +41,11 @@ firstName   String?
   userName    String?
   website String?
   summary String?
-
-
+techSkills TechSkill[]
 workExperience WorkExperience[]
 education Education[]
   skills String[]
-
+  interest String[]
   User User[]
 }
 
@@ -64,14 +56,29 @@ model WorkExperience {
   startDate DateTime?
   endDate DateTime?
     location     String?
+    duties           String?
+  responsibilities String?
+  accomplishments  String?
+  clearance        String?
+  grade            String?
+  status           String?
+  time             String?
 description String?
-
 resumeId String
 resume Resume @relation(fields: [resumeId], references: [id],  onDelete: Cascade)
 createdAt      DateTime        @default(now())
  updatedAt   DateTime @updatedAt
 }
-
+model TechSkill {
+  id        String   @id @default(uuid())
+  resumeId  String
+  name      String
+  rating     String
+  description    String?
+  resume Resume @relation(fields: [resumeId], references: [id],  onDelete: Cascade)
+  createdAt      DateTime        @default(now())
+ updatedAt   DateTime @updatedAt
+}
 model Education {
   id String @id @default(cuid())
   degree String?
@@ -80,7 +87,6 @@ model Education {
   endDate DateTime?
     location     String?
 description String?
-
 resumeId String
 resume Resume @relation(fields: [resumeId], references: [id],  onDelete: Cascade)
 createdAt      DateTime        @default(now())
@@ -95,10 +101,8 @@ model UserSubscription {
   stripePriceId           String
   stripeCurrentPeriodEnd  DateTime
   stripeCancelAtPeriodEnd Boolean  @default(false)
-
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
   @@map("user_subscriptions")
 }
 

@@ -5,7 +5,6 @@ export const generalInfoSchema = z.object({
   resumeType: optionalString,
   description: optionalString,
 });
-
 export type GeneralInfoValues = z.infer<typeof generalInfoSchema>;
 
 export const personalInfoSchema = z.object({
@@ -27,6 +26,8 @@ export const personalInfoSchema = z.object({
   phone: optionalString,
   email: optionalString,
   website: optionalString,
+  linkedin: optionalString,
+  github: optionalString,
 });
 export type PersonalInfoValues = z.infer<typeof personalInfoSchema>;
 
@@ -40,11 +41,16 @@ export const workExperienceSchema = z.object({
         endDate: optionalString,
         location: optionalString,
         description: optionalString,
+        clearance: optionalString,
+        duties: optionalString,
+        responsibilities: optionalString,
+        status: optionalString,
+        grade: optionalString,
+        hours: optionalString,
       })
     )
     .optional(),
 });
-
 export type WorkExperiencesValues = z.infer<typeof workExperienceSchema>;
 export type WorkExperience = NonNullable<
   z.infer<typeof workExperienceSchema>["workExperiences"]
@@ -63,14 +69,22 @@ export const educationSchema = z.object({
     )
     .optional(),
 });
-
 export type EducationValues = z.infer<typeof educationSchema>;
 
 export const skillsSchema = z.object({
   skills: z.array(z.string().trim()).optional(),
 });
-
 export type SkillsValues = z.infer<typeof skillsSchema>;
+
+export const interestSchema = z.object({
+  interest: z.array(z.string().trim()).optional(),
+});
+export type InterestValues = z.infer<typeof interestSchema>;
+
+export const techSkillSchema = z.object({
+  techSkill: z.array(z.string().trim()).optional(),
+});
+export type TechSkill = z.infer<typeof techSkillSchema>;
 
 export const summarySchema = z.object({
   summary: optionalString,
@@ -85,6 +99,8 @@ export const resumeSchema = z.object({
   ...educationSchema.shape,
   ...skillsSchema.shape,
   ...summarySchema.shape,
+  ...techSkillSchema.shape,
+  ...interestSchema.shape,
   themeColor: optionalString,
   borderStyle: optionalString,
 });
@@ -111,6 +127,7 @@ export const generateSummarySchema = z.object({
   ...workExperienceSchema.shape,
   ...educationSchema.shape,
   ...skillsSchema.shape,
+  ...techSkillSchema.shape,
 });
 
 export type GenerateSummaryInput = z.infer<typeof generateSummarySchema>;
