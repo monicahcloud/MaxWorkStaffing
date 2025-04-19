@@ -25,7 +25,7 @@ export async function generateSummary(input: GenerateSummaryInput) {
     throw new Error("Upgrade your subscription to use this feature");
   }
 
-  const { jobTitle, workExperiences, education, skills } =
+  const { jobTitle, workExperiences, education, skills, techSkill } =
     generateSummarySchema.parse(input);
 
   const systemMessage = `
@@ -65,6 +65,10 @@ export async function generateSummary(input: GenerateSummaryInput) {
 
       Skills:
       ${skills}
+       .join("\n\n")}
+
+      TechSkill:
+      ${techSkill}
     `;
 
   console.log("systemMessage", systemMessage);

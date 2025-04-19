@@ -64,8 +64,8 @@ export default function TechnicalSkillsForm({
                     {...field}
                     placeholder="e.g. Reactjs, Node.js, graphic design..."
                     onChange={(e) => {
-                      const techSkills = e.target.value.split(",");
-                      field.onChange(techSkills);
+                      const techSkill = e.target.value.split(",");
+                      field.onChange(techSkill);
                     }}
                   />
                 </FormControl>
