@@ -174,7 +174,7 @@ function SkillsSection({ resumeData }: ResumePreviewProps) {
       />
       <div className="break-inside-avoid space-y-3">
         <p
-          className="text-lg font-semibold"
+          className="text-lg font-semibold capitalize"
           style={{
             color: themeColor,
           }}>
@@ -217,11 +217,11 @@ function InterestSection({ resumeData }: ResumePreviewProps) {
       />
       <div className="break-inside-avoid space-y-3">
         <p
-          className="text-lg font-semibold"
+          className="text-lg font-semibold capitalize"
           style={{
             color: themeColor,
           }}>
-          Interest
+          Interests
         </p>
         <div className="flex break-inside-avoid flex-wrap gap-2">
           {interest.map((interest, index) => (
