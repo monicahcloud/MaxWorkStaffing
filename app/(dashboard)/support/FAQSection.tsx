@@ -104,7 +104,7 @@ export default function FAQSection() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto mt-16 p-4">
+    <div id="faq" className="max-w-4xl mx-auto mt-16 p-4 scroll-mt-24">
       <h2 className="text-3xl font-semibold text-center mb-10">
         Frequently Asked Questions
       </h2>
