@@ -10,6 +10,7 @@ import {
   Layers,
   List,
   MessageCircleQuestion,
+  SquareTerminal,
   Users2,
 } from "lucide-react";
 import { nanoid } from "nanoid";
@@ -70,6 +71,12 @@ const links: DashboardLinks[] = [
     label: "Billing",
     href: "/billing",
     icon: <CreditCard />,
+  },
+  {
+    id: nanoid(),
+    label: "Services",
+    href: "/services",
+    icon: <SquareTerminal />,
   },
   {
     id: nanoid(),
