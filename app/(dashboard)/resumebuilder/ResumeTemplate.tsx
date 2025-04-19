@@ -20,7 +20,7 @@ export const resumeTemplates: ResumeTemplate[] = [
     description: [
       "Ideal for government jobs with strict formatting. Emphasizes detailed job history and accomplishments.",
     ],
-    resumeType: "federal",
+    resumeType: "Federal Resume",
   },
   {
     title: "Chronological Resume",
@@ -29,7 +29,7 @@ export const resumeTemplates: ResumeTemplate[] = [
     description: [
       "Best for steady work history. Lists experience in reverse order with a clean, professional look.",
     ],
-    resumeType: "chronological",
+    resumeType: "Chronological Resume",
   },
   // {
   //   title: "Functional Resume",
@@ -38,7 +38,7 @@ export const resumeTemplates: ResumeTemplate[] = [
   //   description: [
   //     "Great for career changers or gaps. Focuses on skills rather than job timelines.",
   //   ],
-  //   resumeType: "functional",
+  //   resumeType: "Functional Resume",
   // },
   // {
   //   title: "Combination Resume",
@@ -47,6 +47,6 @@ export const resumeTemplates: ResumeTemplate[] = [
   //   description: [
   //     "Blends work experience and skills. Suitable for seasoned professionals who want the best of both worlds.",
   //   ],
-  //   resumeType: "combination",
+  //   resumeType: "Combination Resume",
   // },
 ];
