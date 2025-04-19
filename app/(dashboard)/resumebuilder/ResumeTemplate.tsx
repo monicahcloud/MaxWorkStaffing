@@ -1,7 +1,7 @@
 import { StaticImageData } from "next/image";
 import federal from "../../../assets/federal.png";
-// import functional from "../../../assets/functional.png";
-// import combination from "../../../assets/combination.png";
+import functional from "../../../assets/functional.png";
+import combination from "../../../assets/combination.png";
 import chronological from "../../../assets/chronological.png";
 export interface ResumeTemplate {
   title: string;
@@ -31,22 +31,22 @@ export const resumeTemplates: ResumeTemplate[] = [
     ],
     resumeType: "Chronological Resume",
   },
-  // {
-  //   title: "Functional Resume",
-  //   image: functional,
-  //   href: "/editor",
-  //   description: [
-  //     "Great for career changers or gaps. Focuses on skills rather than job timelines.",
-  //   ],
-  //   resumeType: "Functional Resume",
-  // },
-  // {
-  //   title: "Combination Resume",
-  //   image: combination,
-  //   href: "/editor",
-  //   description: [
-  //     "Blends work experience and skills. Suitable for seasoned professionals who want the best of both worlds.",
-  //   ],
-  //   resumeType: "Combination Resume",
-  // },
+  {
+    title: "Functional Resume",
+    image: functional,
+    href: "/editor",
+    description: [
+      "Great for career changers or gaps. Focuses on skills rather than job timelines.",
+    ],
+    resumeType: "Functional Resume",
+  },
+  {
+    title: "Combination Resume",
+    image: combination,
+    href: "/editor",
+    description: [
+      "Blends work experience and skills. Suitable for seasoned professionals who want the best of both worlds.",
+    ],
+    resumeType: "Combination Resume",
+  },
 ];
