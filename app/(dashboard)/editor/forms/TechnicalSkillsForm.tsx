@@ -1,4 +1,3 @@
-import { Rating } from "@smastrom/react-rating";
 import React, { useEffect } from "react";
 import { EditorFormProps } from "@/lib/types";
 import { TechSkill, techSkillSchema } from "@/lib/validation";
