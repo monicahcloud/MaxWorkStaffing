@@ -359,7 +359,7 @@ function WorkExperienceSection({ resumeData }: ResumePreviewProps) {
     <>
       <div className="space-y-3">
         <p
-          className="text-lg font-semibold"
+          className="text-lg font-semibold uppercase"
           style={{
             color: themeColor,
           }}>
