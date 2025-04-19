@@ -306,7 +306,7 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import useDimensions from "@/hooks/useDimensions";
 import { Mail, Phone, MapPin, Globe } from "lucide-react";
-import { formatDate } from "date-fns";
+// import { formatDate } from "date-fns";
 import React, { useEffect, useRef, useState } from "react";
 import { BorderStyles } from "@/app/(dashboard)/editor/BorderStyleButton";
 import { Badge } from "../ui/badge";
@@ -511,14 +511,14 @@ function MainContent({ resumeData }: { resumeData: ResumeValues }) {
         </section>
       )} */}
 
-      {workExperiencesNotEmpty.length > 0 && (
+      {/* {workExperiencesNotEmpty.length > 0 && (
         <section className="mt-4 space-y-4">
           <h2 className="text-lg font-semibold" style={{ color: themeColor }}>
             Work Experience
           </h2>
           <hr
             className="border-2"
-            style={{
+             style={{
               borderColor: themeColor,
             }}
           />
@@ -553,7 +553,7 @@ function MainContent({ resumeData }: { resumeData: ResumeValues }) {
             </div>
           ))}
         </section>
-      )}
+      )} */}
 
       {/* {education?.length > 0 && (
         <section className="mt-4 space-y-4">
