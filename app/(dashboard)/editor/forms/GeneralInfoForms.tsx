@@ -66,7 +66,7 @@ export default function GeneralInforForm({
               </FormItem>
             )}
           />
-          {/* <FormField
+          <FormField
             control={form.control}
             name="resumeType"
             render={({ field }) => (
@@ -75,14 +75,15 @@ export default function GeneralInforForm({
                 <FormControl>
                   <Input
                     {...field}
-                    placeholder="Chronological Resume"
+                    readOnly
+                    // placeholder="Chronological Resume"
                     autoFocus
                   />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
-          /> */}
+          />
           <FormField
             control={form.control}
             name="description"

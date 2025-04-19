@@ -6,7 +6,7 @@ import {
 } from "@tanstack/react-query";
 import CreateJobForm from "@/components/jobComponents/CreateJobForm";
 import { getAllJobsAction } from "@/utils/actions";
-import SearchForm from "@/components/jobComponents/SearchForm";
+// import SearchForm from "@/components/jobComponents/SearchForm";
 import JobList from "@/components/jobComponents/JobsList";
 
 export default async function AddJobPage() {
@@ -19,7 +19,7 @@ export default async function AddJobPage() {
     <>
       <HydrationBoundary state={dehydrate(queryClient)}>
         <CreateJobForm />
-        <SearchForm />
+        {/* <SearchForm /> */}
         <JobList />
       </HydrationBoundary>
     </>

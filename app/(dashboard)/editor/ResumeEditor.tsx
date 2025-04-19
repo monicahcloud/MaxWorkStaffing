@@ -18,9 +18,21 @@ interface ResumeEditorProps {
 
 function ResumeEditor({ resumeToEdit }: ResumeEditorProps) {
   const searchParams = useSearchParams();
-  const [resumeData, setResumeData] = useState<ResumeValues>(
-    resumeToEdit ? mapToResumeValues(resumeToEdit) : {}
-  );
+
+  const resumeTypeFromTemplate = searchParams.get("resumeType") || "";
+
+  const [resumeData, setResumeData] = useState<ResumeValues>(() => {
+    if (resumeToEdit) {
+      return mapToResumeValues(resumeToEdit);
+    }
+
+    return {
+      resumeTitle: "",
+      description: "",
+      resumeType: resumeTypeFromTemplate, // Prepopulate here!
+    };
+  });
+
   const [showSmResumePreview, setShowSmResumePreview] = useState(false);
 
   const { isSaving, hasUnsavedChanges } = useAutoSaveResume(resumeData);

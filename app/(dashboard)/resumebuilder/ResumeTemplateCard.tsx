@@ -23,7 +23,7 @@ const ResumeTemplateCard: React.FC<ResumeTemplateCardProps> = ({
   const [hovered, setHovered] = useState(false);
 
   const handleClick = () => {
-    router.push(template.href);
+    router.push(`${template.href}?resumeType=${template.resumeType}`);
   };
 
   return (

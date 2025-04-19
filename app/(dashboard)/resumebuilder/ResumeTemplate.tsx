@@ -1,5 +1,5 @@
 import { StaticImageData } from "next/image";
-// import federal from "../../../assets/federal.png";
+import federal from "../../../assets/federal.png";
 // import functional from "../../../assets/functional.png";
 // import combination from "../../../assets/combination.png";
 import chronological from "../../../assets/chronological.png";
@@ -13,15 +13,15 @@ export interface ResumeTemplate {
 
 //  Resume Templates Data
 export const resumeTemplates: ResumeTemplate[] = [
-  // {
-  //   title: "Federal Resume",
-  //   image: federal,
-  //   href: "/editor",
-  //   description: [
-  //     "Ideal for government jobs with strict formatting. Emphasizes detailed job history and accomplishments.",
-  //   ],
-  //   resumeType: "federal",
-  // },
+  {
+    title: "Federal Resume",
+    image: federal,
+    href: "/editor",
+    description: [
+      "Ideal for government jobs with strict formatting. Emphasizes detailed job history and accomplishments.",
+    ],
+    resumeType: "federal",
+  },
   {
     title: "Chronological Resume",
     image: chronological,
