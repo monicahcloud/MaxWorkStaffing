@@ -12,6 +12,7 @@ export default function AddJobPage() {
     <>
       <HydrationBoundary state={dehydrate(queryClient)}>
         <CreateJobForm />
+        <AddJobPage />
       </HydrationBoundary>
     </>
   );

@@ -21,6 +21,12 @@ const services = [
       "Includes electronic resume, personal website, digital business card design, and a custom color/font guide.",
     price: "$499",
   },
+  {
+    title: "Interview Coaching",
+    description:
+      "1-on-1 session or downloadable prep workbook, STAR method coaching, mock interview",
+    price: "$29",
+  },
 ];
 
 export default function ServicesPage() {
@@ -39,7 +45,7 @@ export default function ServicesPage() {
         {services.map((service, index) => (
           <div
             key={index}
-            className="bg-white border border-gray-200 rounded-xl shadow-sm p-6 flex flex-col justify-between">
+            className="bg-white border border-gray-200 rounded-xl shadow-lg p-6 flex flex-col justify-between">
             <div>
               <h2 className="text-xl font-semibold text-gray-900 mb-2">
                 {service.title}
@@ -63,9 +69,7 @@ export default function ServicesPage() {
       </div>
 
       <div className="text-center mt-12">
-        <Link
-          href="/dashboard"
-          className="text-blue-600 text-lg hover:underline">
+        <Link href="/home" className="text-blue-600 text-lg hover:underline">
           ← Back to Dashboard
         </Link>
       </div>
