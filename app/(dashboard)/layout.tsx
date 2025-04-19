@@ -17,7 +17,6 @@ import { getUserSubscriptionLevel } from "@/lib/subscription";
 import SubscriptionLevelProvider from "./SubscriptionLevelProvider";
 import { Menu } from "lucide-react";
 import { redirect } from "next/navigation";
-import SupportContact from "@/components/SupportContact";
 
 async function Dashboardlayout({ children }: PropsWithChildren) {
   const { userId } = await auth();
@@ -51,7 +50,9 @@ async function Dashboardlayout({ children }: PropsWithChildren) {
               </nav>
             </div>
             <div>
-              <SupportContact />
+              <Link href="/support" className=" hover:text-blue-800">
+                Contact Support
+              </Link>
             </div>
           </div>
         </div>
