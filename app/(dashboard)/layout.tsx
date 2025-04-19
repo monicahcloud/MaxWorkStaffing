@@ -49,13 +49,6 @@ async function Dashboardlayout({ children }: PropsWithChildren) {
                 <DashboardLinks />
               </nav>
             </div>
-            <div className="mx-auto flex items-center gap-3 rounded-lg px-3 py-2 -mt-20 text-xl transition-all hover:text-primary">
-              <Link
-                href="/support"
-                className=" text-xl text-muted-foreground hover:text-foreground">
-                Submit a Support Request
-              </Link>
-            </div>
           </div>
         </div>
         <div className="flex flex-col">

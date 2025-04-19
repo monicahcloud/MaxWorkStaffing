@@ -71,9 +71,9 @@ function SupportContact() {
 
       <div className="text-center mt-6">
         <Link
-          href="/support"
+          href="#faq"
           className="text-muted-foreground text-lg hover:underline">
-          Need more help? Visit our support page
+          Need more help? View our FAQs
         </Link>
       </div>
     </div>

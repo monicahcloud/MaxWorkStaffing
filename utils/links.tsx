@@ -3,6 +3,7 @@
 import {
   AppWindow,
   AreaChart,
+  CircleHelp,
   CreditCard,
   FilePen,
   HomeIcon,
@@ -68,6 +69,12 @@ const links: DashboardLinks[] = [
     label: "Billing",
     href: "/billing",
     icon: <CreditCard />,
+  },
+  {
+    id: nanoid(),
+    label: "Support",
+    href: "/support",
+    icon: <CircleHelp />,
   },
 ];
 
