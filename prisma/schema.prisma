@@ -40,6 +40,8 @@ firstName   String?
   userEmail   String?
   userName    String?
   website String?
+  linkedin String?
+  gitHub String?
   summary String?
 techSkills TechSkill[]
 workExperience WorkExperience[]
@@ -72,9 +74,8 @@ createdAt      DateTime        @default(now())
 model TechSkill {
   id        String   @id @default(uuid())
   resumeId  String
-  name      String
-  rating     String
-  description    String?
+  name      String?
+  rating     Int?
   resume Resume @relation(fields: [resumeId], references: [id],  onDelete: Cascade)
   createdAt      DateTime        @default(now())
  updatedAt   DateTime @updatedAt

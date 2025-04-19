@@ -1,83 +1,189 @@
-import React, { useEffect } from "react";
-import { EditorFormProps } from "@/lib/types";
-import { TechSkill, techSkillSchema } from "@/lib/validation";
-import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { useForm } from "react-hook-form";
+// import { useState, useEffect } from "react";
+// import { Button } from "@/components/ui/button";
+// import { Input } from "@/components/ui/input";
+// import { Rating } from "@smastrom/react-rating";
+// import "@smastrom/react-rating/style.css";
+// import { EditorFormProps } from "@/lib/types";
 
+// interface TechSkill {
+//   name: string;
+//   rating: number;
+// }
+
+// export default function TechnicalSkillsForm({
+//   resumeData,
+//   setResumeData,
+// }: EditorFormProps) {
+//   const [techSkills, setTechSkills] = useState<TechSkill[]>(
+//     resumeData.techSkills || []
+//   );
+
+//   const handleAddSkill = () => {
+//     setTechSkills([...techSkills, { name: "", rating: 1 }]);
+//   };
+
+//   const handleUpdateSkill = (index: number, updated: TechSkill) => {
+//     const updatedSkills = [...techSkills];
+//     updatedSkills[index] = updated;
+//     setTechSkills(updatedSkills);
+//   };
+
+//   const handleRemoveSkill = (index: number) => {
+//     const updated = techSkills.filter((_, i) => i !== index);
+//     setTechSkills(updated);
+//   };
+
+//   useEffect(() => {
+//     setResumeData({ ...resumeData, techSkills });
+//   }, [techSkills]);
+
+//   return (
+//     <div className="max-w-xl mx-auto space-y-6">
+//       <div className="space-y-1.5 text-center">
+//         <h2 className="text-2xl font-semibold">Technical Skills</h2>
+//         <p className="text-sm text-muted-foreground">
+//           Rate each skill on a scale from 1 (Beginner) to 5 (Expert).
+//         </p>
+//       </div>
+
+//       {techSkills.map((skill, index) => (
+//         <div key={index} className="border p-4 rounded-md bg-white space-y-2">
+//           <div className="flex justify-between items-center">
+//             <Input
+//               value={skill.name}
+//               placeholder="e.g. React.js"
+//               onChange={(e) =>
+//                 handleUpdateSkill(index, {
+//                   ...skill,
+//                   name: e.target.value,
+//                 })
+//               }
+//             />
+//             <Rating
+//               style={{ maxWidth: 120 }}
+//               value={skill.rating}
+//               onChange={(value) =>
+//                 handleUpdateSkill(index, {
+//                   ...skill,
+//                   rating: value,
+//                 })
+//               }
+//             />
+//             <Button
+//               type="button"
+//               variant="destructive"
+//               size="sm"
+//               onClick={() => handleRemoveSkill(index)}>
+//               Remove
+//             </Button>
+//           </div>
+//         </div>
+//       ))}
+
+//       <Button type="button" onClick={handleAddSkill}>
+//         Add Technical Skill
+//       </Button>
+//     </div>
+//   );
+// }
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Rating } from "@smastrom/react-rating";
 import "@smastrom/react-rating/style.css";
-import { Textarea } from "@/components/ui/textarea";
+import { EditorFormProps } from "@/lib/types";
+
+interface TechSkill {
+  name: string;
+  rating: number;
+}
 
 export default function TechnicalSkillsForm({
   resumeData,
   setResumeData,
 }: EditorFormProps) {
-  const form = useForm<TechSkill>({
-    resolver: zodResolver(techSkillSchema),
-    defaultValues: {
-      techSkill: resumeData.techSkill || [],
-    },
-  });
+  const [techSkills, setTechSkills] = useState<TechSkill[]>(
+    resumeData.techSkills || []
+  );
+
+  const handleAddSkill = () => {
+    const last = techSkills[techSkills.length - 1];
+    if (last && last.name.trim() === "") return; // prevent adding if last is empty
+    setTechSkills([...techSkills, { name: "", rating: 1 }]);
+  };
+
+  const handleUpdateSkill = (index: number, updated: TechSkill) => {
+    const updatedSkills = [...techSkills];
+    updatedSkills[index] = updated;
+    setTechSkills(updatedSkills);
+  };
+
+  const handleRemoveSkill = (index: number) => {
+    const updated = techSkills.filter((_, i) => i !== index);
+    setTechSkills(updated);
+  };
 
   useEffect(() => {
-    const { unsubscribe } = form.watch(async (values) => {
-      setResumeData({
-        ...resumeData,
-        techSkill:
-          values.techSkill
-            ?.filter((techSkill) => techSkill !== undefined)
-            .map((techSkill) => techSkill.trim())
-            .filter((techSkill) => techSkill !== "") || [],
-      });
-    });
-    return unsubscribe;
-  }, [form, resumeData, setResumeData]);
+    setResumeData({ ...resumeData, techSkills });
+  }, [techSkills]);
 
   return (
     <div className="max-w-xl mx-auto space-y-6">
       <div className="space-y-1.5 text-center">
-        <h2 className="text-2xl font-semibold"> Technical Skills</h2>
+        <h2 className="text-2xl font-semibold">Technical Skills</h2>
         <p className="text-sm text-muted-foreground">
-          {" "}
-          Rate your proficiency for each technical skill on a scale of 1
-          (Beginner) to 5 (Expert).
+          Rate each skill on a scale from 1 (Beginner) to 5 (Expert).
         </p>
       </div>
-      <Form {...form}>
-        <form className="space-t-3">
-          <FormField
-            control={form.control}
-            name="techSkill"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="sr-only">Technical Skills</FormLabel>
-                <FormControl>
-                  <Textarea
-                    {...field}
-                    placeholder="e.g. Reactjs, Node.js, graphic design..."
-                    onChange={(e) => {
-                      const techSkill = e.target.value.split(",");
-                      field.onChange(techSkill);
-                    }}
-                  />
-                </FormControl>
-                <FormDescription>
-                  Separate each skill with a comma.
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </form>
-      </Form>
+
+      {techSkills.map((skill, index) => (
+        <div key={index} className="border p-4 rounded-md bg-white space-y-2">
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-2">
+            <Input
+              aria-label={`Skill name ${index + 1}`}
+              value={skill.name}
+              placeholder="e.g. React.js"
+              onChange={(e) =>
+                handleUpdateSkill(index, {
+                  ...skill,
+                  name: e.target.value,
+                })
+              }
+            />
+            <div className="flex flex-col items-center">
+              <Rating
+                style={{ maxWidth: 120 }}
+                value={skill.rating}
+                onChange={(value) =>
+                  handleUpdateSkill(index, {
+                    ...skill,
+                    rating: value,
+                  })
+                }
+              />
+              <div className="text-xs text-muted-foreground mt-1">
+                {
+                  ["Beginner", "Basic", "Intermediate", "Advanced", "Expert"][
+                    skill.rating - 1
+                  ]
+                }
+              </div>
+            </div>
+            <Button
+              type="button"
+              variant="destructive"
+              size="sm"
+              onClick={() => handleRemoveSkill(index)}>
+              Remove
+            </Button>
+          </div>
+        </div>
+      ))}
+      <div className="mx-auto justify-center items-center flex">
+        <Button type="button" onClick={handleAddSkill}>
+          Add Technical Skill
+        </Button>
+      </div>
     </div>
   );
 }

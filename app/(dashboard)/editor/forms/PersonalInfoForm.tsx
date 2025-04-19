@@ -28,6 +28,8 @@ function PersonalInfoForm({ resumeData, setResumeData }: EditorFormProps) {
       phone: resumeData.phone || "",
       email: resumeData.email || "",
       website: resumeData.website || "",
+      linkedin: resumeData.linkedin || "",
+      gitHub: resumeData.gitHub || "",
     },
   });
   useEffect(() => {
@@ -188,6 +190,34 @@ function PersonalInfoForm({ resumeData, setResumeData }: EditorFormProps) {
               </FormItem>
             )}
           />
+          <div className="grid grid-cols-2 gap-3">
+            <FormField
+              control={form.control}
+              name="linkedin"
+              render={({ field }) => (
+                <FormItem className="mb-2">
+                  <FormLabel>LinkedIn</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="gitHub"
+              render={({ field }) => (
+                <FormItem className="mb-2">
+                  <FormLabel>GitHub</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
         </form>
       </Form>
     </div>

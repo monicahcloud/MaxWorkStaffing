@@ -69,7 +69,7 @@ function SkillsForm({ resumeData, setResumeData }: EditorFormProps) {
           />
         </form>
       </Form>
-      <section className="max-w-xl mx-auto space-y-6">
+      <section className="max-w-xl mx-auto space-y-6 mt-5">
         <TechnicalSkillsForm
           resumeData={resumeData}
           setResumeData={setResumeData}

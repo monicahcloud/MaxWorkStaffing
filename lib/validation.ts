@@ -27,7 +27,7 @@ export const personalInfoSchema = z.object({
   email: optionalString,
   website: optionalString,
   linkedin: optionalString,
-  github: optionalString,
+  gitHub: optionalString,
 });
 export type PersonalInfoValues = z.infer<typeof personalInfoSchema>;
 
@@ -82,9 +82,27 @@ export const interestSchema = z.object({
 export type InterestValues = z.infer<typeof interestSchema>;
 
 export const techSkillSchema = z.object({
-  techSkill: z.array(z.string().trim()).optional(),
+  techSkills: z
+    .array(
+      z.object({
+        name: z.string().trim().default(""),
+        rating: z
+          .union([
+            z
+              .string()
+              .regex(/^[1-5]$/)
+              .transform(Number), // accepts "1" to "5" as strings and transforms to number
+            z.number().min(1).max(5), // accepts numbers 1–5
+          ])
+          .default("1")
+          .transform((val) => (typeof val === "string" ? parseInt(val) : val)),
+      })
+    )
+    .optional(),
 });
-export type TechSkill = z.infer<typeof techSkillSchema>;
+
+export type TechSkillValues = z.infer<typeof techSkillSchema>;
+export type TechSkill = NonNullable<TechSkillValues["techSkills"]>[number];
 
 export const summarySchema = z.object({
   summary: optionalString,

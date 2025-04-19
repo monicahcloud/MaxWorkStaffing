@@ -11,7 +11,7 @@ import path from "path";
 export async function saveResume(values: ResumeValues) {
   const { id } = values;
   console.log("recieved values", values);
-  const { photo, workExperiences, education, ...resumeValues } =
+  const { photo, workExperiences, education, techSkills, ...resumeValues } =
     resumeSchema.parse(values);
   const { userId } = await auth();
 
@@ -66,6 +66,13 @@ export async function saveResume(values: ResumeValues) {
       data: {
         ...resumeValues,
         photoUrl: newPhotoUrl,
+        techSkills: {
+          deleteMany: {},
+          create: techSkills?.map((skill) => ({
+            ...skill,
+            rating: skill.rating,
+          })),
+        },
         workExperience: {
           deleteMany: {},
           create: workExperiences?.map((exp) => ({
@@ -91,6 +98,12 @@ export async function saveResume(values: ResumeValues) {
         ...resumeValues,
         userId,
         photoUrl: newPhotoUrl,
+        techSkills: {
+          create: techSkills?.map((skill) => ({
+            ...skill,
+            rating: skill.rating,
+          })),
+        },
         workExperience: {
           create: workExperiences?.map((exp) => ({
             ...exp,
