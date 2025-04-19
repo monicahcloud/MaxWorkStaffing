@@ -48,9 +48,10 @@ export function mapToResumeValues(data: ResumeServerData): ResumeValues {
       endDate: edu.endDate?.toISOString().split("T")[0],
     })),
     techSkills: data.techSkills.map((techSkill) => ({
-      name: techSkill.name || undefined,
+      name: techSkill.name ?? "", // ✅ default to empty string
       rating: typeof techSkill.rating === "number" ? techSkill.rating : 1,
     })),
+
     skills: data.skills,
 
     borderStyle: data.borderStyle,
