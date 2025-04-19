@@ -313,6 +313,7 @@ import { Mail, Phone, MapPin, Globe } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import { BorderStyles } from "@/app/(dashboard)/editor/BorderStyleButton";
 import { Badge } from "../ui/badge";
+import { formatDate } from "date-fns";
 
 interface ResumePreviewProps {
   resumeData: ResumeValues;
@@ -433,31 +434,6 @@ function Sidebar({ resumeData }: { resumeData: ResumeValues }) {
         )} */}
       </div>
       <SkillsSection resumeData={resumeData} />;
-      {/* {skills?.length > 0 && (
-        <div>
-          <h4 className="text-md font-semibold" style={{ color: themeColor }}>
-            Technical Skills
-          </h4>
-          <div className="flex flex-wrap gap-2 mt-2">
-            {skills.map((skill, idx) => (
-              <Badge
-                key={idx}
-                className="text-white"
-                style={{
-                  backgroundColor: themeColor,
-                  borderRadius:
-                    borderStyle === BorderStyles.SQUARE
-                      ? "0px"
-                      : borderStyle === BorderStyles.CIRCLE
-                      ? "9999px"
-                      : "6px",
-                }}>
-                {skill}
-              </Badge>
-            ))}
-          </div>
-        </div>
-      )} */}
       {/* {interests?.length > 0 && (
         <div>
           <h4 className="text-md font-semibold" style={{ color: themeColor }}>
@@ -496,16 +472,8 @@ function MainContent({ resumeData }: { resumeData: ResumeValues }) {
         </p>
         <p className="text-sm whitespace-pre-line text-slate-200">{summary}</p>
       </div>
-
-      {/* {summary && (
-        <section className="mt-4 space-y-2">
-          <h2 className="text-lg font-semibold" style={{ color: themeColor }}>
-            Professional Profile
-          </h2>
-          <p className="text-sm whitespace-pre-line">{summary}</p>
-        </section>
-      )} */}
-
+      <WorkExperienceSection resumeData={resumeData} />
+      <EducationSection resumeData={resumeData} />
       {/* {workExperiences.length > 0 && (
         <section className="mt-4 space-y-4">
           <h2 className="text-lg font-semibold" style={{ color: themeColor }}>
@@ -595,6 +563,113 @@ function SkillsSection({ resumeData }: ResumePreviewProps) {
             </Badge>
           ))}
         </div>
+      </div>
+    </>
+  );
+}
+function EducationSection({ resumeData }: ResumePreviewProps) {
+  const { education, themeColor } = resumeData;
+
+  const educationsNotEmpty = education?.filter(
+    (edu) => Object.values(edu).filter(Boolean).length > 0
+  );
+
+  if (!educationsNotEmpty?.length) return null;
+
+  return (
+    <>
+      <hr
+        className="border-2"
+        style={{
+          borderColor: themeColor,
+        }}
+      />
+      <div className="space-y-3">
+        <p
+          className="text-lg font-semibold"
+          style={{
+            color: themeColor,
+          }}>
+          Education
+        </p>
+        {educationsNotEmpty.map((edu, index) => (
+          <div key={index} className="break-inside-avoid space-y-1">
+            <div
+              className="flex items-center justify-between text-sm font-semibold"
+              style={{
+                color: themeColor,
+              }}>
+              <span>{edu.degree}</span>
+              {edu.startDate && (
+                <span>
+                  {edu.startDate &&
+                    `${formatDate(edu.startDate, "MM/yyyy")} ${
+                      edu.endDate
+                        ? `- ${formatDate(edu.endDate, "MM/yyyy")}`
+                        : ""
+                    }`}
+                </span>
+              )}
+            </div>
+            <div className="flex items-center justify-between text-sm font-semibold">
+              <span>{edu.school}</span>
+
+              <span>{edu.location}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </>
+  );
+}
+function WorkExperienceSection({ resumeData }: ResumePreviewProps) {
+  const { workExperiences, themeColor } = resumeData;
+
+  const workExperiencesNotEmpty = workExperiences?.filter(
+    (exp) => Object.values(exp).filter(Boolean).length > 0
+  );
+
+  if (!workExperiencesNotEmpty?.length) return null;
+
+  return (
+    <>
+      <hr
+        className="border-2"
+        style={{
+          borderColor: themeColor,
+        }}
+      />
+      <div className="space-y-3">
+        <p
+          className="text-lg font-semibold"
+          style={{
+            color: themeColor,
+          }}>
+          Work experience
+        </p>
+        {workExperiencesNotEmpty.map((exp, index) => (
+          <div key={index} className="break-inside-avoid space-y-1">
+            <div
+              className="flex items-center justify-between text-sm font-semibold"
+              style={{
+                color: themeColor,
+              }}>
+              <span>{exp.position}</span>
+              {exp.startDate && (
+                <span>
+                  {formatDate(exp.startDate, "MM/yyyy")} -{" "}
+                  {exp.endDate ? formatDate(exp.endDate, "MM/yyyy") : "Present"}
+                </span>
+              )}
+            </div>
+            <div className="flex items-center justify-between text-xs font-semibold">
+              <span>{exp.company}</span>
+
+              <span>{exp.location}</span>
+            </div>
+            <div className="whitespace-pre-line text-xs">{exp.description}</div>
+          </div>
+        ))}
       </div>
     </>
   );
