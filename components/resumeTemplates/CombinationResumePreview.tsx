@@ -303,12 +303,14 @@
 
 import { ResumeValues } from "@/lib/validation";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 import useDimensions from "@/hooks/useDimensions";
 //import { BorderStyles } from "@/app/(dashboard)/editor/BorderStyleButton";
 import { Mail, Phone, MapPin, Globe } from "lucide-react";
 // import { Badge } from "@/components/ui/badge";
 // import { formatDate } from "date-fns";
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { BorderStyles } from "@/app/(dashboard)/editor/BorderStyleButton";
 
 interface ResumePreviewProps {
   resumeData: ResumeValues;
@@ -358,16 +360,42 @@ function Sidebar({ resumeData }: { resumeData: ResumeValues }) {
     email,
     phone,
     website,
+    photo,
     // linkedin,
     // github,
     // skills,
     // interests,
-    // themeColor,
-    // borderStyle,
+    themeColor,
+    borderStyle,
   } = resumeData;
 
+  const [photoSrc, setPhotoSrc] = useState(photo instanceof File ? "" : photo);
+
+  useEffect(() => {
+    const objectUrl = photo instanceof File ? URL.createObjectURL(photo) : "";
+    if (objectUrl) setPhotoSrc(objectUrl);
+    if (photo === null) setPhotoSrc("");
+    return () => URL.revokeObjectURL(objectUrl);
+  }, [photo]);
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 " style={{ backgroundColor: themeColor }}>
+      {photoSrc && (
+        <Image
+          src={photoSrc}
+          width={100}
+          height={100}
+          alt="Author photo"
+          className="aspect-square object-cover"
+          style={{
+            borderRadius:
+              borderStyle === BorderStyles.SQUARE
+                ? "0px"
+                : borderStyle === BorderStyles.CIRCLE
+                ? "9999px"
+                : "10%",
+          }}
+        />
+      )}
       <div className="space-y-2">
         {email && (
           <p className="flex items-center gap-2">
@@ -457,20 +485,21 @@ function MainContent({ resumeData }: { resumeData: ResumeValues }) {
   return (
     <div>
       <div className="p-4 text-white" style={{ backgroundColor: themeColor }}>
-        <h1 className="text-3xl font-bold">
+        <h1 className="text-2xl font-bold">
           {firstName} {lastName}
         </h1>
-        <p className="text-sm">{jobTitle}</p>
+        <p className="text-md underline">{jobTitle}</p>
+        <p className="text-sm whitespace-pre-line text-slate-500">{summary}</p>
       </div>
 
-      {summary && (
+      {/* {summary && (
         <section className="mt-4 space-y-2">
           <h2 className="text-lg font-semibold" style={{ color: themeColor }}>
             Professional Profile
           </h2>
           <p className="text-sm whitespace-pre-line">{summary}</p>
         </section>
-      )}
+      )} */}
 
       {/* {workExperiences.length > 0 && (
         <section className="mt-4 space-y-4">
