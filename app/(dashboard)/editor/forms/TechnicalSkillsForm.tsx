@@ -125,6 +125,7 @@ export default function TechnicalSkillsForm({
 
   useEffect(() => {
     setResumeData({ ...resumeData, techSkills });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [techSkills]);
 
   return (

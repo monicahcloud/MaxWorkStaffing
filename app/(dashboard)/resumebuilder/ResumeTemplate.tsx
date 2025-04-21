@@ -1,8 +1,8 @@
 import { StaticImageData } from "next/image";
-import federal from "../../../assets/federal.png";
-import functional from "../../../assets/functional.png";
-import combination from "../../../assets/combination.png";
-import chronological from "../../../assets/chronological.png";
+// import federal from "../../../assets/federal.png";
+// import functional from "../../../assets/functional.png";
+import combination from "../../../assets/combinationtemplate.png";
+import chronological from "../../../assets/chronologicaltemplate.png";
 export interface ResumeTemplate {
   title: string;
   image: string | StaticImageData;
@@ -13,15 +13,15 @@ export interface ResumeTemplate {
 
 //  Resume Templates Data
 export const resumeTemplates: ResumeTemplate[] = [
-  {
-    title: "Federal Resume",
-    image: federal,
-    href: "/editor",
-    description: [
-      "Ideal for government jobs with strict formatting. Emphasizes detailed job history and accomplishments.",
-    ],
-    resumeType: "Federal Resume",
-  },
+  // {
+  //   title: "Federal Resume",
+  //   image: federal,
+  //   href: "/editor",
+  //   description: [
+  //     "Ideal for government jobs with strict formatting. Emphasizes detailed job history and accomplishments.",
+  //   ],
+  //   resumeType: "Federal Resume",
+  // },
   {
     title: "Chronological Resume",
     image: chronological,
@@ -31,15 +31,15 @@ export const resumeTemplates: ResumeTemplate[] = [
     ],
     resumeType: "Chronological Resume",
   },
-  {
-    title: "Functional Resume",
-    image: functional,
-    href: "/editor",
-    description: [
-      "Great for career changers or gaps. Focuses on skills rather than job timelines.",
-    ],
-    resumeType: "Functional Resume",
-  },
+  // {
+  //   title: "Functional Resume",
+  //   image: functional,
+  //   href: "/editor",
+  //   description: [
+  //     "Great for career changers or gaps. Focuses on skills rather than job timelines.",
+  //   ],
+  //   resumeType: "Functional Resume",
+  // },
   {
     title: "Combination Resume",
     image: combination,
