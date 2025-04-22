@@ -1,16 +1,16 @@
 "use client";
 
 import {
-  AppWindow,
-  AreaChart,
+  // AppWindow,
+  // AreaChart,
   CircleHelp,
-  CreditCard,
-  FilePen,
+  // CreditCard,
+  // FilePen,
   HomeIcon,
   Layers,
   List,
   MessageCircleQuestion,
-  SquareTerminal,
+  // SquareTerminal,
   Users2,
 } from "lucide-react";
 import { nanoid } from "nanoid";
@@ -35,12 +35,12 @@ const links: DashboardLinks[] = [
     icon: <List />,
   },
 
-  {
-    id: nanoid(),
-    label: "Resume Builder",
-    href: "/resumebuilder",
-    icon: <FilePen />,
-  },
+  // {
+  //   id: nanoid(),
+  //   label: "Resume Builder",
+  //   href: "/resumebuilder",
+  //   icon: <FilePen />,
+  // },
 
   {
     id: nanoid(),
@@ -48,36 +48,36 @@ const links: DashboardLinks[] = [
     href: "/addJob",
     icon: <Layers />,
   },
-  {
-    id: nanoid(),
-    label: "All Jobs",
-    href: "/jobs",
-    icon: <AppWindow />,
-  },
-  {
-    id: nanoid(),
-    label: "Stats",
-    href: "/stats",
-    icon: <AreaChart />,
-  },
+  // {
+  //   id: nanoid(),
+  //   label: "All Jobs",
+  //   href: "/jobs",
+  //   icon: <AppWindow />,
+  // },
+  // {
+  //   id: nanoid(),
+  //   label: "Stats",
+  //   href: "/stats",
+  //   icon: <AreaChart />,
+  // },
   {
     id: nanoid(),
     label: "Interview Prep",
     href: "/resources",
     icon: <Users2 />,
   },
-  {
-    id: nanoid(),
-    label: "Billing",
-    href: "/billing",
-    icon: <CreditCard />,
-  },
-  {
-    id: nanoid(),
-    label: "Services",
-    href: "/services",
-    icon: <SquareTerminal />,
-  },
+  // {
+  //   id: nanoid(),
+  //   label: "Billing",
+  //   href: "/billing",
+  //   icon: <CreditCard />,
+  // },
+  // {
+  //   id: nanoid(),
+  //   label: "Services",
+  //   href: "/services",
+  //   icon: <SquareTerminal />,
+  // },
   {
     id: nanoid(),
     label: "FAQs",

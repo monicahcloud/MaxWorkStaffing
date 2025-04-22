@@ -3,7 +3,7 @@ import interviewee from "../../../assets/rename.jpg";
 import resumes from "../../../assets/resume.jpg";
 import jobinterview from "../../../assets/interview.jpg";
 import SingleResource from "./SingleResource";
-import ServicePromoCard from "@/components/ServicePromoCard";
+// import ServicePromoCard from "@/components/ServicePromoCard";
 
 const resources = [
   {
@@ -36,7 +36,7 @@ const Resources = () => {
       <h1 className="text-4xl py-5 font-semibold text-center">
         Your guide to a perfect job interview
       </h1>
-      <ServicePromoCard />
+      {/* <ServicePromoCard /> */}
       <div className="flex flex-col gap-20 max-w-[900px] mx-auto mt-12">
         {resources.map((resource) => {
           return (
