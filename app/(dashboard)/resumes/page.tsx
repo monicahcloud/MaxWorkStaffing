@@ -10,6 +10,7 @@ import ResumeItem from "./ResumeItem";
 import CreateResumeButton from "./CreateReumeButton";
 import { getUserSubscriptionLevel } from "@/lib/subscription";
 import { canCreateResume } from "@/lib/permissions";
+import UploadResumeButton from "./UploadResumeButton";
 
 export const metadata: Metadata = {
   title: "Your Resumes",
@@ -45,11 +46,15 @@ async function Page() {
     <main>
       <SectionTitle text="My Resumes" subtext={`Total: ${totalCount}`} />
       <div className="p-10 md:px-20 lg:px-32">
-        <div className="text-center flext justify-center">
-          <CreateResumeButton
-            canCreate={canCreateResume(subscriptionLevel, totalCount)}
-          />
+        <div className="w-full flex justify-center">
+          <div className="flex items-center gap-4">
+            <CreateResumeButton
+              canCreate={canCreateResume(subscriptionLevel, totalCount)}
+            />
+            <UploadResumeButton />
+          </div>
         </div>
+
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 mt-10 gap-5">
           {resumes.map((resume) => (
             <ResumeItem key={resume.id} resume={resume} />

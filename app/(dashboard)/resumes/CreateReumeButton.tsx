@@ -19,7 +19,7 @@ export default function CreateResumeButton({
       <Button asChild className="mx-auto flex w-fit gap-2">
         <Link href="/resumebuilder">
           <PlusSquare className="size-5" />
-          New Resume
+          Create New Resume
         </Link>
       </Button>
     );

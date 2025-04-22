@@ -53,7 +53,8 @@ export function mapToResumeValues(data: ResumeServerData): ResumeValues {
     })),
 
     skills: data.skills,
-
+    uploadedFileUrl: data.uploadedFileUrl || undefined,
+    isUploaded: data.isUploaded ?? false,
     borderStyle: data.borderStyle,
     themeColor: data.themeColor,
     summary: data.summary || undefined,

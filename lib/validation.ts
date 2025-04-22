@@ -126,6 +126,8 @@ export const resumeSchema = z.object({
 export type ResumeValues = Omit<z.infer<typeof resumeSchema>, "photo"> & {
   id?: string;
   photo?: File | string | null;
+  uploadedFileUrl?: string | null;
+  isUploaded?: boolean;
 };
 
 export const generateWorkExperienceSchema = z.object({

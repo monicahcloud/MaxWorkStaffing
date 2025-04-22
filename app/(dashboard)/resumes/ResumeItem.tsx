@@ -13,7 +13,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { MoreVertical, Printer, Trash2 } from "lucide-react";
+import {
+  Download,
+  Eye,
+  FilePen,
+  MoreVertical,
+  Printer,
+  Trash2,
+} from "lucide-react";
 import { deleteResume } from "./action";
 import {
   Dialog,
@@ -26,9 +33,18 @@ import {
 import LoadingButton from "@/components/LoadingButton";
 import { toast } from "sonner";
 import { useReactToPrint } from "react-to-print";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { useRouter } from "next/navigation";
+
 interface ResumeItemProps {
   resume: ResumeServerData;
 }
+
 function ResumeItem({ resume }: ResumeItemProps) {
   const contentRef = useRef<HTMLDivElement>(null);
 
@@ -38,51 +54,94 @@ function ResumeItem({ resume }: ResumeItemProps) {
   });
 
   const wasUpdated = resume.updatedAt !== resume.createdAt;
+  const isUploaded = resume.isUploaded && resume.uploadedFileUrl;
+  const fileExt = resume.uploadedFileUrl?.split(".").pop()?.toLowerCase();
+  const isPDF = fileExt === "pdf";
 
   return (
-    <div className="group  relative border rounded-lg border-transparent hover:border-border transition-colors p-3 bg-secondary">
-      <div className="space-y-3">
-        <Link
-          href={`/editor?resumeId=${resume.id}`}
-          className="inline-block w-full text-center">
-          <p className="font-semibold line-clamp-1">
-            {resume.resumeTitle || "No Title"}
-          </p>
-          {resume.resumeType && (
-            <p className=" line-clamp-1 text-xs">{resume.resumeType}</p>
-          )}
-          {/*  {resume.description && (
-            <p className="text-xs line-clamp-1">{resume.description}</p>
-          )}*/}
+    <TooltipProvider>
+      <div className="group relative border rounded-lg hover:border-border transition-colors p-3 bg-secondary space-y-3">
+        {/* Title + Tooltip on hover */}
+        <div className="text-left space-y-1">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <p className="font-semibold line-clamp-1 cursor-default">
+                {resume.resumeTitle || "Untitled"}
+              </p>
+            </TooltipTrigger>
+            <TooltipContent side="top">
+              <p>{resume.isUploaded ? "Uploaded Resume" : "Created Resume"}</p>
+            </TooltipContent>
+          </Tooltip>
           <p className="text-xs text-muted-foreground">
-            {wasUpdated ? "Updated" : "Created"} on{" "}
-            {formatDate(resume.updatedAt, "MMM d, yyyy h:mm a")}
+            {resume.isUploaded
+              ? "Uploaded"
+              : wasUpdated
+              ? "Updated"
+              : "Created"}{" "}
+            on {formatDate(resume.updatedAt, "MMM d, yyyy h:mm a")}
           </p>
-        </Link>
-        <Link
-          href={`/editor?resumeId=${resume.id}`}
-          className="inline-block w-full">
-          <ResumePreview
-            resumeData={mapToResumeValues(resume)}
-            className="shadow-sm group-hover:shadow-lg transition-shadow overflow-hidden"
-            contentRef={contentRef}
-          />
-          <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-white to-transparent"></div>
-        </Link>
+        </div>
+
+        {/* Preview Area */}
+        <div>
+          {isUploaded && isPDF ? (
+            <iframe
+              src={`${resume.uploadedFileUrl}#toolbar=0&view=fitH`}
+              title="PDF Preview"
+              className="w-full h-[216px] border rounded shadow-sm"
+            />
+          ) : isUploaded ? (
+            <div className="w-full h-[216px] flex items-center justify-center text-xs text-muted-foreground border rounded">
+              No preview available
+            </div>
+          ) : (
+            <Link href={`/editor?resumeId=${resume.id}`}>
+              <ResumePreview
+                resumeData={mapToResumeValues(resume)}
+                className="h-[216px] shadow-sm group-hover:shadow-lg transition-shadow overflow-hidden"
+                contentRef={contentRef}
+              />
+            </Link>
+          )}
+        </div>
+
+        {/* More Menu Actions */}
+        <MoreMenu
+          resume={resume}
+          isUploaded={!!resume.isUploaded}
+          isPDF={isPDF}
+          onPrintClick={() => reactToPrintFn?.()}
+          contentRef={contentRef}
+        />
       </div>
-      <MoreMenu resumeId={resume.id} onPrintClick={reactToPrintFn} />
-    </div>
+    </TooltipProvider>
   );
 }
 
 export default ResumeItem;
 
 interface MoreMenuProps {
-  resumeId: string;
+  resume: ResumeServerData;
+  isUploaded: boolean;
+  isPDF: boolean;
   onPrintClick: () => void;
+  contentRef: React.RefObject<HTMLDivElement | null>; // ✅ allow null
 }
-function MoreMenu({ resumeId, onPrintClick }: MoreMenuProps) {
+
+function MoreMenu({ resume, isUploaded, onPrintClick }: MoreMenuProps) {
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const router = useRouter();
+  // const contentRef = useRef<HTMLDivElement>(null);
+
+  // const downloadResumeAsPDF = useReactToPrint({
+  //   content: () => contentRef.current,
+  //   documentTitle: resume.resumeTitle || "Resume",
+  // } as Parameters<typeof useReactToPrint>[0]);
+
+  function handleEdit() {
+    router.push(`/editor?resumeId=${resume.id}`);
+  }
 
   return (
     <>
@@ -96,22 +155,81 @@ function MoreMenu({ resumeId, onPrintClick }: MoreMenuProps) {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
+          {isUploaded && (
+            <>
+              <DropdownMenuItem asChild>
+                <Link
+                  href={resume.uploadedFileUrl!}
+                  target="_blank"
+                  rel="noopener noreferrer">
+                  <span className="flex items-center gap-2">
+                    <Eye className="size-4" />
+                    View
+                  </span>
+                </Link>
+              </DropdownMenuItem>
+
+              <DropdownMenuItem asChild>
+                <Link
+                  href={resume.uploadedFileUrl!}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  download>
+                  <span className="flex items-center gap-2">
+                    <Printer className="size-4" />
+                    Print
+                  </span>
+                </Link>
+              </DropdownMenuItem>
+
+              <DropdownMenuItem asChild>
+                <Link
+                  href={resume.uploadedFileUrl!}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  download>
+                  <span className="flex items-center gap-2">
+                    <Download className="size-4" />
+                    Download
+                  </span>
+                </Link>
+              </DropdownMenuItem>
+            </>
+          )}
+
+          {!isUploaded && (
+            <>
+              <DropdownMenuItem
+                className="flex items-center gap-2"
+                onClick={handleEdit}>
+                <FilePen className="size-4" />
+                Edit
+              </DropdownMenuItem>
+
+              <DropdownMenuItem
+                className="flex items-center gap-2"
+                onClick={onPrintClick}>
+                <Printer className="size-4" />
+                Print
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => onPrintClick()}>
+                <Download className="size-4" />
+                Download
+              </DropdownMenuItem>
+            </>
+          )}
+
           <DropdownMenuItem
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 text-destructive"
             onClick={() => setShowDeleteConfirmation(true)}>
             <Trash2 className="size-4" />
             Delete
           </DropdownMenuItem>
-          <DropdownMenuItem
-            className="flex items-center gap-2"
-            onClick={onPrintClick}>
-            <Printer className="size-4" />
-            Print
-          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+
       <DeleteConfirmationDialog
-        resumeId={resumeId}
+        resumeId={resume.id}
         open={showDeleteConfirmation}
         onOpenChange={setShowDeleteConfirmation}
       />

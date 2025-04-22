@@ -49,6 +49,8 @@ education Education[]
   skills String[]
   interest String[]
   User User[]
+   uploadedFileUrl  String?   // 👈 Add this line
+  isUploaded       Boolean  @default(false)
 }
 
 model WorkExperience {
