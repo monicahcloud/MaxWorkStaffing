@@ -207,7 +207,7 @@ export async function getStatsAction(): Promise<{
     };
     return defaultStats;
   } catch (error) {
-    redirect("/jobs");
+    redirect("/addJob");
   }
 }
 
@@ -245,6 +245,6 @@ export async function getChartsDataAction(): Promise<
 
     return applicationsPerMonth;
   } catch (error) {
-    redirect("/jobs");
+    redirect("/addJob");
   }
 }

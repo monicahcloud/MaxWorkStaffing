@@ -42,12 +42,12 @@ const links: DashboardLinks[] = [
   //   icon: <FilePen />,
   // },
 
-  {
-    id: nanoid(),
-    label: "Add Job",
-    href: "/addJob",
-    icon: <Layers />,
-  },
+  // {
+  //   id: nanoid(),
+  //   label: "Job Tracking",
+  //   href: "/jobTracking",
+  //   icon: <Layers />,
+  // },
   // {
   //   id: nanoid(),
   //   label: "All Jobs",

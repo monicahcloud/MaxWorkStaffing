@@ -18,7 +18,6 @@ function JobList() {
   const search = searchParams.get("search") || "";
   const jobStatus = searchParams.get("jobStatus") || "all";
   const pageNumber = Number(searchParams.get("page")) || 1;
-
   const fetchJobs = useCallback(() => {
     return getAllJobsAction({ search, jobStatus, page: pageNumber });
   }, [search, jobStatus, pageNumber]);

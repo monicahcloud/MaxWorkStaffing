@@ -26,7 +26,9 @@ function HomePage() {
     //     />
     //   </div>
     // </main>
-    <StatsPage />
+    <div className="min-h-screen bg-[url('/AbstractWhiteBG.png')] bg-cover bg-center flex items-center justify-center">
+      <StatsPage />
+    </div>
   );
 }
 

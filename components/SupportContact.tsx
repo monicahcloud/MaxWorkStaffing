@@ -41,40 +41,47 @@ function SupportContact() {
   };
 
   return (
-    <div className="max-w-xl mx-auto p-6 bg-white shadow rounded-2xl mt-10">
-      <Image
-        src={Logo}
-        alt="Logo"
-        priority
-        width={400}
-        height={400}
-        className="px-4 my-10 mx-auto"
-      />
-
-      <h2 className="text-2xl font-bold mb-4 text-center">
-        Need Help? Contact Support
-      </h2>
-
-      <form ref={form} onSubmit={handleSubmit} className="space-y-4">
-        <Input name="from_name" placeholder="Your Name" required />
-        <Input
-          name="from_email"
-          type="email"
-          placeholder="Your Email"
-          required
+    <div className="w-full max-w-5xl p-6 bg-red-700 shadow rounded-2xl ">
+      <div className="max-w-3xl mx-auto p-6 bg-white shadow rounded-2xl my-10">
+        <Image
+          src={Logo}
+          alt="Logo"
+          priority
+          width={400}
+          height={400}
+          className="px-4 my-10 mx-auto"
         />
-        <Textarea name="message" placeholder="Your Message" rows={5} required />
-        <Button type="submit" disabled={loading} className="w-full">
-          {loading ? "Sending..." : "Send Message"}
-        </Button>
-      </form>
 
-      <div className="text-center mt-6">
-        <Link
-          href="/faq"
-          className="text-muted-foreground text-lg hover:underline">
-          Need more help? View our FAQs
-        </Link>
+        <h2 className="text-2xl font-bold mb-4 text-center">
+          Need Help? Contact Support
+        </h2>
+
+        <form ref={form} onSubmit={handleSubmit} className="space-y-4">
+          <Input name="from_name" placeholder="Your Name" required />
+          <Input
+            name="from_email"
+            type="email"
+            placeholder="Your Email"
+            required
+          />
+          <Textarea
+            name="message"
+            placeholder="Your Message"
+            rows={5}
+            required
+          />
+          <Button type="submit" disabled={loading} className="w-full">
+            {loading ? "Sending..." : "Send Message"}
+          </Button>
+        </form>
+
+        <div className="text-center mt-6">
+          <Link
+            href="/faq"
+            className="text-muted-foreground text-lg hover:underline">
+            Need more help? View our FAQs
+          </Link>
+        </div>
       </div>
     </div>
   );

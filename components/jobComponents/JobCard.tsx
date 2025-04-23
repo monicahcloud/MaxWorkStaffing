@@ -21,12 +21,6 @@ export default function JobCard({ job }: { job: JobType }) {
   return (
     <>
       <Card className="bg-muted">
-        {/* <CardHeader>
-          <CardDescription className="uppercase text-xl font-bold">
-            {job.location}
-          </CardDescription>
-          <CardTitle className="capitalize text-2xl">{job.position}</CardTitle>
-        </CardHeader> */}
         <CardHeader>
           <CardTitle className="capitalize text-2xl">{job.position}</CardTitle>
           <CardDescription className="uppercase text-xl font-bold">
@@ -39,12 +33,7 @@ export default function JobCard({ job }: { job: JobType }) {
           <JobInfo icon={<Briefcase />} text={job.mode} />
           <JobInfo icon={<MapPin />} text={job.location} />
           <JobInfo icon={<CalendarDays />} text={date} />
-          {/* <CardDescription>
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Facilis
-            laboriosam porro, dicta sed inventore tenetur numquam ipsam in et
-            laborum exercitationem, nulla quae fuga, aperiam nisi est corrupti
-            provident labore?
-          </CardDescription> */}
+
           <Badge className="inline-flex items-center px-3 py-1">
             <JobInfo
               icon={<RadioTower className="w-4 h-4" />}

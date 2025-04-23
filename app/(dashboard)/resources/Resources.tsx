@@ -41,7 +41,7 @@ const resources = [
 const Resources = () => {
   return (
     <>
-      <h1 className="text-4xl py-5 font-semibold text-center">
+      <h1 className="text-6xl uppercase py-5 font-semibold text-center ">
         Your guide to a perfect job interview
       </h1>
       {/* <ServicePromoCard /> */}
