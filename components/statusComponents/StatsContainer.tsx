@@ -27,18 +27,17 @@ function StatsContainer() {
           subtext="Monitor your job application activity at a glance with real-time stats."
         />
       </div>
-      <div className="min-h-screen bg-[url('/AbstractWhiteBG.png')] bg-cover bg-center flex items-center justify-center">
-        <div className="grid md:grid-cols-2 gap-4 lg:grid-cols-3">
-          <StatsCard title="pending jobs" value={data?.Pending || 0} />
-          <StatsCard title="interviews set" value={data?.Interview || 0} />
-          <StatsCard title="jobs declined" value={data?.Declined || 0} />
-          <StatsCard title="hired" value={data?.Hired || 0} />
-          <StatsCard title="offer extended" value={data?.Offered || 0} />
-          <StatsCard
-            title="applications submitted"
-            value={data?.Submitted || 0}
-          />
-        </div>
+
+      <div className="grid md:grid-cols-2 gap-4 lg:grid-cols-3">
+        <StatsCard title="pending jobs" value={data?.Pending || 0} />
+        <StatsCard title="interviews set" value={data?.Interview || 0} />
+        <StatsCard title="jobs declined" value={data?.Declined || 0} />
+        <StatsCard title="hired" value={data?.Hired || 0} />
+        <StatsCard title="offer extended" value={data?.Offered || 0} />
+        <StatsCard
+          title="applications submitted"
+          value={data?.Submitted || 0}
+        />
       </div>
     </>
   );
