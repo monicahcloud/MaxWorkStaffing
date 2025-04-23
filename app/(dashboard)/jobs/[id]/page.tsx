@@ -1,30 +1,25 @@
-// import EditJobForm from "@/components/jobComponents/EditJobForm";
-// import { getSingleJobAction } from "@/utils/actions";
+import EditJobForm from "@/components/jobComponents/EditJobForm";
+import { getSingleJobAction } from "@/utils/actions";
 
-// import {
-//   dehydrate,
-//   HydrationBoundary,
-//   QueryClient,
-// } from "@tanstack/react-query";
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
 
-// async function JobDetailPage(props: { params: Promise<{ id: string }> }) {
-//   const params = await props.params;
-//   const queryClient = new QueryClient();
+async function JobDetailPage(props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
+  const queryClient = new QueryClient();
 
-//   await queryClient.prefetchQuery({
-//     queryKey: ["job", params.id],
-//     queryFn: () => getSingleJobAction(params.id),
-//   });
+  await queryClient.prefetchQuery({
+    queryKey: ["job", params.id],
+    queryFn: () => getSingleJobAction(params.id),
+  });
 
-//   return (
-//     <HydrationBoundary state={dehydrate(queryClient)}>
-//       <EditJobForm jobId={params.id} />
-//     </HydrationBoundary>
-//   );
-// }
-// export default JobDetailPage;
-import React from "react";
-
-export default function page() {
-  return <div>page</div>;
+  return (
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <EditJobForm jobId={params.id} />
+    </HydrationBoundary>
+  );
 }
+export default JobDetailPage;

@@ -165,7 +165,7 @@ export async function getSingleJobAction(id: string): Promise<JobType | null> {
     job = null;
   }
   if (!job) {
-    redirect("/jobs");
+    redirect("/addJob");
   }
   return job;
 }
