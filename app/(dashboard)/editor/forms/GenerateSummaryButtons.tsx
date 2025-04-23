@@ -2,7 +2,7 @@ import { toast } from "sonner";
 import usePremiumModal from "@/hooks/usePremiumModal";
 import { canUseAITools } from "@/lib/permissions";
 import { ResumeValues } from "@/lib/validation";
-import { Brain } from "lucide-react";
+import { Wand2 } from "lucide-react";
 import { useState } from "react";
 import { useSubscriptionLevel } from "../../SubscriptionLevelProvider";
 import { generateSummary } from "./action";
@@ -46,8 +46,8 @@ export default function GenerateSummaryButton({
       type="button"
       onClick={handleClick}
       loading={loading}>
-      <Brain className="size-4" />
-      Generate (AI)
+      <Wand2 className="size-4" />
+      Generate (AI) Suggestion
     </LoadingButton>
   );
 }

@@ -22,7 +22,7 @@ import {
   WorkExperience,
 } from "@/lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Brain } from "lucide-react";
+
 import { useState } from "react";
 import { generateWorkExperience } from "./action";
 import { Textarea } from "@/components/ui/textarea";
@@ -30,6 +30,7 @@ import { useForm } from "react-hook-form";
 import usePremiumModal from "@/hooks/usePremiumModal";
 import { useSubscriptionLevel } from "../../SubscriptionLevelProvider";
 import { canUseAITools } from "@/lib/permissions";
+import { Wand } from "lucide-react";
 
 interface GenerateWorkExperienceButtonProps {
   onWorkExperienceGenerated: (workExperience: WorkExperience) => void;
@@ -55,8 +56,8 @@ export default function GenerateWorkExperienceButton({
           }
           setShowInputDialog(true);
         }}>
-        <Brain className="size-4" />
-        Smart fill (AI)
+        <Wand className="size-4" />
+        Generate AI Suggestions
       </Button>
       <InputDialog
         open={showInputDialog}
@@ -119,6 +120,7 @@ function InputDialog({
                   <FormControl>
                     <Textarea
                       {...field}
+                      value={field.value ?? ""}
                       placeholder={`E.g. "from nov 2019 to dec 2020 I worked at google as a software engineer, my tasks were: ..."`}
                       autoFocus
                     />

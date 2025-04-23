@@ -13,7 +13,6 @@ import {
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 import { useForm } from "react-hook-form";
-import TechnicalSkillsForm from "../forms/TechnicalSkillsForm";
 function SkillsForm({ resumeData, setResumeData }: EditorFormProps) {
   const form = useForm<SkillsValues>({
     resolver: zodResolver(skillsSchema),
@@ -69,16 +68,14 @@ function SkillsForm({ resumeData, setResumeData }: EditorFormProps) {
           />
         </form>
       </Form>
-      <section className="max-w-xl mx-auto space-y-6 mt-5">
+      {/* <section className="max-w-xl mx-auto space-y-6 mt-5">
         <TechnicalSkillsForm
           resumeData={resumeData}
           setResumeData={setResumeData}
         />
-      </section>
+      </section> */}
     </div>
   );
 }
 
 export default SkillsForm;
-
-// *****************************************************************************************************************

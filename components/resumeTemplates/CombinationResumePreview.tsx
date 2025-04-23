@@ -79,23 +79,22 @@ function Sidebar({ resumeData }: { resumeData: ResumeValues }) {
 
   return (
     <div className="space-y-6 ">
-      {photoSrc && (
-        <Image
-          src={photoSrc}
-          width={200}
-          height={200}
-          alt="Author photo"
-          className="aspect-square object-cover mx-auto justify-center items-center"
-          style={{
-            borderRadius:
-              borderStyle === BorderStyles.SQUARE
-                ? "0px"
-                : borderStyle === BorderStyles.CIRCLE
-                ? "9999px"
-                : "10%",
-          }}
-        />
-      )}
+      <Image
+        src={photoSrc || "/placeholder-200x200.png"}
+        width={200}
+        height={200}
+        alt="Author photo"
+        className="aspect-square object-cover mx-auto justify-center items-center"
+        style={{
+          borderRadius:
+            borderStyle === BorderStyles.SQUARE
+              ? "0px"
+              : borderStyle === BorderStyles.CIRCLE
+              ? "9999px"
+              : "10%",
+        }}
+      />
+
       <div className="space-y-2">
         {email && (
           <p className="flex items-center gap-2">
@@ -119,12 +118,12 @@ function Sidebar({ resumeData }: { resumeData: ResumeValues }) {
         )}
         {linkedin && (
           <p className="flex items-center gap-2">
-            <Linkedin size={14} /> {linkedin}
+            <Linkedin size={14} style={{ color: themeColor }} /> {linkedin}
           </p>
         )}
         {gitHub && (
           <p className="flex items-center gap-2">
-            <Github size={14} /> {gitHub}
+            <Github size={14} style={{ color: themeColor }} /> {gitHub}
           </p>
         )}
       </div>
@@ -141,19 +140,29 @@ function MainContent({ resumeData }: { resumeData: ResumeValues }) {
 
   return (
     <div>
-      <div className="p-4 text-white" style={{ backgroundColor: themeColor }}>
-        <h1 className="text-4xl ">
+      <div
+        className="p-4 "
+        style={{ backgroundColor: themeColor || "#f3f4f6" }}>
+        <h1
+          className="text-4xl font-bold"
+          style={{ color: themeColor ? "#fff" : "#000" }}>
           {firstName} {lastName}
         </h1>
-        <p className="text-lg font-semibold underline-offset-4">{jobTitle}</p>
-        <p className="text-sm whitespace-pre-line text-slate-200">{summary}</p>
+        <p
+          className="text-lg font-semibold underline-offset-4"
+          style={{ color: themeColor ? "#fff" : "#000" }}>
+          {jobTitle}
+        </p>
+        <p
+          className="text-sm whitespace-pre-line text-slate-200"
+          style={{ color: themeColor ? "#e2e8f0" : "#333" }}>
+          {summary}
+        </p>
       </div>
       <div className="my-5">
-        {" "}
         <WorkExperienceSection resumeData={resumeData} />
       </div>
       <div>
-        {" "}
         <EducationSection resumeData={resumeData} />
       </div>
     </div>
