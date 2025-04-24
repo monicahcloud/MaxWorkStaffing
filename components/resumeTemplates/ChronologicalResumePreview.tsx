@@ -81,28 +81,30 @@ function PersonalInfoHeader({ resumeData }: ResumePreviewProps) {
   }, [photo]);
 
   return (
-    <div
-      className={`flex items-center gap-6 ${
-        !photoSrc ? "justify-center" : ""
-      }`}>
+    <div className="relative w-full flex justify-center">
+      {/* Left-aligned fixed image (only takes up space if it exists) */}
       {photoSrc && (
-        <Image
-          src={photoSrc}
-          width={100}
-          height={100}
-          alt="Author photo"
-          className="aspect-square object-cover"
-          style={{
-            borderRadius:
-              borderStyle === BorderStyles.SQUARE
-                ? "0px"
-                : borderStyle === BorderStyles.CIRCLE
-                ? "9999px"
-                : "10%",
-          }}
-        />
+        <div className="absolute left-0 top-0 flex justify-start items-start h-full">
+          <Image
+            src={photoSrc}
+            width={135}
+            height={130}
+            alt="Author photo"
+            className="aspect-square object-cover"
+            style={{
+              borderRadius:
+                borderStyle === BorderStyles.SQUARE
+                  ? "0px"
+                  : borderStyle === BorderStyles.CIRCLE
+                  ? "9999px"
+                  : "10%",
+            }}
+          />
+        </div>
       )}
-      <div className="space-y-2.5 text-center md:text-center">
+
+      {/* Centered content */}
+      <div className="text-center space-y-2.5">
         <div className="space-y-1">
           <p
             className="text-3xl font-bold"
@@ -120,15 +122,17 @@ function PersonalInfoHeader({ resumeData }: ResumePreviewProps) {
           </p>
           <p className="text-xs">{address}</p>
         </div>
+
         <p className="text-xs text-gray-500">
           {phone}
           {phone && email ? " • " : ""}
           {[email].filter(Boolean).join(" • ")}
         </p>
+
         <p className="text-xs text-gray-500">
           {website}
           {website && (linkedin || gitHub) ? " • " : ""}
-          {[website, linkedin, gitHub].filter(Boolean).join(" • ")}
+          {[linkedin, gitHub].filter(Boolean).join(" • ")}
         </p>
       </div>
     </div>
