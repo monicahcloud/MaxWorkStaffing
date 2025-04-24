@@ -65,6 +65,8 @@ function PersonalInfoHeader({ resumeData }: ResumePreviewProps) {
     phone,
     email,
     website,
+    linkedin,
+    gitHub,
     themeColor,
     borderStyle,
   } = resumeData;
@@ -116,11 +118,17 @@ function PersonalInfoHeader({ resumeData }: ResumePreviewProps) {
             }}>
             {jobTitle}
           </p>
+          <p className="text-xs">{address}</p>
         </div>
         <p className="text-xs text-gray-500">
-          {address}
-          {address && (phone || email || website) ? " • " : ""}
-          {[phone, email, website].filter(Boolean).join(" • ")}
+          {phone}
+          {phone && email ? " • " : ""}
+          {[email].filter(Boolean).join(" • ")}
+        </p>
+        <p className="text-xs text-gray-500">
+          {website}
+          {website && (linkedin || gitHub) ? " • " : ""}
+          {[website, linkedin, gitHub].filter(Boolean).join(" • ")}
         </p>
       </div>
     </div>

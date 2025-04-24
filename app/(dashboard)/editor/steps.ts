@@ -35,11 +35,11 @@ export const steps: {
     component: TechnicalSkillsForm,
     key: "techSkills",
   },
-  {
-    title: "Interest ",
-    component: InterestForm,
-    key: "interests",
-  },
+  // {
+  //   title: "Interests ",
+  //   component: InterestForm,
+  //   key: "interest",
+  // },
   {
     title: "Summary ",
     component: SummaryForm,

@@ -39,11 +39,11 @@ function InterestForm({ resumeData, setResumeData }: EditorFormProps) {
   return (
     <div className="max-w-xl mx-auto space-y-6">
       <div className="space-y-1.5 text-center">
-        <h2 className="text-2xl font-semibold"> Interest</h2>
-        <p className="text-sm text-muted-foreground">What do you like to do?</p>
+        <h2 className="text-2xl font-semibold capitalize"> Interests</h2>
+        <p className="text-sm text-muted-foreground">What do you enjoy?</p>
       </div>
       <Form {...form}>
-        <form className="space-t-3">
+        <form className="space-y-3">
           <FormField
             control={form.control}
             name="interest"
@@ -53,7 +53,7 @@ function InterestForm({ resumeData, setResumeData }: EditorFormProps) {
                 <FormControl>
                   <Textarea
                     {...field}
-                    placeholder="e.g. Chess, Video games, graphic design..."
+                    placeholder="e.g. Chess, Cooking, graphic design, ..."
                     onChange={(e) => {
                       const interest = e.target.value.split(",");
                       field.onChange(interest);

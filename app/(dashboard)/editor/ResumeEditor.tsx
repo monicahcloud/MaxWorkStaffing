@@ -76,6 +76,7 @@ function ResumeEditor({ resumeToEdit }: ResumeEditorProps) {
           </div>
 
           <div className=" md:block md:w-1/2 border-l">
+            {/* <pre>{JSON.stringify(resumeData, null, 2)}</pre> */}
             <ResumePreviewContainer
               resumeData={resumeData}
               setResumeData={setResumeData}
