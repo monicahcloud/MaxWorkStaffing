@@ -45,7 +45,6 @@ export async function generateSummary(input: GenerateSummaryInput) {
         Position: ${exp.position || "N/A"} at ${exp.company || "N/A"} from ${
           exp.startDate || "N/A"
         } to ${exp.endDate || "Present"}
-
         Description:
         ${exp.description || "N/A"}
         `
@@ -120,6 +119,7 @@ export async function generateWorkExperience(
 
   Job title: <job title>
   Company: <company name>
+  Location: <location> (only if provided)
   Start date: <format: YYYY-MM-DD> (only if provided)
   End date: <format: YYYY-MM-DD> (only if provided)
   Description: <an optimized description in bullet format, might be inferred from the job title>
@@ -155,6 +155,7 @@ export async function generateWorkExperience(
   return {
     position: aiResponse.match(/Job title: (.*)/)?.[1] || "",
     company: aiResponse.match(/Company: (.*)/)?.[1] || "",
+    location: aiResponse.match(/Location: (.*)/)?.[1] || "",
     description: (aiResponse.match(/Description:([\s\S]*)/)?.[1] || "").trim(),
     startDate: aiResponse.match(/Start date: (\d{4}-\d{2}-\d{2})/)?.[1],
     endDate: aiResponse.match(/End date: (\d{4}-\d{2}-\d{2})/)?.[1],

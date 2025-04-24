@@ -111,6 +111,7 @@ function EducationForm({ resumeData, setResumeData }: EditorFormProps) {
                   onClick={() =>
                     append({
                       degree: "",
+                      location: "",
                       school: "",
                       startDate: "",
                       endDate: "",

@@ -67,6 +67,7 @@ model WorkExperience {
   grade            String?
   status           String?
   time             String?
+   hours          String? 
 description String?
 resumeId String
 resume Resume @relation(fields: [resumeId], references: [id],  onDelete: Cascade)

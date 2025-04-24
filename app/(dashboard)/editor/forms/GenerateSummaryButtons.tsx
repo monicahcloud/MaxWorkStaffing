@@ -2,7 +2,7 @@ import { toast } from "sonner";
 import usePremiumModal from "@/hooks/usePremiumModal";
 import { canUseAITools } from "@/lib/permissions";
 import { ResumeValues } from "@/lib/validation";
-import { Wand2 } from "lucide-react";
+import { WandSparkles } from "lucide-react";
 import { useState } from "react";
 import { useSubscriptionLevel } from "../../SubscriptionLevelProvider";
 import { generateSummary } from "./action";
@@ -10,7 +10,7 @@ import LoadingButton from "@/components/LoadingButton";
 
 interface GenerateSummaryButtonProps {
   resumeData: ResumeValues;
-  onSummaryGenerated: (summary: string) => void;
+  onSummaryGenerated: (summary: string) => void; //callback
 }
 
 export default function GenerateSummaryButton({
@@ -46,7 +46,7 @@ export default function GenerateSummaryButton({
       type="button"
       onClick={handleClick}
       loading={loading}>
-      <Wand2 className="size-4" />
+      <WandSparkles className="size-4" />
       Generate (AI) Suggestion
     </LoadingButton>
   );

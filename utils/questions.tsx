@@ -38,7 +38,7 @@ export const interviewQuestions: InterviewQuestion[] = [
     question:
       "What experience do you have with handling confidential information?",
     answer:
-      "At BRP, I handled employee records and payroll data, ensuring that all information was stored securely and shared only with authorized personnel, maintaining compliance with data protection regulations.",
+      "At ABC Company, I handled employee records and payroll data, ensuring that all information was stored securely and shared only with authorized personnel, maintaining compliance with data protection regulations.",
     type: "public",
   },
   {
@@ -46,7 +46,7 @@ export const interviewQuestions: InterviewQuestion[] = [
     question:
       "Can you provide an example of a complex problem you solved and the steps you took to solve it?",
     answer:
-      "At BRP, I was tasked with integrating a legacy system with SAP. I conducted a needs analysis, mapped data flows, and coordinated with IT to implement the solution, resulting in streamlined operations.",
+      "At ABC Company, I was tasked with integrating a legacy system with SAP. I conducted a needs analysis, mapped data flows, and coordinated with IT to implement the solution, resulting in streamlined operations.",
     type: "public",
   },
   {
@@ -85,7 +85,7 @@ export const interviewQuestions: InterviewQuestion[] = [
     question:
       "Can you describe a project where you had to use data analysis to make decisions?",
     answer:
-      "At BRP, I analyzed production data trends using Power BI, which helped us identify bottlenecks and make decisions that improved throughput by 15%.",
+      "At ABC Company, I analyzed production data trends using Power BI, which helped us identify bottlenecks and make decisions that improved throughput by 15%.",
     type: "public",
   },
   {

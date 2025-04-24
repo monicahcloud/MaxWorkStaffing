@@ -30,10 +30,10 @@ import { useForm } from "react-hook-form";
 import usePremiumModal from "@/hooks/usePremiumModal";
 import { useSubscriptionLevel } from "../../SubscriptionLevelProvider";
 import { canUseAITools } from "@/lib/permissions";
-import { Wand } from "lucide-react";
+import { WandSparkles } from "lucide-react";
 
 interface GenerateWorkExperienceButtonProps {
-  onWorkExperienceGenerated: (workExperience: WorkExperience) => void;
+  onWorkExperienceGenerated: (workExperience: WorkExperience) => void; //callback
 }
 
 export default function GenerateWorkExperienceButton({
@@ -56,7 +56,7 @@ export default function GenerateWorkExperienceButton({
           }
           setShowInputDialog(true);
         }}>
-        <Wand className="size-4" />
+        <WandSparkles className="size-4" />
         Generate AI Suggestions
       </Button>
       <InputDialog
@@ -92,7 +92,7 @@ function InputDialog({
   async function onSubmit(input: GenerateWorkExperienceInput) {
     try {
       const response = await generateWorkExperience(input);
-      onWorkExperienceGenerated(response);
+      onWorkExperienceGenerated(response); //callback
     } catch (error) {
       console.error(error);
       toast.error("Something went wrong. Please try again.");
@@ -120,7 +120,7 @@ function InputDialog({
                   <FormControl>
                     <Textarea
                       {...field}
-                      value={field.value ?? ""}
+                      // value={field.value ?? ""}
                       placeholder={`E.g. "from nov 2019 to dec 2020 I worked at google as a software engineer, my tasks were: ..."`}
                       autoFocus
                     />

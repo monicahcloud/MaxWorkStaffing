@@ -36,11 +36,12 @@ import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
 import { CSS } from "@dnd-kit/utilities";
 import { cn } from "@/lib/utils";
 import GenerateWorkExperienceButton from "./GenerateWorkExperienceButton";
+
 function WorkExperienceForm({ resumeData, setResumeData }: EditorFormProps) {
   const form = useForm<WorkExperiencesValues>({
     resolver: zodResolver(workExperienceSchema),
     defaultValues: {
-      workExperiences: resumeData.workExperiences || [],
+      workExperiences: resumeData.workExperiences ?? [],
     },
   });
 
@@ -113,9 +114,16 @@ function WorkExperienceForm({ resumeData, setResumeData }: EditorFormProps) {
                   append({
                     position: "",
                     company: "",
+                    location: "",
                     startDate: "",
                     endDate: "",
                     description: "",
+                    status: "",
+                    clearance: "",
+                    duties: "",
+                    responsibilities: "",
+                    grade: "",
+                    hours: "",
                   })
                 }>
                 Add Work Experience
@@ -191,7 +199,7 @@ function WorkExperienceItem({
           <FormItem>
             <FormLabel>Company</FormLabel>
             <FormControl>
-              <Input {...field} />
+              <Input {...field} autoFocus />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -204,7 +212,7 @@ function WorkExperienceItem({
           <FormItem>
             <FormLabel>Location</FormLabel>
             <FormControl>
-              <Input {...field} />
+              <Input {...field} autoFocus />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -229,6 +237,7 @@ function WorkExperienceItem({
             </FormItem>
           )}
         />
+
         <FormField
           control={form.control}
           name={`workExperiences.${index}.endDate`}

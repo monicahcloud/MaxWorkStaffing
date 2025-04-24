@@ -44,7 +44,7 @@ const links: DashboardLinks[] = [
 
   {
     id: nanoid(),
-    label: "Job Tracking",
+    label: "Job Tracker",
     href: "/addJob",
     icon: <Layers />,
   },
@@ -62,7 +62,7 @@ const links: DashboardLinks[] = [
   // },
   {
     id: nanoid(),
-    label: "Interview Prep",
+    label: "Career Advancement",
     href: "/resources",
     icon: <Users2 />,
   },

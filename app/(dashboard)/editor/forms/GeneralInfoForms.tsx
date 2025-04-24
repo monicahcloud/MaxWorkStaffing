@@ -47,10 +47,9 @@ export default function GeneralInforForm({
       <div className="space-y-1.5 text-center">
         <h2 className="text-2xl font-semibold">General Info</h2>
         <p className="text-sm text-muted-foreground">
-          {" "}
           This will not appear on your resume
         </p>
-      </div>{" "}
+      </div>
       <Form {...form}>
         <form className="space-y-3">
           <FormField
@@ -73,12 +72,7 @@ export default function GeneralInforForm({
               <FormItem>
                 <FormLabel>Resume Type</FormLabel>
                 <FormControl>
-                  <Input
-                    {...field}
-                    readOnly
-                    // placeholder="Chronological Resume"
-                    autoFocus
-                  />
+                  <Input {...field} readOnly autoFocus />
                 </FormControl>
                 <FormMessage />
               </FormItem>

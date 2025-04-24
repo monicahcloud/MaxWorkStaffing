@@ -6,6 +6,7 @@ import Image from "next/image";
 import { formatDate } from "date-fns";
 import { BorderStyles } from "@/app/(dashboard)/editor/BorderStyleButton";
 import { Badge } from "../ui/badge";
+import { Heart } from "lucide-react";
 
 interface ResumePreviewProps {
   resumeData: ResumeValues;
@@ -41,6 +42,8 @@ function ChronologicalResumePreview({
         <WorkExperienceSection resumeData={resumeData} />
         <EducationSection resumeData={resumeData} />
         <SkillsSection resumeData={resumeData} />
+        <TechnicalSkillsSection resumeData={resumeData} />
+        <InterestSection resumeData={resumeData} />
       </div>
     </div>
   );
@@ -168,7 +171,7 @@ function WorkExperienceSection({ resumeData }: ResumePreviewProps) {
       />
       <div className="space-y-3">
         <p
-          className="text-lg font-semibold"
+          className="text-lg font-semibold uppercase text-center"
           style={{
             color: themeColor,
           }}>
@@ -220,7 +223,7 @@ function EducationSection({ resumeData }: ResumePreviewProps) {
       />
       <div className="space-y-3">
         <p
-          className="text-lg font-semibold"
+          className="text-lg font-semibold uppercase text-center"
           style={{
             color: themeColor,
           }}>
@@ -271,7 +274,7 @@ function SkillsSection({ resumeData }: ResumePreviewProps) {
       />
       <div className="break-inside-avoid space-y-3">
         <p
-          className="text-lg font-semibold"
+          className="text-lg font-semibold uppercase text-center"
           style={{
             color: themeColor,
           }}>
@@ -281,7 +284,7 @@ function SkillsSection({ resumeData }: ResumePreviewProps) {
           {skills.map((skill, index) => (
             <Badge
               key={index}
-              className="rounded-md bg-black text-white hover:bg-black"
+              className="rounded-md bg-black text-white hover:bg-black  justify-between"
               style={{
                 backgroundColor: themeColor,
                 borderRadius:
@@ -295,6 +298,84 @@ function SkillsSection({ resumeData }: ResumePreviewProps) {
             </Badge>
           ))}
         </div>
+      </div>
+    </>
+  );
+}
+function TechnicalSkillsSection({ resumeData }: ResumePreviewProps) {
+  const { techSkills, themeColor } = resumeData;
+  if (!techSkills?.length) return null;
+  return (
+    <>
+      <hr
+        className="border-2"
+        style={{
+          borderColor: themeColor,
+        }}
+      />
+      <div className="break-inside-avoid space-y-3">
+        <p
+          className="text-lg font-semibold uppercase text-center"
+          style={{
+            color: themeColor,
+          }}>
+          Technical Skills
+        </p>
+        <div className="flex break-inside-avoid flex-wrap gap-2">
+          {techSkills.map((skill, index) => {
+            const ratingPercentage = skill.rating * 20;
+
+            return (
+              <div
+                key={index}
+                className="flex items-center justify-between gap-4">
+                <h2 className="text-xs">{skill.name}</h2>
+                <div className="h-2 bg-gray-200 w-[120px]">
+                  <div
+                    className="h-2"
+                    style={{
+                      width: `${ratingPercentage}%`,
+                      backgroundColor: themeColor,
+                    }}></div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </>
+  );
+}
+
+function InterestSection({ resumeData }: ResumePreviewProps) {
+  const { interest, themeColor } = resumeData;
+
+  if (!interest?.length) return null;
+
+  return (
+    <>
+      <hr
+        className="border-2"
+        style={{
+          borderColor: themeColor,
+        }}
+      />
+      <div className="break-inside-avoid space-y-3">
+        <p
+          className="text-lg font-semibold uppercase"
+          style={{
+            color: themeColor,
+          }}>
+          Interests
+        </p>
+        <ul className="flex flex-wrap gap-x-4 gap-y-2 list-none">
+          {interest.map((item, index) => (
+            <li key={index} className="flex items-center gap-2 text-sm">
+              <Heart size={14} style={{ color: themeColor }} />
+              {item}
+            </li>
+          ))}
+        </ul>
       </div>
     </>
   );
