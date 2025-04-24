@@ -5,7 +5,7 @@ import WorkExperienceForm from "./forms/WorkExperienceForm";
 import EducationForm from "./forms/EducationForm";
 import SkillsForm from "./forms/SkillsForm";
 import SummaryForm from "./forms/SummaryForm";
-import InterestForm from "./forms/InterestForm";
+// import InterestForm from "./forms/InterestForm";
 import TechnicalSkillsForm from "./forms/TechnicalSkillsForm";
 
 export const steps: {
