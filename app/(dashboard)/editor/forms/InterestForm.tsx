@@ -53,7 +53,7 @@ function InterestForm({ resumeData, setResumeData }: EditorFormProps) {
                 <FormControl>
                   <Textarea
                     {...field}
-                    placeholder="e.g. chess, video games, graphic design..."
+                    placeholder="e.g. Chess, Video games, graphic design..."
                     onChange={(e) => {
                       const interest = e.target.value.split(",");
                       field.onChange(interest);
@@ -61,7 +61,7 @@ function InterestForm({ resumeData, setResumeData }: EditorFormProps) {
                   />
                 </FormControl>
                 <FormDescription>
-                  Separate each skill with a comma.
+                  Separate each interest with a comma.
                 </FormDescription>
                 <FormMessage />
               </FormItem>

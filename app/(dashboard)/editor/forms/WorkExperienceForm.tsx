@@ -41,7 +41,7 @@ function WorkExperienceForm({ resumeData, setResumeData }: EditorFormProps) {
   const form = useForm<WorkExperiencesValues>({
     resolver: zodResolver(workExperienceSchema),
     defaultValues: {
-      workExperiences: resumeData.workExperiences ?? [],
+      workExperiences: resumeData.workExperiences || [],
     },
   });
 
@@ -199,7 +199,7 @@ function WorkExperienceItem({
           <FormItem>
             <FormLabel>Company</FormLabel>
             <FormControl>
-              <Input {...field} autoFocus />
+              <Input {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -212,7 +212,7 @@ function WorkExperienceItem({
           <FormItem>
             <FormLabel>Location</FormLabel>
             <FormControl>
-              <Input {...field} autoFocus />
+              <Input {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -228,7 +228,6 @@ function WorkExperienceItem({
               <FormControl>
                 <Input
                   {...field}
-                  autoFocus
                   type="date"
                   value={field.value?.slice(0, 10)}
                 />
@@ -247,7 +246,6 @@ function WorkExperienceItem({
               <FormControl>
                 <Input
                   {...field}
-                  autoFocus
                   type="date"
                   value={field.value?.slice(0, 10)}
                 />
@@ -276,7 +274,7 @@ function WorkExperienceItem({
       />{" "}
       <GenerateWorkExperienceButton
         onWorkExperienceGenerated={(exp) =>
-          form.setValue(`workExperiences.${index}`, exp)
+          form.setValue(`workExperiences.${index}.description`, exp.description)
         }
       />
       <div className="justify-end flex">

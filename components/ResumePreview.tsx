@@ -36,7 +36,7 @@ export default function ResumePreview({
           className={className}
         />
       );
-    case "Combination Resume":
+    case "combination":
       return (
         <CombinationResumePreview
           resumeData={resumeData}

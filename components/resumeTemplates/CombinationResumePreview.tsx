@@ -257,44 +257,10 @@ function TechnicalSkillsSection({ resumeData }: ResumePreviewProps) {
     </>
   );
 }
-import { Heart } from "lucide-react"; // or choose any other icon you like
-
-function InterestSection({ resumeData }: ResumePreviewProps) {
-  const { interest, themeColor } = resumeData;
-
-  if (!interest?.length) return null;
-
-  return (
-    <>
-      <hr
-        className="border-2"
-        style={{
-          borderColor: themeColor,
-        }}
-      />
-      <div className="break-inside-avoid space-y-3">
-        <p
-          className="text-lg font-semibold uppercase"
-          style={{
-            color: themeColor,
-          }}>
-          Interests
-        </p>
-        <ul className="space-y-1 list-none">
-          {interest.map((item, index) => (
-            <li key={index} className="flex items-center gap-2 text-sm">
-              <Heart size={14} style={{ color: themeColor }} />
-              {item}
-            </li>
-          ))}
-        </ul>
-      </div>
-    </>
-  );
-}
+//import { Heart } from "lucide-react"; // or choose any other icon you like
 
 // function InterestSection({ resumeData }: ResumePreviewProps) {
-//   const { interest, themeColor, borderStyle } = resumeData;
+//   const { interest, themeColor } = resumeData;
 
 //   if (!interest?.length) return null;
 
@@ -314,28 +280,62 @@ function InterestSection({ resumeData }: ResumePreviewProps) {
 //           }}>
 //           Interests
 //         </p>
-//         <div className="flex break-inside-avoid flex-wrap gap-2">
-//           {interest.map((interest, index) => (
-//             <Badge
-//               key={index}
-//               className="rounded-md bg-black text-white hover:bg-black"
-//               style={{
-//                 backgroundColor: themeColor,
-//                 borderRadius:
-//                   borderStyle === BorderStyles.SQUARE
-//                     ? "0px"
-//                     : borderStyle === BorderStyles.CIRCLE
-//                     ? "9999px"
-//                     : "8px",
-//               }}>
-//               {interest}
-//             </Badge>
+//         <ul className="space-y-1 list-none">
+//           {interest.map((item, index) => (
+//             <li key={index} className="flex items-center gap-2 text-sm">
+//               <Heart size={14} style={{ color: themeColor }} />
+//               {item}
+//             </li>
 //           ))}
-//         </div>
+//         </ul>
 //       </div>
 //     </>
 //   );
 // }
+
+function InterestSection({ resumeData }: ResumePreviewProps) {
+  const { interest, themeColor, borderStyle } = resumeData;
+
+  if (!interest?.length) return null;
+
+  return (
+    <>
+      <hr
+        className="border-2"
+        style={{
+          borderColor: themeColor,
+        }}
+      />
+      <div className="break-inside-avoid space-y-3">
+        <p
+          className="text-lg font-semibold uppercase"
+          style={{
+            color: themeColor,
+          }}>
+          Interests
+        </p>
+        <div className="flex break-inside-avoid flex-wrap gap-2">
+          {interest.map((interest, index) => (
+            <Badge
+              key={index}
+              className="rounded-md bg-black text-white hover:bg-black"
+              style={{
+                backgroundColor: themeColor,
+                borderRadius:
+                  borderStyle === BorderStyles.SQUARE
+                    ? "0px"
+                    : borderStyle === BorderStyles.CIRCLE
+                    ? "9999px"
+                    : "8px",
+              }}>
+              {interest}
+            </Badge>
+          ))}
+        </div>
+      </div>
+    </>
+  );
+}
 function EducationSection({ resumeData }: ResumePreviewProps) {
   const { education, themeColor } = resumeData;
 
