@@ -142,3 +142,11 @@
 html {
   scroll-behavior: smooth;
 }
+
+:root {
+  --color-1: 0 100% 67%; /* hsl(0, 100%, 67%) -> Red */
+  --color-2: 39 100% 56%; /* hsl(0, 100%, 56%) -> Orange */
+  --color-3: 101 100% 41%; /* hsl(0, 100%, 41%) -> Green */
+  --color-4: 201 100% 50%; /* hsl(0, 60%, 50%) -> Blue */
+  --color-5: 276 100% 65%; /* hsl(0, 80%, 85%) -> Purple */
+}
