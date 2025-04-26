@@ -14,8 +14,6 @@ import {
   Github,
   Heart,
 } from "lucide-react";
-// import { Badge } from "@/components/ui/badge";
-// import { formatDate } from "date-fns";
 import React, { useEffect, useRef, useState } from "react";
 import { BorderStyles } from "@/app/(dashboard)/editor/BorderStyleButton";
 import { Badge } from "../ui/badge";

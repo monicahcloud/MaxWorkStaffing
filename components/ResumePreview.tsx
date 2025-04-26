@@ -3,7 +3,7 @@ import { Ref } from "react";
 import ChronologicalResumePreview from "./resumeTemplates/ChronologicalResumePreview";
 import FederalResumePreview from "./resumeTemplates/FederalResumePreview";
 import CombinationResumePreview from "./resumeTemplates/CombinationResumePreview";
-import FunctionalResumePreview from "./resumeTemplates/FunctionalResumePreview";
+//import FunctionalResumePreview from "./resumeTemplates/FunctionalResumePreview";
 
 interface ResumePreviewProps {
   resumeData: ResumeValues;
@@ -44,13 +44,13 @@ export default function ResumePreview({
           className={className}
         />
       );
-    case "functional":
-      return (
-        <FunctionalResumePreview
-          resumeData={resumeData}
-          contentRef={contentRef}
-          className={className}
-        />
-      );
+    // case "Functional Resume":
+    //   return (
+    //     <FunctionalResumePreview
+    //       resumeData={resumeData}
+    //       contentRef={contentRef}
+    //       className={className}
+    //     />
+    //   );
   }
 }

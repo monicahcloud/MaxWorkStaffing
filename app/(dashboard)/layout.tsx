@@ -1,8 +1,12 @@
 export const dynamic = "force-dynamic";
 import ThemeToggle from "@/components/ThemeToggle";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-// import { CreditCard, Menu } from "lucide-react";
+import {
+  Sheet,
+  SheetContent,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import Link from "next/link";
 import React, { PropsWithChildren } from "react";
 import { Toaster } from "sonner";
@@ -54,6 +58,7 @@ async function Dashboardlayout({ children }: PropsWithChildren) {
         <div className="flex flex-col">
           <div className="flex h-14 items-center gap-4 px-4 border-b bg-muted/40 lg:h-[60px] lg:px-6">
             <Sheet>
+              <SheetTitle></SheetTitle>
               <SheetTrigger>
                 <Button
                   asChild
