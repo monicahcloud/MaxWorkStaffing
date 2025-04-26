@@ -3,14 +3,16 @@ import React from "react";
 import { resumeTemplates } from "./ResumeTemplate";
 import ResumeTemplateCard from "./ResumeTemplateCard";
 
-function page() {
+function Page() {
   return (
     <>
       <div className="px-4">
         <SectionTitle text="Choose a Template" subtext="" />
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        <div className="flex overflow-x-auto space-x-6 py-4">
           {resumeTemplates.map((template) => (
-            <ResumeTemplateCard key={template.title} template={template} />
+            <div key={template.title} className="flex-shrink-0 w-80">
+              <ResumeTemplateCard template={template} />
+            </div>
           ))}
         </div>
       </div>
@@ -18,4 +20,4 @@ function page() {
   );
 }
 
-export default page;
+export default Page;
