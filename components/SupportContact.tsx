@@ -57,13 +57,8 @@ function SupportContact() {
         </h2>
 
         <form ref={form} onSubmit={handleSubmit} className="space-y-4">
-          <Input name="from_name" placeholder="Your Name" required />
-          <Input
-            name="from_email"
-            type="email"
-            placeholder="Your Email"
-            required
-          />
+          <Input name="name" placeholder="Your Name" required />
+          <Input name="email" type="email" placeholder="Your Email" required />
           <Textarea
             name="message"
             placeholder="Your Message"
