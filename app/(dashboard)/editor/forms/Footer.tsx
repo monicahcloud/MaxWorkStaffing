@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import React from "react";
-import { steps } from "../steps";
+import { getSteps } from "../steps";
 import { FileUserIcon, PenLineIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -11,6 +11,7 @@ interface FooterProps {
   showSmResumePreview: boolean;
   setShowSmResumePreview: (show: boolean) => void;
   isSaving: boolean;
+  resumeType?: string;
 }
 
 function Footer({
@@ -19,7 +20,9 @@ function Footer({
   showSmResumePreview,
   setShowSmResumePreview,
   isSaving,
+  resumeType,
 }: FooterProps) {
+  const steps = getSteps(resumeType);
   const previousStep = steps.find(
     (_, index) => steps[index + 1]?.key === currentStep
   )?.key;

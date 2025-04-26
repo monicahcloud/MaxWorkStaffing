@@ -19,7 +19,7 @@ export default function ResumePreview({
   const { resumeType } = resumeData;
 
   switch (resumeType) {
-    case "federal":
+    case "Federal Resume":
       return (
         <FederalResumePreview
           resumeData={resumeData}
@@ -27,7 +27,7 @@ export default function ResumePreview({
           className={className}
         />
       );
-    case "chronological":
+    case "Chronological Resume":
     default:
       return (
         <ChronologicalResumePreview
@@ -36,7 +36,7 @@ export default function ResumePreview({
           className={className}
         />
       );
-    case "combination":
+    case "Combination Resume":
       return (
         <CombinationResumePreview
           resumeData={resumeData}

@@ -44,6 +44,7 @@ export const workExperienceSchema = z.object({
         clearance: optionalString,
         duties: optionalString,
         responsibilities: optionalString,
+        accomplishments: optionalString,
         status: optionalString,
         grade: optionalString,
         hours: optionalString,
@@ -151,3 +152,23 @@ export const generateSummarySchema = z.object({
 });
 
 export type GenerateSummaryInput = z.infer<typeof generateSummarySchema>;
+
+export const generateDutiesSchema = z.object({
+  jobTitle: z
+    .string()
+    .trim()
+    .min(1, "Required")
+    .min(20, "Must be at least 20 characters"),
+});
+export type GenerateDutiesInput = z.infer<typeof generateDutiesSchema>;
+
+export const generateResponsibilitiesSchema = z.object({
+  jobTitle: z
+    .string()
+    .trim()
+    .min(1, "Required")
+    .min(20, "Must be at least 20 characters"),
+});
+export type GenerateResponsibilitiesInput = z.infer<
+  typeof generateResponsibilitiesSchema
+>;

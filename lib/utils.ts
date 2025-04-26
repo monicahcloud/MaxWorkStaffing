@@ -45,6 +45,7 @@ export function mapToResumeValues(data: ResumeServerData): ResumeValues {
       status: String(exp.status ?? ""),
       clearance: String(exp.clearance ?? ""),
       duties: String(exp.duties ?? ""),
+      accomplishments: String(exp.accomplishments ?? ""),
       responsibilities: String(exp.responsibilities ?? ""),
       grade: String(exp.grade ?? ""),
       hours: String(exp.hours ?? ""),
@@ -64,6 +65,7 @@ export function mapToResumeValues(data: ResumeServerData): ResumeValues {
     })),
 
     skills: data.skills,
+    interest: data.interest,
     uploadedFileUrl: data.uploadedFileUrl ?? "",
     isUploaded: data.isUploaded ?? false,
     borderStyle: data.borderStyle,

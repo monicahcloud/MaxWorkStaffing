@@ -2,7 +2,7 @@
 
 import Image, { StaticImageData } from "next/image";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { Card, CardContent, CardDescription } from "@/components/ui/card";
 
 interface ResumeTemplate {
   title: string;
@@ -20,43 +20,44 @@ const ResumeTemplateCard: React.FC<ResumeTemplateCardProps> = ({
   template,
 }) => {
   const router = useRouter();
-  const [hovered, setHovered] = useState(false);
 
   const handleClick = () => {
     router.push(`${template.href}?resumeType=${template.resumeType}`);
   };
 
   return (
-    <div
-      className="flex flex-col items-center w-full max-w-[280px] mx-auto cursor-pointer"
-      onClick={handleClick}>
-      <h2 className="text-center text-lg font-semibold whitespace-nowrap mb-2">
+    <div className="flex flex-col items-center w-full max-w-[400px] mx-auto space-y-2">
+      {/* Title outside the Card */}
+      <h2 className="text-3xl font-semibold text-center mt-5">
         {template.title}
       </h2>
-      <div
-        className="transition transform hover:scale-105 shadow-md rounded-lg overflow-hidden relative"
-        onMouseEnter={() => setHovered(true)}
-        onMouseLeave={() => setHovered(false)}>
-        <div className="relative w-[200px] h-[280px] sm:w-[240px] sm:h-[320px]">
-          <Image
-            src={template.image}
-            alt={`${template.title} Template`}
-            fill
-            className={`object-cover rounded-lg transition-all duration-300 ${
-              hovered ? "blur-md opacity-40" : "blur-0 opacity-100"
-            }`}
-          />
-          {hovered && (
-            <ul className="absolute top-0 left-0 w-full h-full flex flex-col justify-center items-center bg-gray-800 bg-opacity-75 text-white text-md p-3 rounded-lg">
+
+      <Card
+        onClick={handleClick}
+        className="w-full cursor-pointer hover:shadow-lg transition-all p-4">
+        <CardContent className="flex flex-col items-center gap-4">
+          {/* Image */}
+          <div className="relative w-[300px] h-[400px]">
+            <Image
+              src={template.image}
+              alt={`${template.title} Template`}
+              className="rounded-lg object-contain w-full h-full"
+            />
+          </div>
+
+          {/* Divider */}
+          <div className="w-full border-t border-gray-300" />
+
+          {/* Description */}
+          <CardDescription>
+            <ul className="text-base text-muted-foreground px-4 space-y-2 ">
               {template.description.map((item, index) => (
-                <li key={index} className="mb-1 text-center">
-                  {item}
-                </li>
+                <li key={index}>{item}</li>
               ))}
             </ul>
-          )}
-        </div>
-      </div>
+          </CardDescription>
+        </CardContent>
+      </Card>
     </div>
   );
 };

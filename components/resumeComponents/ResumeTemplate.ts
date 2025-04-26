@@ -12,7 +12,7 @@ export interface ResumeTemplate {
 export const resumeTemplates: ResumeTemplate[] = [
   {
     title: "Federal Resume",
-    image: "/federalTemplate.png",
+    image: "/fed.png",
     href: "/resumeBuilder/federalResume",
     description: [
       "Used For: Government jobs and civil service positions.",
@@ -23,7 +23,7 @@ export const resumeTemplates: ResumeTemplate[] = [
   },
   {
     title: "Chronological Resume",
-    image: "/jobseeker.jpg",
+    image: "/chron.png",
     href: "/resumeBuilder/chronologicalResume",
     description: [
       "Used For: Job seekers with solid work history.",
@@ -45,7 +45,7 @@ export const resumeTemplates: ResumeTemplate[] = [
   },
   {
     title: "Combination Resume",
-    image: "/functionalTemplate.png",
+    image: "/combo.png",
     href: "/resumeBuilder/combinationResume",
     description: [
       "Used For: Experienced professionals.",

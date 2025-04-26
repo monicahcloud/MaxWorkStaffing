@@ -18,6 +18,8 @@ import { EditorFormProps } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 
 function PersonalInfoForm({ resumeData, setResumeData }: EditorFormProps) {
+  console.log("Resume Type:", resumeData.resumeType);
+
   const form = useForm<PersonalInfoValues>({
     resolver: zodResolver(personalInfoSchema),
     defaultValues: {
@@ -58,43 +60,45 @@ function PersonalInfoForm({ resumeData, setResumeData }: EditorFormProps) {
       </div>
       <Form {...form}>
         <form>
-          <FormField
-            control={form.control}
-            name="photo"
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            render={({ field: { value, ...fieldValues } }) => (
-              <FormItem className="mb-2">
-                <FormLabel>Your Photo</FormLabel>
-                <div className=" flex items-center gap-2">
-                  <FormControl>
-                    <Input
-                      {...fieldValues}
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) => {
-                        const file = e.target.files?.[0];
-                        fieldValues.onChange(file);
-                      }}
-                      ref={photoInputRef}
-                    />
-                  </FormControl>
-                  <Button
-                    variant="secondary"
-                    type="button"
-                    onClick={() => {
-                      fieldValues.onChange(null);
-                      if (photoInputRef.current) {
-                        photoInputRef.current.value = "";
-                      }
-                    }}>
-                    Remove
-                  </Button>
-                </div>
-                <FormMessage />
-                <FormDescription></FormDescription>
-              </FormItem>
-            )}
-          />
+          {resumeData.resumeType !== "Federal Resume" && (
+            <FormField
+              control={form.control}
+              name="photo"
+              // eslint-disable-next-line @typescript-eslint/no-unused-vars
+              render={({ field: { value, ...fieldValues } }) => (
+                <FormItem className="mb-2">
+                  <FormLabel>Your Photo</FormLabel>
+                  <div className=" flex items-center gap-2">
+                    <FormControl>
+                      <Input
+                        {...fieldValues}
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          fieldValues.onChange(file);
+                        }}
+                        ref={photoInputRef}
+                      />
+                    </FormControl>
+                    <Button
+                      variant="secondary"
+                      type="button"
+                      onClick={() => {
+                        fieldValues.onChange(null);
+                        if (photoInputRef.current) {
+                          photoInputRef.current.value = "";
+                        }
+                      }}>
+                      Remove
+                    </Button>
+                  </div>
+                  <FormMessage />
+                  <FormDescription></FormDescription>
+                </FormItem>
+              )}
+            />
+          )}
           <div className="grid grid-cols-2 gap-3 ">
             <FormField
               control={form.control}
@@ -123,19 +127,21 @@ function PersonalInfoForm({ resumeData, setResumeData }: EditorFormProps) {
               )}
             />
           </div>
-          <FormField
-            control={form.control}
-            name="jobTitle"
-            render={({ field }) => (
-              <FormItem className="mb-2">
-                <FormLabel>Job Title</FormLabel>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          {resumeData.resumeType !== "Federal Resume" && (
+            <FormField
+              control={form.control}
+              name="jobTitle"
+              render={({ field }) => (
+                <FormItem className="mb-2">
+                  <FormLabel>Job Title</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
           <FormField
             control={form.control}
             name="address"
@@ -209,7 +215,7 @@ function PersonalInfoForm({ resumeData, setResumeData }: EditorFormProps) {
               name="gitHub"
               render={({ field }) => (
                 <FormItem className="mb-2">
-                  <FormLabel>GitHub</FormLabel>
+                  <FormLabel>GitHub (if applicable)</FormLabel>
                   <FormControl>
                     <Input {...field} />
                   </FormControl>

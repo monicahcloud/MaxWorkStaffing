@@ -36,6 +36,8 @@ import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
 import { CSS } from "@dnd-kit/utilities";
 import { cn } from "@/lib/utils";
 import GenerateWorkExperienceButton from "./GenerateWorkExperienceButton";
+import GenerateDutiesButton from "./GenerateDutiesButton";
+import GenerateResponsibilitiesButton from "./GenerateResponsibilitiesButton";
 
 function WorkExperienceForm({ resumeData, setResumeData }: EditorFormProps) {
   const form = useForm<WorkExperiencesValues>({
@@ -103,6 +105,7 @@ function WorkExperienceForm({ resumeData, setResumeData }: EditorFormProps) {
                     form={form}
                     remove={remove}
                     id={field.id}
+                    resumeType={resumeData.resumeType}
                   />
                 ))}
               </SortableContext>
@@ -143,12 +146,14 @@ interface WorkExperienceItemProps {
   form: UseFormReturn<WorkExperiencesValues>;
   index: number;
   remove: (index: number) => void;
+  resumeType?: string;
 }
 function WorkExperienceItem({
   id,
   form,
   index,
   remove,
+  resumeType,
 }: WorkExperienceItemProps) {
   const {
     attributes,
@@ -184,7 +189,7 @@ function WorkExperienceItem({
         name={`workExperiences.${index}.position`}
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Job Title</FormLabel>
+            <FormLabel>Job Title/Rank</FormLabel>
             <FormControl>
               <Input {...field} autoFocus />
             </FormControl>
@@ -218,6 +223,62 @@ function WorkExperienceItem({
           </FormItem>
         )}
       />
+      {resumeType === "Federal Resume" && (
+        <div className="grid grid-cols-4 gap-3">
+          <FormField
+            control={form.control}
+            name={`workExperiences.${index}.grade`}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Grade</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name={`workExperiences.${index}.status`}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Job Series</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name={`workExperiences.${index}.hours`}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Hours (hrs/wk)</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name={`workExperiences.${index}.clearance`}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Clearance</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+      )}
       <div className="grid grid-cols-2 gap-3">
         <FormField
           control={form.control}
@@ -259,24 +320,93 @@ function WorkExperienceItem({
         Leave <span className="font-semibold">end date</span> empty if you this
         is your current job.
       </FormDescription>
-      <FormField
-        control={form.control}
-        name={`workExperiences.${index}.description`}
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>Description</FormLabel>
-            <FormControl>
-              <Textarea {...field} />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />{" "}
-      <GenerateWorkExperienceButton
-        onWorkExperienceGenerated={(exp) =>
-          form.setValue(`workExperiences.${index}.description`, exp.description)
-        }
-      />
+      {resumeType !== "Federal Resume" && (
+        <FormField
+          control={form.control}
+          name={`workExperiences.${index}.description`}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Description</FormLabel>
+              <FormControl>
+                <Textarea {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      )}
+      {resumeType !== "Federal Resume" && (
+        <GenerateWorkExperienceButton
+          onWorkExperienceGenerated={(exp) =>
+            form.setValue(
+              `workExperiences.${index}.description`,
+              exp.description
+            )
+          }
+        />
+      )}
+      {resumeType === "Federal Resume" && (
+        <FormField
+          control={form.control}
+          name={`workExperiences.${index}.duties`}
+          render={({ field }) => (
+            <FormItem>
+              <GenerateDutiesButton
+                jobTitle={form.watch(`workExperiences.${index}.position`) || ""}
+                onDutiesGenerated={(duties) =>
+                  form.setValue(`workExperiences.${index}.duties`, duties)
+                }
+              />
+              <FormControl>
+                <Textarea {...field} placeholder="List duties here" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      )}
+      {resumeType === "Federal Resume" && (
+        <FormField
+          control={form.control}
+          name={`workExperiences.${index}.responsibilities`}
+          render={({ field }) => (
+            <FormItem>
+              <GenerateResponsibilitiesButton
+                jobTitle={form.watch(`workExperiences.${index}.position`) || ""}
+                onResponsibilitiesGenerated={(responsibilities) =>
+                  form.setValue(
+                    `workExperiences.${index}.responsibilities`,
+                    responsibilities
+                  )
+                }
+              />
+              <FormControl>
+                <Textarea {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      )}
+      {resumeType === "Federal Resume" && (
+        <FormField
+          control={form.control}
+          name={`workExperiences.${index}.accomplishments`}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Key Accomplishments</FormLabel>
+              <FormControl>
+                <Textarea
+                  {...field}
+                  placeholder="List key accomplishments here"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      )}
+
       <div className="justify-end flex">
         <Button
           variant="destructive"

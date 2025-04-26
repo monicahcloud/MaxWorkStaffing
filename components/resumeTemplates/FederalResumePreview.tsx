@@ -1,11 +1,8 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef } from "react";
 import { ResumeValues } from "@/lib/validation";
 import { cn } from "@/lib/utils";
 import useDimensions from "@/hooks/useDimensions";
-import Image from "next/image";
-import { Badge } from "../ui/badge";
 import { formatDate } from "date-fns";
-import { BorderStyles } from "@/app/(dashboard)/editor/BorderStyleButton";
 
 interface ResumePreviewProps {
   resumeData: ResumeValues;
@@ -40,7 +37,7 @@ function FederalResumePreview({
         <SummarySection resumeData={resumeData} />
         <WorkExperienceSection resumeData={resumeData} />
         <EducationSection resumeData={resumeData} />
-        <SkillsSection resumeData={resumeData} />
+        {/* <SkillsSection resumeData={resumeData} /> */}
       </div>
     </div>
   );
@@ -53,74 +50,35 @@ interface ResumePreviewProps {
 }
 
 function PersonalInfoHeader({ resumeData }: ResumePreviewProps) {
-  const {
-    photo,
-    firstName,
-    lastName,
-    jobTitle,
-    address,
-    phone,
-    email,
-    website,
-    themeColor,
-    borderStyle,
-  } = resumeData;
-
-  const [photoSrc, setPhotoSrc] = useState(photo instanceof File ? "" : photo);
-
-  useEffect(() => {
-    const objectUrl = photo instanceof File ? URL.createObjectURL(photo) : "";
-    if (objectUrl) setPhotoSrc(objectUrl);
-    if (photo === null) setPhotoSrc("");
-    return () => URL.revokeObjectURL(objectUrl);
-  }, [photo]);
-
+  const { firstName, lastName, address, phone, email, website, themeColor } =
+    resumeData;
   return (
-    <div
-      className={`flex items-center gap-6 ${
-        !photoSrc ? "justify-center" : ""
-      }`}>
-      {photoSrc && (
-        <Image
-          src={photoSrc}
-          width={100}
-          height={100}
-          alt="Author photo"
-          className="aspect-square object-cover"
-          style={{
-            borderRadius:
-              borderStyle === BorderStyles.SQUARE
-                ? "0px"
-                : borderStyle === BorderStyles.CIRCLE
-                ? "9999px"
-                : "10%",
-          }}
-        />
-      )}
-      <div className="space-y-2.5 text-center md:text-center">
-        <div className="space-y-1">
-          <p
-            className="text-3xl font-bold"
-            style={{
-              color: themeColor,
-            }}>
-            {firstName} {lastName}
+    <>
+      <div className="justify-center">
+        <div className="space-y-2.5 text-center md:text-center">
+          <p className="text-sm text-gray-500">
+            {address}
+            {address && (phone || email || website) ? " • " : ""}
+            {[phone, email, website].filter(Boolean).join(" • ")}
           </p>
-          <p
-            className="font-medium"
+          <hr
+            className="border-2"
             style={{
-              color: themeColor,
-            }}>
-            {jobTitle}
-          </p>
+              borderColor: themeColor,
+            }}
+          />
+          <div className="space-y-1">
+            <p
+              className="text-4xl mt-3 font-bold"
+              style={{
+                color: themeColor,
+              }}>
+              {firstName} {lastName}
+            </p>
+          </div>
         </div>
-        <p className="text-xs text-gray-500">
-          {address}
-          {address && (phone || email || website) ? " • " : ""}
-          {[phone, email, website].filter(Boolean).join(" • ")}
-        </p>
       </div>
-    </div>
+    </>
   );
 }
 function SummarySection({ resumeData }: ResumePreviewProps) {
@@ -130,19 +88,13 @@ function SummarySection({ resumeData }: ResumePreviewProps) {
 
   return (
     <>
-      <hr
-        className="border-2"
-        style={{
-          borderColor: themeColor,
-        }}
-      />
       <div className="break-inside-avoid space-y-3">
         <p
-          className="text-lg font-semibold"
+          className="text-lg font-semibold uppercase"
           style={{
             color: themeColor,
           }}>
-          Professional profile
+          Professional Summary
         </p>
         <div className="whitespace-pre-line text-sm">{summary}</div>
       </div>
@@ -168,7 +120,7 @@ function WorkExperienceSection({ resumeData }: ResumePreviewProps) {
       />
       <div className="space-y-3">
         <p
-          className="text-lg font-semibold"
+          className="text-lg font-semibold uppercase"
           style={{
             color: themeColor,
           }}>
@@ -191,10 +143,25 @@ function WorkExperienceSection({ resumeData }: ResumePreviewProps) {
             </div>
             <div className="flex items-center justify-between text-xs font-semibold">
               <span>{exp.company}</span>
-
               <span>{exp.location}</span>
             </div>
-            <div className="whitespace-pre-line text-xs">{exp.description}</div>
+            <div className="flex items-center justify-between text-xs font-semibold">
+              <span>Grade: {exp.grade}</span>
+              <span>Job Series: {exp.status}</span>
+              <span>Hours: {exp.hours}</span>
+              <span>{exp.clearance} Clearance</span>
+            </div>
+            <div className="whitespace-pre-line text-xs mt-2 font-bold">
+              Duties:<div className="font-normal"> {exp.duties}</div>
+            </div>
+            <div className="whitespace-pre-line text-xs mt-2 font-bold">
+              Responsibilities:
+              <div className="font-normal">{exp.responsibilities}</div>
+            </div>
+            <div className="whitespace-pre-line text-xs mt-2 font-bold">
+              Key Accomplishments
+              <div className="font-normal">{exp.accomplishments}</div>
+            </div>
           </div>
         ))}
       </div>
@@ -220,7 +187,7 @@ function EducationSection({ resumeData }: ResumePreviewProps) {
       />
       <div className="space-y-3">
         <p
-          className="text-lg font-semibold"
+          className="text-lg font-semibold uppercase"
           style={{
             color: themeColor,
           }}>
@@ -256,46 +223,46 @@ function EducationSection({ resumeData }: ResumePreviewProps) {
     </>
   );
 }
-function SkillsSection({ resumeData }: ResumePreviewProps) {
-  const { skills, themeColor, borderStyle } = resumeData;
+// function SkillsSection({ resumeData }: ResumePreviewProps) {
+//   const { skills, themeColor, borderStyle } = resumeData;
 
-  if (!skills?.length) return null;
+//   if (!skills?.length) return null;
 
-  return (
-    <>
-      <hr
-        className="border-2"
-        style={{
-          borderColor: themeColor,
-        }}
-      />
-      <div className="break-inside-avoid space-y-3">
-        <p
-          className="text-lg font-semibold"
-          style={{
-            color: themeColor,
-          }}>
-          Skills
-        </p>
-        <div className="flex break-inside-avoid flex-wrap gap-2">
-          {skills.map((skill, index) => (
-            <Badge
-              key={index}
-              className="rounded-md bg-black text-white hover:bg-black"
-              style={{
-                backgroundColor: themeColor,
-                borderRadius:
-                  borderStyle === BorderStyles.SQUARE
-                    ? "0px"
-                    : borderStyle === BorderStyles.CIRCLE
-                    ? "9999px"
-                    : "8px",
-              }}>
-              {skill}
-            </Badge>
-          ))}
-        </div>
-      </div>
-    </>
-  );
-}
+//   return (
+//     <>
+//       <hr
+//         className="border-2"
+//         style={{
+//           borderColor: themeColor,
+//         }}
+//       />
+//       <div className="break-inside-avoid space-y-3">
+//         <p
+//           className="text-lg font-semibold uppercase"
+//           style={{
+//             color: themeColor,
+//           }}>
+//           Skills
+//         </p>
+//         <div className="flex break-inside-avoid flex-wrap gap-2">
+//           {skills.map((skill, index) => (
+//             <Badge
+//               key={index}
+//               className="rounded-md bg-black text-white hover:bg-black"
+//               style={{
+//                 backgroundColor: themeColor,
+//                 borderRadius:
+//                   borderStyle === BorderStyles.SQUARE
+//                     ? "0px"
+//                     : borderStyle === BorderStyles.CIRCLE
+//                     ? "9999px"
+//                     : "8px",
+//               }}>
+//               {skill}
+//             </Badge>
+//           ))}
+//         </div>
+//       </div>
+//     </>
+//   );
+// }

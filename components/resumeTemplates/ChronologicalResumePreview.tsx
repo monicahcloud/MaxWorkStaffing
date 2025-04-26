@@ -104,32 +104,32 @@ function PersonalInfoHeader({ resumeData }: ResumePreviewProps) {
       )}
 
       {/* Centered content */}
-      <div className="text-center space-y-2.5">
-        <div className="space-y-1">
+      <div className="text-center space-y-1">
+        <div className="">
           <p
-            className="text-3xl font-bold"
+            className="text-4xl font-bold"
             style={{
               color: themeColor,
             }}>
             {firstName} {lastName}
           </p>
           <p
-            className="font-medium"
+            className="text-2xl"
             style={{
               color: themeColor,
             }}>
             {jobTitle}
           </p>
-          <p className="text-xs">{address}</p>
+          <p className="text-xl">{address}</p>
         </div>
 
-        <p className="text-xs text-gray-500">
+        <p className="text-sm text-gray-700">
           {phone}
           {phone && email ? " • " : ""}
           {[email].filter(Boolean).join(" • ")}
         </p>
 
-        <p className="text-xs text-gray-500">
+        <p className="text-sm text-gray-700">
           {website}
           {website && (linkedin || gitHub) ? " • " : ""}
           {[linkedin, gitHub].filter(Boolean).join(" • ")}
@@ -153,7 +153,7 @@ function SummarySection({ resumeData }: ResumePreviewProps) {
       />
       <div className="break-inside-avoid space-y-3">
         <p
-          className="text-lg font-semibold"
+          className="text-lg font-semibold text-center"
           style={{
             color: themeColor,
           }}>
@@ -374,7 +374,7 @@ function InterestSection({ resumeData }: ResumePreviewProps) {
       />
       <div className="break-inside-avoid space-y-3">
         <p
-          className="text-lg font-semibold uppercase"
+          className="text-lg font-semibold uppercase text-center"
           style={{
             color: themeColor,
           }}>

@@ -2,7 +2,8 @@
 import SectionTitle from "@/components/SectionTitle";
 import React, { useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { steps } from "./steps";
+import { getSteps } from "./steps";
+
 import Breadcrumbs from "./Breadcrumbs";
 import Footer from "./forms/Footer";
 import { ResumeValues } from "@/lib/validation";
@@ -32,7 +33,7 @@ function ResumeEditor({ resumeToEdit }: ResumeEditorProps) {
       resumeType: resumeTypeFromTemplate, // Prepopulate here!
     };
   });
-
+  const steps = getSteps(resumeData.resumeType);
   const [showSmResumePreview, setShowSmResumePreview] = useState(false);
 
   const { isSaving, hasUnsavedChanges } = useAutoSaveResume(resumeData);
@@ -66,7 +67,11 @@ function ResumeEditor({ resumeToEdit }: ResumeEditorProps) {
               "p-3 space-y-6 overflow-y-auto w-full md:w-1/2", // Ensure it's half on medium+
               showSmResumePreview && "hidden"
             )}>
-            <Breadcrumbs currentStep={currentStep} setCurrentStep={setStep} />
+            <Breadcrumbs
+              currentStep={currentStep}
+              setCurrentStep={setStep}
+              resumeType={resumeData.resumeType}
+            />
             {FormComponent && (
               <FormComponent
                 resumeData={resumeData}

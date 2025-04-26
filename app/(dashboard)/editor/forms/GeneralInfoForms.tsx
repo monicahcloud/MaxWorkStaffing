@@ -4,7 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -57,7 +56,7 @@ export default function GeneralInforForm({
             name="resumeTitle"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Project Name</FormLabel>
+                <FormLabel>Resume Name</FormLabel>
                 <FormControl>
                   <Input {...field} placeholder="My First Resume" autoFocus />
                 </FormControl>
@@ -78,7 +77,7 @@ export default function GeneralInforForm({
               </FormItem>
             )}
           />
-          <FormField
+          {/* <FormField
             control={form.control}
             name="description"
             render={({ field }) => (
@@ -97,7 +96,7 @@ export default function GeneralInforForm({
                 <FormMessage />
               </FormItem>
             )}
-          />
+          /> */}
         </form>
       </Form>
     </div>

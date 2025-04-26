@@ -4,6 +4,8 @@ import openai from "@/lib/openai";
 import { canUseAITools } from "@/lib/permissions";
 import { getUserSubscriptionLevel } from "@/lib/subscription";
 import {
+  GenerateDutiesInput,
+  GenerateResponsibilitiesInput,
   GenerateSummaryInput,
   generateSummarySchema,
   GenerateWorkExperienceInput,
@@ -160,4 +162,82 @@ export async function generateWorkExperience(
     startDate: aiResponse.match(/Start date: (\d{4}-\d{2}-\d{2})/)?.[1],
     endDate: aiResponse.match(/End date: (\d{4}-\d{2}-\d{2})/)?.[1],
   } satisfies WorkExperience;
+}
+
+export async function generateDuties(input: GenerateDutiesInput) {
+  const { userId } = await auth();
+
+  if (!userId) throw new Error("Unauthorized");
+
+  const subscriptionLevel = await getUserSubscriptionLevel(userId);
+
+  if (!canUseAITools(subscriptionLevel)) {
+    throw new Error("Upgrade your subscription to use this feature");
+  }
+
+  const { jobTitle } = input;
+
+  const systemMessage = `
+    You are an AI resume assistant. Generate a summary of duties for a resume based on the following job title. 
+    Be specific, professional, and relevant to real-world work experience. Only return summary. No extra text.
+  `;
+
+  const userMessage = `Job title: ${jobTitle}`;
+
+  const completion = await openai.chat.completions.create({
+    model: "gpt-4o-mini",
+    messages: [
+      { role: "system", content: systemMessage },
+      { role: "user", content: userMessage },
+    ],
+    temperature: 0.7,
+  });
+
+  const aiResponse = completion.choices[0].message.content;
+
+  if (!aiResponse) {
+    throw new Error("Failed to generate AI response");
+  }
+
+  return aiResponse.trim();
+}
+
+export async function generateResponsibilities(
+  input: GenerateResponsibilitiesInput
+) {
+  const { userId } = await auth();
+
+  if (!userId) throw new Error("Unauthorized");
+
+  const subscriptionLevel = await getUserSubscriptionLevel(userId);
+
+  if (!canUseAITools(subscriptionLevel)) {
+    throw new Error("Upgrade your subscription to use this feature");
+  }
+
+  const { jobTitle } = input;
+
+  const systemMessage = `
+    You are an AI resume assistant. Generate a summary of responsibilities for a resume based on the following job title. 
+    Be specific, professional, and relevant to real-world work experience. Only return summary. No extra text.
+  `;
+
+  const userMessage = `Job title: ${jobTitle}`;
+
+  const completion = await openai.chat.completions.create({
+    model: "gpt-4o-mini",
+    messages: [
+      { role: "system", content: systemMessage },
+      { role: "user", content: userMessage },
+    ],
+    temperature: 0.7,
+  });
+
+  const aiResponse = completion.choices[0].message.content;
+
+  if (!aiResponse) {
+    throw new Error("Failed to generate AI response");
+  }
+
+  return aiResponse.trim();
 }
