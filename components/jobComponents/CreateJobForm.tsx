@@ -14,7 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-// import { useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import CustomFormSelect, { CustomFormField } from "../FormComponentFile";
 import { createJobAction } from "@/utils/actions";
 import SectionTitle from "../SectionTitle";
@@ -33,7 +33,7 @@ function CreateJobForm() {
   });
   const queryClient = useQueryClient();
 
-  // const router = useRouter();
+  const router = useRouter();
   const { mutate, isPending } = useMutation({
     mutationFn: (values: CreateAndEditJobType) => createJobAction(values),
     onSuccess: (data) => {
@@ -47,7 +47,7 @@ function CreateJobForm() {
       queryClient.invalidateQueries({ queryKey: ["stats"] });
       queryClient.invalidateQueries({ queryKey: ["charts"] });
 
-      // router.push("/jobs");
+      router.push("/addJob");
       form.reset();
     },
   });

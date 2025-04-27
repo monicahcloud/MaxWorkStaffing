@@ -1,6 +1,6 @@
 import { StaticImageData } from "next/image";
 import federal from "../../../assets/fed.png";
-//import functional from "../../../assets/functional.png";
+import functional from "../../../assets/func.png";
 import combination from "../../../assets/combo.png";
 import chronological from "../../../assets/chron.png";
 export interface ResumeTemplate {
@@ -31,15 +31,15 @@ export const resumeTemplates: ResumeTemplate[] = [
     ],
     resumeType: "Chronological Resume",
   },
-  // {
-  //   title: "Functional Resume",
-  //   image: functional,
-  //   href: "/editor",
-  //   description: [
-  //     "Great for career changers or gaps. Focuses on skills rather than job timelines.",
-  //   ],
-  //   resumeType: "Functional Resume",
-  // },
+  {
+    title: "Functional Resume",
+    image: functional,
+    href: "/editor",
+    description: [
+      "Great for career changers or gaps. Focuses on skills rather than job timelines.",
+    ],
+    resumeType: "Functional Resume",
+  },
   {
     title: "Combination Resume",
     image: combination,

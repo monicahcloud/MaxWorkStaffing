@@ -12,11 +12,11 @@ function DeleteJobBtn({ id }: { id: string }) {
         toast("there was an error");
         return;
       }
+      toast("job removed");
       queryClient.invalidateQueries({ queryKey: ["jobs"] });
       queryClient.invalidateQueries({ queryKey: ["stats"] });
       queryClient.invalidateQueries({ queryKey: ["charts"] });
-
-      toast("job removed");
+      
     },
   });
   return (

@@ -4,7 +4,6 @@ import { ResumeValues } from "@/lib/validation";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import useDimensions from "@/hooks/useDimensions";
-//import { BorderStyles } from "@/app/(dashboard)/editor/BorderStyleButton";
 import {
   Mail,
   Phone,
@@ -131,7 +130,6 @@ function Sidebar({ resumeData }: { resumeData: ResumeValues }) {
           </p>
         )}
       </div>
-
       <TechnicalSkillsSection resumeData={resumeData} />
       <SkillsSection resumeData={resumeData} />
       <InterestSection resumeData={resumeData} />

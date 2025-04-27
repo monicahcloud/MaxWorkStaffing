@@ -28,7 +28,7 @@ const ResumeTemplateCard: React.FC<ResumeTemplateCardProps> = ({
   return (
     <div className="flex flex-col items-center w-full max-w-[400px] mx-auto space-y-2">
       {/* Title outside the Card */}
-      <h2 className="text-3xl font-semibold text-center mt-5">
+      <h2 className="text-2xl font-semibold text-center mt-5">
         {template.title}
       </h2>
 

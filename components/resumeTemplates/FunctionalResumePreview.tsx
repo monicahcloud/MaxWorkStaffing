@@ -3,11 +3,19 @@ import { ResumeValues } from "@/lib/validation";
 import { cn } from "@/lib/utils";
 import useDimensions from "@/hooks/useDimensions";
 import Image from "next/image";
-
 import { BorderStyles } from "@/app/(dashboard)/editor/BorderStyleButton";
-
-import { Globe, Linkedin, Mail, MapPin, Phone } from "lucide-react";
+import {
+  Github,
+  Globe,
+  Heart,
+  Linkedin,
+  Mail,
+  MapPin,
+  Phone,
+} from "lucide-react";
 import { Card, CardContent } from "../ui/card";
+import { Badge } from "../ui/badge";
+import { formatDate } from "date-fns";
 
 interface ResumePreviewProps {
   resumeData: ResumeValues;
@@ -15,7 +23,7 @@ interface ResumePreviewProps {
   contentRef?: React.Ref<HTMLDivElement>;
 }
 
-function FunctionalResumePreview({
+export default function FunctionalResumePreview({
   resumeData,
   className,
   contentRef,
@@ -31,24 +39,22 @@ function FunctionalResumePreview({
       )}
       ref={containerRef}>
       <div
-        className={cn("space-y-6 p-6 origin-top-left ", !width && "invisible")}
+        className={cn("space-y-6 p-4 origin-top-left ", !width && "invisible")}
         style={{
-          width: "794px", // Lock original width
+          width: "794px",
           transform: `scale(${width / 794})`,
         }}
         ref={contentRef}
         id="resumePreviewContent">
-        <PersonalInfoHeader resumeData={resumeData} />
-        <MainContent />
+        <div className="w-[100%] space-y-6 ">
+          <PersonalInfoHeader resumeData={resumeData} />
+        </div>
+        <div className="w-[100%] space-y-6">
+          <MainContent resumeData={resumeData} />
+        </div>
       </div>
     </div>
   );
-}
-
-export default FunctionalResumePreview;
-
-interface ResumePreviewProps {
-  resumeData: ResumeValues;
 }
 
 function PersonalInfoHeader({ resumeData }: ResumePreviewProps) {
@@ -63,6 +69,7 @@ function PersonalInfoHeader({ resumeData }: ResumePreviewProps) {
     website,
     summary,
     linkedin,
+    gitHub,
     themeColor,
     borderStyle,
   } = resumeData;
@@ -77,157 +84,298 @@ function PersonalInfoHeader({ resumeData }: ResumePreviewProps) {
   }, [photo]);
 
   return (
-    <>
-      <div className="bg-neutral-900 rounded-xl">
-        <div className="grid-cols-2 flex ">
-          <Card className="flex flex-col md:flex-row items-center md:items-start gap-6 p-6 bg-primary-foreground shadow-md">
-            <div className="flex-1">
-              <h1 className="text-4xl font-bold" style={{ color: themeColor }}>
-                {firstName} {lastName}
-              </h1>
-              <h2 className="text-lg text-muted-foreground">{jobTitle}</h2>
-              <p className="mt-4 text-sm text-muted-foreground">{summary}</p>
-            </div>
-            <div className="flex flex-col items-center gap-4">
-              {photoSrc && (
-                <Image
-                  src={photoSrc}
-                  width={100}
-                  height={100}
-                  alt="Author photo"
-                  className="w-48 h-48 rounded-full object-cover"
+    <div className="grid-cols-2  ">
+      <Card className="personal-info-card flex flex-col md:flex-row md:items-start gap-6 p-2 px-4 bg-primary-foreground shadow-md">
+        <div className="flex-1">
+          <h1 className="text-4xl font-bold" style={{ color: themeColor }}>
+            {firstName} {lastName}
+          </h1>
+          <h2 className="text-lg text-muted-foreground">{jobTitle}</h2>
+          <p className="mt-4 text-sm text-muted-foreground">{summary}</p>
+        </div>
+        <div className="flex flex-col items-center gap-4">
+          {photoSrc && (
+            <Image
+              src={photoSrc || "/placeholder-200x200.png"}
+              width={100}
+              height={100}
+              alt="Author photo"
+              className="w-48 h-48 rounded-full object-cover"
+              style={{
+                borderRadius:
+                  borderStyle === BorderStyles.SQUARE
+                    ? "0px"
+                    : borderStyle === BorderStyles.CIRCLE
+                    ? "9999px"
+                    : "10%",
+              }}
+            />
+          )}
+          <div className="flex flex-col  text-sm text-muted-foreground space-y-1">
+            <p className="flex gap-2">
+              <Mail size={14} style={{ color: themeColor }} /> {email}
+            </p>
+
+            <p className="flex  gap-2">
+              <Phone size={14} style={{ color: themeColor }} /> {phone}
+            </p>
+
+            <p className="flex  gap-2">
+              <MapPin size={14} style={{ color: themeColor }} /> {address}
+            </p>
+
+            <p className="flex  gap-2">
+              <Globe size={14} style={{ color: themeColor }} /> {website}
+            </p>
+
+            <p className="flex  gap-2">
+              <Linkedin size={14} style={{ color: themeColor }} /> {linkedin}
+            </p>
+
+            <p className="flex  gap-2">
+              <Github size={14} style={{ color: themeColor }} /> {gitHub}
+            </p>
+          </div>
+        </div>
+      </Card>
+    </div>
+  );
+}
+function MainContent({ resumeData }: ResumePreviewProps) {
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+      {/* Left Side - Work Experience */}
+      <WorkExperienceSection resumeData={resumeData} />
+
+      {/* Right Side - Skills, Education, etc */}
+      <div className="space-y-4">
+        <SkillsSection resumeData={resumeData} />
+        <div className="space-y-4">
+          <TechnicalSkillsSection resumeData={resumeData} />
+        </div>
+        <div>
+          <EducationSection resumeData={resumeData} />
+        </div>
+
+        <div>
+          <InterestSection resumeData={resumeData} />
+        </div>
+      </div>
+    </div>
+  );
+}
+function WorkExperienceSection({ resumeData }: ResumePreviewProps) {
+  const { workExperiences, themeColor } = resumeData;
+
+  const workExperiencesNotEmpty = workExperiences?.filter(
+    (exp) => Object.values(exp).filter(Boolean).length > 0
+  );
+
+  if (!workExperiencesNotEmpty?.length) return null;
+
+  return (
+    <div className="md:col-span-2 space-y-2">
+      <Card className="break-inside-avoid space-y-3">
+        <CardContent className="px-2">
+          <h3
+            className="text-2xl font-semibold  "
+            style={{
+              color: themeColor,
+            }}>
+            Work Experience
+          </h3>
+          {workExperiences && workExperiences.length > 0 ? (
+            workExperiences.map((exp, index) => (
+              <div key={index} className="mb-4">
+                <h4
+                  className="text-lg font-semibold"
                   style={{
+                    borderColor: themeColor,
+                  }}>
+                  {exp.position}
+                </h4>
+                <p className="text-sm text-muted-foreground">
+                  {exp.company} | {exp.location} (
+                  {exp.startDate && formatDate(exp.startDate, "MM/yyyy")} -
+                  {exp.endDate ? formatDate(exp.endDate, "MM/yyyy") : "Present"}
+                  )
+                </p>
+
+                <div className="whitespace-pre-line text-xs">
+                  {exp.description}
+                </div>
+              </div>
+            ))
+          ) : (
+            <p className="text-muted-foreground">No work experience listed.</p>
+          )}
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+function SkillsSection({ resumeData }: ResumePreviewProps) {
+  const { skills, themeColor, borderStyle } = resumeData;
+
+  if (!skills?.length) return null;
+  return (
+    <>
+      <Card className="break-inside-avoid space-y-1">
+        <CardContent className="px-4">
+          <h3
+            className="text-xl font-semibold mb-2"
+            style={{
+              color: themeColor,
+            }}>
+            Skills & Competencies
+          </h3>
+
+          <div className="flex flex-wrap gap-2">
+            {skills && skills.length > 0 ? (
+              skills.map((skill, idx) => (
+                <Badge
+                  key={idx}
+                  className="rounded-md bg-black text-white hover:bg-black"
+                  style={{
+                    backgroundColor: themeColor,
                     borderRadius:
                       borderStyle === BorderStyles.SQUARE
                         ? "0px"
                         : borderStyle === BorderStyles.CIRCLE
                         ? "9999px"
-                        : "10%",
-                  }}
-                />
-              )}
-              <div className="flex flex-col items-center text-sm text-muted-foreground space-y-1">
-                <div className="flex items-center gap-2">
-                  <p className="flex items-center gap-2">
-                    <Mail size={14} style={{ color: themeColor }} /> {email}
-                  </p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <p className="flex items-center gap-2">
-                    <Phone size={14} style={{ color: themeColor }} /> {phone}
-                  </p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <p className="flex items-center gap-2">
-                    <MapPin size={14} style={{ color: themeColor }} /> {address}
-                  </p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <p className="flex items-center gap-2">
-                    <Globe size={14} style={{ color: themeColor }} /> {website}
-                  </p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <p className="flex items-center gap-2">
-                    <Linkedin size={14} style={{ color: themeColor }} />{" "}
-                    {linkedin}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </Card>
-        </div>
-      </div>
+                        : "8px",
+                  }}>
+                  {skill}
+                </Badge>
+              ))
+            ) : (
+              <p className="text-muted-foreground">No skills listed.</p>
+            )}
+          </div>
+        </CardContent>
+      </Card>
     </>
   );
 }
-function MainContent() {
+
+function TechnicalSkillsSection({ resumeData }: ResumePreviewProps) {
+  const { techSkills, themeColor } = resumeData;
+  if (!techSkills?.length) return null;
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-      {/* Left Side - Work Experience */}
-
-      <div className="md:col-span-2 space-y-6">
-        <Card>
-          <CardContent className="p-6">
-            <h3 className="text-2xl font-semibold mb-4">Work Experience</h3>
-
-            {/* <div className="mb-6">
-                <h4 className="text-lg font-semibold">HR Generalist</h4>
-                <p className="text-sm text-muted-foreground">
-                  The Good Hire Solutions | Bloomington, IN (06/2017 - Present)
-                </p>
-                <ul className="list-disc list-inside mt-2 text-sm space-y-1">
-                  <li>Administer the onboarding process...</li>
-                  <li>Perform formal/informal coaching...</li>
-                  <li>
-                    Serve as a Business Partner executing HR initiatives...
-                  </li>
-                  <li>Utilize HRIS system to enter, manage data...</li>
-                  <li>
-                    Investigate employee complaints and policy violations...
-                  </li>
-                  <li>Conduct exit interviews and feedback evaluations...</li>
-                </ul>
+    <>
+      <Card className="w-full max-w-md shadow-lg break-inside-avoid space-y-3">
+        <CardContent className="px-6 space-y-1">
+          <h3
+            className="text-xl font-semibold mb-2"
+            style={{
+              color: themeColor,
+            }}>
+            Technical Skills
+          </h3>
+          {techSkills.map((skill, index) => {
+            const ratingPercentage = skill.rating * 20;
+            return (
+              <div
+                key={index}
+                className="flex items-center justify-between gap-4">
+                <h2 className="text-sm font-medium">{skill.name}</h2>
+                <div className="relative w-[120px] h-2 bg-gray-200 rounded">
+                  <div
+                    className="absolute top-0 left-0 h-2 rounded"
+                    style={{
+                      width: `${ratingPercentage}%`,
+                      backgroundColor: themeColor, // Consider making `themeColor` dynamic or contextual
+                    }}
+                  />
+                </div>
               </div>
+            );
+          })}
+        </CardContent>
+      </Card>
+    </>
+  );
+}
+function EducationSection({ resumeData }: ResumePreviewProps) {
+  const { education, themeColor } = resumeData;
 
-              <div>
-                <h4 className="text-lg font-semibold">HR Coordinator</h4>
-                <p className="text-sm text-muted-foreground">
-                  Better People Management Corp. (04/2013 - 05/2017)
-                </p>
-                <ul className="list-disc list-inside mt-2 text-sm space-y-1">
-                  <li>Orchestrated end-to-end recruiting, hiring...</li>
-                  <li>Implemented employee wellness initiatives...</li>
-                  <li>Pioneered Affirmative Action Plan implementation...</li>
-                  <li>
-                    Developed robust training programs improving skills...
-                  </li>
-                </ul>
-              </div>*/}
-          </CardContent>
-        </Card>
-      </div>
+  const educationsNotEmpty = education?.filter(
+    (edu) => Object.values(edu).filter(Boolean).length > 0
+  );
 
-      {/* Right Side - Skills, Education, etc */}
-      <div className="space-y-6">
-        <Card>
-          <CardContent className="p-6">
-            <h3 className="text-xl font-semibold mb-4">
-              Skills & Competencies
-            </h3>
-            {/* <div className="flex flex-wrap gap-2">
-              {[
-                "HRIS",
-                "Data Analysis",
-                "Onboarding",
-                "Recruiting",
-                "Employee Relations",
-                "Conflict Resolution",
-                "SAP",
-                "Zoho Recruit",
-                "Labor Laws & Compliance",
-                "Training & Performance Management",
-              ].map((skill) => (
-                <Badge key={skill} variant="secondary">
-                  {skill}
-                </Badge>
-              ))}
-            </div> */}
-          </CardContent>
-        </Card>
+  if (!educationsNotEmpty?.length) return null;
+  return (
+    <>
+      <Card className="break-inside-avoid space-y-1">
+        <CardContent className="px-4">
+          <h3
+            className="text-xl font-semibold mb-2"
+            style={{
+              color: themeColor,
+            }}>
+            Education & Certifications
+          </h3>
 
-        <Card>
-          <CardContent className="p-6">
-            <h3 className="text-xl font-semibold mb-4">
-              Education/Certifications
-            </h3>
-            {/* <ul className="list-disc list-inside space-y-2 text-sm text-muted-foreground">
-              <li>Data Handling Training (02/2013)</li>
-              <li>General Industry Safety & Health Training (10/2012)</li>
-            </ul> */}
-          </CardContent>
-        </Card>
-      </div>
-    </div>
+          <ul className=" space-y-2 text-sm text-muted-foreground">
+            {education && education.length > 0 ? (
+              education.map((edu, idx) => (
+                <li key={idx}>
+                  <div
+                    className="font-semibold capitalize"
+                    style={{
+                      color: themeColor,
+                    }}>
+                    {edu.school}
+                  </div>{" "}
+                  <div>{edu.degree}</div>
+                  {edu.startDate && (
+                    <div>
+                      {edu.startDate &&
+                        `${formatDate(edu.startDate, "MM/yyyy")} ${
+                          edu.endDate
+                            ? `- ${formatDate(edu.endDate, "MM/yyyy")}`
+                            : ""
+                        }`}
+                    </div>
+                  )}
+                </li>
+              ))
+            ) : (
+              <p className="text-muted-foreground">No education listed.</p>
+            )}
+          </ul>
+        </CardContent>
+      </Card>
+    </>
+  );
+}
+function InterestSection({ resumeData }: ResumePreviewProps) {
+  const { interest, themeColor } = resumeData;
+
+  if (!interest?.length) return null;
+
+  return (
+    <>
+      <Card className="break-inside-avoid space-y-3">
+        <CardContent>
+          <h3
+            className="text-xl font-semibold mb-2"
+            style={{
+              color: themeColor,
+            }}>
+            Interests
+          </h3>
+          <ul className="space-y-1 list-none">
+            {interest.map((item, index) => (
+              <li key={index} className="flex items-center gap-2 text-sm">
+                <Heart size={14} style={{ color: themeColor }} />
+                {item}
+              </li>
+            ))}
+          </ul>
+        </CardContent>
+      </Card>
+    </>
   );
 }

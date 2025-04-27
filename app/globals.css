@@ -135,7 +135,7 @@
 }
 
 @page {
-  size: A4;
+  size: A4 portrait;
   margin: 0.6cm;
 }
 
@@ -149,4 +149,53 @@ html {
   --color-3: 101 100% 41%; /* hsl(0, 100%, 41%) -> Green */
   --color-4: 201 100% 50%; /* hsl(0, 60%, 50%) -> Blue */
   --color-5: 276 100% 65%; /* hsl(0, 80%, 85%) -> Purple */
+}
+@media print {
+  body {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Support for older browsers */
+  .w-full {
+    width: 100% !important;
+  }
+
+  /* Firefox-specific fixes */
+  @-moz-document url-prefix() {
+    #resumePreviewContent {
+      width: 210mm !important;
+    }
+  }
+}
+@media print {
+  /* Force grid for print */
+  .grid,
+  .md\:grid-cols-3 {
+    display: grid !important;
+    grid-template-columns: 2fr 1fr 1fr !important; /* Adjust as needed */
+    gap: 1.5rem !important;
+  }
+  .md\:col-span-2 {
+    grid-column: span 2 !important;
+  }
+  #resumePreviewContent {
+    transform: none !important;
+    width: 794px !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    background: white !important;
+  }
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+}
+@media print {
+  /* Force the personal info card to display as a row in print */
+  .personal-info-card {
+    flex-direction: row !important;
+    align-items: flex-start !important;
+    gap: 1.5rem !important;
+  }
 }
