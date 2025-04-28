@@ -41,7 +41,7 @@ function SupportContact() {
   };
 
   return (
-    <div className="w-full max-w-5xl p-6 bg-red-700 shadow rounded-2xl ">
+    <div className="w-full max-w-5xl p-6 bg-gray-300-700 shadow rounded-2xl ">
       <div className="max-w-3xl mx-auto p-6 bg-white shadow rounded-2xl my-10">
         <Image
           src={Logo}

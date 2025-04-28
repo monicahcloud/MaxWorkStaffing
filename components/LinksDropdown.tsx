@@ -4,26 +4,50 @@ import links from "@/utils/links";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+
+// Tooltip descriptions for each link label
+const tooltipDescriptions = {
+  Dashboard: "View your real-time job application stats",
+  Resumes: "Upload, create and manage your resumes",
+  "Job Tracker": "Track your job applications and their status",
+  "Interviewing Tools": "Access resources to prepare for interviews",
+  FAQs: "Find answers to common questions",
+  Support: "Contact support for help",
+};
 
 function LinksDropdown() {
   const pathname = usePathname();
   return (
-    <>
+    <TooltipProvider>
       {links.map((link) => (
-        <Link
-          className={cn(
-            pathname === link.href
-              ? "text-primary bg-primary/10"
-              : "text-muted-foreground hover:text-foreground",
-            "flex items-center gap-3 rounded-lg px-3 py-2 text-xl transition-all hover:text-primary"
-          )}
-          href={link.href}
-          key={link.id}>
-          {link.icon}
-          <span className="capitalize"> {link.label}</span>
-        </Link>
+        <Tooltip key={link.id}>
+          <TooltipTrigger asChild>
+            <Link
+              className={cn(
+                pathname === link.href
+                  ? "text-primary bg-primary/10"
+                  : "text-muted-foreground hover:text-foreground",
+                "flex items-center gap-3 rounded-lg px-3 py-2 text-xl transition-all hover:text-primary"
+              )}
+              href={link.href}>
+              {link.icon}
+              <span className="capitalize">{link.label}</span>
+            </Link>
+          </TooltipTrigger>
+          <TooltipContent
+            side="right"
+            className="bg-primary text-white px-4 py-2 rounded-lg shadow-lg border border-primary/60 text-base font-medium">
+            {tooltipDescriptions[link.label]}
+          </TooltipContent>
+        </Tooltip>
       ))}
-    </>
+    </TooltipProvider>
   );
 }
 

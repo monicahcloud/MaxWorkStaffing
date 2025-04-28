@@ -7,6 +7,7 @@ import SingleInterviewQuestion from "./SingleInterviewQuestion";
 import { interviewQuestions } from "@/utils/questions";
 import TypesofInterviews from "./TypesofInterviews";
 import ResumeTypes from "./ResumeTypes";
+import InterviewTips from "./InterviewTips";
 
 const resources = [
   {
@@ -59,6 +60,7 @@ const Resources = () => {
           );
         })}
       </div>
+      <InterviewTips />
       <hr className="mt-10 border-t-2 border-red-500 mb-4 w-full" />
       <h1
         id="interview-details"

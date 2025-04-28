@@ -1,6 +1,12 @@
 import { buttonVariants } from "@/components/ui/button";
 import { Ban, PlusCircle } from "lucide-react";
 import Link from "next/link";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface iAppProps {
   title: string;
@@ -24,9 +30,20 @@ export function EmptyState({
       <p className="mb-8 mt-2 text-sm text-muted-foreground max-w-xm mx-auto text-center">
         {description}
       </p>
-      <Link href={href} className={buttonVariants()}>
-        <PlusCircle className="size-4 mr-2" /> {buttontext}
-      </Link>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Link href={href} className={buttonVariants()}>
+              <PlusCircle className="size-4 mr-2" /> {buttontext}
+            </Link>
+          </TooltipTrigger>
+          <TooltipContent
+            side="top"
+            className="bg-primary text-white px-4 py-2 rounded-lg shadow-lg border border-primary/60 text-base font-medium">
+            Add a new job to start tracking your applications.
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
     </div>
   );
 }
