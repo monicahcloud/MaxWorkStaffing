@@ -1,6 +1,4 @@
 export const dynamic = "force-dynamic";
-// import Image from "next/image";
-// import logo from "../../../assets/landingpage.png";
 import StatsPage from "../stats/page";
 
 function HomePage() {
@@ -26,8 +24,9 @@ function HomePage() {
     //     />
     //   </div>
     // </main>
-
-    <StatsPage />
+    <>
+      <StatsPage />
+    </>
   );
 }
 
