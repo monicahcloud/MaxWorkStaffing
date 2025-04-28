@@ -62,7 +62,7 @@ const links: DashboardLinks[] = [
   // },
   {
     id: nanoid(),
-    label: "Career Advancement",
+    label: "Interviewing Tools",
     href: "/resources",
     icon: <Users2 />,
   },

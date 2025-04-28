@@ -10,14 +10,10 @@ export function NavBar() {
         <Image
           src={Logo}
           alt="Logo"
-          width={180} // wider
-          height={80} // not too tall
+          width={200} // wider
+          height={100} // not too tall
           priority
         />
-
-        {/* <h3 className="text-3xl font-semibold">
-          Path<span className="text-red-600">Builder</span>
-        </h3> */}
       </Link>
       <Link href="/sign-in">
         <RainbowButton>Get Started</RainbowButton>
