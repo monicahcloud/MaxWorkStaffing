@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import HeroImage from "../../assets/landingpage.png";
+import HeroImage from "../../assets/LandingImg.jpg";
 import { RainbowButton } from "./RainbowButton";
 
 export function Hero() {
@@ -10,16 +10,22 @@ export function Hero() {
         <span className="text-sm text-primary font-medium tracking-tight bg-primary/10 px-4 py-2 rounded-full">
           ResumeBuilder 1.0
         </span>
-        <h1 className="mt-8 text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-semibold tracking-tighter">
+        <h1 className="mt-8 text-4xl tracking-wide sm:text-6xl md:text-7xl lg:text-8xl font-semibold ">
           Resume<span className="text-red-600">Builder</span>
           <span className="block lg:text-6xl mt-4 text-rose-600  bg-clip-text">
             Build
-            <span className="text-black mx-2 align-middle" aria-hidden="true">
-              &bull;
+            <span
+              className="text-black mx-2 text-4xl align-middle"
+              aria-hidden="true">
+              {" "}
+              |
             </span>
             Track
-            <span className="text-black mx-2 align-middle" aria-hidden="true">
-              &bull;
+            <span
+              className="text-black mx-2 text-4xl align-middle"
+              aria-hidden="true">
+              {" "}
+              |
             </span>
             Succeed
           </span>
