@@ -8,10 +8,10 @@ export function Hero() {
     <section className="relative flex flex-col items-center justify-center py-12 lg:py-20">
       <div className="text-center">
         <span className="text-sm text-primary font-medium tracking-tight bg-primary/10 px-4 py-2 rounded-full">
-          Introducing PathBuilder 1.0
+          Introducing ResumeBuilder 1.0
         </span>
         <h1 className="mt-8 text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-semibold tracking-tighter">
-          Welcome to Path<span className="text-red-600">Builder</span>
+          Welcome to Resume<span className="text-red-600">Builder</span>
           <span className="block lg:text-6xl mt-4 bg-gradient-to-l from-red-500 via-red-500 to-rose-900 text-transparent bg-clip-text">
             Build Track Succeed
           </span>

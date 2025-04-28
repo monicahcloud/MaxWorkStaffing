@@ -9,15 +9,6 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { queryClient } from "@/lib/react-query-client";
 
 function Providers({ children }: { children: React.ReactNode }) {
-  // const [queryClient] = useState(() => {
-  //   return new QueryClient({
-  //     defaultOptions: {
-  //       queries: {
-  //         staleTime: 60 * 1000 * 5,
-  //       },
-  //     },
-  //   });
-  // });
   return (
     <>
       <ThemeProvider
