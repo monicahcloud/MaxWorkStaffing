@@ -10,7 +10,7 @@ import dayjs from "dayjs";
 
 async function authenticateAndRedirect(): Promise<string> {
   const { userId } = await auth(); // Await the promise
-  console.log("userId", userId);
+  // console.log("userId", userId);
 
   if (!userId) {
     redirect("/");

@@ -1,0 +1,156 @@
+import { Tour } from "nextstepjs";
+const steps: Tour[] = [
+  {
+    tour: "mainTour",
+    steps: [
+      {
+        title: "Dashboard",
+        selector: ".dashboard-link",
+        side: "right",
+        icon: "👋",
+        content:
+          "Directs the user to the Dashboard, where they can get an overview of their progress and activity within the platform.",
+        showControls: true,
+        showSkip: true,
+        nextRoute: "/home",
+      },
+      {
+        title: "Resumes",
+        selector: ".resumes-link",
+        side: "right",
+        icon: "👋",
+        content:
+          "Takes the user to the Resumes section, allowing them to upload, edit, or delete their resumes as needed for job applications.",
+        showControls: true,
+        showSkip: true,
+        nextRoute: "/home",
+      },
+      {
+        title: "Job Tracker",
+        selector: ".job-tracker-link",
+        side: "right",
+        icon: "👋",
+        content:
+          "Navigates to the Job Tracker, a feature for monitoring all job applications and their current statuses (e.g., applied, interviewing, rejected)",
+        showControls: true,
+        showSkip: true,
+        nextRoute: "/home",
+      },
+      {
+        title: "Interviewing Tools",
+        selector: ".interviewing-tools-link",
+        side: "right",
+        icon: "👋",
+        content:
+          "Provides access to a suite of interview preparation resources and tools to help users get ready for interviews.",
+        showControls: true,
+        showSkip: true,
+        nextRoute: "/home",
+      },
+      {
+        title: "FAQs",
+        selector: ".faqs-link",
+        side: "right",
+        icon: "👋",
+        content:
+          "Opens the Frequently Asked Questions section, where users can quickly find answers to common questions about the platform.",
+        showControls: true,
+        showSkip: true,
+        nextRoute: "/home",
+      },
+      {
+        title: "Support",
+        selector: ".support-link",
+        side: "right",
+        icon: "👋",
+        content:
+          "Connects users to support resources, letting them contact the help team for any assistance or troubleshooting.",
+        showControls: true,
+        showSkip: true,
+        nextRoute: "/home",
+      },
+      {
+        title: "Stats",
+        selector: ".stats-section",
+        side: "right",
+        icon: "👋",
+        content:
+          "Displays a summary of job application statistics, giving users a quick snapshot of their progress and outcomes.",
+        showControls: true,
+        showSkip: true,
+        nextRoute: "/home",
+      },
+      {
+        title: "Add job",
+        selector: ".add-job-btn",
+        side: "right",
+        icon: "👋",
+        content:
+          "A call-to-action button for users to add their first (or additional) job applications to the tracker.",
+        showControls: true,
+        showSkip: true,
+        nextRoute: "/home",
+      },
+    ],
+  },
+  {
+    tour: "resumeTour",
+    steps: [
+      {
+        title: "Create Resume",
+        selector: ".new-resume",
+        side: "bottom",
+        icon: "👋",
+        content:
+          "Guides users to the resume builder to create a brand new resume from scratch.",
+        showControls: true,
+        showSkip: true,
+        nextRoute: "/resumes",
+      },
+      {
+        title: "Upload Resume",
+        selector: ".upload-resume",
+        side: "bottom",
+        icon: "👋",
+        content:
+          "Enables users to upload an existing resume file to the platform.",
+        showControls: true,
+        showSkip: true,
+        nextRoute: "/resumes",
+      },
+    ],
+  },
+  {
+    tour: "builderTour",
+    steps: [
+      {
+        title: "Choose a Template",
+        selector: ".templates",
+        side: "top",
+        icon: "👋",
+        content:
+          "Guides users to the resume builder to create a brand new resume from scratch.",
+        showControls: true,
+        showSkip: true,
+        nextRoute: "/resumebuilder",
+      },
+    ],
+    // ,
+  },
+  {
+    tour: "formTour",
+    steps: [
+      {
+        title: "General Info",
+        selector: ".general-info",
+        side: "top",
+        icon: "👋",
+        content: "Enter general information as part of the resume.",
+        showControls: true,
+        showSkip: true,
+      },
+    ],
+  },
+];
+
+export default steps;

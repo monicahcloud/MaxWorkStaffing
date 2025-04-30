@@ -75,54 +75,52 @@ function EducationForm({ resumeData, setResumeData }: EditorFormProps) {
     }
   }
   return (
-    <div>
-      <div className="max-w-xl mx-auto space-y-6">
-        <div className="space-y-1.5 text-center">
+    <div className="max-w-xl mx-auto space-y-6 education-info">
+      <div className="space-y-1.5 text-center">
+        {" "}
+        <h2 className="text-2xl font-semibold"> Education</h2>
+        <p className="text-sm text-muted-foreground">
           {" "}
-          <h2 className="text-2xl font-semibold"> Education</h2>
-          <p className="text-sm text-muted-foreground">
-            {" "}
-            Add as many education as needed.
-          </p>
-          <Form {...form}>
-            <form className="space-y-3">
-              <DndContext
-                sensors={sensors}
-                collisionDetection={closestCenter}
-                onDragEnd={handleDragEnd}
-                modifiers={[restrictToVerticalAxis]}>
-                <SortableContext
-                  items={fields}
-                  strategy={verticalListSortingStrategy}>
-                  {fields.map((field, index) => (
-                    <EducationItem
-                      key={field.id}
-                      index={index}
-                      form={form}
-                      remove={remove}
-                      id={field.id}
-                    />
-                  ))}
-                </SortableContext>
-              </DndContext>
-              <div className="flex justify-center">
-                <Button
-                  type="button"
-                  onClick={() =>
-                    append({
-                      degree: "",
-                      location: "",
-                      school: "",
-                      startDate: "",
-                      endDate: "",
-                    })
-                  }>
-                  Add Education
-                </Button>
-              </div>
-            </form>
-          </Form>
-        </div>
+          Add as many education as needed.
+        </p>
+        <Form {...form}>
+          <form className="space-y-3">
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              onDragEnd={handleDragEnd}
+              modifiers={[restrictToVerticalAxis]}>
+              <SortableContext
+                items={fields}
+                strategy={verticalListSortingStrategy}>
+                {fields.map((field, index) => (
+                  <EducationItem
+                    key={field.id}
+                    index={index}
+                    form={form}
+                    remove={remove}
+                    id={field.id}
+                  />
+                ))}
+              </SortableContext>
+            </DndContext>
+            <div className="flex justify-center">
+              <Button
+                type="button"
+                onClick={() =>
+                  append({
+                    degree: "",
+                    location: "",
+                    school: "",
+                    startDate: "",
+                    endDate: "",
+                  })
+                }>
+                Add Education
+              </Button>
+            </div>
+          </form>
+        </Form>
       </div>
     </div>
   );

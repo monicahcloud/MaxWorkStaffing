@@ -12,8 +12,10 @@ import { getUserSubscriptionLevel } from "@/lib/subscription";
 import { canCreateResume } from "@/lib/permissions";
 import UploadResumeButton from "./UploadResumeButton";
 
+import ResumesTourButton from "@/components/tourGuide/ResumesTourButton";
+
 export const metadata: Metadata = {
-  title: "Your Resumes",
+  title: "My Resumes",
 };
 
 async function Page() {
@@ -44,7 +46,11 @@ async function Page() {
   // TODO: Chek quota for non-premium users
   return (
     <main>
+      <div className="justify-center items-center mx-auto flex">
+        <ResumesTourButton />
+      </div>
       <SectionTitle text="My Resumes" subtext={`Total: ${totalCount}`} />
+
       <div className="p-10 md:px-20 lg:px-32">
         <div className="w-full flex justify-center">
           <div className="flex items-center gap-4">

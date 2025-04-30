@@ -37,7 +37,7 @@ function SkillsForm({ resumeData, setResumeData }: EditorFormProps) {
   }, [form, resumeData, setResumeData]);
 
   return (
-    <div className="max-w-xl mx-auto space-y-6">
+    <div className="max-w-xl mx-auto space-y-6 skills-info">
       <div className="space-y-1.5 text-center">
         <h2 className="text-2xl font-semibold"> Skills</h2>
         <p className="text-sm text-muted-foreground">What are you good at?</p>

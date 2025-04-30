@@ -45,7 +45,7 @@ export default function UploadResumeButton() {
       />
       <Button
         onClick={() => inputRef.current?.click()}
-        className="mx-auto flex w-fit gap-2">
+        className=" upload-resume mx-auto flex w-fit gap-2">
         <UploadCloud className="size-5" />
         Upload Resume
       </Button>

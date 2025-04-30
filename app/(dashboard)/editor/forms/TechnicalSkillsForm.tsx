@@ -129,7 +129,7 @@ export default function TechnicalSkillsForm({
   }, [techSkills]);
 
   return (
-    <div className="max-w-xl mx-auto space-y-6">
+    <div className="max-w-xl mx-auto space-y-6 technical-info">
       <div className="space-y-1.5 text-center">
         <h2 className="text-2xl font-semibold">Technical Skills</h2>
         <p className="text-sm text-muted-foreground">

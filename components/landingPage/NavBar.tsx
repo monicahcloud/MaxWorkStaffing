@@ -16,7 +16,7 @@ export function NavBar() {
         />
       </Link>
       <Link href="/sign-in">
-        <RainbowButton>Get Started</RainbowButton>
+        <RainbowButton>Login</RainbowButton>
       </Link>
     </div>
   );

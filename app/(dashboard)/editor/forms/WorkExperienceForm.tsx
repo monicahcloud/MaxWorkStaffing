@@ -82,7 +82,7 @@ function WorkExperienceForm({ resumeData, setResumeData }: EditorFormProps) {
   }
 
   return (
-    <div className="max-w-xl mx-auto space-y-6">
+    <div className="experience-info max-w-xl mx-auto space-y-6 ">
       <div className="space-y-1.5 text-center">
         <h2 className="text-2xl font-semibold">Work Experience</h2>
         <p className="text-sm text-muted-foreground">

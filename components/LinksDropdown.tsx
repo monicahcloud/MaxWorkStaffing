@@ -21,8 +21,19 @@ const tooltipDescriptions = {
   Support: "Contact support for help",
 };
 
-function LinksDropdown() {
+export default function LinksDropdown() {
   const pathname = usePathname();
+
+  // Map link labels to unique class names for tour targeting
+  const linkClassNames = {
+    Dashboard: "dashboard-link",
+    Resumes: "resumes-link",
+    "Job Tracker": "job-tracker-link",
+    "Interviewing Tools": "interviewing-tools-link",
+    FAQs: "faqs-link",
+    Support: "support-link",
+  };
+
   return (
     <TooltipProvider>
       {links.map((link) => (
@@ -30,6 +41,7 @@ function LinksDropdown() {
           <TooltipTrigger asChild>
             <Link
               className={cn(
+                linkClassNames[link.label], // <-- Add unique class here
                 pathname === link.href
                   ? "text-primary bg-primary/10"
                   : "text-muted-foreground hover:text-foreground",
@@ -50,5 +62,3 @@ function LinksDropdown() {
     </TooltipProvider>
   );
 }
-
-export default LinksDropdown;

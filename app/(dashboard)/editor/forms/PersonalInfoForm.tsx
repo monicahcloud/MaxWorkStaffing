@@ -50,13 +50,10 @@ function PersonalInfoForm({ resumeData, setResumeData }: EditorFormProps) {
   }, [form, setResumeData]);
   const photoInputRef = useRef<HTMLInputElement>(null);
   return (
-    <div className="max-w-xl mx-auto space-y-6">
+    <div className=" personal-info max-w-xl mx-auto space-y-6">
       <div className="space-y-1.5 text-center">
         <h2 className="text-2xl font-semibold">Personal Info</h2>
-        <p className="text-sm text-muted-foreground">
-          {" "}
-          Tell us about yourself.
-        </p>
+        <p className="text-sm text-muted-foreground">Tell us about yourself.</p>
       </div>
       <Form {...form}>
         <form>
