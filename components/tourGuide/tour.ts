@@ -97,7 +97,6 @@ const steps: Tour[] = [
           "Guides users to the resume builder to create a brand new resume from scratch.",
         showControls: true,
         showSkip: true,
-        nextRoute: "/resumes",
       },
       {
         title: "Upload Resume",
@@ -108,7 +107,6 @@ const steps: Tour[] = [
           "Enables users to upload an existing resume file to the platform.",
         showControls: true,
         showSkip: true,
-        nextRoute: "/resumes",
       },
     ],
   },
