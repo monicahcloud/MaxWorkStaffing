@@ -73,14 +73,11 @@ import SectionTitle from "@/components/SectionTitle";
 import React from "react";
 import { resumeTemplates } from "./ResumeTemplate";
 import ResumeTemplateCard from "./ResumeTemplateCard";
-import ResumeBuilderTourButton from "@/components/tourGuide/ResumeBuilderTourButton";
 
 function Page() {
   return (
     <>
-      <div className="justify-center items-center mx-auto flex">
-        <ResumeBuilderTourButton />
-      </div>
+      <div className="justify-center items-center mx-auto flex"></div>
       <div id="templates" className="px-4 templates">
         <SectionTitle
           text="Choose a Template"

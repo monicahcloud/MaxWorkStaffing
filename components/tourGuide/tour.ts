@@ -12,7 +12,6 @@ const steps: Tour[] = [
           "Directs the user to the Dashboard, where they can get an overview of their progress and activity within the platform.",
         showControls: true,
         showSkip: true,
-        nextRoute: "/home",
       },
       {
         title: "Resumes",
@@ -23,7 +22,6 @@ const steps: Tour[] = [
           "Takes the user to the Resumes section, allowing them to upload, edit, or delete their resumes as needed for job applications.",
         showControls: true,
         showSkip: true,
-        nextRoute: "/home",
       },
       {
         title: "Job Tracker",
@@ -34,7 +32,6 @@ const steps: Tour[] = [
           "Navigates to the Job Tracker, a feature for monitoring all job applications and their current statuses (e.g., applied, interviewing, rejected)",
         showControls: true,
         showSkip: true,
-        nextRoute: "/home",
       },
       {
         title: "Interviewing Tools",
@@ -45,7 +42,6 @@ const steps: Tour[] = [
           "Provides access to a suite of interview preparation resources and tools to help users get ready for interviews.",
         showControls: true,
         showSkip: true,
-        nextRoute: "/home",
       },
       {
         title: "FAQs",
@@ -56,7 +52,6 @@ const steps: Tour[] = [
           "Opens the Frequently Asked Questions section, where users can quickly find answers to common questions about the platform.",
         showControls: true,
         showSkip: true,
-        nextRoute: "/home",
       },
       {
         title: "Support",
@@ -67,7 +62,6 @@ const steps: Tour[] = [
           "Connects users to support resources, letting them contact the help team for any assistance or troubleshooting.",
         showControls: true,
         showSkip: true,
-        nextRoute: "/home",
       },
       {
         title: "Stats",
@@ -78,7 +72,6 @@ const steps: Tour[] = [
           "Displays a summary of job application statistics, giving users a quick snapshot of their progress and outcomes.",
         showControls: true,
         showSkip: true,
-        nextRoute: "/home",
       },
       {
         title: "Add job",
@@ -89,7 +82,6 @@ const steps: Tour[] = [
           "A call-to-action button for users to add their first (or additional) job applications to the tracker.",
         showControls: true,
         showSkip: true,
-        nextRoute: "/home",
       },
     ],
   },
@@ -117,37 +109,6 @@ const steps: Tour[] = [
         showControls: true,
         showSkip: true,
         nextRoute: "/resumes",
-      },
-    ],
-  },
-  {
-    tour: "builderTour",
-    steps: [
-      {
-        title: "Choose a Template",
-        selector: ".templates",
-        side: "top",
-        icon: "👋",
-        content:
-          "Guides users to the resume builder to create a brand new resume from scratch.",
-        showControls: true,
-        showSkip: true,
-        nextRoute: "/resumebuilder",
-      },
-    ],
-    // ,
-  },
-  {
-    tour: "formTour",
-    steps: [
-      {
-        title: "General Info",
-        selector: ".general-info",
-        side: "top",
-        icon: "👋",
-        content: "Enter general information as part of the resume.",
-        showControls: true,
-        showSkip: true,
       },
     ],
   },
