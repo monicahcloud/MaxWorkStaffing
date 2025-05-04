@@ -40,6 +40,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useRouter } from "next/navigation";
+import ShareResume from "@/components/ReactShareButton";
 
 interface ResumeItemProps {
   resume: ResumeServerData;
@@ -142,6 +143,9 @@ function MoreMenu({ resume, isUploaded, onPrintClick }: MoreMenuProps) {
   function handleEdit() {
     router.push(`/editor?resumeId=${resume.id}`);
   }
+  function handleView() {
+    router.push(`/resumes/${resume.id}`);
+  }
 
   return (
     <>
@@ -205,7 +209,12 @@ function MoreMenu({ resume, isUploaded, onPrintClick }: MoreMenuProps) {
                 <FilePen className="size-4" />
                 Edit
               </DropdownMenuItem>
-
+              <DropdownMenuItem
+                className="flex items-center gap-2"
+                onClick={handleView}>
+                <FilePen className="size-4" />
+                View
+              </DropdownMenuItem>
               <DropdownMenuItem
                 className="flex items-center gap-2"
                 onClick={onPrintClick}>
@@ -227,6 +236,13 @@ function MoreMenu({ resume, isUploaded, onPrintClick }: MoreMenuProps) {
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+      <ShareResume
+        resumeUrl={
+          isUploaded
+            ? resume.uploadedFileUrl!
+            : `${process.env.NEXT_PUBLIC_BASE_URL}/resumes/${resume.id}`
+        }
+      />
 
       <DeleteConfirmationDialog
         resumeId={resume.id}

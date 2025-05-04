@@ -83,7 +83,7 @@ export default function GeneralInforForm({
               )}
             />
             <h1 className="mx-auto justify-center flex mt-10">
-              Watch the video before for steps to building out your resume.
+              Watch the video before building out your resume.
             </h1>
 
             <div className="relative pb-[56.25%] h-0">

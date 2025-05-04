@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useRef, useState } from "react";
 import { ResumeValues } from "@/lib/validation";
 import { cn } from "@/lib/utils";

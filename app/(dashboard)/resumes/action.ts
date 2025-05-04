@@ -35,3 +35,21 @@ export async function deleteResume(id: string) {
 
   revalidatePath("/resumes");
 }
+
+export async function getResumeById(id: string) {
+  try {
+    const resume = await prisma.resume.findUnique({
+      where: { id }, // Use resume ID to fetch it
+      include: {
+        workExperience: true, // Include work experiences
+        education: true, // Include education data
+        techSkills: true, // Include tech skills
+      },
+    });
+
+    return resume;
+  } catch (error) {
+    console.error("Error fetching resume:", error);
+    return null;
+  }
+}
