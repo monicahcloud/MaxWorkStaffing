@@ -85,14 +85,14 @@ export default function GeneralInforForm({
             <h1 className="mx-auto justify-center flex mt-10">
               Watch the video before building out your resume.
             </h1>
-
+            {/* 
             <div className="relative pb-[56.25%] h-0">
               <iframe
                 src="https://www.loom.com/embed/5ec66f078da44437b60f7ee3575dd8a2?sid=e321f383-982e-4c75-b9fa-6b9de2b68359"
                 className="absolute top-0 left-0 w-full h-full"
                 allowFullScreen
                 title="Steps to create your resume."></iframe>
-            </div>
+            </div> */}
 
             {/* <FormField
             control={form.control}

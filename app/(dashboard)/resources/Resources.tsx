@@ -1,7 +1,7 @@
-// import { nanoid } from "nanoid";
-// import interviewee from "../../../assets/questionsthumb.png";
-// import resumes from "../../../assets/resumesthumb.png";
-// import jobinterview from "../../../assets/interviewthumb.png";
+import { nanoid } from "nanoid";
+import interviewee from "../../../assets/questionsthumb.png";
+import resumes from "../../../assets/resumesthumb.png";
+import jobinterview from "../../../assets/interviewthumb.png";
 import SingleResource from "./SingleResource";
 import SingleInterviewQuestion from "./SingleInterviewQuestion";
 import { interviewQuestions } from "@/utils/questions";
@@ -9,37 +9,37 @@ import TypesofInterviews from "./TypesofInterviews";
 import ResumeTypes from "./ResumeTypes";
 import InterviewTips from "./InterviewTips";
 
-// const questions = "/commonquestions.mp4";
-// const resumesvideo = "/resumesvideo.mp4";
-// const interviews = "/interviews.mp4";
+const questions = "/commonquestions.mp4";
+const resumesvideo = "/resumesvideo.mp4";
+const interviews = "/interviews.mp4";
 const resources = [
-  // {
-  //   id: nanoid(),
-  //   video: interviews,
-  //   align: "right",
-  //   title: "Types of Interviews",
-  //   image: interviewee,
-  //   info: "Interview formats have evolved, with employers now using a variety of methods to assess candidates. While conventional face-to-face interviews are still impactful, video interviews via platforms like Zoom or Skype have become increasingly common in the initial screening stages, especially due to their ease of use. Understanding the differences between the types of interviews is essential before you prepare for them.",
-  //   componentId: "interview-details",
-  // },
-  // {
-  //   id: nanoid(),
-  //   video: resumesvideo,
-  //   align: "left",
-  //   title: "Types of Resumes",
-  //   image: resumes,
-  //   info: "There are several resume formats to choose from, depending on your experience. Chronological resumes highlight work history, while functional ones focus on skills—great for career changers. A combination format blends both. Choosing the right style helps present your background more effectively.",
-  //   componentId: "resume-details",
-  // },
-  // {
-  //   id: nanoid(),
-  //   video: questions,
-  //   align: "right",
-  //   title: "Common Interview Questions",
-  //   image: jobinterview,
-  //   info: "Most interviews include a few common questions designed to learn about your experience, problem-solving, and personality. Questions like “Tell me about yourself”, “What are your strengths?”, and “Why do you want this job?” often come up. Preparing answers ahead of time helps you respond clearly and confidently.",
-  //   componentId: "questions-details",
-  // },
+  {
+    id: nanoid(),
+    video: interviews,
+    align: "right",
+    title: "Types of Interviews",
+    image: interviewee,
+    info: "Interview formats have evolved, with employers now using a variety of methods to assess candidates. While conventional face-to-face interviews are still impactful, video interviews via platforms like Zoom or Skype have become increasingly common in the initial screening stages, especially due to their ease of use. Understanding the differences between the types of interviews is essential before you prepare for them.",
+    componentId: "interview-details",
+  },
+  {
+    id: nanoid(),
+    video: resumesvideo,
+    align: "left",
+    title: "Types of Resumes",
+    image: resumes,
+    info: "There are several resume formats to choose from, depending on your experience. Chronological resumes highlight work history, while functional ones focus on skills—great for career changers. A combination format blends both. Choosing the right style helps present your background more effectively.",
+    componentId: "resume-details",
+  },
+  {
+    id: nanoid(),
+    video: questions,
+    align: "right",
+    title: "Common Interview Questions",
+    image: jobinterview,
+    info: "Most interviews include a few common questions designed to learn about your experience, problem-solving, and personality. Questions like “Tell me about yourself”, “What are your strengths?”, and “Why do you want this job?” often come up. Preparing answers ahead of time helps you respond clearly and confidently.",
+    componentId: "questions-details",
+  },
 ];
 
 const Resources = () => {
@@ -49,7 +49,7 @@ const Resources = () => {
         Your guide to a perfect job interview
       </h1>
       {/* <ServicePromoCard /> */}
-      {/* <div className="flex flex-col gap-20 max-w-[900px] mx-auto mt-12">
+      <div className="flex flex-col gap-20 max-w-[900px] mx-auto mt-12">
         {resources.map((resource) => {
           return (
             <SingleResource
@@ -62,7 +62,7 @@ const Resources = () => {
             />
           );
         })}
-      </div> */}
+      </div>
       <InterviewTips />
       <hr className="mt-10 border-t-2 border-red-500 mb-4 w-full" />
       <h1
