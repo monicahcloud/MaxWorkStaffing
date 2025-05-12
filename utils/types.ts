@@ -121,3 +121,14 @@ export type ResumeInfo = {
   education?: Education[] | null; // ✅ Now accepts null
   skills?: Skill[] | null; // ✅ Now accepts null
 };
+
+// types/job.ts (or wherever you store shared types)
+export type Job = {
+  id: string;
+  title: string;
+  company: string;
+  location: string;
+  salary?: string;
+  postedAt: string;
+  category: string;
+};

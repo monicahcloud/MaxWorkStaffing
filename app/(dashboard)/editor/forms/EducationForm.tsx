@@ -36,6 +36,7 @@ import {
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
+import { EducationTips } from "@/components/EducationTips";
 function EducationForm({ resumeData, setResumeData }: EditorFormProps) {
   const form = useForm<EducationValues>({
     resolver: zodResolver(educationSchema),
@@ -77,7 +78,7 @@ function EducationForm({ resumeData, setResumeData }: EditorFormProps) {
   return (
     <div className="max-w-xl mx-auto space-y-6 education-info">
       <div className="space-y-1.5 text-center">
-        {" "}
+        <EducationTips />
         <h2 className="text-2xl font-semibold"> Education</h2>
         <p className="text-sm text-muted-foreground">
           {" "}

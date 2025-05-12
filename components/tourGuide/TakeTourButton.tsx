@@ -2,16 +2,18 @@
 "use client";
 
 import { useNextStep } from "nextstepjs";
+import { Button } from "../ui/button";
 
 const TakeTourButton = () => {
   const { startNextStep } = useNextStep();
 
   return (
-    <button
-      className="px-4 text-white bg-blue-500 rounded-md  "
+    <Button
+      variant="outline"
+      className="px-4 rounded-md  "
       onClick={() => startNextStep("mainTour")}>
       Start Tour
-    </button>
+    </Button>
   );
 };
 export default TakeTourButton;

@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Image, { StaticImageData } from "next/image";
@@ -20,6 +20,8 @@ const SingleResource = ({
   video,
   componentId,
 }: SingleResourceProps) => {
+  const [showVideo, setShowVideo] = useState(false);
+
   const scrollToDetails = () => {
     const target = document.getElementById(componentId);
     if (target) {
@@ -28,17 +30,37 @@ const SingleResource = ({
   };
 
   const isVideoResource = !!video;
+
   return (
     <Card className="max-w-4xl mx-auto grid md:grid-cols-2 gap-6 p-6 items-center">
       {/* Media Section */}
-      <div className="w-full aspect-video rounded-lg overflow-hidden border">
+      <div className="w-full aspect-video rounded-lg overflow-hidden border relative">
         {isVideoResource ? (
-          <iframe
-            src={video}
-            title="Types of Interviews"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-            className="w-full h-full"></iframe>
+          showVideo ? (
+            <iframe
+              src={`${video}?autoplay=1`}
+              title={title}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              className="w-full h-full"></iframe>
+          ) : (
+            <div
+              className="relative w-full h-full cursor-pointer"
+              onClick={() => setShowVideo(true)}>
+              <Image
+                src={image}
+                alt={title}
+                width={400}
+                height={225}
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+                <div className="text-white text-4xl bg-red-600 rounded-full p-4 hover:scale-105 transition-transform">
+                  ▶
+                </div>
+              </div>
+            </div>
+          )
         ) : (
           <Image
             src={image}

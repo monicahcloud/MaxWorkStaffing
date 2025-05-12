@@ -32,6 +32,11 @@ export async function POST(req: NextRequest) {
     await prisma.resume.create({
       data: {
         userId,
+        user: {
+          connect: {
+            clerkId: userId, // Connect the user using the id (optional but ensures the relation)
+          },
+        },
         resumeTitle: file.name,
         uploadedFileUrl: blob.url,
         isUploaded: true,

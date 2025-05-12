@@ -6,6 +6,8 @@ import { getUserSubscriptionLevel } from "@/lib/subscription";
 import {
   GenerateDutiesInput,
   GenerateResponsibilitiesInput,
+  GenerateSkillsInput,
+  generateSkillsSchema,
   GenerateSummaryInput,
   generateSummarySchema,
   GenerateWorkExperienceInput,
@@ -13,6 +15,7 @@ import {
   WorkExperience,
 } from "@/lib/validation";
 import { auth } from "@clerk/nextjs/server";
+// import { z } from "zod";
 
 export async function generateSummary(input: GenerateSummaryInput) {
   const { userId } = await auth();
@@ -240,4 +243,68 @@ export async function generateResponsibilities(
   }
 
   return aiResponse.trim();
+}
+
+export async function generateSkills(
+  input: GenerateSkillsInput
+): Promise<string[]> {
+  const { userId } = await auth();
+
+  if (!userId) {
+    throw new Error("Unauthorized");
+  }
+
+  const subscriptionLevel = await getUserSubscriptionLevel(userId);
+
+  if (!canUseAITools(subscriptionLevel)) {
+    throw new Error("Upgrade your subscription to use this feature");
+  }
+
+  const { jobTitle } = generateSkillsSchema.parse(input);
+
+  // System message to explicitly request 100 skills
+  const systemMessage = `
+    You are a resume assistant AI. Generate a concise list of exactly 100 highly relevant and professional resume skills 
+    based on the candidate's job title. Return a raw JSON array of strings only. 
+    Ensure that the list includes a wide range of relevant skills suitable for the job title.
+  `;
+
+  const userMessage = `
+    Job Title: ${jobTitle}
+  `;
+
+  const completion = await openai.chat.completions.create({
+    model: "gpt-4o-mini",
+    messages: [
+      { role: "system", content: systemMessage },
+      { role: "user", content: userMessage },
+    ],
+    temperature: 0.5,
+  });
+
+  const aiResponse = completion.choices[0].message.content;
+
+  if (!aiResponse) throw new Error("Failed to generate AI response");
+
+  try {
+    // Clean the AI response to ensure it is valid JSON
+    const cleanResponse = aiResponse.replace(/```json|```/g, "").trim();
+
+    // Parse the cleaned response as JSON
+    const parsed = JSON.parse(cleanResponse);
+
+    // Ensure we have an array of strings and that we return exactly 100 skills
+    if (
+      Array.isArray(parsed) &&
+      parsed.every((item) => typeof item === "string")
+    ) {
+      // Slice to 100 skills, in case the AI returns more
+      return parsed.slice(0, 50);
+    } else {
+      throw new Error("AI response is not a valid list of strings.");
+    }
+  } catch (err) {
+    console.error("Skill JSON parsing error:", err, aiResponse);
+    throw new Error("Invalid AI response format — please try again.");
+  }
 }

@@ -22,17 +22,27 @@ async function authenticateAndRedirect(): Promise<string> {
 export async function createJobAction(
   values: CreateAndEditJobType
 ): Promise<JobType | null> {
-  // await new Promise((resolve) => setTimeout(resolve, 3000));
-  const userId = await authenticateAndRedirect();
+  const clerkUserId = await authenticateAndRedirect();
+
   try {
     createAndEditJobSchema.parse(values);
+
+    // Find the internal DB userId using clerkId
+    const dbUser = await prisma.user.findUnique({
+      where: { clerkId: clerkUserId },
+      select: { id: true },
+    });
+
+    if (!dbUser) throw new Error("User not found");
+
     const job: JobType = await prisma.job.create({
       data: {
         ...values,
-
-        clerkId: userId,
+        clerkId: clerkUserId,
+        userId: dbUser.id, // ✅ required for schema
       },
     });
+
     return job;
   } catch (error) {
     console.error(error);

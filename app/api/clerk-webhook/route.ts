@@ -5,27 +5,58 @@ import {
   DeletedObjectJSON,
 } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
-import { headers } from "next/headers";
+import { Webhook } from "svix";
 
 export async function POST(req: NextRequest) {
   try {
-    // Read raw body
-    const rawBody = await req.text();
+    // Read raw body as text
+    const payload = await req.text();
 
-    // Headers & Signature
-    const headerPayload = await headers();
-    const signature = headerPayload.get("svix-signature");
-    const webhookSecret = process.env.CLERK_WEBHOOK_SIGNING_SECRET;
+    // Get Svix headers
+    const svixId = req.headers.get("svix-id");
+    const svixTimestamp = req.headers.get("svix-timestamp");
+    const svixSignature = req.headers.get("svix-signature");
 
-    if (!signature || !webhookSecret) {
-      return new NextResponse("Unauthorized: Missing signature or secret", {
-        status: 401,
-      });
+    if (!svixId || !svixTimestamp || !svixSignature) {
+      return new NextResponse("Missing required Svix headers", { status: 400 });
     }
 
-    // Parse event
-    const event: WebhookEvent = JSON.parse(rawBody);
+    const svixHeaders = {
+      "svix-id": svixId,
+      "svix-timestamp": svixTimestamp,
+      "svix-signature": svixSignature,
+    };
+
+    const webhookSecret = process.env.CLERK_WEBHOOK_SIGNING_SECRET;
+
+    // Validate required headers and secret
+    if (
+      !svixHeaders["svix-id"] ||
+      !svixHeaders["svix-timestamp"] ||
+      !svixHeaders["svix-signature"]
+    ) {
+      return new NextResponse("Missing required Svix headers", { status: 400 });
+    }
+
+    if (!webhookSecret) {
+      return new NextResponse("Webhook secret not configured", { status: 500 });
+    }
+
+    // Verify webhook signature
+    const wh = new Webhook(webhookSecret);
+    let event: WebhookEvent;
+
+    try {
+      event = wh.verify(payload, svixHeaders) as WebhookEvent;
+    } catch (err) {
+      console.error("⚠️ Webhook verification failed:", err);
+      return new NextResponse("Invalid signature", { status: 401 });
+    }
+
     console.log(`📥 Clerk webhook received: ${event.type}`);
+    console.log("🧾 Payload:", payload);
+    console.log("📩 Headers:", svixHeaders);
+    console.log("🔑 Secret exists:", !!webhookSecret);
 
     // Route the event
     switch (event.type) {
@@ -50,19 +81,22 @@ export async function POST(req: NextRequest) {
   }
 }
 
+// Rest of your handler functions remain the same...
+
 // Handles new user creation
 async function handleUserCreated(user: UserJSON) {
-  await prisma.user.create({
+  const newUser = await prisma.user.create({
     data: {
       clerkId: user.id,
       email: user.email_addresses[0]?.email_address || "",
       firstName: user.first_name || "",
       lastName: user.last_name || "",
       imageUrl: user.image_url || "",
+      isFirstTimeUser: true,
     },
   });
 
-  console.log(`✅ User created in DB: ${user.id}`);
+  console.log("✅ User created in DB:", newUser);
 }
 
 // Handles user updates

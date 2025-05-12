@@ -7,6 +7,11 @@ import {
 import CreateJobForm from "@/components/jobComponents/CreateJobForm";
 import { getAllJobsAction } from "@/utils/actions";
 import JobList from "@/components/jobComponents/JobsList";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Job Tracker",
+};
 
 export default async function AddJobPage() {
   const queryClient = new QueryClient();

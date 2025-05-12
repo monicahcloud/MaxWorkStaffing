@@ -1,5 +1,3 @@
-
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -8,6 +6,7 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
 model User {
   id        String   @id @default(cuid()) // internal DB ID
   clerkId   String   @unique              // Clerk-provided user ID
@@ -15,23 +14,28 @@ model User {
   firstName String?
   lastName  String?
   imageUrl  String?
-  resumes   Resume[] // optional relationship if you want to link them
+  isFirstTimeUser Boolean @default(true)
+  resumes   Resume[]
+  jobs      Job[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  @@index([clerkId])
+  savedJob SavedJob[]
 }
 
 model Resume {
-id String @id @default(cuid())
-userId String
-resumeType     String?
-resumeTitle String?
-description String?
-photoUrl String?
-themeColor String @default("#000000")
-borderStyle String @default("squircle")
-createdAt      DateTime        @default(now())
- updatedAt   DateTime @updatedAt
-firstName   String?
+  id String @id @default(cuid())
+  clerkId   String 
+  userId String
+  resumeType     String?
+  resumeTitle String?
+  description String?
+  photoUrl String?
+  themeColor String @default("#000000")
+  borderStyle String @default("squircle")
+  createdAt      DateTime        @default(now())
+  updatedAt   DateTime @updatedAt
+  firstName   String?
   lastName    String?
   jobTitle    String?
   address     String?
@@ -43,14 +47,16 @@ firstName   String?
   linkedin String?
   gitHub String?
   summary String?
-techSkills TechSkill[]
-workExperience WorkExperience[]
-education Education[]
+  techSkills TechSkill[]
+  workExperience WorkExperience[]
+  education Education[]
   skills String[]
   interest String[]
-  User User[]
-   uploadedFileUrl  String?   // 👈 Add this line
+  uploadedFileUrl  String?   
   isUploaded       Boolean  @default(false)
+  user   User   @relation(fields: [clerkId], references: [clerkId])
+  jobs   Job[]
+  @@index([clerkId])
 }
 
 model WorkExperience {
@@ -59,21 +65,22 @@ model WorkExperience {
   company String?
   startDate DateTime?
   endDate DateTime?
-    location     String?
-    duties           String?
+  location     String?
+  duties           String?
   responsibilities String?
   accomplishments  String?
   clearance        String?
   grade            String?
   status           String?
   time             String?
-   hours          String? 
-description String?
-resumeId String
-resume Resume @relation(fields: [resumeId], references: [id],  onDelete: Cascade)
-createdAt      DateTime        @default(now())
- updatedAt   DateTime @updatedAt
+  hours          String? 
+  description String?
+  resumeId String
+  resume Resume @relation(fields: [resumeId], references: [id],  onDelete: Cascade)
+  createdAt      DateTime        @default(now())
+  updatedAt   DateTime @updatedAt
 }
+
 model TechSkill {
   id        String   @id @default(uuid())
   resumeId  String
@@ -81,20 +88,21 @@ model TechSkill {
   rating     Int?
   resume Resume @relation(fields: [resumeId], references: [id],  onDelete: Cascade)
   createdAt      DateTime        @default(now())
- updatedAt   DateTime @updatedAt
+  updatedAt   DateTime @updatedAt
 }
+
 model Education {
   id String @id @default(cuid())
   degree String?
   school String?
   startDate DateTime?
   endDate DateTime?
-    location     String?
-description String?
-resumeId String
-resume Resume @relation(fields: [resumeId], references: [id],  onDelete: Cascade)
-createdAt      DateTime        @default(now())
- updatedAt   DateTime @updatedAt
+  location     String?
+  description String?
+  resumeId String
+  resume Resume @relation(fields: [resumeId], references: [id],  onDelete: Cascade)
+  createdAt      DateTime        @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model UserSubscription {
@@ -111,15 +119,30 @@ model UserSubscription {
 }
 
 model Job {
-  id        String   @id @default(uuid())
-  clerkId   String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  position  String
-  company   String
-  location  String
-  mode      Mode
-  status    String
+  id          String   @id @default(uuid())
+  clerkId     String
+  userId      String
+  resumeId    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  position    String
+  company     String
+  location    String
+  mode        Mode
+  status      String
+  salary      String?
+  postedAt    DateTime?
+  description String?
+  requirements String[]
+  category    String?
+  url       String? 
+
+  user   User   @relation(fields: [clerkId], references: [clerkId])
+  resume Resume? @relation(fields: [resumeId], references: [id])
+
+  @@index([clerkId])
+  @@index([resumeId])
+  savedJob SavedJob[]
 }
 
 enum Mode {
@@ -129,4 +152,29 @@ enum Mode {
   CONTRACT
   APPRENTICESHIP
   SEASONAL
+}
+
+model SavedJob {
+  id        String   @id @default(uuid())
+  jobId     String
+  userId    String
+  createdAt DateTime @default(now())
+
+  job  Job  @relation(fields: [jobId], references: [id])
+  user User @relation(fields: [userId], references: [id])
+}
+
+
+model Interview {
+  id          String   @id @default(cuid())
+  userId      String
+  role        String
+  type        String
+  level       String
+  techstack   String[] // PostgreSQL must support array type
+  questions   String[] // You can also store as JSON if needed
+  coverImage  String
+  finalized   Boolean
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }

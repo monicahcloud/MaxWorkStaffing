@@ -38,6 +38,7 @@ import { cn } from "@/lib/utils";
 import GenerateWorkExperienceButton from "./GenerateWorkExperienceButton";
 import GenerateDutiesButton from "./GenerateDutiesButton";
 import GenerateResponsibilitiesButton from "./GenerateResponsibilitiesButton";
+import { ExperienceTips } from "@/components/ExperienceTips";
 
 function WorkExperienceForm({ resumeData, setResumeData }: EditorFormProps) {
   const form = useForm<WorkExperiencesValues>({
@@ -84,6 +85,7 @@ function WorkExperienceForm({ resumeData, setResumeData }: EditorFormProps) {
   return (
     <div className="experience-info max-w-xl mx-auto space-y-6 ">
       <div className="space-y-1.5 text-center">
+        <ExperienceTips />
         <h2 className="text-2xl font-semibold">Work Experience</h2>
         <p className="text-sm text-muted-foreground">
           Add as many work experiences as needed.

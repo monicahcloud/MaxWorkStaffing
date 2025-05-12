@@ -12,9 +12,12 @@ export function DashboardLinks() {
   return (
     <>
       {/* Replace dynamic name with static fallback */}
-      <h1 className="text-xl text-primary mx-auto mb-4">
-        Welcome, {user?.firstName || "User"}
-      </h1>
+      <div className="flex mx-auto justify-center items-center text-center mb-4">
+        <h1 className="text-3xl font-extrabold text-blue-900 capitalize">
+          Welcome, {user?.firstName || user?.username || "User"}{" "}
+          {user?.lastName || ""}
+        </h1>
+      </div>
 
       <Button
         className="rounded-full flex items-center justify-center mx-auto mb-10 w-40 h-40 overflow-hidden p-0 border"

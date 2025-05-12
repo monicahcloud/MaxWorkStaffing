@@ -11,9 +11,11 @@ import path from "path";
 export async function saveResume(values: ResumeValues) {
   const { id } = values;
   console.log("recieved values", values);
+
   const { photo, workExperiences, education, techSkills, ...resumeValues } =
     resumeSchema.parse(values);
   const { userId } = await auth();
+  console.log("Creating resume for userId:", userId);
 
   if (!userId) {
     throw new Error("User not authenticated");
@@ -96,7 +98,12 @@ export async function saveResume(values: ResumeValues) {
     return prisma.resume.create({
       data: {
         ...resumeValues,
-        userId,
+        userId, // This will link the resume to the user by userId
+        user: {
+          connect: {
+            clerkId: userId, // Connect the user using the id (optional but ensures the relation)
+          },
+        },
         photoUrl: newPhotoUrl,
         techSkills: {
           create: techSkills?.map((skill) => ({

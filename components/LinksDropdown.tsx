@@ -13,9 +13,14 @@ import {
 
 // Tooltip descriptions for each link label
 const tooltipDescriptions = {
-  Dashboard: "View your real-time job application stats",
+  Dashboard: "Your personalized space to stay organized.",
   Resumes: "Upload, create and manage your resumes",
+  "Cover Letter": "Upload, create and manage your cover letter",
+  "Personal Profile": "Online professional profile to share with recruiters.",
   "Job Tracker": "Track your job applications and their status",
+  "Job Search": "Search for open positions and apply",
+  Stats: "View your real-time job application stats",
+  "AI Mock Interview": "AI-powered mock interview",
   "Interviewing Tools": "Access resources to prepare for interviews",
   FAQs: "Find answers to common questions",
   Support: "Contact support for help",
@@ -28,7 +33,13 @@ export default function LinksDropdown() {
   const linkClassNames = {
     Dashboard: "dashboard-link",
     Resumes: "resumes-link",
+    "Cover Letter": "coverletter-link",
+    "Personal Profile": "profile-link",
+    "Job Search": "job-search-link",
     "Job Tracker": "job-tracker-link",
+
+    Stats: "stats-link",
+    "AI Mock Interview": "mock-interview-link",
     "Interviewing Tools": "interviewing-tools-link",
     FAQs: "faqs-link",
     Support: "support-link",
@@ -45,7 +56,7 @@ export default function LinksDropdown() {
                 pathname === link.href
                   ? "text-primary bg-primary/10"
                   : "text-muted-foreground hover:text-foreground",
-                "flex items-center gap-3 rounded-lg px-3 py-2 text-xl transition-all hover:text-primary"
+                "flex items-center gap-3 rounded-lg px-3 py-1.5 text-xl transition-all hover:text-primary"
               )}
               href={link.href}>
               {link.icon}

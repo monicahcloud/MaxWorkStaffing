@@ -172,3 +172,21 @@ export const generateResponsibilitiesSchema = z.object({
 export type GenerateResponsibilitiesInput = z.infer<
   typeof generateResponsibilitiesSchema
 >;
+
+export const generateSkillsSchema = z.object({
+  jobTitle: z
+    .string()
+    .trim()
+    .min(1, "Required")
+    .min(2, "Must be at least 20 characters"),
+});
+export type GenerateSkillsInput = z.infer<typeof generateSkillsSchema>;
+
+export const InterviewSchema = z.object({
+  type: z.string(),
+  role: z.string(),
+  level: z.string(),
+  techstack: z.string(),
+  amount: z.number(),
+  userId: z.string(),
+});

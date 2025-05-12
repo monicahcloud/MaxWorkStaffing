@@ -1,17 +1,20 @@
 "use client";
 
 import {
-  // AppWindow,
+  AreaChart,
+  AppWindow,
   // AreaChart,
   CircleHelp,
   // CreditCard,
-  // FilePen,
   HomeIcon,
   Layers,
   List,
   MessageCircleQuestion,
   // SquareTerminal,
-  Users2,
+  FilePen,
+  Globe,
+  Users,
+  UserCheck2,
 } from "lucide-react";
 import { nanoid } from "nanoid";
 type DashboardLinks = {
@@ -35,36 +38,48 @@ const links: DashboardLinks[] = [
     icon: <List />,
   },
 
-  // {
-  //   id: nanoid(),
-  //   label: "Resume Builder",
-  //   href: "/resumebuilder",
-  //   icon: <FilePen />,
-  // },
-
+  {
+    id: nanoid(),
+    label: "Cover Letter",
+    href: "/coverletter",
+    icon: <FilePen />,
+  },
+  {
+    id: nanoid(),
+    label: "Personal Profile",
+    href: "/profile",
+    icon: <Globe />,
+  },
+  {
+    id: nanoid(),
+    label: "Job Search",
+    href: "/jobsearch",
+    icon: <AppWindow />,
+  },
   {
     id: nanoid(),
     label: "Job Tracker",
     href: "/addJob",
     icon: <Layers />,
   },
-  // {
-  //   id: nanoid(),
-  //   label: "All Jobs",
-  //   href: "/jobs",
-  //   icon: <AppWindow />,
-  // },
-  // {
-  //   id: nanoid(),
-  //   label: "Stats",
-  //   href: "/stats",
-  //   icon: <AreaChart />,
-  // },
+
+  {
+    id: nanoid(),
+    label: "Stats",
+    href: "/stats",
+    icon: <AreaChart />,
+  },
+  {
+    id: nanoid(),
+    label: "AI Mock Interview",
+    href: "/interview",
+    icon: <Users />,
+  },
   {
     id: nanoid(),
     label: "Interviewing Tools",
     href: "/resources",
-    icon: <Users2 />,
+    icon: <UserCheck2 />,
   },
   // {
   //   id: nanoid(),
@@ -72,12 +87,7 @@ const links: DashboardLinks[] = [
   //   href: "/billing",
   //   icon: <CreditCard />,
   // },
-  // {
-  //   id: nanoid(),
-  //   label: "Services",
-  //   href: "/services",
-  //   icon: <SquareTerminal />,
-  // },
+
   {
     id: nanoid(),
     label: "FAQs",
