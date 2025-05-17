@@ -1,25 +1,94 @@
+"use client";
+
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import avator from "../../assets/ai-avatar.png";
 import user from "../../assets/jobseeker.jpg";
-//import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
+import { useRouter } from "next/navigation";
+import { vapi } from "@/lib/vapi.sdk";
+import { Button } from "../ui/button";
 
-// enum CallStatus {
-//   INACTIVE = "INACTIVE",
-//   CONNECTING = "CONNECTING",
-//   ACTIVE = "ACTIVE",
-//   FINISHED = "FINISHED",
-// }
+enum CallStatus {
+  INACTIVE = "INACTIVE",
+  CONNECTING = "CONNECTING",
+  ACTIVE = "ACTIVE",
+  FINISHED = "FINISHED",
+}
 
-const Agent = ({ userName }: AgentProps) => {
-  // const callStatus = CallStatus.FINISHED;
-  const isSpeaking = true;
-  const messages = [
-    "Whats your name?",
-    "My name is John Doe, nice to meet you!",
-  ];
-  const lastMessage = messages[messages.length - 1];
+interface SavedMessage {
+  role: "user" | "system" | "assistant";
+  content: string;
+}
+
+const Agent = ({ userName, userId, type }: AgentProps) => {
+  const router = useRouter();
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [callStatus, setCallStatus] = useState<CallStatus>(CallStatus.INACTIVE);
+  const [messages, setMessages] = useState<SavedMessage[]>([]);
+
+  useEffect(() => {
+    const onCallStart = () => setCallStatus(CallStatus.ACTIVE);
+    const onCallEnd = () => setCallStatus(CallStatus.FINISHED);
+    const onMessage = (message: Message) => {
+      if (message.type === "transcript" && message.transcriptType === "final") {
+        const newMessage = { role: message.role, content: message.transcript };
+        setMessages((prev) => [...prev, newMessage]);
+      }
+    };
+    const onSpeechStart = () => setIsSpeaking(true);
+    const onSpeechEnd = () => setIsSpeaking(false);
+
+    const onError = (error: Error) => console.log("Error", error);
+    vapi.on("call-start", onCallStart);
+    vapi.on("call-end", onCallEnd);
+    vapi.on("message", onMessage);
+    vapi.on("speech-start", onSpeechStart);
+    vapi.on("speech-end", onSpeechEnd);
+    vapi.on("error", onError);
+
+    return () => {
+      vapi.off("call-start", onCallStart);
+      vapi.off("call-end", onCallEnd);
+      vapi.off("message", onMessage);
+      vapi.off("speech-start", onSpeechStart);
+      vapi.off("speech-end", onSpeechEnd);
+      vapi.off("error", onError);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (callStatus === CallStatus.FINISHED) {
+      router.push("/interview");
+    }
+  }, [messages, callStatus, type, userId, router]);
+
+  const handleCall = async () => {
+    if (!userId) {
+      console.error("User ID is required to start the call.");
+      return;
+    }
+
+    setCallStatus(CallStatus.CONNECTING);
+
+    await vapi.start(process.env.NEXT_PUBLIC_VAPI_WORKFLOW_ID!, {
+      variableValues: {
+        username: userName,
+        userid: userId,
+      },
+      clientMessages: [],
+      serverMessages: [],
+    });
+  };
+
+  const handleDisconnect = async () => {
+    setCallStatus(CallStatus.FINISHED);
+    vapi.stop();
+  };
+
+  const latestMessage = messages[messages.length - 1]?.content;
+  const isCallInactiveOrFinished =
+    callStatus === CallStatus.INACTIVE || callStatus === CallStatus.FINISHED;
 
   return (
     <>
@@ -60,38 +129,37 @@ const Agent = ({ userName }: AgentProps) => {
         <div className="bg-gradient-to-b from-[#4B4D4F] to-[#4B4D4F33] p-0.5 rounded-2xl w-full text-white">
           <div className="bg-gradient-to-b from-[#1A1C20] to-[#08090D] rounded-2xl  min-h-12 px-5 py-3 flex items-center justify-center">
             <p
-              key={lastMessage}
+              key={latestMessage}
               className={cn(
                 " transition-opacity duration-500 opacity-0",
                 "animate-fadeIn opacity-100"
               )}>
-              {lastMessage}
+              {latestMessage}
             </p>
           </div>
         </div>
       )}
-      {/* <div className="w-full flex justify-center">
+      <div className="w-full flex justify-center">
         {callStatus !== "ACTIVE" ? (
-          <Button className="relative inline-block px-7 py-3 font-bold text-sm leading-5 text-white transition-colors  duration-150 bg-green-700 border border-transparent rounded-full shadow-sm focus:outline-none focus:shadow-2xl active:bg-success-200 hover:bg-success-200 min-w-28 cursor-pointer items-center justify-center overflow-visible;">
+          <Button
+            onClick={handleCall}
+            className="relative inline-block px-7 font-bold text-sm leading-5 text-white transition-colors  duration-150 bg-green-700 border border-transparent rounded-full shadow-sm focus:outline-none focus:shadow-2xl active:bg-success-200 hover:bg-success-200 min-w-28 cursor-pointer items-center justify-center overflow-visible;">
             <span
               className={cn(
                 "absolute animate-ping rounded-full opacity-75",
-                (callStatus !== "CONNECTING") & "hidden"
+                callStatus !== "CONNECTING" && "hidden"
               )}
             />
-            <span>
-              {" "}
-              {callStatus === "INACTIVE" || callStatus === "FINISHED"
-                ? "Call"
-                : ". . ."}
-            </span>
+            <span>{isCallInactiveOrFinished ? "Call" : ". . ."}</span>
           </Button>
         ) : (
-          <Button className="inline-block px-7 py-3 text-sm font-bold leading-5 text-white transition-colors duration-150 bg-destructive-100 border border-transparent rounded-full shadow-sm focus:outline-none focus:shadow-2xl active:bg-destructive-200 hover:bg-destructive-200 min-w-28;">
+          <Button
+            onClick={handleDisconnect}
+            className="inline-block px-7 text-sm font-bold leading-5 text-white transition-colors duration-150 bg-red-500 text-center mx-auto border border-transparent rounded-full shadow-sm focus:outline-none focus:shadow-2xl active:bg-destructive-200 hover:bg-destructive-200 min-w-28;">
             End
           </Button>
         )}
-      </div> */}
+      </div>
     </>
   );
 };

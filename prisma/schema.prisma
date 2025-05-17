@@ -171,7 +171,7 @@ model Interview {
   role        String
   type        String
   level       String
-  techstack   String[] // PostgreSQL must support array type
+  techstack   String[]// PostgreSQL must support array type
   questions   String[] // You can also store as JSON if needed
   coverImage  String
   finalized   Boolean

@@ -258,3 +258,44 @@ export async function getChartsDataAction(): Promise<
     redirect("/addJob");
   }
 }
+
+export async function getInterviewsByUserId(
+  userId: string
+): Promise<Interview[]> {
+  const interviews = await prisma.interview.findMany({
+    where: { userId },
+    orderBy: { createdAt: "desc" },
+  });
+
+  return interviews.map((interview) => ({
+    ...interview,
+    createdAt: interview.createdAt.toISOString(),
+    updatedAt: interview.updatedAt.toISOString(),
+  }));
+}
+
+
+export async function getLatestInterviews(
+  params: GetLatestInterviewsParams
+): Promise<Interview[]> {
+  const { userId, limit = 20 } = params;
+
+  const interviews = await prisma.interview.findMany({
+    where: {
+      finalized: true,
+      NOT: {
+        userId: userId,
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+    take: limit,
+  });
+
+  return interviews.map((interview) => ({
+    ...interview,
+    createdAt: interview.createdAt.toISOString(),
+    updatedAt: interview.updatedAt.toISOString(),
+  }));
+}
