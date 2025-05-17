@@ -11,7 +11,7 @@ function InterviewCard({
   // userId,
   role,
   type,
-  interviewId,
+  id,
   techstack,
 }: InterviewCardProps) {
   const feedback = null as Feedback | null;
@@ -57,9 +57,7 @@ function InterviewCard({
           <Button className="bg-gray-400 rounded-3xl text-black">
             <Link
               href={
-                feedback
-                  ? `/interview/${interviewId}/feedback`
-                  : `/interview/${interviewId}`
+                feedback ? `/interview/${id}/feedback` : `/interview/${id}`
               }>
               {feedback ? "Check Feedback" : "View Interview"}
             </Link>

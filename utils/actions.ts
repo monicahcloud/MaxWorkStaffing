@@ -274,7 +274,6 @@ export async function getInterviewsByUserId(
   }));
 }
 
-
 export async function getLatestInterviews(
   params: GetLatestInterviewsParams
 ): Promise<Interview[]> {
@@ -298,4 +297,18 @@ export async function getLatestInterviews(
     createdAt: interview.createdAt.toISOString(),
     updatedAt: interview.updatedAt.toISOString(),
   }));
+}
+
+export async function getInterviewById(id: string): Promise<Interview | null> {
+  const interview = await prisma.interview.findUnique({
+    where: { id },
+  });
+
+  if (!interview) return null;
+
+  return {
+    ...interview,
+    createdAt: interview.createdAt.toISOString(),
+    updatedAt: interview.updatedAt.toISOString(),
+  };
 }

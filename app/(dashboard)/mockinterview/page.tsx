@@ -6,6 +6,9 @@ import React from "react";
 
 const MockInterviewRoute = async () => {
   const user = await currentUser();
+  if (!user) {
+    return <div className="text-white">Please sign in to continue.</div>;
+  }
 
   return (
     <>
