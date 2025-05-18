@@ -21,6 +21,7 @@ model User {
   updatedAt DateTime @updatedAt
   @@index([clerkId])
   savedJob SavedJob[]
+  feedback Feedback[]
 }
 
 model Resume {
@@ -177,4 +178,27 @@ model Interview {
   finalized   Boolean
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+
+  feedback Feedback[]
+}
+
+model Feedback {
+  id                  String   @id @default(cuid())
+  clerkId             String
+  userId              String
+  interviewId         String
+  totalScore          Int
+  categoryScores      Json       // structured scoring per category
+  strengths           String[]   // or Json if needed
+  areasForImprovement String[]   // or Json if needed
+  finalAssessment     String
+  createdAt           DateTime   @default(now())
+
+  // Relations
+  interview Interview @relation(fields: [interviewId], references: [id])
+  user      User      @relation(fields: [userId], references: [id])
+
+  @@index([interviewId])
+  @@index([userId])
 }

@@ -1,17 +1,19 @@
-interface Feedback {
+type Feedback = {
   id: string;
+  userId: string;
+  clerkId: string;
   interviewId: string;
   totalScore: number;
-  categoryScores: Array<{
+  categoryScores: {
     name: string;
     score: number;
     comment: string;
-  }>;
+  }[];
   strengths: string[];
   areasForImprovement: string[];
   finalAssessment: string;
-  createdAt: string;
-}
+  createdAt: Date;
+};
 
 interface Interview {
   id: string;
@@ -72,17 +74,17 @@ interface GetLatestInterviewsParams {
   limit?: number;
 }
 
-interface SignInParams {
-  email: string;
-  idToken: string;
-}
+// interface SignInParams {
+//   email: string;
+//   idToken: string;
+// }
 
-interface SignUpParams {
-  uid: string;
-  name: string;
-  email: string;
-  password: string;
-}
+// interface SignUpParams {
+//   uid: string;
+//   name: string;
+//   email: string;
+//   password: string;
+// }
 
 type FormType = "sign-in" | "sign-up";
 
