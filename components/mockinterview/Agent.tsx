@@ -29,6 +29,7 @@ const Agent = ({
   type,
   interviewId,
   questions,
+  imageUrl,
 }: AgentProps) => {
   const router = useRouter();
   const [isSpeaking, setIsSpeaking] = useState(false);
@@ -64,6 +65,7 @@ const Agent = ({
       vapi.off("error", onError);
     };
   }, []);
+
   const handleGenerateFeedback = async (messages: SavedMessage[]) => {
     console.log("Generate feedback here");
 
@@ -82,9 +84,13 @@ const Agent = ({
     }
   };
   useEffect(() => {
+    console.log("isSpeaking:", isSpeaking);
+  }, [isSpeaking]);
+
+  useEffect(() => {
     if (callStatus === CallStatus.FINISHED) {
       if (type === "generate") {
-        router.push("/");
+        router.push("/interview");
       } else {
         handleGenerateFeedback(messages);
       }
@@ -135,28 +141,29 @@ const Agent = ({
     <>
       <div className="flex sm:flex-row flex-col h-1/2 gap-5 items-center justify-center bg-gradient-to-b from-[#4B4D4F] to-[#4B4D4F33]  w-full">
         {/* AI Interviewer Card */}
-        <div className="flex-center flex-col gap-2 p-7 bg-gradient-to-b from-[#171532] to-[#08090D] rounded-lg border-2 w-1/3 border-primary-200/50 ">
-          <div className="z-10 flex items-center justify-center mx-auto bg-gradient-to-l from-[#FFFFFF] to-[#CAC5FE] rounded-full size-[120px] relative">
+        {/* AI Interviewer Card */}
+        <div className="flex flex-col items-center gap-2 p-7 bg-gradient-to-b from-[#171532] to-[#08090D] rounded-lg border-2 w-1/3 border-primary-200/50">
+          <div className="relative size-[120px] rounded-full bg-gradient-to-l from-white to-[#CAC5FE] flex items-center justify-center">
+            {isSpeaking && (
+              <span className="absolute h-full w-full rounded-full bg-purple-200 opacity-75 animate-ping z-0" />
+            )}
             <Image
               src={avator}
               alt="vapi"
               width={65}
               height={54}
-              className="object-cover"
+              className="relative z-10 object-cover"
             />
-            {isSpeaking && (
-              <span className="absolute inline-flex size-5/6 animate-ping rounded-full bg-primary-200 opacity-75" />
-            )}
           </div>
-          <h3 className="text-white items-center text-center pt-5">
-            AI Interviewer
-          </h3>
+
+          <h3 className="text-white text-center pt-5">AI Interviewer</h3>
         </div>
+
         {/* User Profile Card */}
         <div className=" bg-gradient-to-b from-[#4B4D4F] to-[#4B4D4F33] p-0.5   w-1/3 rounded-2xl ">
           <div className="flex flex-col gap-2 justify-center bg-gradient-to-b from-[#1A1C20] to-[#08090D] items-center p-7 rounded-2xl min-h-full">
             <Image
-              src={user}
+              src={imageUrl || user}
               alt="user avatar"
               width={540}
               height={540}

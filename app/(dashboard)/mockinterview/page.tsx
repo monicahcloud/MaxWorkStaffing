@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import Agent from "@/components/mockinterview/Agent";
 import SectionTitle from "@/components/SectionTitle";
 import { currentUser } from "@clerk/nextjs/server";
@@ -20,6 +22,7 @@ const MockInterviewRoute = async () => {
         userName={user?.firstName ?? "Guest"}
         userId={user?.id ?? ""}
         type="generate"
+        imageUrl={user?.imageUrl ?? ""}
       />
     </>
   );

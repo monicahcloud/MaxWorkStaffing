@@ -41,7 +41,7 @@ async function page() {
         <Button
           asChild
           variant="outline"
-          className="bg-transparent w-full md:w-auto text-base font-medium">
+          className="bg-transparent w-full md:w-auto text-2xl font-medium">
           <Link href="/mockInterview">Start an Interview</Link>
         </Button>
 
@@ -50,8 +50,8 @@ async function page() {
           <Image
             src={robot}
             alt="robot"
-            height={250}
-            width={250}
+            height={400}
+            width={400}
             className="w-full max-w-[250px] sm:max-w-[300px] md:max-w-[400px] h-auto object-contain"
           />
         </div>
