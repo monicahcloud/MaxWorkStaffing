@@ -42,7 +42,7 @@ async function page() {
           asChild
           variant="outline"
           className="bg-transparent w-full md:w-auto text-2xl font-medium">
-          <Link href="/mockInterview">Start an Interview</Link>
+          <Link href={"/mockInterview/"}>Start an Interview</Link>
         </Button>
 
         {/* Image */}

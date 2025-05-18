@@ -10,6 +10,7 @@ import dayjs from "dayjs";
 import { generateObject } from "ai";
 import { feedbackSchema } from "./constants";
 import { openai } from "@ai-sdk/openai"; // or your OpenAI wrapper import
+
 async function authenticateAndRedirect(): Promise<string> {
   const { userId } = await auth(); // Await the promise
   // console.log("userId", userId);

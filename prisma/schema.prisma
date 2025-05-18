@@ -8,65 +8,68 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid()) // internal DB ID
-  clerkId   String   @unique              // Clerk-provided user ID
-  email     String   @unique
-  firstName String?
-  lastName  String?
-  imageUrl  String?
-  isFirstTimeUser Boolean @default(true)
-  resumes   Resume[]
-  jobs      Job[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id              String      @id @default(cuid()) // internal DB ID
+  clerkId         String      @unique // Clerk-provided user ID
+  email           String      @unique
+  firstName       String?
+  lastName        String?
+  imageUrl        String?
+  isFirstTimeUser Boolean     @default(true)
+  resumes         Resume[]
+  jobs            Job[]
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  interviews      Interview[]
+  savedJob        SavedJob[]
+  feedback        Feedback[]
+
   @@index([clerkId])
-  savedJob SavedJob[]
-  feedback Feedback[]
 }
 
 model Resume {
-  id String @id @default(cuid())
-  clerkId   String 
-  userId String
-  resumeType     String?
-  resumeTitle String?
-  description String?
-  photoUrl String?
-  themeColor String @default("#000000")
-  borderStyle String @default("squircle")
-  createdAt      DateTime        @default(now())
-  updatedAt   DateTime @updatedAt
-  firstName   String?
-  lastName    String?
-  jobTitle    String?
-  address     String?
-  phone       String?
-  email       String?
-  userEmail   String?
-  userName    String?
-  website String?
-  linkedin String?
-  gitHub String?
-  summary String?
-  techSkills TechSkill[]
-  workExperience WorkExperience[]
-  education Education[]
-  skills String[]
-  interest String[]
-  uploadedFileUrl  String?   
-  isUploaded       Boolean  @default(false)
-  user   User   @relation(fields: [clerkId], references: [clerkId])
-  jobs   Job[]
+  id              String           @id @default(cuid())
+  clerkId         String
+  userId          String
+  resumeType      String?
+  resumeTitle     String?
+  description     String?
+  photoUrl        String?
+  themeColor      String           @default("#000000")
+  borderStyle     String           @default("squircle")
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  firstName       String?
+  lastName        String?
+  jobTitle        String?
+  address         String?
+  phone           String?
+  email           String?
+  userEmail       String?
+  userName        String?
+  website         String?
+  linkedin        String?
+  gitHub          String?
+  summary         String?
+  techSkills      TechSkill[]
+  workExperience  WorkExperience[]
+  education       Education[]
+  skills          String[]
+  interest        String[]
+  uploadedFileUrl String?
+  isUploaded      Boolean          @default(false)
+  user            User             @relation(fields: [clerkId], references: [clerkId])
+  jobs            Job[]
+
   @@index([clerkId])
 }
 
 model WorkExperience {
-  id String @id @default(cuid())
-  position String?
-  company String?
-  startDate DateTime?
-  endDate DateTime?
-  location     String?
+  id               String    @id @default(cuid())
+  position         String?
+  company          String?
+  startDate        DateTime?
+  endDate          DateTime?
+  location         String?
   duties           String?
   responsibilities String?
   accomplishments  String?
@@ -74,36 +77,36 @@ model WorkExperience {
   grade            String?
   status           String?
   time             String?
-  hours          String? 
-  description String?
-  resumeId String
-  resume Resume @relation(fields: [resumeId], references: [id],  onDelete: Cascade)
-  createdAt      DateTime        @default(now())
-  updatedAt   DateTime @updatedAt
+  hours            String?
+  description      String?
+  resumeId         String
+  resume           Resume    @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
 }
 
 model TechSkill {
   id        String   @id @default(uuid())
   resumeId  String
   name      String?
-  rating     Int?
-  resume Resume @relation(fields: [resumeId], references: [id],  onDelete: Cascade)
-  createdAt      DateTime        @default(now())
-  updatedAt   DateTime @updatedAt
+  rating    Int?
+  resume    Resume   @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Education {
-  id String @id @default(cuid())
-  degree String?
-  school String?
-  startDate DateTime?
-  endDate DateTime?
-  location     String?
+  id          String    @id @default(cuid())
+  degree      String?
+  school      String?
+  startDate   DateTime?
+  endDate     DateTime?
+  location    String?
   description String?
-  resumeId String
-  resume Resume @relation(fields: [resumeId], references: [id],  onDelete: Cascade)
-  createdAt      DateTime        @default(now())
-  updatedAt   DateTime @updatedAt
+  resumeId    String
+  resume      Resume    @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }
 
 model UserSubscription {
@@ -114,36 +117,37 @@ model UserSubscription {
   stripePriceId           String
   stripeCurrentPeriodEnd  DateTime
   stripeCancelAtPeriodEnd Boolean  @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+
   @@map("user_subscriptions")
 }
 
 model Job {
-  id          String   @id @default(uuid())
-  clerkId     String
-  userId      String
-  resumeId    String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  position    String
-  company     String
-  location    String
-  mode        Mode
-  status      String
-  salary      String?
-  postedAt    DateTime?
-  description String?
+  id           String    @id @default(uuid())
+  clerkId      String
+  userId       String
+  resumeId     String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  position     String
+  company      String
+  location     String
+  mode         Mode
+  status       String
+  salary       String?
+  postedAt     DateTime?
+  description  String?
   requirements String[]
-  category    String?
-  url       String? 
+  category     String?
+  url          String?
 
-  user   User   @relation(fields: [clerkId], references: [clerkId])
-  resume Resume? @relation(fields: [resumeId], references: [id])
+  user     User       @relation(fields: [clerkId], references: [clerkId])
+  resume   Resume?    @relation(fields: [resumeId], references: [id])
+  savedJob SavedJob[]
 
   @@index([clerkId])
   @@index([resumeId])
-  savedJob SavedJob[]
 }
 
 enum Mode {
@@ -165,20 +169,19 @@ model SavedJob {
   user User @relation(fields: [userId], references: [id])
 }
 
-
 model Interview {
-  id          String   @id @default(cuid())
-  userId      String
-  role        String
-  type        String
-  level       String
-  techstack   String[]// PostgreSQL must support array type
-  questions   String[] // You can also store as JSON if needed
-  coverImage  String
-  finalized   Boolean
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  role       String
+  type       String
+  level      String
+  techstack  String[] // PostgreSQL must support array type
+  questions  String[] // You can also store as JSON if needed
+  coverImage String
+  finalized  Boolean
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   feedback Feedback[]
 }
@@ -189,11 +192,11 @@ model Feedback {
   userId              String
   interviewId         String
   totalScore          Int
-  categoryScores      Json       // structured scoring per category
-  strengths           String[]   // or Json if needed
-  areasForImprovement String[]   // or Json if needed
+  categoryScores      Json // structured scoring per category
+  strengths           String[] // or Json if needed
+  areasForImprovement String[] // or Json if needed
   finalAssessment     String
-  createdAt           DateTime   @default(now())
+  createdAt           DateTime @default(now())
 
   // Relations
   interview Interview @relation(fields: [interviewId], references: [id])

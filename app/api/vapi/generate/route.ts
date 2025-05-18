@@ -3,6 +3,7 @@ import { InterviewSchema } from "@/lib/validation";
 import { getRandomInterviewCover } from "@/utils/utils";
 import { openai } from "@ai-sdk/openai";
 import { generateText } from "ai";
+
 export async function GET() {
   return Response.json({ success: true, data: "THANK YOU" }, { status: 200 });
 }
@@ -20,7 +21,7 @@ export async function POST(request: Request) {
   const { type, role, level, techstack, amount, userId } = parsed.data;
 
   try {
-    const { text: rawQuestions } = await generateText({
+    const { text: questions } = await generateText({
       model: openai("gpt-4o-mini"),
       prompt: `Prepare questions for a job interview.
 The job role is ${role}.
@@ -38,16 +39,16 @@ Thank you! <3`,
 
     let parsedQuestions: string[];
     try {
-      parsedQuestions = JSON.parse(rawQuestions);
+      parsedQuestions = JSON.parse(questions);
       if (!Array.isArray(parsedQuestions)) throw new Error("Not an array");
     } catch {
-      console.error("Failed to parse questions:", rawQuestions);
+      console.error("Failed to parse questions:", questions);
       return Response.json(
         { success: false, error: "Invalid question format from AI." },
         { status: 500 }
       );
     }
-
+    console.log(parsedQuestions);
     const interview = await prisma.interview.create({
       data: {
         role,
@@ -62,6 +63,7 @@ Thank you! <3`,
         updatedAt: new Date(),
       },
     });
+    console.log(interview);
 
     return Response.json({ success: true, interview }, { status: 201 });
   } catch (error) {

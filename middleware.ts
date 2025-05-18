@@ -10,8 +10,10 @@ const isPublicRoute = createRouteMatcher([
   "/api/stripe-webhook",
   "/api/clerk-webhook(.*)",
   "/api/adzuna(.*)",
+  "/api/jobs(.*)",
   "/api/jobspikr(.*)",
   "/api/vapi(.*)",
+  "/api/user(.*)",
   "/verify",
 ]); // Allow "/sign-in" to prevent redirect loops
 
