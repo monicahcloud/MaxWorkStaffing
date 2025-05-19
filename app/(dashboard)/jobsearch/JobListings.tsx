@@ -11,6 +11,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Card } from "@/components/ui/card";
+import { fetchJobs } from "./actions";
 
 interface Job {
   id: number;
@@ -25,7 +26,11 @@ interface Job {
 }
 
 interface Props {
-  category: string;
+  filters: {
+    keyword?: string;
+    location?: string;
+    category?: string;
+  };
   onBack: () => void;
 }
 
@@ -184,17 +189,28 @@ const jobData: Job[] = [
   },
 ];
 
-export default function JobListingsView({ category, onBack }: Props) {
+export default function JobListingsView({ filters, onBack }: Props) {
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
-  const [filteredJobs, setFilteredJobs] = useState<Job[]>([]);
+  const [jobs, setJobs] = useState<Job[]>([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const jobs = jobData.filter(
-      (job) => job.category.toLowerCase() === category.toLowerCase()
-    );
-    setFilteredJobs(jobs);
-    setSelectedJob(jobs[0] || null);
-  }, [category]);
+    const loadJobs = async () => {
+      setLoading(true);
+      try {
+        const fetchedJobs = await fetchJobs(filters); // ✅ Live call using filters
+        setJobs(fetchedJobs);
+        setSelectedJob(fetchedJobs[0] || null);
+      } catch (error) {
+        console.error("Failed to fetch jobs:", error);
+        setJobs([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadJobs();
+  }, [filters]);
 
   return (
     <div className="p-6 space-y-6 max-w-7xl mx-auto">
@@ -202,7 +218,9 @@ export default function JobListingsView({ category, onBack }: Props) {
         <Button variant="secondary" className="text-black" onClick={onBack}>
           ← Back to Categories
         </Button>
-        <h1 className="text-xl font-bold text-red-700">Jobs in {category}</h1>
+        <h1 className="text-xl font-bold text-red-700">
+          {filters.category ? `Jobs in ${filters.category}` : "Job Listings"}
+        </h1>
       </div>
 
       {/* Search Filters */}
@@ -251,10 +269,12 @@ export default function JobListingsView({ category, onBack }: Props) {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Job List */}
         <div className="space-y-4 lg:col-span-1">
-          {filteredJobs.length === 0 ? (
-            <p>No jobs found in this category.</p>
+          {loading ? (
+            <p>Loading jobs...</p>
+          ) : jobs.length === 0 ? (
+            <p>No jobs found for this search.</p>
           ) : (
-            filteredJobs.map((job) => (
+            jobs.map((job) => (
               <Card
                 key={job.id}
                 className={`border p-4 cursor-pointer hover:shadow-md ${

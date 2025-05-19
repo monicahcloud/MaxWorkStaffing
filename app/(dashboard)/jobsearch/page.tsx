@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/select";
 import { US_STATES } from "@/utils/states";
 import { jobIndustries } from "@/utils/industry";
+import SectionTitle from "@/components/SectionTitle";
 
 const jobCategories = [
   { title: "Financial Services", image: business },
@@ -58,36 +59,52 @@ const moreCategories = [
 function JobSearch() {
   const [keyword, setKeyword] = useState("");
   const [location, setLocation] = useState("");
-  // const [distance, setDistance] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  console.log(location);
-  if (selectedCategory) {
+  const [selectedDropdownCategory, setSelectedDropdownCategory] = useState<
+    string | undefined
+  >();
+  const [searchParams, setSearchParams] = useState<{
+    keyword?: string;
+    location?: string;
+    category?: string;
+  } | null>(null);
+
+  if (searchParams) {
     return (
       <JobListingsView
-        category={selectedCategory}
-        onBack={() => setSelectedCategory(null)}
+        filters={searchParams}
+        onBack={() => setSearchParams(null)}
       />
     );
   }
 
   return (
-    <div className="px-4 pt-4 max-w-7xl mx-auto shadow-2xl">
-      <h1 className="text-6xl font-bold text-center mb-6  text-red-700">
+    <div className="px-4 sm:px-6 lg:px-8 py-6 max-w-7xl mx-auto">
+      <SectionTitle
+        text=" Find Your Perfect Job"
+        subtext=" Whether you're looking for a new career or your next assignment, take a
+        look at some of our open positions and find the perfect job for you."
+      />
+      {/* <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-center mb-6 text-red-700">
         Find Your Perfect Job
       </h1>
-      <p className="text-center text-gray-600 mb-10">
+      <p className="text-center text-gray-600 mb-10 text-sm sm:text-base max-w-2xl mx-auto">
         Whether you're looking for a new career or your next assignment, take a
         look at some of our open positions and find the perfect job for you.
-      </p>
-      <div className="flex flex-col md:flex-row justify-center gap-4 mb-8">
+      </p> */}
+
+      {/* Search Form */}
+      {/* Search Form */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10 mt-8">
         <Input
           placeholder="Title or keyword"
+          aria-label="Search by job title or keyword"
           value={keyword}
           onChange={(e) => setKeyword(e.target.value)}
-          className="flex-1"
+          className="w-full"
         />
+
         <Select onValueChange={(value) => setLocation(value)}>
-          <SelectTrigger className="md:flex-1">
+          <SelectTrigger className="w-full" aria-label="Select a state">
             <SelectValue placeholder="Select State" />
           </SelectTrigger>
           <SelectContent>
@@ -98,8 +115,9 @@ function JobSearch() {
             ))}
           </SelectContent>
         </Select>
-        <Select onValueChange={(value) => setLocation(value)}>
-          <SelectTrigger className="md:flex-1">
+
+        <Select onValueChange={(value) => setSelectedDropdownCategory(value)}>
+          <SelectTrigger className="w-full" aria-label="Select a job category">
             <SelectValue placeholder="Select Category" />
           </SelectTrigger>
           <SelectContent>
@@ -110,45 +128,72 @@ function JobSearch() {
             ))}
           </SelectContent>
         </Select>
-        <Button className="bg-red-700 hover:bg-red-800 text-white">
+
+        <Button
+          onClick={() =>
+            setSearchParams({
+              keyword,
+              location,
+              category: selectedDropdownCategory,
+            })
+          }
+          className="w-full bg-red-700 hover:bg-red-800 text-white">
           Search
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {jobCategories.map((category, index) => (
-          <Card key={index} className="relative group overflow-hidden">
-            <Image
-              src={category.image}
-              alt={category.title}
-              className="w-full h-48 object-fill group-hover:scale-105 transition-transform duration-300"
-            />
-            <CardContent className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-60 text-white p-4">
-              <h2 className="text-lg text-center font-semibold">
-                {category.title}
-              </h2>
-              <Button
-                variant="secondary"
-                className="mt-2 bg-gray-200 text-black hover:bg-gray-200"
-                onClick={() => setSelectedCategory(category.title)}>
-                View Opportunities
-              </Button>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+      {/* Job Categories */}
+      <section aria-label="Popular Job Categories">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {jobCategories.map((category, index) => (
+            <Card
+              key={index}
+              className="relative group overflow-hidden focus-within:ring-2 focus-within:ring-red-500">
+              <Image
+                src={category.image}
+                alt={category.title}
+                className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+              />
+              <CardContent className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent text-white p-4">
+                <h2 className="text-lg text-center font-bold drop-shadow-sm tracking-wide">
+                  {category.title}
+                </h2>
+                <Button
+                  variant="secondary"
+                  className="mt-2 w-full bg-gray-100 text-black text-sm font-medium hover:bg-gray-200 whitespace-normal break-words px-2 py-1 min-h-[2.5rem]"
+                  onClick={() =>
+                    setSearchParams({
+                      category: category.title,
+                    })
+                  }
+                  aria-label={`View jobs in ${category.title}`}>
+                  View Opportunities
+                </Button>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </section>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 text-sm text-center text-gray-700 mt-10">
+      {/* More Categories */}
+      <section
+        className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 text-sm text-center text-gray-700 mt-10"
+        aria-label="More Job Categories">
         {moreCategories.map((category, index) => (
           <Button
             variant="outline"
             key={index}
-            onClick={() => setSelectedCategory(category)}
-            className="hover:underline hover:text-red-700 transition-colors text-stone-900 font-semibold">
+            onClick={() =>
+              setSearchParams({
+                category,
+              })
+            }
+            className="hover:underline hover:text-red-700 transition-colors text-stone-900 font-semibold text-sm px-2 py-1 whitespace-normal break-words"
+            aria-label={`Browse ${category} jobs`}>
             {category}
           </Button>
         ))}
-      </div>
+      </section>
     </div>
   );
 }
