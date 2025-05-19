@@ -1,7 +1,7 @@
-import { ModernTemplate } from "./ModernTemplate";
-import { MinimalTemplate } from "./MinimalTemplate";
+import { ShabachTemplate } from "./ShabachTemplate";
+import { TodahTemplate } from "./TodahTemplate";
 
 export const templateMap = {
-  modern: ModernTemplate,
-  minimal: MinimalTemplate,
+  todah: TodahTemplate,
+  shabach: ShabachTemplate,
 };

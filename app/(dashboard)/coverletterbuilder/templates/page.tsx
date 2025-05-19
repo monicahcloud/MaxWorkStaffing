@@ -2,15 +2,15 @@
 
 import { useRouter } from "next/navigation";
 import { Card, CardContent } from "@/components/ui/card";
-import { templateMetadata } from "./template"; // <-- make sure this file only exports plain objects
+import { templateMetadata } from "./template";
 
 export default function TemplateSelectionPage() {
   const router = useRouter();
 
   const handleSelect = (templateId: string) => {
-    if (!templateId) return;
+    const validTemplates = templateMetadata.map((t) => t.id);
+    if (!templateId || !validTemplates.includes(templateId)) return;
 
-    // ✅ Fix: Remove newline from template string
     router.push(
       `/coverletterbuilder/editor?template=${encodeURIComponent(templateId)}`
     );
@@ -18,10 +18,6 @@ export default function TemplateSelectionPage() {
 
   return (
     <main className="p-6 max-w-5xl mx-auto">
-      <h1 className="text-2xl font-bold mb-6">
-        Choose a Cover Letter Template
-      </h1>
-
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {templateMetadata.map((template) => (
           <Card
