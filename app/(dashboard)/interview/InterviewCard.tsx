@@ -49,7 +49,7 @@ function InterviewCard({
           </div>
           <p className="line-clamp-2 mt-5 text-white">
             {feedback?.finalAssessment ||
-              "Your haven't taken the interview yet. Take it now to improve your skills."}
+              "Your haven't taken the interview yet. "}
           </p>
         </div>
         <div className="flex flex-row justify-between text-white">

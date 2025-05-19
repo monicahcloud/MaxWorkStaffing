@@ -46,6 +46,9 @@
 //   );
 // };
 // export default Page;
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
 import { getInterviewById } from "@/utils/actions";
 import { redirect } from "next/navigation";
 import React from "react";

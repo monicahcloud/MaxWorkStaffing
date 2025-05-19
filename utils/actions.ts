@@ -8,7 +8,7 @@ import prisma from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 import dayjs from "dayjs";
 import { generateObject } from "ai";
-import { feedbackSchema } from "./constants";
+import { feedbackSchema } from "@/lib/validation";
 import { openai } from "@ai-sdk/openai"; // or your OpenAI wrapper import
 
 async function authenticateAndRedirect(): Promise<string> {
@@ -332,7 +332,15 @@ export async function createFeedback(params: CreateFeedbackParams) {
       schema: feedbackSchema,
       prompt: `
 You are an AI interviewer analyzing a mock interview. Your task is to evaluate the candidate based on structured categories. Be thorough and detailed in your analysis. Don't be lenient with the candidate. If there are mistakes or areas for improvement, point them out.
-
+IMPORTANT:
+- Do NOT use '&' (ampersand). Always write "and".
+- Return only a valid JSON object matching the exact schema.
+- Category names must exactly match:
+  - "Communication Skills"
+  - "Technical Knowledge"
+  - "Problem Solving"
+  - "Cultural Fit"
+  - "Confidence and Clarity"
 Transcript:
 ${formattedTranscript}
 
@@ -350,16 +358,17 @@ Please score the candidate from 0 to 100 in the following areas. Do not add cate
 
     // 🔍 Look up the clerkId from the userId
     const user = await prisma.user.findUnique({
-      where: { id: userId },
-      select: { clerkId: true },
+      where: { clerkId: userId }, // if you're passing Clerk ID
+      select: { id: true, clerkId: true },
     });
 
     if (!user) throw new Error("User not found");
+    console.log("Looking up user by clerkId:", userId);
 
     const feedbackData = {
       interviewId,
-      userId,
-      clerkId: user.clerkId, // ✅ Add clerkId here
+      userId: user.id, // ✅ use internal DB ID for `userId`
+      clerkId: user.clerkId,
       totalScore: object.totalScore,
       categoryScores: object.categoryScores,
       strengths: object.strengths,

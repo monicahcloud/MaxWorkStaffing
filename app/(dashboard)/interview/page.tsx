@@ -16,18 +16,18 @@ async function page() {
     throw new Error("User not found. Please log in.");
   }
 
-  // Now it's safe to use user.id
-  // const [userInterviews, latestInterviews] = await Promise.all([
-  //   getInterviewsByUserId(user.id),
-  //   getLatestInterviews({ userId: user.id }),
-  // ]);
-
-  const [userInterviews] = await Promise.all([
+  //Now it's safe to use user.id
+  const [userInterviews, latestInterviews] = await Promise.all([
     getInterviewsByUserId(user.id),
     getLatestInterviews({ userId: user.id }),
   ]);
+
+  // const [userInterviews] = await Promise.all([
+  //   getInterviewsByUserId(user.id),
+  //   getLatestInterviews({ userId: user.id }),
+  // ]);
   const hasPastInterviews = userInterviews?.length > 0;
-  // const hasUpcomingInterviews = latestInterviews?.length > 0;
+  const hasUpcomingInterviews = latestInterviews?.length > 0;
 
   return (
     <>
@@ -58,7 +58,9 @@ async function page() {
       </section>
 
       <section className="flex flex-col gap-6 mt-8">
-        <h2 className="text-3xl font-semibold">Your Interviews</h2>
+        <h2 className="text-3xl font-semibold">
+          Take your interview now to improve your skills
+        </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 px-4">
           {hasPastInterviews ? (
             userInterviews?.map((interview) => (
@@ -69,7 +71,7 @@ async function page() {
           )}
         </div>
       </section>
-      {/* <section className="flex flex-col gap-6 mt-8">
+      <section className="flex flex-col gap-6 mt-8">
         <h2 className="text-3xl font-semibold">Conduct a Practice Interview</h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 px-4">
@@ -81,7 +83,7 @@ async function page() {
             <p> There are no interviews available</p>
           )}
         </div>
-      </section> */}
+      </section>
     </>
   );
 }

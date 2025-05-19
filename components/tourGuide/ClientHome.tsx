@@ -15,27 +15,26 @@ function ClientHome() {
     setLoaded(true);
   }, []);
 
-  if (!loaded) {
-    return null;
-  }
+  if (!loaded) return null;
 
   return (
-    <>
-      <div className="bg-muted p-4 mb-4 rounded flex items-center justify-between gap-10 ">
-        <div className="flex items-center justify-between flex-wrap gap-4 mb-6">
-          <h1 className="text-3xl font-extrabold text-blue-900  capitalize">
-            Hey, {username}!
-          </h1>
-          <p className="text-muted-foreground">
-            Your dashboard is a personalized space to stay organized, access and
-            create resumes and cover letters, search for jobs and get current
-            tips and trends.
-          </p>
-        </div>
-        <ResumeProgress completedSteps={completedSteps} /> <br />
+    <div className="bg-muted p-4 sm:p-6 md:p-8 mb-4 rounded flex flex-col sm:flex-col md:flex-row items-start md:items-center justify-between gap-6">
+      <div className="flex flex-col gap-4 w-full md:w-2/3">
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-blue-900 capitalize">
+          Hey, {username}!
+        </h1>
+        <p className="text-sm sm:text-base text-muted-foreground">
+          Your dashboard is a personalized space to stay organized, access and
+          create resumes and cover letters, search for jobs, and get current
+          tips and trends.
+        </p>
+      </div>
+
+      <div className="flex flex-col items-start sm:items-end gap-4 w-full md:w-auto">
+        <ResumeProgress completedSteps={completedSteps} />
         <TakeTourButton />
       </div>
-    </>
+    </div>
   );
 }
 

@@ -79,15 +79,22 @@ const Agent = ({
 
     // create server action that generate feedback
 
-    const { success, feedbackId: id } = await createFeedback({
+    // const { success, feedbackId: id } = await createFeedback({
+    //   interviewId: interviewId!,
+    //   userId: userId!,
+    //   transcript: messages,
+    // });
+    const result = await createFeedback({
       interviewId: interviewId!,
       userId: userId!,
       transcript: messages,
     });
-    if (success && id) {
+
+    if (result.success && result.feedbackId) {
       router.push(`/interview/${interviewId}/feedback`);
     } else {
-      console.log("Error saving feedback");
+      console.error("Error saving feedback", result);
+      alert("Feedback generation failed. Please try again.");
       router.push("/interview");
     }
   };
