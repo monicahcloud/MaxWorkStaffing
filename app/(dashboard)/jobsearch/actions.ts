@@ -3,28 +3,8 @@
 //   const res = await fetch(endpoint);
 //   if (!res.ok) throw new Error("Failed to fetch jobs");
 
-//   const data = await res.json();
-//   console.log("Adzuna API response:", data); // <--- Add this line
+import { categoryMap } from "@/utils/category";
 
-//   if (!data?.results) {
-//     throw new Error("Invalid response structure: 'results' field is missing");
-//   }
-
-//   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-//   return data.results.map((job: any, index: number) => ({
-//     id: job.id || index,
-//     title: job.title,
-//     location: job.location.display_name,
-//     type: job.contract_time || "N/A",
-//     salary: job.salary_display || "N/A",
-//     posted: job.created || "N/A",
-//     description: job.description,
-//     requirements: [],
-//     category: job.category?.label || category,
-//   }));
-// }
-
-// actions.ts
 export async function fetchJobs(filters: {
   keyword?: string;
   location?: string;
@@ -34,28 +14,51 @@ export async function fetchJobs(filters: {
 
   if (filters.keyword) query.append("what", filters.keyword);
   if (filters.location) query.append("where", filters.location);
-  if (filters.category) query.append("category", filters.category);
+
+  if (filters.category) {
+    const tag = categoryMap[filters.category];
+    if (tag) {
+      query.append("category", tag);
+    } else {
+      console.warn(`Unknown category: ${filters.category}`);
+    }
+  }
+  console.log("Fetching with:", query.toString());
 
   const endpoint = `/api/adzuna?${query.toString()}`;
-
   const res = await fetch(endpoint);
   const data = await res.json();
 
-  console.log("Adzuna API raw response:", data); // helpful debug log
+  console.log(" fetchJobs Adzuna API raw response:", data);
 
-  if (!data?.results) {
-    throw new Error("Invalid response structure: 'results' field is missing");
+  const jobsArray = Array.isArray(data.results)
+    ? data.results
+    : Array.isArray(data)
+    ? data
+    : [];
+
+  if (jobsArray.length === 0) {
+    throw new Error("No jobs found or invalid structure.");
   }
 
-  return data.results.map((job: any, index: number) => ({
-    id: job.id || index,
-    title: job.title,
-    location: job.location.display_name,
-    type: job.contract_time || "N/A",
-    salary: job.salary_display || "N/A",
-    posted: job.created || "N/A",
-    description: job.description,
-    requirements: [],
-    category: job.category?.label || filters.category || "Unknown",
-  }));
+  return jobsArray
+    .filter((job: any) => {
+      if (!filters.category) return true;
+
+      const categoryLabel = job.category?.label?.toLowerCase();
+      const selectedCategory = filters.category.toLowerCase();
+
+      return categoryLabel?.includes(selectedCategory);
+    })
+    .map((job: any, index: number) => ({
+      id: job.id || index,
+      title: job.title,
+      location: job.location?.display_name || "Unknown",
+      type: job.contract_time || "N/A",
+      salary: job.salary_display || "N/A",
+      posted: job.created || "N/A",
+      description: job.description,
+      requirements: [],
+      category: job.category?.label || "Uncategorized",
+    }));
 }

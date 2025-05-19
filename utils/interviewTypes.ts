@@ -101,3 +101,12 @@ interface InterviewFormProps {
 interface TechIconProps {
   techStack: string[];
 }
+
+interface TemplateProps {
+  recipientName: string;
+  companyName: string;
+  jobTitle: string;
+  body: string;
+  userName: string;
+  userEmail: string;
+}
