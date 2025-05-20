@@ -1,4 +1,6 @@
 export const templateMetadata = [
-  { id: "shabach", name: "Shabach Template" },
-  { id: "todah", name: "Todah Template" },
+  { id: "Shabach", name: "Shabach Template" },
+  { id: "Todah", name: "Todah Template" },
+  { id: "Zamar", name: "Zamar Template" },
+  { id: "Barak", name: "Barak Template" },
 ];

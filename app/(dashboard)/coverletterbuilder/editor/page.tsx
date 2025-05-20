@@ -9,7 +9,7 @@ import BackToTemplatesButton from "../templates/BackToTemplatesButton";
 
 export default function CoverLetterBuilder() {
   const searchParams = useSearchParams();
-  const templateId = searchParams.get("template") || "shabach";
+  const templateId = searchParams.get("template") || "Shabach";
   const TemplateComponent = templateMap[templateId];
 
   const form = useForm({

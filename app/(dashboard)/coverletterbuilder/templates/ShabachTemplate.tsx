@@ -4,13 +4,17 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 import React, { useRef } from "react";
 import useDimensions from "@/hooks/useDimensions";
+import image from "../../../../assets/jobseeker.jpg";
 
 interface Props {
   recipientName: string;
   companyName: string;
   jobTitle: string;
   body: string;
-  userName: string;
+  firstName: string;
+  lastName: string;
+  fullname: string;
+  website: string;
   userEmail: string;
   userPhone: string;
   userAddress: string;
@@ -27,7 +31,9 @@ export function ShabachTemplate({
   companyName,
   jobTitle,
   body,
-  userName,
+  firstName,
+  lastName,
+  website,
   userEmail,
   userPhone,
   userAddress,
@@ -43,140 +49,118 @@ export function ShabachTemplate({
   return (
     <div
       className={cn(
-        "aspect-[210/297] bg-black text-white h-fit w-full",
+        "relative aspect-[210/297] bg-black text-white h-fit w-full overflow-hidden",
         className
       )}
       ref={containerRef}>
       <div
-        className={cn("space-y-6 p-6 origin-top-left ", !width && "invisible")}
+        className={cn(
+          "origin-top-left space-y-6 p-10 font-lora",
+          !width && "invisible"
+        )}
         style={{
-          width: "794px", // Lock original width
+          width: "794px",
           transform: `scale(${width / 794})`,
         }}
         ref={contentRef}
-        id="resumePreviewContent">
-        <PersonalInfoSection
-          userName={userName}
-          userEmail={userEmail}
-          userPhone={userPhone}
-          userAddress={userAddress}
-          userPhoto={userPhoto}
-          date={date}
-        />
-        <EmployeeInfoSection
-          recipientName={recipientName}
-          companyName={companyName}
-          jobTitle={jobTitle}
-        />
-        <BodySection
-          body={body}
-          recipientName={recipientName}
-          userName={userName}
-          signatureUrl={signatureUrl}
-        />
-      </div>
-    </div>
-  );
-}
+        id="coverletterPreviewContent">
+        {/* Header Section */}
+        <div className="flex justify-between">
+          {/* Name Block */}
+          <div>
+            <h1 className="text-7xl font-serif leading-none tracking-widest">
+              {firstName || "Lizzie"}
+            </h1>
+            <div className="h-1 w-20 bg-white my-9" />
+            <h2 className="text-7xl pl-25 -mt-20 font-serif tracking-widest">
+              {lastName || "Major"}
+            </h2>
+          </div>
 
-function PersonalInfoSection({
-  userName,
-  userEmail,
-  userPhone,
-  userAddress,
-  userPhoto,
-  date,
-}: {
-  userName: string;
-  userEmail: string;
-  userPhone: string;
-  userAddress: string;
-  userPhoto?: string;
-  date?: string;
-}) {
-  const [firstName, lastName] = userName.split(" ");
-
-  return (
-    <div className="relative w-full flex justify-center text-white">
-      <div className="text-center space-y-1">
-        <div className="flex-1">
-          <h1 className="text-5xl font-serif tracking-widest font-light">
-            {firstName}
-            <span className="block text-4xl font-medium">{lastName}</span>
-          </h1>
-
-          <div className="mt-6 space-y-1 text-sm text-white/80">
-            <p>{date || new Date().toLocaleDateString()}</p>
-            <p>{userAddress}</p>
-            <p>📧 {userEmail}</p>
-            <p>📞 {userPhone}</p>
+          {/* Contact Block */}
+          <div className="text-lg text-white/80 text-right space-y-1 pr-5">
+            <p>📧 {userEmail || "hello@reallygreatsite.com"}</p>
+            <p>🌐 {website || "@reallygreatsite"}</p>
           </div>
         </div>
 
-        {userPhoto && (
-          <div className="shrink-0 w-32 h-32">
-            <Image
-              src={userPhoto}
-              alt="User Photo"
-              width={128}
-              height={128}
-              className="object-cover rounded-md border border-white"
-            />
+        {/* Image aligned to right side */}
+        {(userPhoto || image?.src) && (
+          <div className="flex justify-end -mt-20">
+            <div className="w-75 h-70 rounded-md overflow-hidden border border-white">
+              <Image
+                src={userPhoto || image.src}
+                alt="User Photo"
+                width={300}
+                height={240}
+                className="object-cover w-full h-full"
+              />
+            </div>
           </div>
         )}
-      </div>
-    </div>
-  );
-}
+        {/* Recipient Info */}
+        <div className="text-lg space-y-1 -mt-45">
+          <p>{date || new Date().toLocaleDateString()}</p>
+          <p className="font-semibold text-white">
+            {recipientName || "Ms. Estelle"}
+          </p>
+          <p>{jobTitle || "Founder Borcelle"}</p>
+          <p>{companyName || "123 Anywhere St., Any City, ST 12345"}</p>
+          <div className="h-px w-16 bg-white/50 mt-2" />
+        </div>
 
-function EmployeeInfoSection({
-  recipientName,
-  companyName,
-  jobTitle,
-}: {
-  recipientName: string;
-  companyName: string;
-  jobTitle: string;
-}) {
-  return (
-    <div className="mt-4 space-y-1 text-sm text-white/80">
-      <p className="font-semibold text-white">{recipientName}</p>
-      <p>{jobTitle}</p>
-      <p>{companyName}</p>
-    </div>
-  );
-}
+        {/* Body Content */}
+        <div className="text-xl text-white/90 space-y-5 leading-relaxed">
+          <p>
+            <strong>Dear {recipientName || "Hiring Manager"},</strong>
+          </p>
+          <p>
+            {body ||
+              `A cover letter allows you to professionally introduce yourself to a prospective
+              employer. Your goal in writing your cover letter should be to encourage the employer
+              to read your resume and consider you for a specific position.`}
+          </p>
+          <p>
+            Highlight your achievements, skills, experiences, and training that
+            are relevant to the position you want to get. However, avoid simply
+            repeating the information you included in your resume. Tailor your
+            cover letter to each employer and job.
+          </p>
+          <p>
+            Yes, you should maintain a professional air throughout the copy.
+            Remember to also show genuine enthusiasm. Think of it as a smart
+            casual gathering — not too formal, not too personal.
+          </p>
+        </div>
 
-function BodySection({
-  body,
-  recipientName,
-  userName,
-  signatureUrl,
-}: {
-  body: string;
-  recipientName: string;
-  userName: string;
-  signatureUrl?: string;
-}) {
-  return (
-    <div className="mt-8 space-y-6 text-sm leading-relaxed text-white/90">
-      <p>
-        <strong>Dear {recipientName || "Hiring Manager"},</strong>
-      </p>
-      <p>{body || "[Your cover letter body content will appear here.]"}</p>
+        {/* Signature */}
+        <div className="mt-10 text-lg">
+          <p>Best Regards,</p>
+          {signatureUrl && (
+            <Image
+              src={signatureUrl}
+              alt="Signature"
+              width={120}
+              height={40}
+              className="object-contain"
+            />
+          )}
+          <p className="font-semibold text-white">
+            {firstName || lastName
+              ? `${firstName} ${lastName}`.trim()
+              : "Shawn Garcia"}
+          </p>
+          <p className="font-semibold text-white">
+            {userPhone || "123-123-1234"}
+          </p>
+        </div>
 
-      <div className="mt-10 space-y-2">
-        <p>Best Regards,</p>
-        {signatureUrl && (
-          <Image
-            src={signatureUrl}
-            alt="Signature"
-            width={120}
-            height={40}
-            className="object-contain"
-          />
-        )}
-        <p className="font-semibold text-white">{userName}</p>
+        {/* Footer */}
+        <div className="pt-6 border-t border-white/20 text-center text-lg text-white/70 mt-4">
+          <p className="font-semibold text-white">
+            {userAddress || "1234 Main St, Anytown USA"}
+          </p>
+        </div>
       </div>
     </div>
   );

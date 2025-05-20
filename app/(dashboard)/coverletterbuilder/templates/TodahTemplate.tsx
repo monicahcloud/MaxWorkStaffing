@@ -1,34 +1,9 @@
-// templates/MinimalTemplate.tsx
 "use client";
-export function MinimalTemplate(props: TemplateProps) {
-  return (
-    <div className="p-6 font-sans text-sm space-y-4 text-gray-900">
-      <div className="text-right">{new Date().toLocaleDateString()}</div>
-      <div>
-        <strong>{props.recipientName}</strong>
-        <br />
-        {props.companyName}
-      </div>
-      <p>Dear {props.recipientName || "Hiring Manager"},</p>
-      <p>{props.body}</p>
-      <p>
-        Thank you for considering my application for the{" "}
-        {props.jobTitle || "[Job Title]"} position at{" "}
-        {props.companyName || "[Company Name]"}.
-      </p>
-      <p>
-        Sincerely,
-        <br />
-        {props.userName}
-        <br />
-        {props.userEmail}
-      </p>
-    </div>
-  );
-}
 
+import { useRef } from "react";
+import useDimensions from "@/hooks/useDimensions";
+import { cn } from "@/lib/utils";
 import Image from "next/image";
-import { Card, CardContent } from "@/components/ui/card";
 
 interface Props {
   recipientName: string;
@@ -40,67 +15,127 @@ interface Props {
   userPhone: string;
   userAddress: string;
   userPhoto?: string; // URL or base64
+  signatureUrl?: string;
+  className?: string;
+  contentRef?: React.Ref<HTMLDivElement>;
 }
 
 export function TodahTemplate({
   recipientName,
   companyName,
-  jobTitle,
   body,
   userName,
   userEmail,
   userPhone,
   userAddress,
-  userPhoto,
+  signatureUrl,
+  className,
+  contentRef,
 }: Props) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { width } = useDimensions(containerRef as React.RefObject<HTMLElement>);
+
   return (
-    <Card className="text-gray-900">
-      <CardContent className="p-6">
-        <div className="flex items-start justify-between gap-6 border-b pb-6">
-          <div className="flex-1">
-            <h1 className="text-3xl font-bold tracking-wide">{userName}</h1>
-            <p className="uppercase text-sm tracking-[0.25em] text-gray-500">
-              {jobTitle || "Professional Title"}
-            </p>
-            <div className="mt-4 space-y-1 text-sm">
-              <p>
-                <strong>P:</strong> {userPhone || "(123) 456-7890"} &nbsp;&nbsp;
-                <strong>E:</strong> {userEmail || "email@example.com"}
-              </p>
-              <p>
-                <strong>A:</strong>{" "}
-                {userAddress || "123 Anywhere St., Any City, ST 12345"}
-              </p>
-            </div>
-          </div>
-          {userPhoto && (
-            <div className="shrink-0">
-              <Image
-                src={userPhoto}
-                alt="User Photo"
-                width={100}
-                height={100}
-                className="rounded-full object-cover border border-gray-200"
-              />
-            </div>
-          )}
+    <div
+      className={cn(
+        "relative aspect-[210/297] bg-white text-black h-fit w-full overflow-hidden",
+        className
+      )}
+      ref={containerRef}>
+      {/* Top wave */}
+      <div className="absolute top-0 left-0 w-full pointer-events-none z-0">
+        <svg
+          className="w-full h-24"
+          viewBox="0 0 1440 320"
+          preserveAspectRatio="none">
+          <path
+            fill="#fbd3dc"
+            d="M0,128L60,144C120,160,240,192,360,197.3C480,203,600,181,720,160C840,139,960,117,1080,117.3C1200,117,1320,139,1380,149.3L1440,160L1440,0L1380,0C1320,0,1200,0,1080,0C960,0,840,0,720,0C600,0,480,0,360,0C240,0,120,0,60,0L0,0Z"
+          />
+        </svg>
+      </div>
+
+      {/* Content wrapper */}
+      <div
+        className={cn(
+          "relative space-y-6 p-6 origin-top-left z-10 font-lora ",
+          !width && "invisible"
+        )}
+        style={{
+          width: "794px",
+          transform: `scale(${width / 794})`,
+        }}
+        ref={contentRef}
+        id="coverletterPreviewContent">
+        {/* Header */}
+        <div className=" flex flex-col justify-center mx-auto text-center mt-25 ">
+          <h1 className="text-black text-7xl">{userName || "Olivia Wilson"}</h1>
+          <p className="text-xl">{userAddress || "1234 Main Street"}</p>
+          <p className="text-lg">{userPhone || "1231231234"}</p>
+          <p className="text-lg">{userEmail || "hello@email.com"}</p>
         </div>
 
-        <div className="mt-6 space-y-4 text-sm leading-relaxed">
-          <p>
-            <strong>Dear {recipientName || "Hiring Manager"},</strong>
+        {/* Letter Body */}
+        <div className="text-left mt-6 leading-relaxed ">
+          <p className="text-xl font-semibold mt-5 mb-5">
+            {new Date().toLocaleDateString()}
           </p>
-          <p>{body || "[Your cover letter body content will appear here.]"}</p>
+          <p className="text-xl ">{companyName || "Company Name"}</p>
+          <p className="text-xl"> {companyName || "Vita Design"}</p>
 
-          <p>Thank you for your consideration.</p>
-
-          <div className="pt-6 space-y-2">
-            <p>Sincerely,</p>
-            <p className="text-xl font-signature">{userName}</p>
-            <p className="font-semibold">{userName}</p>
+          <div className="">
+            <div className="space-y-5 leading-relaxed mt-10">
+              <p className="text-2xl">
+                <strong>Dear {recipientName || "Hiring Manager"},</strong>
+              </p>
+              <p className="text-xl">
+                {body ||
+                  "  A cover letter allows you to professionally introduce yourself to a prospective employer. Your goal in writing your cover letter should be to encourage the employer to read your resume and consider you for a specific position."}
+              </p>
+              <p className="text-xl">
+                Highlight your achievements, skills, experiences, and training
+                that are relevant to the position you want to get. However,
+                avoid simply repeating the information you included in your
+                resume. Tailor your cover letter to each employer and job.
+              </p>
+              <p className="text-xl">
+                Yes, you should maintain a professional air throughout the copy.
+                Remember to also show genuine enthusiasm. Think of it as a smart
+                casual gathering — not too formal, not too personal.
+              </p>
+            </div>
+          </div>
+          {/* Signature */}
+          <div className="mt-10 space-y-2 text-xl">
+            <p>Best Regards,</p>
+            {signatureUrl ? (
+              <Image
+                src={signatureUrl}
+                alt="Signature"
+                width={120}
+                height={40}
+                className="object-contain"
+              />
+            ) : (
+              <p className="italic text-xl">{userName || "Your Name"}</p>
+            )}
+            <p className="font-semibold text-lg ">Olivia Wilson</p>
           </div>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+
+      {/* Bottom wave */}
+      <div className="absolute bottom-0 left-0 w-full pointer-events-none z-0 rotate-180">
+        <svg
+          className="w-full h-20"
+          viewBox="0 0 1440 320"
+          preserveAspectRatio="none">
+          <path
+            fill="#fbd3dc"
+            d="M0,128L60,144C120,160,240,192,360,197.3C480,203,600,181,720,160C840,139,960,117,1080,117.3C1200,117,1320,139,1380,149.3L1440,160L1440,0L1380,0C1320,0,1200,0,1080,0C960,0,840,0,720,0C600,0,480,0,360,0C240,0,120,0,60,0L0,0Z"
+          />
+        </svg>
+      </div>
+    </div>
   );
 }

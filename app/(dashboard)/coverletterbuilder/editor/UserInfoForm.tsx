@@ -13,18 +13,16 @@ import { Button } from "@/components/ui/button";
 import { useRef } from "react";
 
 export default function UserInfoForm({
-  jobTitle,
-  setJobTitle,
+  selectedTemplate,
 }: {
-  jobTitle: string;
-  setJobTitle: (value: string) => void;
+  selectedTemplate: string;
 }) {
   const form = useFormContext();
   const photoInputRef = useRef<HTMLInputElement>(null);
 
   return (
     <div className="space-y-4">
-      <h3 className="text-lg font-medium">Your Info</h3>
+      <h3 className="text-lg font-medium">Personal Info</h3>
       <div className="grid grid-cols-2 gap-4">
         <FormField
           control={form.control}
@@ -65,10 +63,23 @@ export default function UserInfoForm({
 
         <FormField
           control={form.control}
-          name="userName"
+          name="firstName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Your Name</FormLabel>
+              <FormLabel>First Name</FormLabel>
+              <FormControl>
+                <Input {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="lastName"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Last Name</FormLabel>
               <FormControl>
                 <Input {...field} />
               </FormControl>
@@ -82,13 +93,9 @@ export default function UserInfoForm({
           name="jobTitle"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Your Job Title</FormLabel>
+              <FormLabel>Job Title (if applicable)</FormLabel>
               <FormControl>
-                <Input
-                  {...field}
-                  value={jobTitle}
-                  onChange={(e) => setJobTitle(e.target.value)}
-                />
+                <Input {...field} disabled={selectedTemplate === "Shabach"} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -100,7 +107,7 @@ export default function UserInfoForm({
           name="userEmail"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Your Email</FormLabel>
+              <FormLabel>Email</FormLabel>
               <FormControl>
                 <Input type="email" {...field} />
               </FormControl>
@@ -114,7 +121,7 @@ export default function UserInfoForm({
           name="userPhone"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Your Phone</FormLabel>
+              <FormLabel>Phone</FormLabel>
               <FormControl>
                 <Input type="tel" {...field} />
               </FormControl>
@@ -122,13 +129,25 @@ export default function UserInfoForm({
             </FormItem>
           )}
         />
-
+        <FormField
+          control={form.control}
+          name="website"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Website</FormLabel>
+              <FormControl>
+                <Input type="tel" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <FormField
           control={form.control}
           name="userAddress"
           render={({ field }) => (
             <FormItem className="col-span-2">
-              <FormLabel>Your Address</FormLabel>
+              <FormLabel>Address</FormLabel>
               <FormControl>
                 <Input {...field} />
               </FormControl>

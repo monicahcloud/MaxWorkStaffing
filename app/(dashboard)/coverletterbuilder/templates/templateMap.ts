@@ -1,7 +1,11 @@
+import Barak from "./Barak";
 import { ShabachTemplate } from "./ShabachTemplate";
 import { TodahTemplate } from "./TodahTemplate";
+import Zamar from "./Zamar";
 
 export const templateMap = {
-  todah: TodahTemplate,
-  shabach: ShabachTemplate,
+  Todah: TodahTemplate,
+  Shabach: ShabachTemplate,
+  Barak: Barak,
+  Zamar: Zamar,
 };

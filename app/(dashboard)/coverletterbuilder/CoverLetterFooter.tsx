@@ -22,13 +22,9 @@ export default function CoverLetterFooter({
   isSaving,
   steps,
 }: FooterProps) {
-  const previousStep = steps.find(
-    (_, index) => steps[index + 1]?.key === currentStep
-  )?.key;
-
-  const nextStep = steps.find(
-    (_, index) => steps[index - 1]?.key === currentStep
-  )?.key;
+  const currentIndex = steps.findIndex((step) => step.key === currentStep);
+  const previousStep = steps[currentIndex - 1]?.key;
+  const nextStep = steps[currentIndex + 1]?.key;
 
   return (
     <footer className="w-full border-t px-3 py-5">
@@ -36,14 +32,17 @@ export default function CoverLetterFooter({
         <div className="flex items-center gap-3">
           <Button
             variant="secondary"
-            onClick={
-              previousStep ? () => setCurrentStep(previousStep) : undefined
-            }
+            onClick={() => {
+              if (previousStep) setCurrentStep(previousStep);
+            }}
             disabled={!previousStep}>
             Previous Step
           </Button>
+
           <Button
-            onClick={nextStep ? () => setCurrentStep(nextStep) : undefined}
+            onClick={() => {
+              if (nextStep) setCurrentStep(nextStep);
+            }}
             disabled={!nextStep}>
             Next Step
           </Button>

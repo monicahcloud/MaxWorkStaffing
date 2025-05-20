@@ -9,7 +9,7 @@ export default function CreateLetterButton() {
     <Button asChild className="new-resume mx-auto flex w-fit gap-2">
       <Link href="/coverletterbuilder">
         <PlusSquare className="size-5" />
-        Create New Resume
+        Create New Cover Letter
       </Link>
     </Button>
   );
