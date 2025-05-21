@@ -6,6 +6,7 @@ import SectionTitle from "@/components/SectionTitle";
 import { CoverLetterFormBuilder } from "./CoverLetterFormBuilder";
 import { templateMap } from "../templates/templateMap";
 import BackToTemplatesButton from "../templates/BackToTemplatesButton";
+import { useMemo } from "react";
 
 export default function CoverLetterBuilder() {
   const searchParams = useSearchParams();
@@ -29,6 +30,17 @@ export default function CoverLetterBuilder() {
   });
 
   const watched = form.watch();
+  const previewContent = useMemo(() => {
+    if (!TemplateComponent) return null;
+    return (
+      <TemplateComponent
+        {...watched}
+        userPhoto={
+          watched.userPhoto ? URL.createObjectURL(watched.userPhoto) : undefined
+        }
+      />
+    );
+  }, [watched, TemplateComponent]);
 
   return (
     <div className="flex grow flex-col">
@@ -48,7 +60,7 @@ export default function CoverLetterBuilder() {
             <CoverLetterFormBuilder form={form} />
           </div>
           <div className="md:block md:w-1/2 border-l p-4 overflow-y-auto bg-secondary">
-            {TemplateComponent && (
+            {/* {TemplateComponent && (
               <TemplateComponent
                 {...watched}
                 userPhoto={
@@ -57,7 +69,8 @@ export default function CoverLetterBuilder() {
                     : undefined
                 }
               />
-            )}
+            )} */}
+            <div>{previewContent}</div>
           </div>
         </div>
       </main>

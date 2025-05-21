@@ -49,7 +49,7 @@ export function ShabachTemplate({
   return (
     <div
       className={cn(
-        "relative aspect-[210/297] bg-black text-white h-fit w-full overflow-hidden",
+        "relative aspect-[210/297] bg-black text-white  w-full ",
         className
       )}
       ref={containerRef}>
@@ -120,39 +120,31 @@ export function ShabachTemplate({
               employer. Your goal in writing your cover letter should be to encourage the employer
               to read your resume and consider you for a specific position.`}
           </p>
-          <p>
-            Highlight your achievements, skills, experiences, and training that
-            are relevant to the position you want to get. However, avoid simply
-            repeating the information you included in your resume. Tailor your
-            cover letter to each employer and job.
-          </p>
-          <p>
-            Yes, you should maintain a professional air throughout the copy.
-            Remember to also show genuine enthusiasm. Think of it as a smart
-            casual gathering — not too formal, not too personal.
-          </p>
         </div>
 
-        {/* Signature */}
-        <div className="mt-10 text-lg">
+        <div className="mt-4 text-xl  ">
           <p>Best Regards,</p>
-          {signatureUrl && (
+          {signatureUrl ? (
             <Image
               src={signatureUrl}
               alt="Signature"
               width={120}
               height={40}
-              className="object-contain"
+              className="object-contain inline-block"
             />
+          ) : (
+            <p className="italic text-xl">
+              {firstName || lastName
+                ? `${firstName} ${lastName}`.trim()
+                : "Your Name"}
+            </p>
           )}
-          <p className="font-semibold text-white">
+          <p className="font-bold">
             {firstName || lastName
               ? `${firstName} ${lastName}`.trim()
-              : "Shawn Garcia"}
+              : "Lizze Major"}
           </p>
-          <p className="font-semibold text-white">
-            {userPhone || "123-123-1234"}
-          </p>
+          <p className="text-md text-white">{userPhone || "123-456-7890"}</p>
         </div>
 
         {/* Footer */}

@@ -22,6 +22,7 @@ model User {
   interviews      Interview[]
   savedJob        SavedJob[]
   feedback        Feedback[]
+   coverletter    CoverLetter[]
 
   @@index([clerkId])
 }
@@ -204,4 +205,30 @@ model Feedback {
 
   @@index([interviewId])
   @@index([userId])
+}
+
+
+model CoverLetter {
+  id            String   @id @default(cuid())
+  userId        String
+  clerkId       String
+  template      String
+  jobTitle      String?
+  companyName   String?
+  companyAddress String?
+  recipientName String?
+  body          String?
+  signatureUrl  String?
+  firstName     String?
+  lastName      String?
+  email         String?
+  phone         String?
+  address       String?
+  website       String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  user User @relation(fields: [clerkId], references: [clerkId])
+  
+  @@index([clerkId])
 }

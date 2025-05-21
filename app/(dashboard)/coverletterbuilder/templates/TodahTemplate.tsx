@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import React, { useRef } from "react";
 import useDimensions from "@/hooks/useDimensions";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
@@ -8,13 +8,16 @@ import Image from "next/image";
 interface Props {
   recipientName: string;
   companyName: string;
+  companyAddress: string;
   jobTitle: string;
   body: string;
   userName: string;
+  firstName: string;
+  lastName: string;
   userEmail: string;
   userPhone: string;
   userAddress: string;
-  userPhoto?: string; // URL or base64
+  userPhoto?: string;
   signatureUrl?: string;
   className?: string;
   contentRef?: React.Ref<HTMLDivElement>;
@@ -23,8 +26,10 @@ interface Props {
 export function TodahTemplate({
   recipientName,
   companyName,
+  companyAddress,
   body,
-  userName,
+  firstName,
+  lastName,
   userEmail,
   userPhone,
   userAddress,
@@ -58,7 +63,7 @@ export function TodahTemplate({
       {/* Content wrapper */}
       <div
         className={cn(
-          "relative space-y-6 p-6 origin-top-left z-10 font-lora ",
+          "relative space-y-6 p-6 origin-top-left z-10 font-lora",
           !width && "invisible"
         )}
         style={{
@@ -68,45 +73,46 @@ export function TodahTemplate({
         ref={contentRef}
         id="coverletterPreviewContent">
         {/* Header */}
-        <div className=" flex flex-col justify-center mx-auto text-center mt-25 ">
-          <h1 className="text-black text-7xl">{userName || "Olivia Wilson"}</h1>
+        <div className="flex flex-col items-center justify-center text-center mt-30">
+          <div className="flex items-end space-x-4">
+            <h1 className="text-7xl font-serif leading-none tracking-wide">
+              {firstName || "Lizzie"}
+            </h1>
+            <h2 className="text-7xl font-serif leading-none tracking-wide">
+              {lastName || "Major"}
+            </h2>
+          </div>
+
+          <div className="h-1 w-100 bg-black my-4" />
+
           <p className="text-xl">{userAddress || "1234 Main Street"}</p>
           <p className="text-lg">{userPhone || "1231231234"}</p>
           <p className="text-lg">{userEmail || "hello@email.com"}</p>
         </div>
 
         {/* Letter Body */}
-        <div className="text-left mt-6 leading-relaxed ">
+        <div className="text-left mt-6 leading-relaxed">
           <p className="text-xl font-semibold mt-5 mb-5">
             {new Date().toLocaleDateString()}
           </p>
-          <p className="text-xl ">{companyName || "Company Name"}</p>
-          <p className="text-xl"> {companyName || "Vita Design"}</p>
+          <p className="text-xl">{companyName || "Company Name"}</p>
+          <p className="text-xl">{companyAddress || "Vita Design"}</p>
 
-          <div className="">
-            <div className="space-y-5 leading-relaxed mt-10">
-              <p className="text-2xl">
-                <strong>Dear {recipientName || "Hiring Manager"},</strong>
-              </p>
-              <p className="text-xl">
-                {body ||
-                  "  A cover letter allows you to professionally introduce yourself to a prospective employer. Your goal in writing your cover letter should be to encourage the employer to read your resume and consider you for a specific position."}
-              </p>
-              <p className="text-xl">
-                Highlight your achievements, skills, experiences, and training
-                that are relevant to the position you want to get. However,
-                avoid simply repeating the information you included in your
-                resume. Tailor your cover letter to each employer and job.
-              </p>
-              <p className="text-xl">
-                Yes, you should maintain a professional air throughout the copy.
-                Remember to also show genuine enthusiasm. Think of it as a smart
-                casual gathering — not too formal, not too personal.
-              </p>
-            </div>
+          <div className="space-y-5 leading-relaxed mt-10">
+            <p className="text-2xl">
+              <strong>Dear {recipientName || "Hiring Manager"},</strong>
+            </p>
+            <div
+              dangerouslySetInnerHTML={{
+                __html: body?.includes("<p>")
+                  ? body
+                  : `<p>${body?.replace(/\n\n/g, "</p><p>").trim()}</p>`,
+              }}
+            />
           </div>
+
           {/* Signature */}
-          <div className="mt-10 space-y-2 text-xl">
+          <div className="mt-5 text-xl space-y-2 ">
             <p>Best Regards,</p>
             {signatureUrl ? (
               <Image
@@ -114,12 +120,20 @@ export function TodahTemplate({
                 alt="Signature"
                 width={120}
                 height={40}
-                className="object-contain"
+                className="object-contain inline-block"
               />
             ) : (
-              <p className="italic text-xl">{userName || "Your Name"}</p>
+              <p className="italic text-xl">
+                {firstName || lastName
+                  ? `${firstName} ${lastName}`.trim()
+                  : "Your Name"}
+              </p>
             )}
-            <p className="font-semibold text-lg ">Olivia Wilson</p>
+            <p className="font-bold">
+              {firstName || lastName
+                ? `${firstName} ${lastName}`.trim()
+                : "Lizze Major"}
+            </p>
           </div>
         </div>
       </div>

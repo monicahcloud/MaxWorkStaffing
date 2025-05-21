@@ -1,14 +1,17 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// forms/CoverLetterFormBuilder.tsx
 "use client";
 
 import { FormProvider } from "react-hook-form";
 import { useState } from "react";
-
-import { Form } from "@/components/ui/form";
-import UserInfoForm from "./UserInfoForm";
-import EmployerInfoForm from "./EmployerInfo";
 import LetterBodyForm from "./LetterBody";
 import CoverLetterFooter from "../CoverLetterFooter";
 import Signature from "@/components/SignaturePad";
+import UserInfoForm from "./UserInfoForm";
+import EmployerInfoForm from "./EmployerInfo";
+import { getContrastColor } from "@/lib/getContrastColor";
+import { templateStyles } from "../templates/templateStyles";
+import useAutoSaveCoverLetter from "../../coverletter/useAutoSaveCoverLetter";
 
 const steps = [
   { key: "user", label: "Personal Info" },
@@ -17,35 +20,32 @@ const steps = [
   { key: "signature", label: "Signature" },
 ];
 
-export function CoverLetterFormBuilder({ form }) {
+export function CoverLetterFormBuilder({ form }: { form: any }) {
   const [stepIndex, setStepIndex] = useState(0);
   const [showPreview, setShowPreview] = useState(false);
-  const [isSaving, setIsSaving] = useState(false);
+  const { isSaving, hasUnsavedChanges } = useAutoSaveCoverLetter(form.watch());
+
   const [selectedTemplate, setSelectedTemplate] = useState("Shabach");
   const [signatureUrl, setSignatureUrl] = useState("");
-
-  const CurrentStep = () => {
-    switch (steps[stepIndex].key) {
-      case "user":
-        return <UserInfoForm selectedTemplate={selectedTemplate} />;
-      case "employer":
-        return <EmployerInfoForm />;
-      case "body":
-        return <LetterBodyForm />;
-      case "signature":
-        return (
-          <Signature
-            onSave={(dataUrl) => {
-              setSignatureUrl(dataUrl);
-              console.log("Signature saved!", dataUrl);
-              form.setValue("signatureUrl", dataUrl);
-            }}
-            defaultValue={signatureUrl}
-          />
-        );
-      default:
-        return null;
-    }
+  const currentTemplateStyle = templateStyles[selectedTemplate] || {
+    background: "#ffffff",
+  };
+  const penColor = getContrastColor(currentTemplateStyle.background);
+  const stepComponents: Record<string, React.ReactNode> = {
+    user: <UserInfoForm selectedTemplate={selectedTemplate} />,
+    employer: <EmployerInfoForm />,
+    body: <LetterBodyForm />,
+    signature: (
+      <Signature
+        onSave={(dataUrl) => {
+          setSignatureUrl(dataUrl);
+          form.setValue("signatureUrl", dataUrl);
+        }}
+        defaultValue={signatureUrl}
+        penColor={penColor}
+        fontFamily={selectedTemplate === "Shabach" ? "cursive" : "serif"}
+      />
+    ),
   };
 
   return (
@@ -58,7 +58,7 @@ export function CoverLetterFormBuilder({ form }) {
           </p>
         </div>
 
-        <CurrentStep />
+        {stepComponents[steps[stepIndex].key]}
 
         <CoverLetterFooter
           currentStep={steps[stepIndex].key}

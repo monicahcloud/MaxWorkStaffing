@@ -24,7 +24,6 @@ interface Props {
 
 export default function Zamar({
   recipientName,
-  companyName,
   body,
   userName,
   userEmail,

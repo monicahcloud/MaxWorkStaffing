@@ -234,3 +234,22 @@ export const userInfoSchema = z.object({
   gitHub: optionalString,
 });
 export type UserInfoValues = z.infer<typeof userInfoSchema>;
+
+export const coverLetterSchema = z.object({
+  id: z.string().optional(),
+  template: optionalString,
+  jobTitle: optionalString,
+  companyName: optionalString,
+  companyAddress: optionalString,
+  recipientName: optionalString,
+  body: optionalString,
+  signatureUrl: optionalString,
+  firstName: optionalString,
+  lastName: optionalString,
+  email: optionalString,
+  phone: optionalString,
+  address: optionalString,
+  website: optionalString,
+});
+
+export type CoverLetterValues = z.infer<typeof coverLetterSchema>;
