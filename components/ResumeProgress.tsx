@@ -1,19 +1,13 @@
+// components/ResumeProgress.tsx
 "use client";
 
-import { cn } from "@/lib/utils";
 import { CheckCircle, Circle } from "lucide-react";
+import { cn } from "@/lib/utils";
 
-const steps = [
-  "Create Resume",
-  "Cover Letter",
-  "Personlized Url",
-  "Job\nSearch",
-  "Apply to Job",
-  "Job Tracker",
-];
+const steps = ["Create Resume", "Cover Letter", "Job\nSearch"];
 
 interface ResumeProgressProps {
-  completedSteps: number; // e.g., 3 means 3 out of 8 completed
+  completedSteps: number;
 }
 
 export default function ResumeProgress({
@@ -22,9 +16,9 @@ export default function ResumeProgress({
   const percentage = Math.round((completedSteps / steps.length) * 100);
 
   return (
-    <div className="w-full max-w-2xl mx-auto ">
+    <div className="w-full max-w-2xl mx-auto">
       <div className="mx-auto justify-center items-center flex">
-        <h1 className="text-2xl font-semibold ">Your Recommended Next Steps</h1>
+        <h1 className="text-2xl font-semibold">Your Recommended Next Steps</h1>
       </div>
 
       <div className="flex justify-between mb-2 text-sm text-gray-600">
@@ -45,12 +39,14 @@ export default function ResumeProgress({
           </div>
         ))}
       </div>
+
       <div className="relative h-3 bg-gray-200 rounded-full">
         <div
           className="absolute top-0 left-0 h-3 bg-rose-800 rounded-full transition-all duration-300"
           style={{ width: `${percentage}%` }}
         />
       </div>
+
       <p className="mt-2 text-sm text-center text-gray-700">
         Progress: {percentage}%
       </p>

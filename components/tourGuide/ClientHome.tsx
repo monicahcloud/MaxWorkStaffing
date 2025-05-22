@@ -7,12 +7,30 @@ import ResumeProgress from "../ResumeProgress";
 
 function ClientHome() {
   const [loaded, setLoaded] = useState(false);
-  const completedSteps = 4;
+  const [completedSteps, setCompletedSteps] = useState(0);
   const { user } = useUser();
   const username = user?.firstName || user?.username;
 
   useEffect(() => {
-    setLoaded(true);
+    async function fetchProgress() {
+      try {
+        const res = await fetch("/api/user-progress");
+        const data = await res.json();
+
+        let steps = 0;
+        if (data.hasResume) steps += 1;
+        if (data.hasCoverLetter) steps += 1;
+        if (data.hasJob) steps += 1;
+
+        setCompletedSteps(steps);
+      } catch (error) {
+        console.error("Failed to fetch user progress:", error);
+      } finally {
+        setLoaded(true);
+      }
+    }
+
+    fetchProgress();
   }, []);
 
   if (!loaded) return null;
