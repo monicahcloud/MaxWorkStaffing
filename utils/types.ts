@@ -1,3 +1,4 @@
+import { CoverLetterValues } from "@/lib/validation";
 import * as z from "zod";
 
 export type JobType = {
@@ -131,4 +132,11 @@ export type Job = {
   salary?: string;
   postedAt: string;
   category: string;
+};
+
+export type CoverLetterTemplateProps = CoverLetterValues & {
+  userPhotoUrl?: string;
+  coverletterData: CoverLetterValues;
+
+  setCoverLetterData: React.Dispatch<React.SetStateAction<CoverLetterValues>>;
 };

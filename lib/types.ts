@@ -1,4 +1,5 @@
-import { ResumeValues } from "./validation";
+import { Ref } from "react";
+import { CoverLetterValues, ResumeValues } from "./validation";
 import { Prisma } from "@prisma/client";
 
 export interface EditorFormProps {
@@ -15,3 +16,10 @@ export const resumeDataInclude = {
 export type ResumeServerData = Prisma.ResumeGetPayload<{
   include: typeof resumeDataInclude;
 }>;
+
+export interface CoverLetterFormProps {
+  coverLetterData: CoverLetterValues;
+  setCoverLetterData: React.Dispatch<React.SetStateAction<CoverLetterValues>>;
+  contentRef?: Ref<HTMLDivElement>;
+  className?: string;
+}

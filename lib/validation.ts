@@ -212,7 +212,7 @@ export const feedbackSchema = z.object({
 });
 
 export const userInfoSchema = z.object({
-  photo: z
+  userPhoto: z
     .custom<File | undefined>()
     .refine(
       (file) =>
@@ -225,31 +225,49 @@ export const userInfoSchema = z.object({
     ),
   firstName: optionalString,
   lastName: optionalString,
+  userName: optionalString,
   jobTitle: optionalString,
-  address: optionalString,
-  phone: optionalString,
-  email: optionalString,
+  userAddress: optionalString,
+  userPhone: optionalString,
+  userEmail: optionalString,
   website: optionalString,
   linkedin: optionalString,
   gitHub: optionalString,
 });
 export type UserInfoValues = z.infer<typeof userInfoSchema>;
 
-export const coverLetterSchema = z.object({
-  id: z.string().optional(),
-  template: optionalString,
-  jobTitle: optionalString,
-  companyName: optionalString,
-  companyAddress: optionalString,
+export const employerInfoSchema = z.object({
   recipientName: optionalString,
+  companyName: optionalString,
+  companyEmail: optionalString,
+  companyPhone: optionalString,
+  companyAddress: optionalString,
+});
+export type EmployerInfoValues = z.infer<typeof employerInfoSchema>;
+export const letterBodySchema = z.object({
   body: optionalString,
-  signatureUrl: optionalString,
-  firstName: optionalString,
-  lastName: optionalString,
-  email: optionalString,
-  phone: optionalString,
-  address: optionalString,
-  website: optionalString,
+});
+export type LetterBodyValues = z.infer<typeof letterBodySchema>;
+export const signatureSchema = z.object({
+  signatureUrl: z.string().optional(),
+});
+export type SignatureValues = z.infer<typeof signatureSchema>;
+
+export const coverLetterSchema = z.object({
+  ...userInfoSchema.shape,
+  ...employerInfoSchema.shape,
+  ...letterBodySchema.shape,
+  ...signatureSchema.shape,
+  themeColor: optionalString,
+  borderStyle: optionalString,
+  template: optionalString,
 });
 
-export type CoverLetterValues = z.infer<typeof coverLetterSchema>;
+export type CoverLetterValues = Omit<
+  z.infer<typeof coverLetterSchema>,
+  "photo"
+> & {
+  id?: string;
+  photo?: File | string | null;
+  signatureUrl?: string | null;
+};

@@ -207,24 +207,31 @@ model Feedback {
   @@index([userId])
 }
 
-
 model CoverLetter {
-  id            String   @id @default(cuid())
-  userId        String
-  clerkId       String
-  template      String
-  jobTitle      String?
-  companyName   String?
-  companyAddress String?
-  recipientName String?
-  body          String?
-  signatureUrl  String?
-  firstName     String?
-  lastName      String?
-  email         String?
-  phone         String?
-  address       String?
-  website       String?
+  id              String   @id @default(cuid())
+  userId          String
+  clerkId         String
+  template        String?
+  jobTitle        String?
+  companyName     String?
+  companyAddress  String?
+  companyPhone   String?
+  companyEmail    String?
+  recipientName   String?
+  body            String?
+  signatureUrl    String?
+  firstName       String?
+  lastName        String?
+  userPhotoUrl        String?
+  userEmail           String?
+  userPhone           String?
+  userAddress     String?
+  website         String?
+  linkedin        String?   // ✅ Add this
+  gitHub          String?   // ✅ And this
+  themeColor      String?   @default("#000000")
+  borderStyle     String ?   @default("solid")
+   
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 

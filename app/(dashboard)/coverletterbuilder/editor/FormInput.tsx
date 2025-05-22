@@ -28,7 +28,7 @@ export function FormInput({
         <FormItem>
           <FormLabel>{label}</FormLabel>
           <FormControl>
-            <Input {...field} type={type} disabled={disabled} />
+            <Input {...field} type={type} disabled={disabled} autoFocus />
           </FormControl>
           <FormMessage />
         </FormItem>

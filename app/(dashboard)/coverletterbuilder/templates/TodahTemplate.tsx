@@ -20,6 +20,7 @@ interface Props {
   userPhoto?: string;
   signatureUrl?: string;
   className?: string;
+
   contentRef?: React.Ref<HTMLDivElement>;
 }
 

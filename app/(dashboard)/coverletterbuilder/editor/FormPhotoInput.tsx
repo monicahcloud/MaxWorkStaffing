@@ -1,4 +1,3 @@
-// components/form/FormPhotoInput.tsx
 "use client";
 
 import {
@@ -31,10 +30,16 @@ export function FormPhotoInput({ name }: { name: string }) {
                 accept="image/*"
                 onChange={(e) => {
                   const file = e.target.files?.[0];
-                  if (file) {
-                    setPreview(URL.createObjectURL(file));
-                    fieldValues.onChange(file);
+                  if (!file) return;
+
+                  if (!file.type.startsWith("image/")) {
+                    alert("Only image files are allowed.");
+                    if (inputRef.current) inputRef.current.value = "";
+                    return;
                   }
+
+                  setPreview(URL.createObjectURL(file));
+                  fieldValues.onChange(file);
                 }}
                 ref={inputRef}
               />
@@ -54,6 +59,8 @@ export function FormPhotoInput({ name }: { name: string }) {
             <Image
               src={preview}
               alt="Preview"
+              width={64}
+              height={64}
               className="mt-2 h-16 w-16 rounded-full object-cover"
             />
           )}
