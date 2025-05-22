@@ -28,6 +28,7 @@ import MainFooter from "@/components/MainFooter";
 import { getUserSubscriptionLevel } from "@/lib/subscription";
 import { getUserMetadata, markUserAsReturning } from "@/lib/user";
 import { Metadata } from "next";
+import { UserProgressProvider } from "@/components/UserProgressContext";
 
 export const metadata: Metadata = {
   title: "Support",
@@ -53,71 +54,73 @@ async function Dashboardlayout({ children }: PropsWithChildren) {
 
   return (
     <SubscriptionLevelProvider userSubscriptionLevel={userSubscriptionLevel}>
-      <main className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr] pt-4">
-        {/* Sidebar */}
-        <aside className="hidden border-r bg-muted/40 md:block">
-          <div className="flex flex-col  gap-2 ">
-            <div className="h-14 flex items-center border-b px-4 lg:h-[60px] lg:px-6">
-              <Link href="/home" className="flex items-center  ">
-                <Image
-                  src={Logo}
-                  alt="Logo"
-                  priority
-                  width={400}
-                  height={400}
-                  className="px-4 my-2"
+      <UserProgressProvider>
+        <main className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr] pt-4">
+          {/* Sidebar */}
+          <aside className="hidden border-r bg-muted/40 md:block">
+            <div className="flex flex-col  gap-2 ">
+              <div className="h-14 flex items-center border-b px-4 lg:h-[60px] lg:px-6">
+                <Link href="/home" className="flex items-center  ">
+                  <Image
+                    src={Logo}
+                    alt="Logo"
+                    priority
+                    width={400}
+                    height={400}
+                    className="px-4 my-2"
+                  />
+                </Link>
+              </div>
+              <nav className="flex-1 grid items-start text-white text-sm font-medium mt-20 px-2 lg:px-4">
+                <DashboardLinks />
+              </nav>
+            </div>
+          </aside>
+
+          {/* Main content */}
+          <div className="flex flex-col">
+            {/* Header */}
+            <header className="flex h-14 items-center gap-4 px-4 border-b bg-muted/40 lg:h-[60px] lg:px-6">
+              <Sheet>
+                <SheetTitle />
+                <SheetTrigger>
+                  <Button
+                    asChild
+                    variant="outline"
+                    size="icon"
+                    className="md:hidden">
+                    <Menu className="size-5" />
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="left">
+                  <nav className="grid gap-2 ">
+                    <LinksDropdown />
+                  </nav>
+                </SheetContent>
+              </Sheet>
+
+              <div className="ml-auto flex items-center gap-4">
+                <ThemeToggle />
+                <UserButton
+                  appearance={{
+                    elements: { avatarBox: { width: 35, height: 35 } },
+                  }}
                 />
-              </Link>
-            </div>
-            <nav className="flex-1 grid items-start text-white text-sm font-medium mt-20 px-2 lg:px-4">
-              <DashboardLinks />
-            </nav>
+              </div>
+            </header>
+
+            {/* Body */}
+            <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-8 lg:p-8">
+              {children}
+              <FirstTimeModal openOnLoad={shouldShowModal} userId={userId} />
+              <PremiumModal />
+            </main>
           </div>
-        </aside>
+        </main>
 
-        {/* Main content */}
-        <div className="flex flex-col">
-          {/* Header */}
-          <header className="flex h-14 items-center gap-4 px-4 border-b bg-muted/40 lg:h-[60px] lg:px-6">
-            <Sheet>
-              <SheetTitle />
-              <SheetTrigger>
-                <Button
-                  asChild
-                  variant="outline"
-                  size="icon"
-                  className="md:hidden">
-                  <Menu className="size-5" />
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="left">
-                <nav className="grid gap-2 ">
-                  <LinksDropdown />
-                </nav>
-              </SheetContent>
-            </Sheet>
-
-            <div className="ml-auto flex items-center gap-4">
-              <ThemeToggle />
-              <UserButton
-                appearance={{
-                  elements: { avatarBox: { width: 35, height: 35 } },
-                }}
-              />
-            </div>
-          </header>
-
-          {/* Body */}
-          <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-8 lg:p-8">
-            {children}
-            <FirstTimeModal openOnLoad={shouldShowModal} userId={userId} />
-            <PremiumModal />
-          </main>
-        </div>
-      </main>
-
-      <MainFooter />
-      <Toaster richColors closeButton theme="light" />
+        <MainFooter />
+        <Toaster richColors closeButton theme="light" />
+      </UserProgressProvider>
     </SubscriptionLevelProvider>
   );
 }

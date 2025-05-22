@@ -44,18 +44,18 @@ const links: DashboardLinks[] = [
     href: "/coverletter",
     icon: <FilePen />,
   },
-  {
-    id: nanoid(),
-    label: "Personal Profile",
-    href: "/profile",
-    icon: <Globe />,
-  },
-  {
-    id: nanoid(),
-    label: "Job Search",
-    href: "/jobsearch",
-    icon: <AppWindow />,
-  },
+  // {
+  //   id: nanoid(),
+  //   label: "Personal Profile",
+  //   href: "/profile",
+  //   icon: <Globe />,
+  // },
+  // {
+  //   id: nanoid(),
+  //   label: "Job Search",
+  //   href: "/jobsearch",
+  //   icon: <AppWindow />,
+  // },
   {
     id: nanoid(),
     label: "Job Tracker",
@@ -69,12 +69,12 @@ const links: DashboardLinks[] = [
     href: "/stats",
     icon: <AreaChart />,
   },
-  {
-    id: nanoid(),
-    label: "AI Mock Interview",
-    href: "/interview",
-    icon: <Users />,
-  },
+  // {
+  //   id: nanoid(),
+  //   label: "AI Mock Interview",
+  //   href: "/interview",
+  //   icon: <Users />,
+  // },
   {
     id: nanoid(),
     label: "Interviewing Tools",
