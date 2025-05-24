@@ -4,13 +4,24 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { CoverLetterValues } from "@/lib/validation";
 import useDimensions from "@/hooks/useDimensions";
-import image from "../../../../assets/jobseeker.jpg";
+import fallbackImage from "../../../../assets/jobseeker.jpg";
 import { BorderStyles } from "../../editor/BorderStyleButton";
 
 interface CoverLetterPreviewProps {
   coverletterData: CoverLetterValues;
   className?: string;
   contentRef?: React.Ref<HTMLDivElement>;
+}
+
+// Helper to get a safe photo src
+function getUserPhotoSrc(userPhoto: unknown): string | undefined {
+  if (typeof userPhoto === "string" && userPhoto.trim() !== "") {
+    return userPhoto;
+  }
+  if (typeof window !== "undefined" && userPhoto instanceof File) {
+    return URL.createObjectURL(userPhoto);
+  }
+  return undefined;
 }
 
 export function ShabachTemplate({
@@ -21,10 +32,24 @@ export function ShabachTemplate({
   const containerRef = useRef<HTMLDivElement>(null);
   const { width } = useDimensions(containerRef as React.RefObject<HTMLElement>);
 
+  // Safely get user photo src (or fallback)
+  const userPhotoSrc =
+    getUserPhotoSrc(coverletterData.userPhoto) || fallbackImage?.src;
+
+  // Only render if it's a non-empty string
+  const showUserPhoto = Boolean(userPhotoSrc);
+
+  // Signature image logic
+  const signatureUrl =
+    typeof coverletterData.signatureUrl === "string" &&
+    coverletterData.signatureUrl.trim() !== ""
+      ? coverletterData.signatureUrl
+      : undefined;
+
   return (
     <div
       className={cn(
-        " aspect-[210/297] bg-black text-white w-full h-fit",
+        "aspect-[210/297] bg-black text-white w-full h-fit",
         className
       )}
       ref={containerRef}>
@@ -35,7 +60,7 @@ export function ShabachTemplate({
         )}
         style={{
           width: "794px",
-          transform: `scale(${width / 794})`,
+          transform: width ? `scale(${width / 794})` : undefined,
         }}
         ref={contentRef}
         id="coverletterPreviewContent">
@@ -75,21 +100,15 @@ export function ShabachTemplate({
         </div>
 
         {/* Image aligned to right side */}
-        {(coverletterData.userPhoto || image?.src) && (
+        {showUserPhoto && (
           <div className="flex justify-end -mt-20">
-            <div className="overflow-hidden  ">
+            <div className="overflow-hidden">
               <Image
-                src={
-                  typeof coverletterData.userPhoto === "string"
-                    ? coverletterData.userPhoto
-                    : coverletterData.userPhoto instanceof File
-                    ? URL.createObjectURL(coverletterData.userPhoto)
-                    : image.src
-                }
+                src={userPhotoSrc}
                 alt="User Photo"
                 width={100}
                 height={100}
-                className="object-cover w-70 h-70 "
+                className="object-cover w-70 h-70"
                 style={{
                   borderRadius:
                     coverletterData.borderStyle === BorderStyles.SQUARE
@@ -98,17 +117,18 @@ export function ShabachTemplate({
                       ? "9999px"
                       : "10%",
                 }}
+                priority
               />
             </div>
           </div>
         )}
+
         {/* Recipient Info */}
         <div className="text-lg -mt-50">
           <p className="text-xl ">{new Date().toLocaleDateString()}</p>
           <p className=" text-white">
             {coverletterData.recipientName || "Hiring Manager Name"}
           </p>
-
           <p>{coverletterData.companyName || "Company Name"}</p>
           <p>
             {coverletterData.companyAddress ||
@@ -124,34 +144,49 @@ export function ShabachTemplate({
               Dear {coverletterData.recipientName || "Hiring Manager"},
             </strong>
           </p>
-          <p>
-            {coverletterData.body ||
-              `A cover letter allows you to professionally introduce yourself to a prospective
-              employer. Your goal in writing your cover letter should be to encourage the employer
-              to read your resume and consider you for a specific position.`}
-          </p>
+          {coverletterData.body ? (
+            <div
+              // This is safe if your AI is trusted, and lets you render <p> tags as real paragraphs!
+              dangerouslySetInnerHTML={{ __html: coverletterData.body }}
+            />
+          ) : (
+            <p>
+              A cover letter allows you to professionally introduce yourself to
+              a prospective employer. Your goal in writing your cover letter
+              should be to encourage the employer to read your resume and
+              consider you for a specific position.
+            </p>
+          )}
         </div>
-
         <div className="mt-4 text-xl  ">
           <p>Best Regards,</p>
-          {coverletterData.signatureUrl ? (
+          {signatureUrl ? (
             <Image
-              src={coverletterData.signatureUrl}
+              src={signatureUrl}
               alt="Signature"
               width={120}
               height={40}
               className="object-contain inline-block"
+              priority
             />
           ) : (
-            <p className="italic text-xl">
+            <p
+              className="italic text-xl"
+              style={{
+                color: coverletterData.signatureColor || "white", // fallback to white for dark backgrounds
+              }}>
               {coverletterData.firstName || coverletterData.lastName
-                ? `${coverletterData.firstName} ${coverletterData.lastName}`.trim()
+                ? `${coverletterData.firstName ?? ""} ${
+                    coverletterData.lastName ?? ""
+                  }`.trim()
                 : "Your Name"}
             </p>
           )}
           <p className="font-bold">
             {coverletterData.firstName || coverletterData.lastName
-              ? `${coverletterData.firstName} ${coverletterData.lastName}`.trim()
+              ? `${coverletterData.firstName ?? ""} ${
+                  coverletterData.lastName ?? ""
+                }`.trim()
               : "Lizze Major"}
           </p>
           <p className="text-md ">

@@ -19,7 +19,12 @@ interface Props {
   placeholder?: string;
   loading?: boolean;
   value?: string;
-  generateAI?: (title: string) => Promise<void>;
+  generateAI?: (params: {
+    jobTitle: string;
+    yearsExperience?: string;
+    achievements?: string;
+    tools?: string;
+  }) => Promise<void>;
 }
 
 export default function RichTextEditor({
@@ -30,6 +35,9 @@ export default function RichTextEditor({
   generateAI,
 }: Props) {
   const [jobTitleInput, setJobTitleInput] = useState("");
+  const [yearsExperienceInput, setYearsExperienceInput] = useState("");
+  const [achievementsInput, setAchievementsInput] = useState("");
+  const [toolsInput, setToolsInput] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
 
   const editor = useEditor({
@@ -67,7 +75,12 @@ export default function RichTextEditor({
 
     setIsGenerating(true);
     try {
-      await generateAI(jobTitleInput);
+      await generateAI({
+        jobTitle: jobTitleInput,
+        yearsExperience: yearsExperienceInput,
+        achievements: achievementsInput,
+        tools: toolsInput,
+      });
     } catch (error) {
       console.error("AI generation failed", error);
     } finally {
@@ -120,15 +133,36 @@ export default function RichTextEditor({
 
       <EditorContent editor={editor} />
 
-      {/* Job title input + AI button */}
-      <div className="flex flex-col md:flex-row items-center gap-2 justify-between">
+      {/* AI Inputs + Button */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
         <Input
-          placeholder="Enter job title (e.g. Product Designer)"
+          placeholder="Job title (e.g. Product Designer)"
           value={jobTitleInput}
           onChange={(e) => setJobTitleInput(e.target.value)}
-          className="w-full max-w-sm"
+          className="w-full"
         />
+        <Input
+          placeholder="Years of experience (e.g. 5)"
+          value={yearsExperienceInput}
+          type="number"
+          onChange={(e) => setYearsExperienceInput(e.target.value)}
+          className="w-full"
+        />
+        <Input
+          placeholder="Key achievements (comma or line separated)"
+          value={achievementsInput}
+          onChange={(e) => setAchievementsInput(e.target.value)}
+          className="w-full md:col-span-2"
+        />
+        <Input
+          placeholder="Tools & technologies (comma separated)"
+          value={toolsInput}
+          onChange={(e) => setToolsInput(e.target.value)}
+          className="w-full md:col-span-2"
+        />
+      </div>
 
+      <div className="flex items-center gap-2 justify-end">
         <Button
           variant="outline"
           type="button"

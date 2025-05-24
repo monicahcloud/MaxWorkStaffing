@@ -5,11 +5,14 @@ import { coverLetterSchema, CoverLetterValues } from "@/lib/validation";
 import prisma from "@/lib/prisma";
 import { del, put } from "@vercel/blob";
 import path from "path";
+import { nullsToEmptyStrings } from "@/utils/nullsToEmptyStrings";
 
 export async function saveCoverLetter(values: CoverLetterValues) {
   const { id } = values;
+  const cleanValues = nullsToEmptyStrings(values);
   console.log("recieved values", values);
-  const { userPhoto, ...coverLetterValues } = coverLetterSchema.parse(values);
+  const { userPhoto, ...coverLetterValues } =
+    coverLetterSchema.parse(cleanValues);
   const { userId } = await auth();
   console.log("createing coverLetter for userId", userId);
   if (!userId) {

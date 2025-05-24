@@ -8,7 +8,17 @@ import prisma from "@/lib/prisma";
 import { del } from "@vercel/blob";
 import { revalidatePath } from "next/cache";
 
-export async function generateCoverLetter({ jobTitle }: { jobTitle: string }) {
+export async function generateCoverLetter({
+  jobTitle,
+  yearsExperience,
+  achievements,
+  tools,
+}: {
+  jobTitle: string;
+  yearsExperience?: string | number;
+  achievements?: string;
+  tools?: string;
+}) {
   const { userId } = await auth();
   if (!userId) throw new Error("Unauthorized");
 
@@ -17,14 +27,23 @@ export async function generateCoverLetter({ jobTitle }: { jobTitle: string }) {
     throw new Error("Upgrade your subscription to use this feature");
   }
 
-  const systemMessage = `You are a job cover letter AI assistant. Your task is to write 
-  a professional cover letter given the user's provided data. Only return the body section of the letter. Do not include any other information in the response. Keep it concise and professional.`;
+  const achievementsText =
+    achievements?.trim() && achievements.trim() !== "" ? `${achievements}` : "";
+  const toolsText = tools?.trim() && tools.trim() !== "" ? `${tools}` : "";
+
+  const systemMessage = `You are a job cover letter AI assistant. Your task is to write a professional, natural-sounding cover letter body (not a template, no placeholders).`;
 
   const userMessage = `
-  Please generate a job cover letter returning the letter body (only) of a professional 
-  cover letter for the job title: ${jobTitle}.
-  Do not include greeting, sign-off, or heading. Return 3  distinct paragraphs in letter 
-  format with each new paragraph starting a new line`;
+Write the body of a professional cover letter for the following job application details:
+- Job Title: ${jobTitle}
+- Years of Experience: ${yearsExperience || "Not specified"}
+${achievementsText ? `- Achievements: ${achievementsText}` : ""}
+${toolsText ? `- Tools/Technologies: ${toolsText}` : ""}
+
+Do not use square brackets, placeholder text, or anything like [object Object]. Write as if you are the applicant describing your own genuine experience and skills. If information is missing, use general strengths and experience relevant to the role.
+
+Return exactly three well-structured paragraphs, separated by two line breaks (\\n\\n). Do not include any greeting, sign-off, or heading. Only return the letter body, ready to paste into a document.
+`;
 
   const completion = await openai.chat.completions.create({
     model: "gpt-4o-mini",

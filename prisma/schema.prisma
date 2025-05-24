@@ -230,6 +230,7 @@ firstName       String?
   companyEmail    String?
   recipientName   String?
   signatureUrl    String?
+  signatureColor String?
 
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt

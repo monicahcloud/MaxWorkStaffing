@@ -21,7 +21,7 @@ export default function useAutoSaveCoverLetter(
     if (coverletterData.id && coverletterData.id !== coverletterId) {
       setCoverletterId(coverletterData.id);
     }
-  }, [coverletterData.id]);
+  }, [coverletterData.id, coverletterId]);
 
   const debounced = useDebounce(coverletterData, 1500);
   const [lastSaved, setLastSaved] = useState(structuredClone(coverletterData));

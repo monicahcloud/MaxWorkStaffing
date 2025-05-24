@@ -55,7 +55,7 @@ export default function CoverLetterItem({ coverletter }: CoverLetterProps) {
         </div>
 
         <Link
-          href={`/coverletterbuilder/editor?coverletterId=${coverletter.id}`}
+          href={`/coverletterbuilder/editor/${coverletter.id}`}
           className="relative inline-block w-full">
           {" "}
           <CoverLetterPreview
@@ -86,10 +86,10 @@ function MoreMenu({ coverletter, onPrintClick }: MoreMenuProps) {
   const router = useRouter();
 
   function handleEdit() {
-    router.push(`/coverletterbuilder/editor?coverletterId=${coverletter.id}`);
+    router.push(`/coverletterbuilder/editor/${coverletter.id}`);
   }
   function handleView() {
-    router.push(`/coverletterbuilder/editor/${coverletter.id}`);
+    router.push(`/coverletter/preview/${coverletter.id}`);
   }
 
   return (

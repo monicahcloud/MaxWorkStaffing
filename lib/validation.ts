@@ -251,8 +251,10 @@ export const letterBodySchema = z.object({
   body: optionalString,
 });
 export type LetterBodyValues = z.infer<typeof letterBodySchema>;
+
 export const signatureSchema = z.object({
   signatureUrl: z.string().optional(),
+  signatureColor: z.string().optional(),
 });
 export type SignatureValues = z.infer<typeof signatureSchema>;
 

@@ -150,6 +150,25 @@
   font-family: "Lora", serif;
 }
 
+.a4-page {
+  width: 794px;
+  height: 1123px;
+  background: #000;
+  color: #fff;
+  margin: 0 auto;
+  padding: 40px 50px;
+  box-sizing: border-box;
+  overflow: hidden;
+  position: relative;
+}
+@media print {
+  .a4-page {
+    break-after: page;
+    page-break-after: always;
+    page: a4;
+  }
+}
+
 @page {
   size: A4 portrait;
   margin: 0.6cm;
