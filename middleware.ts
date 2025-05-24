@@ -15,7 +15,7 @@ const isPublicRoute = createRouteMatcher([
   "/api/vapi(.*)",
   "/api/user(.*)",
   "/verify",
-]); // Allow "/sign-in" to prevent redirect loops
+]);
 
 export default clerkMiddleware(async (auth, req) => {
   const { userId } = await auth(); // Get the user ID from Clerk

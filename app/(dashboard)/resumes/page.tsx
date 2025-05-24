@@ -59,7 +59,7 @@ async function Page() {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 mt-10 gap-5">
+        <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 mt-10 gap-5">
           {resumes.map((resume) => (
             <ResumeItem key={resume.id} resume={resume} />
           ))}

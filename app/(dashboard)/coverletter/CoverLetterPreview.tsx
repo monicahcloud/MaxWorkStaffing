@@ -1,4 +1,4 @@
-import { Ref, SetStateAction } from "react";
+import { Ref } from "react";
 import { CoverLetterValues } from "@/lib/validation";
 import Zamar from "../coverletterbuilder/templates/Zamar";
 import { TodahTemplate } from "../coverletterbuilder/templates/TodahTemplate";

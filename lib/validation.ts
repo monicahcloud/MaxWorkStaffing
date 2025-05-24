@@ -213,14 +213,17 @@ export const feedbackSchema = z.object({
 
 export const userInfoSchema = z.object({
   userPhoto: z
-    .custom<File | undefined>()
+    .union([z.instanceof(File), z.string(), z.null(), z.undefined()])
     .refine(
       (file) =>
-        !file || (file instanceof File && file.type.startsWith("image/")),
+        !file ||
+        typeof file === "string" ||
+        (file instanceof File && file.type.startsWith("image/")),
       "Must be an image file"
     )
     .refine(
-      (file) => !file || file.size <= 1024 * 1024 * 4,
+      (file) =>
+        !file || typeof file === "string" || file.size <= 1024 * 1024 * 4,
       "File must be less than 4MB"
     ),
   firstName: optionalString,
@@ -265,9 +268,9 @@ export const coverLetterSchema = z.object({
 
 export type CoverLetterValues = Omit<
   z.infer<typeof coverLetterSchema>,
-  "photo"
+  "userPhoto"
 > & {
   id?: string;
-  photo?: File | string | null;
+  userPhoto?: File | string | null;
   signatureUrl?: string | null;
 };

@@ -2,7 +2,7 @@
 
 import {
   AreaChart,
-  AppWindow,
+  // AppWindow,
   // AreaChart,
   CircleHelp,
   // CreditCard,
@@ -12,8 +12,8 @@ import {
   MessageCircleQuestion,
   // SquareTerminal,
   FilePen,
-  Globe,
-  Users,
+  // Globe,
+  // Users,
   UserCheck2,
 } from "lucide-react";
 import { nanoid } from "nanoid";

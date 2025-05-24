@@ -9,12 +9,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useRef, useState } from "react";
-import Image from "next/image";
+import { useRef } from "react";
 
 export function FormPhotoInput({ name }: { name: string }) {
   const inputRef = useRef<HTMLInputElement>(null);
-  const [preview, setPreview] = useState<string | null>(null);
 
   return (
     <FormField
@@ -38,7 +36,6 @@ export function FormPhotoInput({ name }: { name: string }) {
                     return;
                   }
 
-                  setPreview(URL.createObjectURL(file));
                   fieldValues.onChange(file);
                 }}
                 ref={inputRef}
@@ -49,13 +46,13 @@ export function FormPhotoInput({ name }: { name: string }) {
               type="button"
               onClick={() => {
                 fieldValues.onChange(null);
-                setPreview(null);
+
                 if (inputRef.current) inputRef.current.value = "";
               }}>
               Remove
             </Button>
           </div>
-          {preview && (
+          {/* {preview && (
             <Image
               src={preview}
               alt="Preview"
@@ -63,7 +60,7 @@ export function FormPhotoInput({ name }: { name: string }) {
               height={64}
               className="mt-2 h-16 w-16 rounded-full object-cover"
             />
-          )}
+          )} */}
           <FormMessage />
         </FormItem>
       )}

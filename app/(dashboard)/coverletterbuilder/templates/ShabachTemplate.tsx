@@ -1,14 +1,13 @@
 "use client";
-
+import React, { useRef } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import React, { useRef } from "react";
+import { CoverLetterValues } from "@/lib/validation";
 import useDimensions from "@/hooks/useDimensions";
 import image from "../../../../assets/jobseeker.jpg";
-import type { CoverLetterValues } from "@/lib/validation";
 import { BorderStyles } from "../../editor/BorderStyleButton";
 
-interface Props extends CoverLetterValues {
+interface CoverLetterPreviewProps {
   coverletterData: CoverLetterValues;
   className?: string;
   contentRef?: React.Ref<HTMLDivElement>;
@@ -18,21 +17,20 @@ export function ShabachTemplate({
   className,
   contentRef,
   coverletterData,
-}: Props) {
+}: CoverLetterPreviewProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-
   const { width } = useDimensions(containerRef as React.RefObject<HTMLElement>);
 
   return (
     <div
       className={cn(
-        " relative aspect-[210/297] bg-black text-white w-full h-fit",
+        " aspect-[210/297] bg-black text-white w-full h-fit",
         className
       )}
       ref={containerRef}>
       <div
         className={cn(
-          "origin-top-left space-y-6 p-10 font-lora",
+          "origin-top-left space-y-6 p-10  font-lora",
           !width && "invisible"
         )}
         style={{
@@ -42,12 +40,15 @@ export function ShabachTemplate({
         ref={contentRef}
         id="coverletterPreviewContent">
         {/* Header Section */}
-        <div className="flex justify-between">
+        <div className="flex w-[100%] space-y-6  mt-20 justify-between">
           {/* Name Block */}
           <div
-            className="text-white"
             style={{
-              color: coverletterData.themeColor,
+              color:
+                !coverletterData.themeColor ||
+                coverletterData.themeColor === "#000000"
+                  ? "white"
+                  : coverletterData.themeColor,
             }}>
             <h1 className="text-7xl font-serif leading-none tracking-widest">
               {coverletterData.firstName || "Lizzie"}
@@ -60,9 +61,13 @@ export function ShabachTemplate({
 
           {/* Contact Block */}
           <div
-            className="text-lg text-white/80 text-right space-y-1 pr-5"
+            className="text-lg text-right space-y-1 pr-5"
             style={{
-              color: coverletterData.themeColor,
+              color:
+                !coverletterData.themeColor ||
+                coverletterData.themeColor === "#000000"
+                  ? "white"
+                  : coverletterData.themeColor,
             }}>
             <p>📧 {coverletterData.userEmail || "hello@reallygreatsite.com"}</p>
             <p>🌐 {coverletterData.website || "@reallygreatsite"}</p>
@@ -72,13 +77,19 @@ export function ShabachTemplate({
         {/* Image aligned to right side */}
         {(coverletterData.userPhoto || image?.src) && (
           <div className="flex justify-end -mt-20">
-            <div className="w-75 h-70 overflow-hidden  ">
+            <div className="overflow-hidden  ">
               <Image
-                src={coverletterData.userPhoto || image.src}
+                src={
+                  typeof coverletterData.userPhoto === "string"
+                    ? coverletterData.userPhoto
+                    : coverletterData.userPhoto instanceof File
+                    ? URL.createObjectURL(coverletterData.userPhoto)
+                    : image.src
+                }
                 alt="User Photo"
-                width={300}
-                height={240}
-                className="object-cover w-full h-full"
+                width={100}
+                height={100}
+                className="object-cover w-70 h-70 "
                 style={{
                   borderRadius:
                     coverletterData.borderStyle === BorderStyles.SQUARE
@@ -92,9 +103,9 @@ export function ShabachTemplate({
           </div>
         )}
         {/* Recipient Info */}
-        <div className="text-lg -mt-45">
-          <p>{new Date().toLocaleDateString()}</p>
-          <p className="font-semibold text-white">
+        <div className="text-lg -mt-50">
+          <p className="text-xl ">{new Date().toLocaleDateString()}</p>
+          <p className=" text-white">
             {coverletterData.recipientName || "Hiring Manager Name"}
           </p>
 
@@ -143,7 +154,7 @@ export function ShabachTemplate({
               ? `${coverletterData.firstName} ${coverletterData.lastName}`.trim()
               : "Lizze Major"}
           </p>
-          <p className="text-md text-white">
+          <p className="text-md ">
             {coverletterData.userPhone || "123-456-7890"}
           </p>
         </div>
@@ -151,9 +162,12 @@ export function ShabachTemplate({
         {/* Footer */}
         <div className="pt-6 border-t border-white/20 text-center text-lg text-white/70 mt-4">
           <p
-            className="font-semibold text-white"
             style={{
-              color: coverletterData.themeColor,
+              color:
+                !coverletterData.themeColor ||
+                coverletterData.themeColor === "#000000"
+                  ? "white"
+                  : coverletterData.themeColor,
             }}>
             {coverletterData.userAddress || "1234 Main St, Anytown USA"}
           </p>

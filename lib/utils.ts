@@ -1,7 +1,7 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { ResumeServerData } from "./types";
-import { ResumeValues } from "./validation";
+import { CoverLetterServerData, ResumeServerData } from "./types";
+import { CoverLetterValues, ResumeValues } from "./validation";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -71,5 +71,30 @@ export function mapToResumeValues(data: ResumeServerData): ResumeValues {
     borderStyle: data.borderStyle,
     themeColor: data.themeColor,
     summary: data.summary ?? "",
+  };
+}
+
+export function mapToCoverLetterValues(
+  data: CoverLetterServerData
+): CoverLetterValues {
+  return {
+    id: data.id,
+    template: data.template ?? "",
+    userPhoto: data.userPhotoUrl ?? "",
+    firstName: data.firstName ?? "",
+    lastName: data.lastName ?? "",
+    jobTitle: data.jobTitle ?? "",
+    userAddress: data.userAddress ?? "",
+    website: data.website ?? "",
+    userPhone: data.userPhone ?? "",
+    userEmail: data.userEmail ?? "",
+    companyAddress: data.companyAddress ?? "",
+    companyName: data.companyName ?? "",
+    recipientName: data.recipientName ?? "",
+    linkedin: data.linkedin ?? "",
+    gitHub: data.gitHub ?? "",
+    signatureUrl: data.signatureUrl ?? "",
+    borderStyle: data.borderStyle ?? "",
+    themeColor: data.themeColor ?? "",
   };
 }

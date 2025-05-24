@@ -23,3 +23,6 @@ export interface CoverLetterFormProps {
   contentRef?: Ref<HTMLDivElement>;
   className?: string;
 }
+
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export type CoverLetterServerData = Prisma.CoverLetterGetPayload<{}>;

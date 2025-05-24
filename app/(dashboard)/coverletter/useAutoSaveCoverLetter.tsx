@@ -13,7 +13,16 @@ export default function useAutoSaveCoverLetter(
   coverletterData: CoverLetterValues
 ) {
   const searchParams = useSearchParams();
-  const [coverletterId, setCoverletterId] = useState(coverletterData.id);
+  const [coverletterId, setCoverletterId] = useState<string | undefined>(
+    coverletterData.id
+  );
+
+  useEffect(() => {
+    if (coverletterData.id && coverletterData.id !== coverletterId) {
+      setCoverletterId(coverletterData.id);
+    }
+  }, [coverletterData.id]);
+
   const debounced = useDebounce(coverletterData, 1500);
   const [lastSaved, setLastSaved] = useState(structuredClone(coverletterData));
   const [isSaving, setIsSaving] = useState(false);
@@ -53,20 +62,17 @@ export default function useAutoSaveCoverLetter(
             `?${newSearchParams.toString()}`
           );
         }
-
-        toast.success("Cover letter saved");
       } catch (error) {
-        console.error("Autosave failed:", error);
         setIsError(true);
+        console.error("Autosave failed:", error);
 
         toast.error("Could not save changes", {
           description: () => (
             <div className="space-y-3">
-              <p>We couldn’t save your changes. Please try again.</p>
+              <p>We couldn&apos;t save your changes. Please try again.</p>
               <Button
                 variant="secondary"
                 onClick={() => {
-                  toast.dismiss();
                   save();
                 }}>
                 Retry
@@ -91,7 +97,6 @@ export default function useAutoSaveCoverLetter(
   return {
     isSaving,
     hasUnsavedChanges:
-      JSON.stringify(coverletterData, fileReplacer) !==
-      JSON.stringify(lastSaved, fileReplacer),
+      JSON.stringify(coverletterData) !== JSON.stringify(lastSaved),
   };
 }

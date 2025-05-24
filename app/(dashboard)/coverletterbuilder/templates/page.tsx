@@ -11,9 +11,7 @@ export default function TemplateSelectionPage() {
     const validTemplates = templateMetadata.map((t) => t.id);
     if (!templateId || !validTemplates.includes(templateId)) return;
 
-    router.push(
-      `/coverletterbuilder/editor?template=${encodeURIComponent(templateId)}`
-    );
+    router.push(`/coverletterbuilder/editor`);
   };
 
   return (

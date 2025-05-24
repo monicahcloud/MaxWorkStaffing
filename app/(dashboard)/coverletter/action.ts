@@ -15,12 +15,7 @@ export async function saveCoverLetter(values: CoverLetterValues) {
   if (!userId) {
     throw new Error("User not authenticated");
   }
-  // const { userId: clerkId } = await auth();
-  // if (!clerkId) throw new Error("Unauthorized");
 
-  // const parsed = coverLetterSchema.parse(values);
-
-  // console.log("📤 Cover letter input:", parsed);
   const existingCoverLetter = id
     ? await prisma.coverLetter.findUnique({ where: { id, userId } })
     : null;
@@ -29,8 +24,8 @@ export async function saveCoverLetter(values: CoverLetterValues) {
   }
   let newPhotoUrl: string | undefined | null = undefined;
   if (userPhoto instanceof File) {
-    if (existingCoverLetter?.photoUrl) {
-      await del(existingCoverLetter.photoUrl);
+    if (existingCoverLetter?.userPhotoUrl) {
+      await del(existingCoverLetter.userPhotoUrl);
     }
     const blob = await put(
       `coverLetter_photos/${path.extname(userPhoto.name)}`,
@@ -41,23 +36,21 @@ export async function saveCoverLetter(values: CoverLetterValues) {
     );
     newPhotoUrl = blob.url;
   } else if (userPhoto === null) {
-    if (existingCoverLetter?.photoUrl) {
-      await del(existingCoverLetter.photoUrl);
+    if (existingCoverLetter?.userPhotoUrl) {
+      await del(existingCoverLetter.userPhotoUrl);
     }
     newPhotoUrl = null;
   }
 
   if (id) {
-    const updated = await prisma.coverLetter.update({
+    return prisma.coverLetter.update({
       where: { id },
       data: {
         ...coverLetterValues,
-        photoUrl: newPhotoUrl,
+        userPhotoUrl: newPhotoUrl,
         updatedAt: new Date(),
       },
     });
-    console.log("✅ Cover letter updated:", updated);
-    return updated;
   } else {
     return prisma.coverLetter.create({
       data: {
@@ -68,7 +61,7 @@ export async function saveCoverLetter(values: CoverLetterValues) {
             clerkId: userId,
           },
         },
-        photoUrl: newPhotoUrl,
+        userPhotoUrl: newPhotoUrl,
       },
     });
   }

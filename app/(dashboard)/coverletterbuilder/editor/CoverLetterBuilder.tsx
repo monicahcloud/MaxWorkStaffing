@@ -1,32 +1,52 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import SectionTitle from "@/components/SectionTitle";
-import { CoverLetterFormBuilder } from "./CoverLetterFormBuilder";
 import BackToTemplatesButton from "../templates/BackToTemplatesButton";
 import { useEffect, useState } from "react";
 import CoverLetterFooter from "../CoverLetterFooter";
-
 import { coverLetterSchema, CoverLetterValues } from "@/lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { debounce } from "lodash";
 import CoverLetterPreviewSection from "../CoverLetterPreviewSection";
 import useAutoSaveCoverLetter from "../../coverletter/useAutoSaveCoverLetter";
+import useUnloadWarning from "@/hooks/useUnloadWarning";
+import UserInfoForm from "./UserInfoForm";
+import EmployerInfoForm from "./EmployerInfo";
+import LetterBodyForm from "./LetterBody";
 
-const steps = [
-  { key: "user", label: "Personal Info" },
-  { key: "employer", label: "Employer Info" },
-  { key: "body", label: "Letter Body" },
-  { key: "signature", label: "Signature" },
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import React from "react";
+
+interface StepFormProps {
+  coverletterData: CoverLetterValues;
+  setCoverLetterData: React.Dispatch<React.SetStateAction<CoverLetterValues>>;
+  selectedTemplate: string;
+}
+
+const steps: {
+  key: string;
+  label: string;
+  component: React.ComponentType<StepFormProps>;
+}[] = [
+  { key: "user", label: "Personal Info", component: UserInfoForm },
+  { key: "employer", label: "Employer Info", component: EmployerInfoForm },
+  { key: "body", label: "Letter Body", component: LetterBodyForm },
+  // Add signature form when ready
 ];
 
 export default function CoverLetterBuilder() {
   const searchParams = useSearchParams();
   const templateId = searchParams.get("template") || "Shabach";
-  const [stepIndex, setStepIndex] = useState(0);
   const [showPreview, setShowPreview] = useState(false);
-  const [signatureUrl, setSignatureUrl] = useState("");
   const [coverletterData, setCoverLetterData] = useState<CoverLetterValues>({});
   const form = useForm<CoverLetterValues>({
     resolver: zodResolver(coverLetterSchema),
@@ -56,6 +76,20 @@ export default function CoverLetterBuilder() {
           : undefined,
     },
   });
+
+  const currentStep = searchParams.get("step") || steps[0].key;
+  const stepIndex = steps.findIndex((step) => step.key === currentStep);
+
+  function setCurrentStep(key: string) {
+    const newSearchParams = new URLSearchParams(searchParams);
+    newSearchParams.set("step", key);
+    window.history.pushState(null, "", `?${newSearchParams.toString()}`);
+  }
+
+  const FormComponent = steps.find(
+    (step) => step.key === currentStep
+  )?.component;
+
   useEffect(() => {
     const debouncedUpdate = debounce((values: CoverLetterValues) => {
       setCoverLetterData((prev) => ({ ...prev, ...values }));
@@ -71,8 +105,10 @@ export default function CoverLetterBuilder() {
     };
   }, [form, setCoverLetterData]);
 
-  const watched = form.watch();
-  const { isSaving } = useAutoSaveCoverLetter(watched);
+  // const watched = form.watch();
+  const { isSaving, hasUnsavedChanges } =
+    useAutoSaveCoverLetter(coverletterData);
+  useUnloadWarning(hasUnsavedChanges);
 
   return (
     <div className="flex grow flex-col">
@@ -84,46 +120,84 @@ export default function CoverLetterBuilder() {
         <div className="mt-4 px-1">
           <BackToTemplatesButton />
         </div>
-      </header>
-
+      </header>{" "}
       <main className="relative grow">
         <div className="absolute bottom-0 top-0 flex w-full">
           <div className="p-3 space-y-6 overflow-y-auto w-full md:w-1/2">
-            <CoverLetterFormBuilder
-              form={form}
-              stepIndex={stepIndex}
-              setSignatureUrl={setSignatureUrl}
-              signatureUrl={signatureUrl}
-              selectedTemplate={templateId}
-              coverletterData={coverletterData}
-              setCoverLetterData={setCoverLetterData}
+            {/* left side */}
+            <div className="space-y-1.5 text-center">
+              <h2 className="text-2xl font-semibold">Cover Letter Builder</h2>
+              <p className="text-sm text-muted-foreground">
+                Step {stepIndex + 1} of {steps.length}
+              </p>
+            </div>{" "}
+            <Breadcrumbs
+              currentStep={currentStep}
+              setCurrentStep={setCurrentStep}
             />
+            {FormComponent && (
+              <FormProvider {...form}>
+                <FormComponent
+                  coverletterData={coverletterData}
+                  setCoverLetterData={setCoverLetterData}
+                  selectedTemplate={templateId}
+                />
+              </FormProvider>
+            )}
           </div>
-          <div className="grow md:border-right"></div>
-          <div className="hidden md:flex md:w-1/2 border-l p-4 overflow-y-auto bg-secondary">
+          <div className="grow md:border-right" />
+          <div className="hidden w-1/2 md:flex border-l p-4 overflow-y-auto bg-secondary">
+            {/* right side */}
+            {/* <pre>{JSON.stringify(resumeData, null, 2)}</pre> */}
             <CoverLetterPreviewSection
-              coverLetterData={watched}
-              setCoverLetterData={(data) => {
-                for (const key in data) {
-                  form.setValue(key as keyof CoverLetterValues, data[key]);
-                }
-              }}
+              coverLetterData={coverletterData}
+              setCoverLetterData={setCoverLetterData}
+              // className={cn("h-full w-full", showSmResumePreview && "flex")}
             />
           </div>
         </div>
       </main>
-
       <CoverLetterFooter
-        currentStep={steps[stepIndex].key}
-        setCurrentStep={(key) => {
-          const index = steps.findIndex((step) => step.key === key);
-          if (index !== -1) setStepIndex(index);
-        }}
+        currentStep={currentStep}
+        setCurrentStep={setCurrentStep}
         showPreview={showPreview}
         setShowPreview={setShowPreview}
         isSaving={isSaving}
         steps={steps}
       />
+    </div>
+  );
+}
+
+interface BreadcrumbsProps {
+  currentStep: string;
+  setCurrentStep: (step: string) => void;
+}
+
+function Breadcrumbs({ currentStep, setCurrentStep }: BreadcrumbsProps) {
+  return (
+    <div className="flex justify-center">
+      <Breadcrumb>
+        <BreadcrumbList>
+          {steps.map((step, index) => (
+            <React.Fragment key={step.key}>
+              <BreadcrumbItem>
+                {step.key === currentStep ? (
+                  <BreadcrumbPage>{step.label}</BreadcrumbPage>
+                ) : (
+                  <BreadcrumbLink asChild>
+                    <button onClick={() => setCurrentStep(step.key)}>
+                      {step.label}
+                    </button>
+                  </BreadcrumbLink>
+                )}
+              </BreadcrumbItem>
+              {/* Only show separator if not the last step */}
+              {index !== steps.length - 1 && <BreadcrumbSeparator />}
+            </React.Fragment>
+          ))}
+        </BreadcrumbList>
+      </Breadcrumb>
     </div>
   );
 }

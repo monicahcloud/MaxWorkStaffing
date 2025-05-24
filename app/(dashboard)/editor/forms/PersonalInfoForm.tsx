@@ -48,6 +48,7 @@ function PersonalInfoForm({ resumeData, setResumeData }: EditorFormProps) {
       debouncedUpdate.cancel(); // Clean up debounce
     };
   }, [form, setResumeData]);
+
   const photoInputRef = useRef<HTMLInputElement>(null);
   return (
     <div className=" personal-info max-w-xl mx-auto space-y-6">

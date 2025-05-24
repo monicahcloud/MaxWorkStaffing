@@ -4,13 +4,15 @@ import SectionTitle from "@/components/SectionTitle";
 
 const page = () => {
   return (
-    <div>
+    <>
       <SectionTitle
         text="choose a Cover Letter Template"
         subtext="  Fill out the form and watch your preview update in real time."
       />
-      <TemplateSelectionPage />
-    </div>
+      <div className="max-w-7xl mx-auto flex flex-wrap">
+        <TemplateSelectionPage />
+      </div>
+    </>
   );
 };
 
