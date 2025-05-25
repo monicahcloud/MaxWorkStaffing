@@ -1,4 +1,5 @@
 import { CoverLetterValues } from "@/lib/validation";
+import { Ref } from "react";
 import Zamar from "../coverletterbuilder/templates/Zamar";
 import { TodahTemplate } from "../coverletterbuilder/templates/TodahTemplate";
 import { ShabachTemplate } from "../coverletterbuilder/templates/ShabachTemplate";
@@ -6,7 +7,7 @@ import { ShabachTemplate } from "../coverletterbuilder/templates/ShabachTemplate
 interface CoverLetterPreviewProps {
   coverLetterData: CoverLetterValues;
   className?: string;
-  contentRef?: React.Ref<HTMLDivElement>;
+  contentRef?: Ref<HTMLDivElement>;
 }
 
 export default function CoverLetterPreview({
@@ -14,7 +15,8 @@ export default function CoverLetterPreview({
   className,
   contentRef,
 }: CoverLetterPreviewProps) {
-  switch (coverLetterData.template) {
+  const { template } = coverLetterData;
+  switch (template) {
     case "Zamar":
       return (
         <Zamar

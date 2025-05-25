@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { FileTextIcon, PencilIcon } from "lucide-react";
+import { FileUserIcon, PencilIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface FooterProps {
@@ -54,7 +54,7 @@ export default function CoverLetterFooter({
           onClick={() => setShowPreview(!showPreview)}
           className="md:hidden"
           title={showPreview ? "Show input form" : "Show preview"}>
-          {showPreview ? <PencilIcon /> : <FileTextIcon />}
+          {showPreview ? <PencilIcon /> : <FileUserIcon />}
         </Button>
 
         <div className="flex items-center gap-3">
