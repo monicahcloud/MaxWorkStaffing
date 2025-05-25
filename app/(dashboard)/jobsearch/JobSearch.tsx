@@ -22,11 +22,11 @@ export const JobSearch: React.FC<JobSearchProps> = ({ jobs }) => {
     <section className=" p-6 rounded-xl">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-2xl font-bold">Job Search</h2>
-        <a
+        {/* <a
           href="/jobsearch"
           className="text-sm font-medium underline text-black hover:text-blue-600">
           View more
-        </a>
+        </a> */}
       </div>
 
       <div className="flex flex-col md:flex-row gap-4 mb-6">

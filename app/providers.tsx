@@ -1,4 +1,3 @@
-// app/providers.tsx
 "use client";
 
 import React from "react";
@@ -8,6 +7,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { queryClient } from "@/lib/react-query-client";
 import { NextStep, NextStepProvider } from "nextstepjs";
 import steps from "@/components/tourGuide/tour";
+import { UserProgressProvider } from "@/components/UserProgressContext"; // ← Add this line
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (
@@ -17,9 +17,13 @@ export default function Providers({ children }: { children: React.ReactNode }) {
       enableSystem
       disableTransitionOnChange>
       <QueryClientProvider client={queryClient}>
-        <NextStepProvider>
-          <NextStep steps={steps}>{children}</NextStep>
-        </NextStepProvider>
+        <UserProgressProvider>
+          {" "}
+          {/* ← Wrap here */}
+          <NextStepProvider>
+            <NextStep steps={steps}>{children}</NextStep>
+          </NextStepProvider>
+        </UserProgressProvider>
         <ReactQueryDevtools />
       </QueryClientProvider>
     </ThemeProvider>
