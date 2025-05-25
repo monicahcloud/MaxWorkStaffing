@@ -257,7 +257,9 @@ export default function CoverLetterBuilder() {
   const searchParams = useSearchParams();
   const templateId = searchParams.get("template") || "Shabach";
   const [showPreview, setShowPreview] = useState(false);
-  const [coverletterData, setCoverLetterData] = useState<CoverLetterValues>({});
+  const [coverletterData, setCoverLetterData] = useState<CoverLetterValues>({
+    template: templateId,
+  });
   const [loading, setLoading] = useState(true);
 
   // Fetch and set data if editing
@@ -269,13 +271,17 @@ export default function CoverLetterBuilder() {
         try {
           const data = await getcoverLetterById(coverLetterId);
           if (!ignore && data) {
-            setCoverLetterData(data);
+            setCoverLetterData(nullsToEmptyStrings(data) as CoverLetterValues);
           }
         } catch (error) {
           // Handle error (optional: display error to user)
         }
         setLoading(false);
       } else {
+        setCoverLetterData({
+          template: templateId,
+          // ...other defaults
+        });
         setLoading(false);
       }
     }
@@ -326,10 +332,8 @@ export default function CoverLetterBuilder() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form, setCoverLetterData]);
 
-  const { isSaving, hasUnsavedChanges } = useAutoSaveCoverLetter(
-    coverletterData,
-    coverLetterId
-  ); // pass ID to update vs create
+  const { isSaving, hasUnsavedChanges } =
+    useAutoSaveCoverLetter(coverletterData); // pass ID to update vs create
   useUnloadWarning(hasUnsavedChanges);
 
   if (loading) {

@@ -86,6 +86,7 @@ export function mapToCoverLetterValues(
     jobTitle: data.jobTitle ?? "",
     userAddress: data.userAddress ?? "",
     website: data.website ?? "",
+    body: data.body ?? "",
     userPhone: data.userPhone ?? "",
     userEmail: data.userEmail ?? "",
     companyAddress: data.companyAddress ?? "",

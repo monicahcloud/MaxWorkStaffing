@@ -49,7 +49,7 @@ export function ShabachTemplate({
   return (
     <div
       className={cn(
-        "aspect-[210/297] bg-black text-white w-full h-fit",
+        "aspect-[210/297] bg-black  text-white w-full h-fit",
         className
       )}
       ref={containerRef}>
