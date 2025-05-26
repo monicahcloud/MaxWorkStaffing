@@ -5,7 +5,6 @@ import { coverLetterSchema, CoverLetterValues } from "@/lib/validation";
 import prisma from "@/lib/prisma";
 import { del, put } from "@vercel/blob";
 import path from "path";
-import { nullsToEmptyStrings } from "@/utils/nullsToEmptyStrings";
 
 export async function saveCoverLetter(values: CoverLetterValues) {
   const { id } = values;
@@ -44,6 +43,9 @@ export async function saveCoverLetter(values: CoverLetterValues) {
       await del(existingCoverLetter.userPhotoUrl);
     }
     newPhotoUrl = null;
+  } else {
+    // If not updating or deleting, preserve the old url
+    newPhotoUrl = existingCoverLetter?.userPhotoUrl;
   }
 
   if (id) {

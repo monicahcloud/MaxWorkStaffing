@@ -37,7 +37,9 @@ export default function CoverLetterItem({ coverletter }: CoverLetterProps) {
   const contentRef = useRef<HTMLDivElement>(null);
   const reactToPrintFn = useReactToPrint({
     contentRef,
-    documentTitle: coverletter.companyName || "Cover Letter",
+    documentTitle: coverletter.companyName
+      ? `${coverletter.companyName} Cover Letter`
+      : "Cover Letter",
   });
   const wasUpdated = coverletter.updatedAt !== coverletter.createdAt;
 
