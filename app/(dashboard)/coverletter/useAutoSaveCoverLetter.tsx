@@ -10,12 +10,12 @@ import { useSearchParams } from "next/navigation";
 import { saveCoverLetter } from "./action";
 
 // Utility to omit the userPhoto (File) field before cloning or comparing
-function omitFileField<T extends { userPhoto?: unknown }>(
-  obj: T
-): Omit<T, "userPhoto"> {
-  const { userPhoto, ...rest } = obj;
-  return rest;
-}
+// function omitFileField<T extends { userPhoto?: unknown }>(
+//   obj: T
+// ): Omit<T, "userPhoto"> {
+//   const { userPhoto, ...rest } = obj;
+//   return rest;
+// }
 
 export default function useAutoSaveCoverLetter(
   coverletterData: CoverLetterValues
@@ -36,9 +36,7 @@ export default function useAutoSaveCoverLetter(
   // This lastSavedWithFile includes the userPhoto key for comparison
   const [lastSavedWithFile, setLastSavedWithFile] = useState(coverletterData);
   // This lastSaved omits userPhoto for safe cloning/comparison
-  const [lastSaved, setLastSaved] = useState(
-    structuredClone(omitFileField(coverletterData))
-  );
+  const [lastSaved, setLastSaved] = useState(structuredClone(coverletterData));
   const [isSaving, setIsSaving] = useState(false);
   const [isError, setIsError] = useState(false);
 
@@ -57,7 +55,7 @@ export default function useAutoSaveCoverLetter(
         console.log("Saving cover letter. Debounced data:", debounced);
 
         // Omit file for save/clone
-        const newData = structuredClone(omitFileField(debounced));
+        const newData = structuredClone(debounced);
         console.log("newData (no userPhoto):", newData);
         // Only send userPhoto if it actually changed
         const userPhotoChanged =
@@ -112,7 +110,7 @@ export default function useAutoSaveCoverLetter(
     }
 
     const hasUnsavedChanges =
-      JSON.stringify(omitFileField(debounced), fileReplacer) !==
+      JSON.stringify(debounced, fileReplacer) !==
       JSON.stringify(lastSaved, fileReplacer);
 
     if (hasUnsavedChanges && debounced && !isSaving && !isError) {
@@ -132,7 +130,7 @@ export default function useAutoSaveCoverLetter(
   return {
     isSaving,
     hasUnsavedChanges:
-      JSON.stringify(omitFileField(coverletterData), fileReplacer) !==
+      JSON.stringify(coverletterData, fileReplacer) !==
       JSON.stringify(lastSaved, fileReplacer),
   };
 }

@@ -28,13 +28,13 @@ function ClientHome() {
 
       <div className="flex flex-col items-start sm:items-center  mr-15 gap-4 w-full md:w-auto">
         <ResumeProgress completedSteps={completedSteps} />
-        <pre>
+        {/* <pre>
           {JSON.stringify(
             { hasResume, hasCoverLetter, hasJob, completedSteps },
             null,
             2
           )}
-        </pre>
+        </pre> */}
         <TakeTourButton />
       </div>
     </div>
