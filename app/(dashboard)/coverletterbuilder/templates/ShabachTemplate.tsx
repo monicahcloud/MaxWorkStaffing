@@ -14,12 +14,9 @@ interface CoverLetterPreviewProps {
 }
 
 // Helper to get a safe photo src
-function getUserPhotoSrc(userPhoto: unknown): string | undefined {
-  if (typeof userPhoto === "string" && userPhoto.trim() !== "") {
-    return userPhoto;
-  }
-  if (typeof window !== "undefined" && userPhoto instanceof File) {
-    return URL.createObjectURL(userPhoto);
+function getUserPhotoSrc(userPhotoUrl: unknown): string | undefined {
+  if (typeof userPhotoUrl === "string" && userPhotoUrl.trim() !== "") {
+    return userPhotoUrl;
   }
   return undefined;
 }
@@ -34,8 +31,7 @@ export function ShabachTemplate({
 
   // Safely get user photo src (or fallback)
   const userPhotoSrc =
-    getUserPhotoSrc(coverletterData.userPhoto) || fallbackImage?.src;
-
+    getUserPhotoSrc(coverletterData.userPhotoUrl) || fallbackImage?.src;
   // Only render if it's a non-empty string
   const showUserPhoto = Boolean(userPhotoSrc);
 

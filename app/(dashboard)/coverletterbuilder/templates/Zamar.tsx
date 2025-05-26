@@ -74,8 +74,9 @@ function UserPhotoOverlap({
 }: {
   coverletterData: CoverLetterValues;
 }) {
-  const { userPhoto, borderStyle, themeColor = "#FFD600" } = coverletterData;
-  const userPhotoSrc = getUserPhotoSrc(userPhoto) || fallbackImage?.src;
+  const { userPhotoUrl, borderStyle, themeColor = "#FFD600" } = coverletterData;
+  const userPhotoSrc =
+    getUserPhotoSrc(coverletterData.userPhotoUrl) || fallbackImage?.src;
   const borderRadius = borderStyle === BorderStyles.SQUARE ? "0px" : "9999px";
 
   return (
@@ -228,13 +229,9 @@ function ContactSection({
 }
 
 // Helper function
-function getUserPhotoSrc(userPhoto: unknown): string | undefined {
-  if (typeof userPhoto === "string" && userPhoto.trim() !== "") {
-    return userPhoto;
-  }
-  // Only for local preview immediately after selection:
-  if (typeof window !== "undefined" && userPhoto instanceof File) {
-    return URL.createObjectURL(userPhoto);
+function getUserPhotoSrc(userPhotoUrl: unknown): string | undefined {
+  if (typeof userPhotoUrl === "string" && userPhotoUrl.trim() !== "") {
+    return userPhotoUrl;
   }
   return undefined;
 }
