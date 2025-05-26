@@ -6,8 +6,12 @@ import { FormPhotoInput } from "./FormPhotoInput";
 import { FormInput } from "./FormInput";
 
 export default function UserInfoForm({
+  coverletterData,
+  setCoverLetterData,
   selectedTemplate,
 }: {
+  coverletterData;
+  setCoverLetterData;
   selectedTemplate: string;
 }) {
   const { setValue } = useFormContext();
@@ -21,7 +25,6 @@ export default function UserInfoForm({
       <h3 className="text-lg font-medium">Personal Info</h3>
       <div className="grid grid-cols-2 gap-4">
         <div className="hidden">
-         
           <FormInput
             name="template"
             label="CoverLetter Template  (ReadOnly)"
@@ -29,7 +32,15 @@ export default function UserInfoForm({
           />
         </div>
 
-        <FormPhotoInput name="userPhoto" />
+        <FormPhotoInput
+          name="userPhoto"
+          onPhotoUploaded={(url) => {
+            // This function receives the uploaded image URL.
+            // You update your parent form state here:
+            setCoverLetterData((prev) => ({ ...prev, userPhotoUrl: url }));
+          }}
+          initialUrl={coverletterData.userPhotoUrl}
+        />
         <FormInput name="firstName" label="First Name" />
         <FormInput name="lastName" label="Last Name" />
         <FormInput

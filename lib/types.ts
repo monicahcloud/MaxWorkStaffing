@@ -24,5 +24,8 @@ export interface CoverLetterFormProps {
   className?: string;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export type CoverLetterServerData = Prisma.CoverLetterGetPayload<{}>;
+export const coverLetterInclude = {} satisfies Prisma.CoverLetterInclude;
+
+export type CoverLetterServerData = Prisma.CoverLetterGetPayload<{
+  include: typeof coverLetterInclude;
+}>;

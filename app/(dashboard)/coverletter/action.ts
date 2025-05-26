@@ -9,12 +9,12 @@ import { nullsToEmptyStrings } from "@/utils/nullsToEmptyStrings";
 
 export async function saveCoverLetter(values: CoverLetterValues) {
   const { id } = values;
-  const cleanValues = nullsToEmptyStrings(values);
+  // const cleanValues = nullsToEmptyStrings(values);
   console.log("recieved values", values);
-  const { userPhoto, ...coverLetterValues } =
-    coverLetterSchema.parse(cleanValues);
+  const { userPhoto, ...coverLetterValues } = coverLetterSchema.parse(values);
   const { userId } = await auth();
-  console.log("createing coverLetter for userId", userId);
+  console.log("creating coverLetter for userId", userId);
+
   if (!userId) {
     throw new Error("User not authenticated");
   }
@@ -22,6 +22,7 @@ export async function saveCoverLetter(values: CoverLetterValues) {
   const existingCoverLetter = id
     ? await prisma.coverLetter.findUnique({ where: { id, userId } })
     : null;
+
   if (id && !existingCoverLetter) {
     throw new Error("CoverLetter not found");
   }

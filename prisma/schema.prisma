@@ -220,6 +220,7 @@ firstName       String?
   userEmail           String?
   userPhone           String?
   userAddress     String?
+  userPhotoUrl    String?
   website         String?
   linkedin        String? 
   gitHub          String?   

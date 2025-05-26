@@ -1,5 +1,4 @@
 "use client";
-
 import { useParams, useSearchParams } from "next/navigation";
 import { FormProvider, useForm } from "react-hook-form";
 import SectionTitle from "@/components/SectionTitle";
@@ -83,11 +82,11 @@ export default function CoverLetterBuilder() {
     };
   }, [coverLetterId]);
 
-  const cleanDefaults = nullsToEmptyStrings(coverletterData);
+  // const cleanDefaults = nullsToEmptyStrings(coverletterData);
   const form = useForm<CoverLetterValues>({
     resolver: zodResolver(coverLetterSchema),
-    defaultValues: cleanDefaults,
-    values: cleanDefaults,
+    defaultValues: coverletterData,
+    values: coverletterData,
   });
   const currentStep = searchParams.get("step") || steps[0].key;
   const stepIndex = steps.findIndex((step) => step.key === currentStep);

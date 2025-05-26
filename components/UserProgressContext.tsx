@@ -30,7 +30,7 @@ export const UserProgressProvider = ({
 
   const fetchProgress = async () => {
     try {
-      const res = await fetch("/api/user-progress");
+      const res = await fetch("/api/progress");
       const data = await res.json();
       setHasResume(data.hasResume);
       setHasCoverLetter(data.hasCoverLetter);

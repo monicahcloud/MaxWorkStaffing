@@ -212,18 +212,29 @@ export const feedbackSchema = z.object({
 });
 
 export const userInfoSchema = z.object({
+  // userPhoto: z
+  //   .union([z.instanceof(File), z.string(), z.null(), z.undefined()])
+  //   .refine(
+  //     (file) =>
+  //       !file ||
+  //       typeof file === "string" ||
+  //       (file instanceof File && file.type.startsWith("image/")),
+  //     "Must be an image file"
+  //   )
+  //   .refine(
+  //     (file) =>
+  //       !file || typeof file === "string" || file.size <= 1024 * 1024 * 4,
+  //     "File must be less than 4MB"
+  //   ),
   userPhoto: z
-    .union([z.instanceof(File), z.string(), z.null(), z.undefined()])
+    .custom<File | undefined>()
     .refine(
       (file) =>
-        !file ||
-        typeof file === "string" ||
-        (file instanceof File && file.type.startsWith("image/")),
+        !file || (file instanceof File && file.type.startsWith("image/")),
       "Must be an image file"
     )
     .refine(
-      (file) =>
-        !file || typeof file === "string" || file.size <= 1024 * 1024 * 4,
+      (file) => !file || file.size <= 1024 * 1024 * 4,
       "File must be less than 4MB"
     ),
   firstName: optionalString,
@@ -266,6 +277,7 @@ export const coverLetterSchema = z.object({
   themeColor: optionalString,
   borderStyle: optionalString,
   template: optionalString,
+  userPhotoUrl: z.string().url().optional(),
 });
 
 export type CoverLetterValues = Omit<
@@ -275,4 +287,5 @@ export type CoverLetterValues = Omit<
   id?: string;
   userPhoto?: File | string | null;
   signatureUrl?: string | null;
+  userPhotoUrl?: string | null;
 };

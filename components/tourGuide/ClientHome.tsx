@@ -15,7 +15,7 @@ function ClientHome() {
 
   return (
     <div className="bg-muted p-4 sm:p-6 md:p-8 mb-4 rounded flex flex-col sm:flex-col md:flex-row items-start md:items-center justify-between gap-6">
-      <div className="flex flex-col gap-4 w-full md:w-2/3">
+      <div className="flex flex-col gap-4 w-full md:w-2/4">
         <h1 className="text-2xl sm:text-3xl font-extrabold text-blue-900 capitalize">
           Hey, {username}!
         </h1>
@@ -26,8 +26,15 @@ function ClientHome() {
         </p>
       </div>
 
-      <div className="flex flex-col items-start sm:items-end gap-4 w-full md:w-auto">
+      <div className="flex flex-col items-start sm:items-center  mr-15 gap-4 w-full md:w-auto">
         <ResumeProgress completedSteps={completedSteps} />
+        <pre>
+          {JSON.stringify(
+            { hasResume, hasCoverLetter, hasJob, completedSteps },
+            null,
+            2
+          )}
+        </pre>
         <TakeTourButton />
       </div>
     </div>

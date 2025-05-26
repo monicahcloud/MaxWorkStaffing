@@ -4,7 +4,7 @@
 import { CheckCircle, Circle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const steps = ["Create Resume", "Cover Letter", "Job\nSearch"];
+const steps = ["Create Resume", "Cover Letter", "Job\nTracker"];
 
 interface ResumeProgressProps {
   completedSteps: number;
@@ -16,11 +16,10 @@ export default function ResumeProgress({
   const percentage = Math.round((completedSteps / steps.length) * 100);
 
   return (
-    <div className="w-full max-w-2xl mx-auto">
-      <div className="mx-auto justify-center items-center flex">
-        <h1 className="text-2xl font-semibold">Your Recommended Next Steps</h1>
-      </div>
-
+    <div className="flex flex-col justify-center text-center ">
+      <h1 className="text-2xl font-semibold text-center pb-4">
+        Your Recommended Next Steps
+      </h1>
       <div className="flex justify-between mb-2 text-sm text-gray-600">
         {steps.map((step, index) => (
           <div key={step} className="text-center flex-1">
@@ -39,14 +38,12 @@ export default function ResumeProgress({
           </div>
         ))}
       </div>
-
       <div className="relative h-3 bg-gray-200 rounded-full">
         <div
           className="absolute top-0 left-0 h-3 bg-rose-800 rounded-full transition-all duration-300"
           style={{ width: `${percentage}%` }}
         />
       </div>
-
       <p className="mt-2 text-sm text-center text-gray-700">
         Progress: {percentage}%
       </p>

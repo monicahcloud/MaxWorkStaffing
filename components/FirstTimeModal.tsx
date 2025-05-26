@@ -51,7 +51,7 @@ export default function FirstTimeModal({
     { icon: "📊", text: "Track your job application status" },
     { icon: "🎤", text: "Prep for upcoming interviews" },
     { icon: "✍️", text: "Create a custom cover letter in minutes" },
-    { icon: "🌐", text: "Claim your personalized URL" },
+    { icon: "🌐", text: "Search for jobs" },
   ];
 
   return (
