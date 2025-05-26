@@ -21,20 +21,10 @@ export default function useAutoSaveCoverLetter(
   coverletterData: CoverLetterValues
 ) {
   const searchParams = useSearchParams();
-  const [coverletterId, setCoverletterId] = useState<string | undefined>(
-    coverletterData.id
-  );
-
-  useEffect(() => {
-    if (coverletterData.id && coverletterData.id !== coverletterId) {
-      setCoverletterId(coverletterData.id);
-    }
-  }, [coverletterData.id, coverletterId]);
-
+  const [coverletterId, setCoverletterId] = useState(coverletterData.id);
   const debounced = useDebounce(coverletterData, 1500);
-
   // This lastSavedWithFile includes the userPhoto key for comparison
-  const [lastSavedWithFile, setLastSavedWithFile] = useState(coverletterData);
+  // const [lastSavedWithFile, setLastSavedWithFile] = useState(coverletterData);
   // This lastSaved omits userPhoto for safe cloning/comparison
   const [lastSaved, setLastSaved] = useState(structuredClone(coverletterData));
   const [isSaving, setIsSaving] = useState(false);
@@ -45,39 +35,43 @@ export default function useAutoSaveCoverLetter(
   }, [debounced]);
   console.log("Saving cover letter:", coverletterData);
   // Or wherever you call your save function
+  // useEffect(() => {
+  //   if (coverletterData.id && coverletterData.id !== coverletterId) {
+  //     setCoverletterId(coverletterData.id);
+  //   }
+  // }, [coverletterData.id, coverletterId]);
+
   useEffect(() => {
     async function save() {
       try {
         setIsSaving(true);
         setIsError(false);
-
         // Log debounced data before saving
         console.log("Saving cover letter. Debounced data:", debounced);
 
         // Omit file for save/clone
         const newData = structuredClone(debounced);
         console.log("newData (no userPhoto):", newData);
+
         // Only send userPhoto if it actually changed
-        const userPhotoChanged =
-          JSON.stringify(lastSavedWithFile.userPhoto, fileReplacer) !==
-          JSON.stringify(debounced.userPhoto, fileReplacer);
-        console.log("userPhotoChanged:", userPhotoChanged);
+        // const userPhotoChanged =
+        //   JSON.stringify(lastSavedWithFile.userPhoto, fileReplacer) !==
+        //   JSON.stringify(debounced.userPhoto, fileReplacer);
+        // console.log("userPhotoChanged:", userPhotoChanged);
         const updateCoverLetter = await saveCoverLetter({
-          ...debounced,
-          ...(userPhotoChanged ? {} : { userPhoto: undefined }),
+          // ...debounced,
+          ...newData,
+          ...(JSON.stringify(lastSaved.userPhoto, fileReplacer) ===
+            JSON.stringify(newData.userPhoto, fileReplacer) && {
+            userPhoto: undefined,
+          }),
+          // ...(userPhotoChanged ? {} : { userPhoto: undefined }),
           id: coverletterId,
         });
-        console.log(
-          "Received updateCoverLetter from server:",
-          updateCoverLetter
-        );
-
         setCoverletterId(updateCoverLetter.id);
         setLastSaved(newData);
-        setLastSavedWithFile(debounced);
 
-        const currentId = searchParams.get("coverletterId");
-        if (currentId !== updateCoverLetter.id) {
+        if (searchParams.get("coverletterId") !== updateCoverLetter.id) {
           const newSearchParams = new URLSearchParams(searchParams);
           newSearchParams.set("coverletterId", updateCoverLetter.id);
           window.history.replaceState(
@@ -117,20 +111,11 @@ export default function useAutoSaveCoverLetter(
       save();
     }
     // eslint-disable-next-line
-  }, [
-    debounced,
-    isSaving,
-    lastSaved,
-    lastSavedWithFile,
-    isError,
-    coverletterId,
-    searchParams,
-  ]);
+  }, [debounced, isSaving, lastSaved, isError, coverletterId, searchParams]);
 
   return {
     isSaving,
     hasUnsavedChanges:
-      JSON.stringify(coverletterData, fileReplacer) !==
-      JSON.stringify(lastSaved, fileReplacer),
+      JSON.stringify(coverletterData) !== JSON.stringify(lastSaved),
   };
 }
