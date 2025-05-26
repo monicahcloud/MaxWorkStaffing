@@ -57,7 +57,7 @@ export default function CoverLetterItem({ coverletter }: CoverLetterProps) {
         </div>
 
         <Link
-          href={`/coverletterbuilder/editor/${coverletter.id}`}
+          href={`/coverletterbuilder/editor?${coverletter.id}`}
           className="relative inline-block w-full">
           {" "}
           <CoverLetterPreview

@@ -34,6 +34,13 @@ export default function SignatureForm({
     form.setValue("signatureColor", penColor);
   }, [penColor]);
 
+  useEffect(() => {
+    return () => {
+      if (previewUrl?.startsWith("blob:")) {
+        URL.revokeObjectURL(previewUrl);
+      }
+    };
+  }, [previewUrl]);
   // Draw signature and save as data URL
   const handleSaveSignature = () => {
     const pad = sigPadRef.current;

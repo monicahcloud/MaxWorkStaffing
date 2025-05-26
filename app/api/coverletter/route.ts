@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import prisma from "@/lib/prisma";
 import { coverLetterSchema } from "@/lib/validation";
+import { ZodError } from "zod";
 
 export async function POST(req: NextRequest) {
   try {
@@ -35,11 +36,14 @@ export async function POST(req: NextRequest) {
     });
 
     return NextResponse.json(created);
-  } catch (err: any) {
+  } catch (err) {
+    if (err instanceof ZodError) {
+      return NextResponse.json(
+        { error: "Validation error", details: err.errors },
+        { status: 400 }
+      );
+    }
     console.error("❌ API Error:", err);
-    return NextResponse.json(
-      { error: err.message || "Server error" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }

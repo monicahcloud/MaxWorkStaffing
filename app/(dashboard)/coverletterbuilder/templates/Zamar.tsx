@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useMemo, useRef } from "react";
 import useDimensions from "@/hooks/useDimensions";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
@@ -8,6 +8,7 @@ import { Mail, MapPin, Phone } from "lucide-react";
 import fallbackImage from "../../../../assets/jobseeker.jpg";
 import { CoverLetterValues } from "@/lib/validation";
 import { BorderStyles } from "../../editor/BorderStyleButton";
+import React from "react";
 
 interface Props {
   coverletterData: CoverLetterValues;
@@ -43,15 +44,15 @@ export default function Zamar({
         ref={contentRef}
         id="coverletterPreviewContent">
         {/* Left Bar */}
-        <LeftBar themeColor={themeColor} />
+        <MemoizedLeftBar themeColor={themeColor} />
 
         {/* Main Content */}
         <div className="bg-white flex flex-col h-full relative">
-          <UserPhotoOverlap coverletterData={coverletterData} />
-          <HeaderSection coverletterData={coverletterData} />
-          <BodySection coverletterData={coverletterData} />
-          <SignatureSection coverletterData={coverletterData} />
-          <ContactSection coverletterData={coverletterData} />
+          <MemoizedUserPhotoOverlap coverletterData={coverletterData} />
+          <MemoizedHeaderSection coverletterData={coverletterData} />
+          <MemoizedBodySection coverletterData={coverletterData} />
+          <MemoizedSignatureSection coverletterData={coverletterData} />
+          <MemoizedContactSection coverletterData={coverletterData} />
         </div>
       </div>
     </div>
@@ -68,6 +69,7 @@ function LeftBar({ themeColor }: { themeColor: string }) {
     />
   );
 }
+const MemoizedLeftBar = React.memo(LeftBar);
 
 function UserPhotoOverlap({
   coverletterData,
@@ -77,8 +79,10 @@ function UserPhotoOverlap({
   const { userPhotoUrl, borderStyle, themeColor = "#FFD600" } = coverletterData;
   const userPhotoSrc =
     getUserPhotoSrc(coverletterData.userPhotoUrl) || fallbackImage?.src;
-  const borderRadius = borderStyle === BorderStyles.SQUARE ? "0px" : "9999px";
-
+  const borderRadius = useMemo(
+    () => (borderStyle === BorderStyles.SQUARE ? "0px" : "9999px"),
+    [borderStyle]
+  );
   return (
     <div
       className="absolute z-20"
@@ -113,6 +117,7 @@ function UserPhotoOverlap({
     </div>
   );
 }
+const MemoizedUserPhotoOverlap = React.memo(UserPhotoOverlap);
 
 function HeaderSection({
   coverletterData,
@@ -133,6 +138,7 @@ function HeaderSection({
     </div>
   );
 }
+const MemoizedHeaderSection = React.memo(HeaderSection);
 
 function BodySection({
   coverletterData,
@@ -157,6 +163,7 @@ function BodySection({
     </div>
   );
 }
+const MemoizedBodySection = React.memo(BodySection);
 
 function SignatureSection({
   coverletterData,
@@ -185,6 +192,7 @@ function SignatureSection({
     </div>
   );
 }
+const MemoizedSignatureSection = React.memo(SignatureSection);
 
 function ContactSection({
   coverletterData,
@@ -227,6 +235,7 @@ function ContactSection({
     </div>
   );
 }
+const MemoizedContactSection = React.memo(ContactSection);
 
 // Helper function
 function getUserPhotoSrc(userPhotoUrl: unknown): string | undefined {
