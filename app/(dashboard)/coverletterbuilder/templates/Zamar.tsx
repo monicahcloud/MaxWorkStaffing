@@ -141,7 +141,7 @@ function BodySection({
 }) {
   const { recipientName, body } = coverletterData;
   return (
-    <div className="pt-15 px-10 mr-10 pb-6 space-y-6 text-xl leading-relaxed min-h-[400px]">
+    <div className="pt-25 px-10 mr-10 pb-6 space-y-6 text-xl leading-relaxed min-h-[400px]">
       <p>Dear {recipientName || "Mr. Gallego"},</p>
       <p>
         {body ||
@@ -179,9 +179,9 @@ function SignatureSection({
           className="object-contain inline-block"
         />
       ) : (
-        <p className="italic text-xl">{displayName}</p>
+        <p className="italic text-2xl">{displayName}</p>
       )}
-      <p className="font-bold">{displayName}</p>
+      {/* <p className="font-bold">{displayName}</p> */}
     </div>
   );
 }

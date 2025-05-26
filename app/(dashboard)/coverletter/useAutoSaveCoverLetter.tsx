@@ -45,7 +45,8 @@ export default function useAutoSaveCoverLetter(
   useEffect(() => {
     setIsError(false);
   }, [debounced]);
-
+  console.log("Saving cover letter:", coverletterData);
+  // Or wherever you call your save function
   useEffect(() => {
     async function save() {
       try {
