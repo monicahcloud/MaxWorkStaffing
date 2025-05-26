@@ -77,8 +77,8 @@ export async function deleteCoverLetter(id: string) {
     throw new Error("CoverLetter not found");
   }
 
-  if (coverLetter.photoUrl) {
-    await del(coverLetter.photoUrl);
+  if (coverLetter.userPhotoUrl) {
+    await del(coverLetter.userPhotoUrl);
   }
 
   await prisma.coverLetter.delete({
