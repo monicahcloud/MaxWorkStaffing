@@ -7,6 +7,7 @@ import CreateLetterButton from "./CreateletterButton";
 import { auth } from "@clerk/nextjs/server";
 import prisma from "@/lib/prisma";
 import CoverLetterItem from "./CoverLetterItem";
+import { coverLetterInclude } from "@/lib/types";
 
 export const metadata: Metadata = {
   title: "Cover Letters",
@@ -27,6 +28,7 @@ async function CoverLetterRoute() {
       orderBy: {
         updatedAt: "desc",
       },
+      include: coverLetterInclude,
     }),
     prisma.resume.count({
       where: {
@@ -38,7 +40,6 @@ async function CoverLetterRoute() {
     <main>
       <SectionTitle text="my Cover Letters" subtext={`Total: ${totalCount}`} />
       <div className="p-10 md:px-20 lg:px-32">
-
         <div className="w-full flex justify-center">
           <div className="flex items-center gap-4">
             <CreateLetterButton />

@@ -49,13 +49,15 @@ export default function CoverLetterBuilder() {
   const params = useParams();
   const coverLetterId = params?.id as string | undefined;
   const searchParams = useSearchParams();
-  const templateId = searchParams.get("template") || "Shabach";
+  // const templateId = searchParams.get("template") || "Shabach";
   const [showSmResumePreview, setShowSmResumePreview] = useState(false);
   const [coverletterData, setCoverLetterData] = useState<CoverLetterValues>({
-    template: templateId,
+    template: searchParams.get("template") || "Shabach",
   });
+  const [templateId, setTemplateId] = useState(
+    searchParams.get("template") || "Shabach"
+  );
   const [loading, setLoading] = useState(true);
-
   // Fetch and set data if editing
   useEffect(() => {
     let ignore = false;
@@ -65,14 +67,19 @@ export default function CoverLetterBuilder() {
         try {
           const data = await getcoverLetterById(coverLetterId);
           if (!ignore && data) {
-            setCoverLetterData(nullsToEmptyStrings(data) as CoverLetterValues);
+            const normalized = nullsToEmptyStrings(data) as CoverLetterValues;
+            setCoverLetterData(normalized);
+            // Update templateId from fetched data!
+            if (normalized.template) setTemplateId(normalized.template);
           }
         } catch (error) {}
         setLoading(false);
       } else {
+        const urlTemplate = searchParams.get("template") || "Shabach";
         setCoverLetterData({
-          template: templateId,
+          template: urlTemplate,
         });
+        setTemplateId(urlTemplate);
         setLoading(false);
       }
     }
@@ -80,7 +87,7 @@ export default function CoverLetterBuilder() {
     return () => {
       ignore = true;
     };
-  }, [coverLetterId]);
+  }, [coverLetterId, searchParams]);
 
   // const cleanDefaults = nullsToEmptyStrings(coverletterData);
   const form = useForm<CoverLetterValues>({

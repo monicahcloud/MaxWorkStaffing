@@ -48,7 +48,7 @@ export default function CoverLetterItem({ coverletter }: CoverLetterProps) {
       <div className="space-y-3 text-left">
         <div>
           <p className="font-semibold line-clamp-1 cursor-default">
-            {coverletter.companyName || "Company Name"}
+            {coverletter.companyName || "Untitled Cover Letter"}
           </p>
           <p className="text-xs text-muted-foreground">
             {wasUpdated ? "Updated" : "Created"} on{" "}
@@ -57,7 +57,7 @@ export default function CoverLetterItem({ coverletter }: CoverLetterProps) {
         </div>
 
         <Link
-          href={`/coverletterbuilder/editor?${coverletter.id}`}
+          href={`/coverletterbuilder/editor?coverLetterId=${coverletter.id}`}
           className="relative inline-block w-full">
           {" "}
           <CoverLetterPreview
@@ -88,7 +88,7 @@ function MoreMenu({ coverletter, onPrintClick }: MoreMenuProps) {
   const router = useRouter();
 
   function handleEdit() {
-    router.push(`/coverletterbuilder/editor/${coverletter.id}`);
+    router.push(`/coverletterbuilder/editor?coverLetterId=${coverletter.id}`);
   }
   function handleView() {
     router.push(`/coverletter/preview/${coverletter.id}`);
@@ -185,9 +185,9 @@ function DeleteConfirmationDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Delete resume?</DialogTitle>
+          <DialogTitle>Delete Coverletter?</DialogTitle>
           <DialogDescription>
-            This will permanently delete this resume. This action cannot be
+            This will permanently delete this coverletter. This action cannot be
             undone.
           </DialogDescription>
         </DialogHeader>

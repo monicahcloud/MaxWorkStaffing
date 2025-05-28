@@ -9,10 +9,8 @@ import { fileReplacer } from "@/lib/utils";
 
 export default function useAutoSaveResume(resumeData: ResumeValues) {
   const searchParams = useSearchParams();
-
   const [resumeId, setResumeId] = useState(resumeData.id);
   const debounceResumeData = useDebounce(resumeData, 1500);
-
   const [lastSaveData, setLastSavedData] = useState(
     structuredClone(resumeData)
   );

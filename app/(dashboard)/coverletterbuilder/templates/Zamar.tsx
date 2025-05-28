@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import useDimensions from "@/hooks/useDimensions";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
@@ -29,7 +29,7 @@ export default function Zamar({
     <div
       ref={containerRef}
       className={cn(
-        "relative aspect-[210/297] bg-white text-black h-fit w-full overflow-hidden",
+        " aspect-[210/297] bg-white text-black h-fit w-full ",
         className
       )}>
       <div
@@ -38,13 +38,12 @@ export default function Zamar({
         )}
         style={{
           width: "794px",
-          minHeight: "1123px",
-          transform: width ? `scale(${width / 794})` : undefined,
+          transform: `scale(${width / 794})`,
         }}
         ref={contentRef}
         id="coverletterPreviewContent">
         {/* Left Bar */}
-        <MemoizedLeftBar themeColor={themeColor} />
+        <MemoizedLeftBar coverletterData={coverletterData} />
 
         {/* Main Content */}
         <div className="bg-white flex flex-col h-full relative">
@@ -59,10 +58,11 @@ export default function Zamar({
   );
 }
 
-function LeftBar({ themeColor }: { themeColor: string }) {
+function LeftBar({ coverletterData }: { coverletterData: CoverLetterValues }) {
+  const { themeColor } = coverletterData;
   return (
     <div
-      className="h-full w-full"
+      className="h-full w-full bg-[#ffd600]"
       style={{
         backgroundColor: themeColor,
       }}
@@ -76,13 +76,19 @@ function UserPhotoOverlap({
 }: {
   coverletterData: CoverLetterValues;
 }) {
-  const { userPhotoUrl, borderStyle, themeColor = "#FFD600" } = coverletterData;
-  const userPhotoSrc =
-    getUserPhotoSrc(coverletterData.userPhotoUrl) || fallbackImage?.src;
-  const borderRadius = useMemo(
-    () => (borderStyle === BorderStyles.SQUARE ? "0px" : "9999px"),
-    [borderStyle]
+  const { userPhoto, themeColor, borderStyle } = coverletterData;
+
+  const [photoSrc, setPhotoSrc] = useState(
+    userPhoto instanceof File ? "" : userPhoto
   );
+
+  useEffect(() => {
+    const objectUrl =
+      userPhoto instanceof File ? URL.createObjectURL(userPhoto) : "";
+    if (objectUrl) setPhotoSrc(objectUrl);
+    if (userPhoto === null) setPhotoSrc("");
+    return () => URL.revokeObjectURL(objectUrl);
+  }, [userPhoto]);
   return (
     <div
       className="absolute z-20"
@@ -96,20 +102,26 @@ function UserPhotoOverlap({
       <div
         className="w-[200px] h-[200px] flex items-center justify-center overflow-hidden"
         style={{
-          borderWidth: "4px",
-          borderStyle: borderStyle,
-          borderColor: themeColor,
-          borderRadius: borderRadius,
-          background: "#fff",
+          borderRadius:
+            borderStyle === BorderStyles.SQUARE
+              ? "0px"
+              : borderStyle === BorderStyles.CIRCLE
+              ? "9999px"
+              : "10%",
         }}>
         <Image
-          src={userPhotoSrc}
+          src={photoSrc || fallbackImage}
           alt="User Photo"
           width={200}
           height={200}
           className="object-cover w-full h-full"
           style={{
-            borderRadius: borderRadius,
+            borderRadius:
+              borderStyle === BorderStyles.SQUARE
+                ? "0px"
+                : borderStyle === BorderStyles.CIRCLE
+                ? "9999px"
+                : "10%",
           }}
           priority
         />
@@ -238,9 +250,9 @@ function ContactSection({
 const MemoizedContactSection = React.memo(ContactSection);
 
 // Helper function
-function getUserPhotoSrc(userPhotoUrl: unknown): string | undefined {
-  if (typeof userPhotoUrl === "string" && userPhotoUrl.trim() !== "") {
-    return userPhotoUrl;
-  }
-  return undefined;
-}
+// function getUserPhotoSrc(userPhotoUrl: unknown): string | undefined {
+//   if (typeof userPhotoUrl === "string" && userPhotoUrl.trim() !== "") {
+//     return userPhotoUrl;
+//   }
+//   return undefined;
+// }

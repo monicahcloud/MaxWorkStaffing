@@ -4,33 +4,29 @@ import React, { useRef, useState, useEffect } from "react";
 import SignaturePad from "react-signature-canvas";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useFormContext } from "react-hook-form";
+import { UseFormReturn } from "react-hook-form";
 import Image from "next/image";
+import { CoverLetterFormProps } from "@/lib/types";
 
 export default function SignatureForm({
-  coverletterData,
+  form,
+  coverLetterData,
   setCoverLetterData,
-}: {
-  coverletterData: any;
-  setCoverLetterData: (data: any) => void;
-}) {
-  const form = useFormContext();
+}: CoverLetterFormProps) {
   const sigPadRef = useRef<SignaturePad>(null);
   const [previewUrl, setPreviewUrl] = useState<string | undefined>(
-    coverletterData.signatureUrl
+    coverLetterData.signatureUrl
   );
   const [penColor, setPenColor] = useState<string>(
-    coverletterData.signatureColor || "#000000"
+    coverLetterData.signatureColor || "#000000"
   );
 
-  // Sync previewUrl with signatureUrl prop
   useEffect(() => {
-    setPreviewUrl(coverletterData.signatureUrl);
-  }, [coverletterData.signatureUrl]);
+    setPreviewUrl(coverLetterData.signatureUrl);
+  }, [coverLetterData.signatureUrl]);
 
-  // Save pen color to cover letter data
   useEffect(() => {
-    setCoverLetterData({ ...coverletterData, signatureColor: penColor });
+    setCoverLetterData({ ...coverLetterData, signatureColor: penColor });
     form.setValue("signatureColor", penColor);
   }, [penColor]);
 
@@ -41,25 +37,24 @@ export default function SignatureForm({
       }
     };
   }, [previewUrl]);
-  // Draw signature and save as data URL
+
   const handleSaveSignature = () => {
     const pad = sigPadRef.current;
     if (pad && !pad.isEmpty()) {
       const url = pad.getTrimmedCanvas().toDataURL("image/png");
       setPreviewUrl(url);
       form.setValue("signatureUrl", url);
-      setCoverLetterData({ ...coverletterData, signatureUrl: url });
+      setCoverLetterData({ ...coverLetterData, signatureUrl: url });
     }
   };
 
-  // Upload signature image
   const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       const url = URL.createObjectURL(file);
       setPreviewUrl(url);
       form.setValue("signatureUrl", url);
-      setCoverLetterData({ ...coverletterData, signatureUrl: url });
+      setCoverLetterData({ ...coverLetterData, signatureUrl: url });
     }
   };
 

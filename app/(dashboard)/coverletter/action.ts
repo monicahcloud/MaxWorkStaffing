@@ -8,8 +8,7 @@ import path from "path";
 
 export async function saveCoverLetter(values: CoverLetterValues) {
   const { id } = values;
-  // const cleanValues = nullsToEmptyStrings(values);
-  console.log("recieved values", values);
+  console.log("saveCoverLetter recieved values", values);
   const { userPhoto, ...coverLetterValues } = coverLetterSchema.parse(values);
   const { userId } = await auth();
   console.log("creating coverLetter for userId", userId);
@@ -44,8 +43,7 @@ export async function saveCoverLetter(values: CoverLetterValues) {
     }
     newPhotoUrl = null;
   } else {
-    // If not updating or deleting, preserve the old url
-    newPhotoUrl = existingCoverLetter?.userPhotoUrl;
+    newPhotoUrl = null;
   }
 
   if (id) {

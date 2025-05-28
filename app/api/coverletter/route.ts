@@ -29,9 +29,7 @@ export async function POST(req: NextRequest) {
       data: {
         ...parsed,
         clerkId,
-        user: {
-          connect: { clerkId },
-        },
+        userId: clerkId,
       },
     });
 

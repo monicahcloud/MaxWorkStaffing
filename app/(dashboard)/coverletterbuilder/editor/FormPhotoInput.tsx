@@ -84,16 +84,7 @@ export function FormPhotoInput({
               Remove
             </Button>
           </div>
-          {preview && (
-            // Use your Next.js or standard <img> here
-            <img
-              src={preview}
-              alt="Preview"
-              width={64}
-              height={64}
-              className="mt-2 h-16 w-16 rounded-full object-cover"
-            />
-          )}
+
           <FormMessage />
         </FormItem>
       )}

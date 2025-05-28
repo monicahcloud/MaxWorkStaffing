@@ -16,6 +16,7 @@ interface CoverLetterPreviewProps {
 // Helper to get a safe photo src
 function getUserPhotoSrc(userPhotoUrl: unknown): string | undefined {
   if (typeof userPhotoUrl === "string" && userPhotoUrl.trim() !== "") {
+    console.log("userPhoto from getUserPhotoSrc", userPhotoUrl);
     return userPhotoUrl;
   }
   return undefined;
