@@ -19,32 +19,28 @@ export function TodahTemplate({
 }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { width } = useDimensions(containerRef as React.RefObject<HTMLElement>);
-  const themeColor = coverletterData.themeColor || "#fbd3dc";
 
   return (
     <div
+      ref={containerRef}
       className={cn(
-        "relative aspect-[210/297] bg-white text-black h-fit w-full overflow-hidden",
+        " aspect-[210/297] bg-white text-black h-fit w-full",
         className
-      )}
-      ref={containerRef}>
-      <TopWave themeColor={themeColor} />
+      )}>
       <div
-        className={cn(
-          "relative space-y-6 p-6 origin-top-left z-10 font-lora",
-          !width && "invisible"
-        )}
+        className={cn(" space-y-6 p-6 origin-top-left  z-10  font-lora")}
         style={{
           width: "794px",
           transform: `scale(${width / 794})`,
         }}
         ref={contentRef}
         id="coverletterPreviewContent">
+        <TopWave coverletterData={coverletterData} />
         <TodahHeaderSection coverletterData={coverletterData} />
         <TodahBodySection coverletterData={coverletterData} />
         <TodahSignatureSection coverletterData={coverletterData} />
+        <BottomWave coverletterData={coverletterData} />
       </div>
-      <BottomWave themeColor={themeColor} />
     </div>
   );
 }
@@ -97,13 +93,7 @@ function TodahBodySection({
         <p className="text-xl">
           <strong>Dear {recipientName || "Hiring Manager"},</strong>
         </p>
-        <div
-          dangerouslySetInnerHTML={{
-            __html: body?.includes("<p>")
-              ? body
-              : `<p>${body?.replace(/\n\n/g, "</p>lor<p>").trim()}</p>`,
-          }}
-        />
+        <div className="whitespace-pre-line text-md">{body}</div>
       </div>
     </div>
   );
@@ -141,11 +131,15 @@ function TodahSignatureSection({
 }
 
 // --- Top Wave ---
-function TopWave({ themeColor }: { themeColor: string }) {
+function TopWave({ coverletterData }: { coverletterData: CoverLetterValues }) {
+  const { themeColor } = coverletterData;
   return (
     <div className="absolute top-0 left-0 w-full pointer-events-none z-0">
       <svg
         className="w-full h-16"
+        style={{
+          backgroundColor: themeColor,
+        }}
         viewBox="0 0 1440 320"
         preserveAspectRatio="none">
         <path
@@ -158,7 +152,12 @@ function TopWave({ themeColor }: { themeColor: string }) {
 }
 
 // --- Bottom Wave ---
-function BottomWave({ themeColor }: { themeColor: string }) {
+function BottomWave({
+  coverletterData,
+}: {
+  coverletterData: CoverLetterValues;
+}) {
+  const { themeColor } = coverletterData;
   return (
     <div className="absolute bottom-0 left-0 w-full pointer-events-none z-0 rotate-180">
       <svg

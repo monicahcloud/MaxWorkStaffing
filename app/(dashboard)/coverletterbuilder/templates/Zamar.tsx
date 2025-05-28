@@ -63,7 +63,7 @@ function LeftBar({ coverletterData }: { coverletterData: CoverLetterValues }) {
     <div
       className="h-full w-full bg-[#ffd600]"
       style={{
-        backgroundColor: themeColor,
+        backgroundColor: themeColor || "#ffd600",
       }}
     />
   );
@@ -248,10 +248,3 @@ function ContactSection({
 }
 const MemoizedContactSection = React.memo(ContactSection);
 
-// Helper function
-// function getUserPhotoSrc(userPhotoUrl: unknown): string | undefined {
-//   if (typeof userPhotoUrl === "string" && userPhotoUrl.trim() !== "") {
-//     return userPhotoUrl;
-//   }
-//   return undefined;
-// }
