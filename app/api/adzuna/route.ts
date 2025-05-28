@@ -14,12 +14,13 @@ export async function GET(req: NextRequest) {
 
   const { searchParams } = new URL(req.url);
   const query = searchParams.get("q") || "developer";
-  const location = searchParams.get("location") || "California";
-  console.log("Location:", location);
+  const state = searchParams.get("state") || "";
+  const location1 = state ? "&location1=" + state : "";
+  const city = searchParams.get("city") || "";
 
   const apiUrl = `https://api.adzuna.com/v1/api/jobs/us/search/1?app_id=${appId}&app_key=${appKey}&results_per_page=10&what=${encodeURIComponent(
     query
-  )}&where=${encodeURIComponent(location)}&content-type=application/json`;
+  )}&location0=us${location1}&content-type=application/json`;
 
   try {
     const res = await fetch(apiUrl);

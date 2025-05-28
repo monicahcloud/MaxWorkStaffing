@@ -18,7 +18,7 @@ type Job = {
   id: string;
   title: string;
   company: { display_name: string };
-  location: {
+  state: {
     display_name: string;
     area: string[]; // Added area property to match the structure expected in AdzunaJobList
   };
@@ -30,14 +30,12 @@ export default function JobSearchWrapper() {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>(""); // User input for job title
-  const [location, setLocation] = useState<string>(""); // User input for location
+  const [state, setState] = useState<string>(""); // User input for state
 
   const fetchJobs = async () => {
     setLoading(true);
     try {
-      const res = await fetch(
-        `/api/adzuna?q=${searchQuery}&location=${location}`
-      );
+      const res = await fetch(`/api/adzuna?q=${searchQuery}&state=${state}`);
       const data = await res.json();
       setJobs(data);
     } catch (err) {
@@ -53,7 +51,7 @@ export default function JobSearchWrapper() {
     const fetchDefaultJobs = async () => {
       setLoading(true);
       try {
-        const res = await fetch(`/api/adzuna?q=developer&location=California`); // default query
+        const res = await fetch(`/api/adzuna?q=developer&state=California`); // default query
         const data = await res.json();
         setJobs(data);
       } catch (err) {
@@ -89,7 +87,7 @@ export default function JobSearchWrapper() {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)} // Update job title query
         />
-        <Select onValueChange={(value) => setLocation(value)}>
+        <Select onValueChange={(value) => setState(value)}>
           <SelectTrigger className="md:flex-1">
             <SelectValue placeholder="Select State" />
           </SelectTrigger>
