@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import useDimensions from "@/hooks/useDimensions";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
@@ -23,7 +23,6 @@ export default function Zamar({
 }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { width } = useDimensions(containerRef as React.RefObject<HTMLElement>);
-  const themeColor = coverletterData.themeColor || "#FFD600";
 
   return (
     <div
@@ -76,7 +75,7 @@ function UserPhotoOverlap({
 }: {
   coverletterData: CoverLetterValues;
 }) {
-  const { userPhoto, themeColor, borderStyle } = coverletterData;
+  const { userPhoto, borderStyle } = coverletterData;
 
   const [photoSrc, setPhotoSrc] = useState(
     userPhoto instanceof File ? "" : userPhoto
