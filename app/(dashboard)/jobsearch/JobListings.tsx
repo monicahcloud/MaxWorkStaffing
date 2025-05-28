@@ -59,7 +59,7 @@ export default function JobListingsView({ filters, onBack }: Props) {
   }, [filters]);
 
   return (
-    <div className="p-6 space-y-6 max-w-7xl mx-auto">
+    <div className="p-6 space-y-6 max-w-7xl ">
       <SectionTitle text="Detailed Job Search" subtext="" />
       <div className="flex justify-between items-center">
         <Button variant="secondary" className="text-black" onClick={onBack}>
@@ -71,7 +71,7 @@ export default function JobListingsView({ filters, onBack }: Props) {
       </div>
 
       {/* Search Filters */}
-      {/* <div className="flex flex-wrap gap-4">
+      <div className="flex flex-wrap gap-4">
         <Input placeholder="e.g. developer" className="flex-1 min-w-[200px]" />
         <Input placeholder="Dallas, GA" className="flex-1 min-w-[200px]" />
         <Select>
@@ -110,7 +110,7 @@ export default function JobListingsView({ filters, onBack }: Props) {
         <Button className="bg-red-700 hover:bg-red-800 text-white">
           Search
         </Button>
-      </div> */}
+      </div>
 
       {/* Job Listings */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
