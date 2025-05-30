@@ -50,12 +50,12 @@ const links: DashboardLinks[] = [
   //   href: "/profile",
   //   icon: <Globe />,
   // },
-  {
-    id: nanoid(),
-    label: "Job Search",
-    href: "/jobsearch",
-    icon: <AppWindow />,
-  },
+  // {
+  //   id: nanoid(),
+  //   label: "Job Search",
+  //   href: "/jobsearch",
+  //   icon: <AppWindow />,
+  // },
   {
     id: nanoid(),
     label: "Job Tracker",
