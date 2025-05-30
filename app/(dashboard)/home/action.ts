@@ -1,7 +1,6 @@
 // checkUserProgress.ts
 import { auth } from "@clerk/nextjs/server";
 import prisma from "@/lib/prisma";
-
 import { generateText } from "ai";
 import { openai } from "@ai-sdk/openai";
 import { nanoid } from "nanoid";
@@ -23,6 +22,7 @@ export async function checkUserProgress() {
     hasJob: !!jobs,
   };
 }
+
 export async function generateBlogPostsIfNeeded() {
   const existingPosts = await prisma.blogPost.count();
   console.log("Existing blog post count:", existingPosts);
@@ -37,12 +37,12 @@ Generate 12 unique blog posts for jobseekers in JSON format with the following f
 - id (uuid)
 - title (unique, no duplicates)
 - description (2–3 sentences, unique)
-- imageUrl (choose from "/images/blog/office.jpg", "/images/blog/handshake.jpg", "/images/blog/transition.jpg")
-- tag (one of "Career", "Job Search", "Advice", "Remote Work", "Transitions".)
-- content (a full detailed article formatted as an HTML string with multiple paragraphs, headings, and lists if appropriate)
+- imageUrl (choose from "/blog/office.jpg", "/blog/handshake.jpg", "/blog/transition.jpg")
+- tag (one of "Career", "Job Search", "Advice", "Remote Work", "Transitions")
+- content (IGNORE for now — we'll generate detailed content separately)
 
-Make sure the posts are all unique in title, description, and content. Respond with JSON only.
-Make sure there at least 3 blogposts for each tag.
+Make sure the posts are all unique in title, description, and imageUrl. Provide valid JSON only.
+Ensure at least 3 posts for each tag.
 `,
   });
 
@@ -68,18 +68,31 @@ Make sure there at least 3 blogposts for each tag.
       continue;
     }
 
+    // Now generate full HTML article content per post.title
+    const { text: contentHTML } = await generateText({
+      model: openai("gpt-4"),
+      prompt: `
+Write a detailed blog article in HTML format for the title: "${post.title}". 
+Audience: job seekers. 
+Include headings, subheadings, multiple paragraphs, and lists if helpful.
+Do not include <html> or <body> tags. Only provide the inner HTML content.
+`,
+    });
+
     await prisma.blogPost.create({
       data: {
         id: post.id || nanoid(),
         title: post.title,
         description: post.description,
         imageUrl: post.imageUrl,
-        content: `<p>${post.description}</p><p>Generated detailed content here...</p>`,
+        content: contentHTML,
         slug,
         tag: post.tag ?? null,
       },
     });
+
+    console.log(`Created blog post: ${post.title}`);
   }
 
-  console.log("Generated and saved blog posts:", blogPosts);
+  console.log("✅ Blog post generation complete");
 }

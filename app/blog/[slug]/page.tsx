@@ -1,8 +1,28 @@
 import { notFound } from "next/navigation";
 import prisma from "@/lib/prisma";
+import Image from "next/image";
+import { cn } from "@/lib/utils"; // optional, if using ShadCN's `cn` util
+import { Separator } from "@/components/ui/separator";
 
 interface BlogPostPageProps {
   params: Promise<{ slug: string }>;
+}
+
+function formatContentWithSeparators(content: string) {
+  // Add <hr /> after each closing </p> tag
+  let formatted = content.replace(
+    /<\/p>/g,
+    "</p><hr class='my-6 border-muted/30' />"
+  );
+
+  // Optional: bold <strong> or <h3> tags inside paragraphs
+  // If your headings are manually wrapped in <strong> or <h3>, style them
+  formatted = formatted.replace(
+    /<strong>(.*?)<\/strong>/g,
+    "<strong class='font-semibold text-xl text-foreground'>$1</strong>"
+  );
+
+  return formatted;
 }
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
@@ -13,12 +33,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   });
 
   if (!post) return notFound();
+  if (!post.content) return <p>No content available for this post.</p>;
 
-  if (!post.content) {
-    return <p>No content available for this post.</p>;
-  }
-
-  // Format the date nicely
   const publishedDate = post.createdAt
     ? new Date(post.createdAt).toLocaleDateString("en-US", {
         year: "numeric",
@@ -28,34 +44,46 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     : null;
 
   return (
-    <article className="max-w-3xl mx-auto p-6 bg-white rounded-md shadow-md">
+    <article className="max-w-7xl mx-auto p-6 mt-10 bg-background rounded-2xl shadow-lg border border-muted/30 animate-fade-in">
       <header className="mb-8">
-        <h1 className="text-4xl font-extrabold mb-2">{post.title}</h1>
-        {post.tag && (
-          <span className="inline-block bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full mb-2">
-            {post.tag}
-          </span>
-        )}
-        {publishedDate && (
-          <time
-            dateTime={post.createdAt?.toISOString()}
-            className="block text-gray-500 text-sm">
-            Published on {publishedDate}
-          </time>
-        )}
+        <h1 className="text-4xl font-extrabold tracking-tight leading-tight mb-2 text-foreground">
+          {post.title}
+        </h1>
+
+        <div className="flex items-center gap-3 flex-wrap text-sm text-muted-foreground">
+          {post.tag && (
+            <span className="bg-muted px-3 py-1 rounded-full text-xs font-medium uppercase tracking-wide">
+              {post.tag}
+            </span>
+          )}
+          {publishedDate && (
+            <time dateTime={post.createdAt?.toISOString()}>
+              Published on {publishedDate}
+            </time>
+          )}
+        </div>
+
         {post.imageUrl && (
-          <img
-            src={post.imageUrl}
-            alt={post.title}
-            className="w-full h-auto mt-4 rounded-md object-cover max-h-96"
-            loading="lazy"
-          />
+          <div className="mt-6 overflow-hidden rounded-xl border border-muted/30">
+            <Image
+              src={post.imageUrl}
+              alt={post.title || "Blog post image"}
+              className="w-full object-cover max-h-[450px] transition-all hover:scale-[1.02]"
+              width={1280}
+              height={720}
+              loading="lazy"
+            />
+          </div>
         )}
       </header>
 
+      <Separator className="my-8" />
+
       <section
-        className="prose prose-lg max-w-none"
-        dangerouslySetInnerHTML={{ __html: post.content }}
+        className="prose prose-lg prose-slate dark:prose-invert text-xl p-5 max-w-none leading-relaxed"
+        dangerouslySetInnerHTML={{
+          __html: formatContentWithSeparators(post.content),
+        }}
       />
     </article>
   );
