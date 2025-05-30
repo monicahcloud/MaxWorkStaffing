@@ -240,3 +240,14 @@ firstName       String?
   
   @@index([clerkId])
 }
+
+model BlogPost {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  imageUrl    String
+  tag         String?
+  content     String?  // 👈 optional for now
+  slug        String?  @unique  // 👈 optional for now
+  createdAt   DateTime @default(now())
+}

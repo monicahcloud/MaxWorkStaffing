@@ -1,7 +1,7 @@
 "use client";
 
 import { Card } from "@/components/ui/card";
-import { FileText, IdCard, NotebookPen } from "lucide-react";
+import { File, FileText, IdCard, NotebookPen } from "lucide-react";
 
 const toolCards = [
   {
@@ -20,12 +20,20 @@ const toolCards = [
     linkHref: "coverletter",
   },
   {
-    icon: <IdCard className="text-blue-600 w-6 h-6" />,
-    title: "Claim Professional Profile",
-    description: "Be found by recruiters online with a professional profile",
-    linkText: "Get a Profile",
-    linkHref: "profile",
+    icon: <File className="text-blue-600 w-6 h-6" />,
+    title: "Add Job to Job Tracker",
+    description:
+      "Manage and monitor your job search with a simple, streamlined tracker.",
+    linkText: "Add Job",
+    linkHref: "addJob",
   },
+  // {
+  //   icon: <IdCard className="text-blue-600 w-6 h-6" />,
+  //   title: "Claim Professional Profile",
+  //   description: "Be found by recruiters online with a professional profile",
+  //   linkText: "Get a Profile",
+  //   linkHref: "profile",
+  // },
 ];
 
 export const ResumeTools = () => {

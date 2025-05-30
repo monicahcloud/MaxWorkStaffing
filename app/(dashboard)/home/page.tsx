@@ -1,43 +1,38 @@
-import { BlogPostGrid } from "@/components/BlogPost";
-import ClientHome from "@/components/tourGuide/ClientHome";
-import office from "../../../assets/office.webp";
-import handshake from "../../../assets/handshake.webp";
-import transition from "../../../assets/office.webp";
+export const dynamic = "force-dynamic";
+
 import { ResumeTools } from "@/components/ResumeTools";
+import ClientHome from "@/components/tourGuide/ClientHome";
+import defaultImage from "@/public/blogs/team.jpg";
+
+import prisma from "@/lib/prisma";
 import JobSearchWrapper from "../jobsearch/JobSearchWrapper";
+import { BlogPostGrid } from "@/components/BlogPost";
+import { generateBlogPostsIfNeeded } from "./action";
+import { tagToImageMap } from "@/utils/constants";
 
-const posts = [
-  {
-    id: "1",
-    title:
-      "The Hidden Benefits of Temporary Work: Why It’s a Smart Career Move",
-    description:
-      "Temporary roles offer flexibility, skill-building opportunities, and a chance to explore different industries.",
-    imageUrl: office,
-  },
-  {
-    id: "2",
-    title: "How Companies Can Win the War for Talent in 2025",
-    description:
-      "Key trends shaping how companies hire and retain top talent this year.",
-    imageUrl: transition,
-  },
-  {
-    id: "3",
-    title: "From Military to Civilian Careers: How Veterans Can Transition",
-    description:
-      "Translating military experience into the corporate world can be challenging—here’s how to do it right.",
-    imageUrl: handshake,
-  },
-];
+export default async function HomePageWrapper() {
+  await generateBlogPostsIfNeeded(); //
+  const getImageByTag = (tag: string | null) =>
+    tagToImageMap[tag ?? ""] || defaultImage;
 
-export default function HomePageWrapper() {
-  // Calculate this dynamically based on profile completion
+  const rawPosts = await prisma.blogPost.findMany({
+    orderBy: { createdAt: "desc" },
+    take: 12,
+  });
+
+  const posts = rawPosts
+    // .filter((post) => post.slug) // keep only posts with slug
+    .map((post) => ({
+      ...post,
+      imageUrl: getImageByTag(post.tag),
+      tag: post.tag ?? undefined,
+      slug: post.slug!, // non-null assertion since filtered
+    }));
+  console.log("Fetched posts:", posts);
 
   return (
     <>
       <ClientHome />
-      {/* <ServicePromoCard /> */}
       <main className="p-6">
         <ResumeTools />
         <hr className="border-4 my-8" />
@@ -50,6 +45,9 @@ export default function HomePageWrapper() {
           Career Tips & Insights
         </h1>
         <BlogPostGrid posts={posts} />
+        {posts.length === 0 && (
+          <p className="text-red-500 mt-4">No blog posts found.</p>
+        )}
       </main>
     </>
   );

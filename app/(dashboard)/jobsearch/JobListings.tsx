@@ -13,6 +13,9 @@ import {
 import { Card } from "@/components/ui/card";
 import { fetchJobs } from "./actions";
 import SectionTitle from "@/components/SectionTitle";
+import { US_STATES } from "@/utils/states";
+import { categoryMap } from "@/utils/category";
+import { jobIndustries } from "@/utils/industry";
 
 interface Job {
   id: number;
@@ -39,7 +42,25 @@ export default function JobListingsView({ filters, onBack }: Props) {
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(false);
+  const [keyword, setKeyword] = useState("");
+  const [location, setLocation] = useState("");
+  const [selectedDropdownCategory, setSelectedDropdownCategory] = useState<
+    string | undefined
+  >();
+  const [searchParams, setSearchParams] = useState<{
+    keyword?: string;
+    location?: string;
+    category?: string;
+  } | null>(null);
 
+  if (searchParams) {
+    return (
+      <JobListingsView
+        filters={searchParams}
+        onBack={() => setSearchParams(null)}
+      />
+    );
+  }
   useEffect(() => {
     const loadJobs = async () => {
       setLoading(true);
@@ -72,39 +93,32 @@ export default function JobListingsView({ filters, onBack }: Props) {
 
       {/* Search Filters */}
       <div className="flex flex-wrap gap-4">
-        <Input placeholder="e.g. developer" className="flex-1 min-w-[200px]" />
-        <Input placeholder="Dallas, GA" className="flex-1 min-w-[200px]" />
-        <Select>
-          <SelectTrigger className="min-w-[160px]">
-            <SelectValue placeholder="Location" />
+        <Input placeholder="Job Title" className="flex-1 min-w-[200px]" />
+
+        <Select onValueChange={(value) => setLocation(value)}>
+          <SelectTrigger className="min-w-[160px]" aria-label="Select a state">
+            <SelectValue placeholder="Select State" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="atlanta">Atlanta</SelectItem>
+            {US_STATES.map((state) => (
+              <SelectItem key={state} value={state}>
+                {state}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
-        <Select>
-          <SelectTrigger className="min-w-[160px]">
-            <SelectValue placeholder="Distance" />
+        <Input placeholder="city" className="flex-1 min-w-[200px]" />
+
+        <Select onValueChange={(value) => setLocation(value)}>
+          <SelectTrigger className="min-w-[160px]" aria-label="Category">
+            <SelectValue placeholder="Category" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="10">10 miles</SelectItem>
-          </SelectContent>
-        </Select>
-        <Select>
-          <SelectTrigger className="min-w-[160px]">
-            <SelectValue placeholder="Specialization" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="developer">Developer</SelectItem>
-          </SelectContent>
-        </Select>
-        <Select>
-          <SelectTrigger className="min-w-[160px]">
-            <SelectValue placeholder="Job Type" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="permanent">Permanent</SelectItem>
-            <SelectItem value="temporary">Temporary</SelectItem>
+            {jobIndustries.map((cat) => (
+              <SelectItem key={cat} value={cat}>
+                {cat}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
         <Button className="bg-red-700 hover:bg-red-800 text-white">

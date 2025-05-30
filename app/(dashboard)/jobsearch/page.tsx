@@ -93,10 +93,9 @@ function JobSearch() {
       </p> */}
 
       {/* Search Form */}
-      {/* Search Form */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10 mt-8">
         <Input
-          placeholder="Title or keyword"
+          placeholder="Job Title or keyword"
           aria-label="Search by job title or keyword"
           value={keyword}
           onChange={(e) => setKeyword(e.target.value)}
