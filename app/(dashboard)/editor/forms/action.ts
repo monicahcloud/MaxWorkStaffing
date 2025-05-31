@@ -323,7 +323,8 @@ You are a resume parser. Extract structured data from the resume text below in J
 
 {
   'resumeTitle':string,
-      "firstName": string,
+  
+    "firstName": string,
     "lastName": string,
     "jobTitle": string,
     "email": string,
@@ -391,15 +392,7 @@ export async function saveParsedResumeData(resumeId: string, parsedData: any) {
   if (!resumeId) throw new Error("Missing resumeId");
 
   const {
-    firstName,
-    lastName,
-    jobTitle,
-    email,
-    phone,
-    address,
-    website,
-    linkedin,
-    gitHub,
+    personalInfo,
     summary,
     skills,
     education,
@@ -407,30 +400,33 @@ export async function saveParsedResumeData(resumeId: string, parsedData: any) {
     interests,
   } = parsedData;
 
-  // Clear previous nested data
+  // 1. Clear previous nested data to avoid duplicates
   await prisma.techSkill.deleteMany({ where: { resumeId } });
   await prisma.education.deleteMany({ where: { resumeId } });
   await prisma.workExperience.deleteMany({ where: { resumeId } });
 
+  // 2. Update resume with new parsed data
   await prisma.resume.update({
     where: { id: resumeId },
     data: {
-      resumeTitle: jobTitle || "Untitled",
+      resumeTitle: personalInfo?.jobTitle || "Untitled",
       description: summary || "",
-      email,
-      phone,
-      address,
-      website,
-      linkedin,
-      gitHub,
-      firstName,
-      lastName,
-      jobTitle,
+      email: personalInfo?.email,
+      phone: personalInfo?.phone,
+      address: personalInfo?.address,
+      website: personalInfo?.website,
+      linkedin: personalInfo?.linkedin,
+      gitHub: personalInfo?.gitHub,
+      firstName: personalInfo?.firstName,
+      lastName: personalInfo?.lastName,
+      jobTitle: personalInfo?.jobTitle,
       summary: summary || "",
 
+      // string[] fields
       skills: skills || [],
       interest: interests || [],
 
+      // related records
       techSkills: {
         create: skills?.map((skill: string) => ({ name: skill })) || [],
       },
