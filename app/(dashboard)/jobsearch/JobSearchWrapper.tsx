@@ -18,6 +18,10 @@ type Job = {
   id: string;
   title: string;
   company: { display_name: string };
+  location: {
+    area: string[]; // e.g., ["US", "California", "San Francisco"]
+    display_name: string;
+  };
   state: {
     display_name: string;
     area: string[]; // Added area property to match the structure expected in AdzunaJobList
@@ -51,7 +55,7 @@ export default function JobSearchWrapper() {
     const fetchDefaultJobs = async () => {
       setLoading(true);
       try {
-        const res = await fetch(`/api/adzuna?q=developer&state=California`); // default query
+        const res = await fetch(`/api/adzuna?q=${searchQuery}&state=${state}`); // default query
         const data = await res.json();
         setJobs(data);
       } catch (err) {

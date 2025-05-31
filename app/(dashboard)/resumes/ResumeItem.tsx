@@ -86,15 +86,26 @@ function ResumeItem({ resume }: ResumeItemProps) {
 
         {/* Preview Area */}
         <div>
-          {isUploaded && isPDF ? (
-            <iframe
-              src={`${resume.uploadedFileUrl}#toolbar=0&view=fitH`}
-              title="PDF Preview"
-              className="w-full h-[216px] border rounded shadow-sm"
-            />
-          ) : isUploaded ? (
-            <div className="w-full h-[216px] flex items-center justify-center text-xs text-muted-foreground border rounded">
-              No preview available
+          {isUploaded ? (
+            <div className="space-y-2">
+              {isPDF ? (
+                <iframe
+                  src={`${resume.uploadedFileUrl}#toolbar=0&view=fitH`}
+                  title="PDF Preview"
+                  className="w-full h-[216px] border rounded shadow-sm"
+                />
+              ) : (
+                <div className="w-full h-[216px] flex items-center justify-center text-xs text-muted-foreground border rounded">
+                  No preview available
+                </div>
+              )}
+
+              {/* New "Choose Template" Button */}
+              <Link href={`/resumes/${resume.id}/chooseTemplate`}>
+                <Button variant="outline" className="w-full">
+                  Choose Template
+                </Button>
+              </Link>
             </div>
           ) : (
             <Link href={`/editor?resumeId=${resume.id}`}>
@@ -161,6 +172,15 @@ function MoreMenu({ resume, isUploaded, onPrintClick }: MoreMenuProps) {
         <DropdownMenuContent>
           {isUploaded && (
             <>
+              <DropdownMenuItem asChild>
+                <Link href={`/resumes/${resume.id}/chooseTemplate`}>
+                  <span className="flex items-center gap-2">
+                    <FilePen className="size-4" />
+                    Choose Template
+                  </span>
+                </Link>
+              </DropdownMenuItem>
+
               <DropdownMenuItem asChild>
                 <Link
                   href={resume.uploadedFileUrl!}

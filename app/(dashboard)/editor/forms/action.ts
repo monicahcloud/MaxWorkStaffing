@@ -2,6 +2,7 @@
 
 import openai from "@/lib/openai";
 import { canUseAITools } from "@/lib/permissions";
+import prisma from "@/lib/prisma";
 import { getUserSubscriptionLevel } from "@/lib/subscription";
 import {
   GenerateDutiesInput,
@@ -307,4 +308,160 @@ export async function generateSkills(
     console.error("Skill JSON parsing error:", err, aiResponse);
     throw new Error("Invalid AI response format — please try again.");
   }
+}
+
+function cleanJsonString(jsonStr: string): string {
+  return jsonStr
+    .replace(/```json\s*/i, "") // remove opening
+    .replace(/```/g, "") // remove *all* triple backticks
+    .trim();
+}
+
+export async function parseResumeWithAI(rawText: string) {
+  const prompt = `
+You are a resume parser. Extract structured data from the resume text below in JSON format with these fields:
+
+{
+  'resumeTitle':string,
+      "firstName": string,
+    "lastName": string,
+    "jobTitle": string,
+    "email": string,
+    "phone": string,
+    "address": string,
+    "website": string,
+    "linkedin": string,
+    "gitHub": string,
+
+  "summary": string,
+  "skills": string[],
+  "education": [
+    {
+      "degree": string,
+      "location": string,
+      "school": string,
+      "startDate": string,
+      "endDate": string
+    }
+  ],
+  "workExperience": [
+    {
+      "position": string,
+      "company": string,
+      "startDate": string,
+      "endDate": string,
+      "description": string,
+      "location": string,
+      "status":string,
+      "clearance":string,
+      "duties":string,
+      "responsibilities":string,
+      "grade":string,
+      "hours":string
+    }
+  ],
+  "interests": string[]
+}
+
+Here is the resume text:
+"""${rawText}"""
+
+Return only the JSON object.
+`;
+
+  const completion = await openai.chat.completions.create({
+    model: "gpt-4o-mini",
+    messages: [{ role: "user", content: prompt }],
+    temperature: 0,
+  });
+
+  try {
+    const rawResponse = completion.choices[0].message?.content || "{}";
+    console.log("🧠 AI raw response:", rawResponse);
+
+    const cleanedJson = cleanJsonString(rawResponse);
+    const parsed = JSON.parse(cleanedJson);
+    return parsed;
+  } catch (err) {
+    console.error("Error parsing resume JSON:", err);
+    return null;
+  }
+}
+export async function saveParsedResumeData(resumeId: string, parsedData: any) {
+  if (!resumeId) throw new Error("Missing resumeId");
+
+  const {
+    firstName,
+    lastName,
+    jobTitle,
+    email,
+    phone,
+    address,
+    website,
+    linkedin,
+    gitHub,
+    summary,
+    skills,
+    education,
+    workExperience,
+    interests,
+  } = parsedData;
+
+  // Clear previous nested data
+  await prisma.techSkill.deleteMany({ where: { resumeId } });
+  await prisma.education.deleteMany({ where: { resumeId } });
+  await prisma.workExperience.deleteMany({ where: { resumeId } });
+
+  await prisma.resume.update({
+    where: { id: resumeId },
+    data: {
+      resumeTitle: jobTitle || "Untitled",
+      description: summary || "",
+      email,
+      phone,
+      address,
+      website,
+      linkedin,
+      gitHub,
+      firstName,
+      lastName,
+      jobTitle,
+      summary: summary || "",
+
+      skills: skills || [],
+      interest: interests || [],
+
+      techSkills: {
+        create: skills?.map((skill: string) => ({ name: skill })) || [],
+      },
+      education: {
+        create:
+          education?.map((edu: any) => ({
+            degree: edu.degree,
+            school: edu.school,
+            location: edu.location,
+            startDate: edu.startDate ? new Date(edu.startDate) : undefined,
+            endDate: edu.endDate ? new Date(edu.endDate) : undefined,
+            description: edu.description,
+          })) || [],
+      },
+      workExperience: {
+        create:
+          workExperience?.map((job: any) => ({
+            position: job.position,
+            company: job.company,
+            location: job.location,
+            startDate: job.startDate ? new Date(job.startDate) : undefined,
+            endDate: job.endDate ? new Date(job.endDate) : undefined,
+            description: job.description,
+            status: job.status,
+            clearance: job.clearance,
+            duties: job.duties,
+            responsibilities: job.responsibilities,
+            grade: job.grade,
+            hours: job.hours,
+          })) || [],
+      },
+    },
+  });
 }

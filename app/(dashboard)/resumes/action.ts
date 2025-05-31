@@ -53,3 +53,19 @@ export async function getResumeById(id: string) {
     return null;
   }
 }
+
+export async function updateResumeType(resumeId: string, resumeType: string) {
+  if (!resumeId || !resumeType) {
+    throw new Error("Missing resumeId or resumeType");
+  }
+
+  const updated = await prisma.resume.update({
+    where: { id: resumeId },
+    data: { resumeType },
+  });
+
+  // Revalidate the resume page or list if needed
+  // revalidatePath(`/resumes/${resumeId}`);
+
+  return updated;
+}

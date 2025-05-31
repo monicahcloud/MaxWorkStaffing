@@ -1,6 +1,6 @@
 "use client";
 import SectionTitle from "@/components/SectionTitle";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { getSteps } from "./steps";
 
@@ -12,6 +12,7 @@ import { cn, mapToResumeValues } from "@/lib/utils";
 import useUnloadWarning from "@/hooks/useUnloadWarning";
 import useAutoSaveResume from "./useAutoSaveResume";
 import { ResumeServerData } from "@/lib/types";
+import { parseResumeWithAI, saveParsedResumeData } from "./forms/action";
 
 interface ResumeEditorProps {
   resumeToEdit: ResumeServerData | null;
@@ -24,15 +25,55 @@ function ResumeEditor({ resumeToEdit }: ResumeEditorProps) {
 
   const [resumeData, setResumeData] = useState<ResumeValues>(() => {
     if (resumeToEdit) {
-      return mapToResumeValues(resumeToEdit);
+      // If resume has structured data, use it
+      if (
+        resumeToEdit.education?.length ||
+        resumeToEdit.workExperience?.length ||
+        resumeToEdit.techSkills?.length
+      ) {
+        return mapToResumeValues(resumeToEdit);
+      }
+
+      // If resume has raw text only (e.g. uploaded), use fallback initially
+      return {
+        resumeTitle: "",
+        description: "",
+        resumeType: resumeTypeFromTemplate,
+      };
     }
 
+    // New resume
     return {
       resumeTitle: "",
       description: "",
-      resumeType: resumeTypeFromTemplate, // Prepopulate here!
+      resumeType: resumeTypeFromTemplate,
     };
   });
+
+  useEffect(() => {
+    const shouldParse =
+      resumeToEdit &&
+      resumeToEdit.rawTextContent &&
+      !resumeToEdit.education?.length &&
+      !resumeToEdit.workExperience?.length &&
+      !resumeToEdit.techSkills?.length;
+
+    if (shouldParse && resumeToEdit.rawTextContent) {
+      parseResumeWithAI(resumeToEdit.rawTextContent).then(async (parsed) => {
+        if (parsed) {
+          setResumeData((prev) => ({
+            ...prev,
+            ...parsed,
+            resumeType: resumeTypeFromTemplate || prev.resumeType,
+          }));
+
+          // Persist parsed data to DB
+          await saveParsedResumeData(resumeToEdit.id, parsed);
+        }
+      });
+    }
+  }, [resumeToEdit, resumeTypeFromTemplate]);
+
   const steps = getSteps(resumeData.resumeType);
   const [showSmResumePreview, setShowSmResumePreview] = useState(false);
 

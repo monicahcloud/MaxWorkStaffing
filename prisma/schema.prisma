@@ -60,7 +60,7 @@ model Resume {
   isUploaded      Boolean          @default(false)
   user            User             @relation(fields: [clerkId], references: [clerkId])
   jobs            Job[]
-
+rawTextContent   String?
   @@index([clerkId])
 }
 
