@@ -159,9 +159,9 @@ export async function generateWorkExperience(
   console.log("aiResponse", aiResponse);
 
   return {
-    position: aiResponse.match(/Job title: (.*)/)?.[1] || "",
-    company: aiResponse.match(/Company: (.*)/)?.[1] || "",
-    location: aiResponse.match(/Location: (.*)/)?.[1] || "",
+    position: aiResponse.match(/Job title: (.*)/)?.[1]?.trim() || "",
+    company: aiResponse.match(/Company: (.*)/)?.[1]?.trim() || "",
+    location: aiResponse.match(/Location: (.*)/)?.[1]?.trim() || "",
     description: (aiResponse.match(/Description:([\s\S]*)/)?.[1] || "").trim(),
     startDate: aiResponse.match(/Start date: (\d{4}-\d{2}-\d{2})/)?.[1],
     endDate: aiResponse.match(/End date: (\d{4}-\d{2}-\d{2})/)?.[1],
@@ -265,7 +265,7 @@ export async function generateSkills(
 
   // System message to explicitly request 100 skills
   const systemMessage = `
-    You are a resume assistant AI. Generate a concise list of exactly 100 highly relevant and professional resume skills 
+    You are a resume assistant AI. Generate a concise list of exactly 50 highly relevant and professional resume skills 
     based on the candidate's job title. Return a raw JSON array of strings only. 
     Ensure that the list includes a wide range of relevant skills suitable for the job title.
   `;
@@ -313,7 +313,7 @@ export async function generateSkills(
 function cleanJsonString(jsonStr: string): string {
   return jsonStr
     .replace(/```json\s*/i, "") // remove opening
-    .replace(/```/g, "") // remove *all* triple backticks
+    .replace(/```$/, "") // remove *all* triple backticks
     .trim();
 }
 
@@ -322,8 +322,7 @@ export async function parseResumeWithAI(rawText: string) {
 You are a resume parser. Extract structured data from the resume text below in JSON format with these fields:
 
 {
-  'resumeTitle':string,
-  
+  "personalInfo": {
     "firstName": string,
     "lastName": string,
     "jobTitle": string,
@@ -333,7 +332,7 @@ You are a resume parser. Extract structured data from the resume text below in J
     "website": string,
     "linkedin": string,
     "gitHub": string,
-
+  },
   "summary": string,
   "skills": string[],
   "education": [
@@ -372,27 +371,45 @@ Return only the JSON object.
 
   const completion = await openai.chat.completions.create({
     model: "gpt-4o-mini",
-    messages: [{ role: "user", content: prompt }],
+    messages: [
+      {
+        role: "system",
+        content: "You are a resume parser AI that outputs JSON only.",
+      },
+      {
+        role: "user",
+        content: prompt + `\n\nResume Text:\n${rawText}`,
+      },
+    ],
     temperature: 0,
   });
 
-  try {
-    const rawResponse = completion.choices[0].message?.content || "{}";
-    console.log("🧠 AI raw response:", rawResponse);
+  const aiResponse = completion.choices[0].message.content;
 
-    const cleanedJson = cleanJsonString(rawResponse);
-    const parsed = JSON.parse(cleanedJson);
-    return parsed;
+  if (!aiResponse) throw new Error("Failed to generate AI response");
+
+  try {
+    const clean = cleanJsonString(aiResponse);
+    return JSON.parse(clean);
   } catch (err) {
-    console.error("Error parsing resume JSON:", err);
-    return null;
+    console.error("Resume parsing error:", err, aiResponse);
+    throw new Error("Failed to parse structured resume data.");
   }
 }
+
 export async function saveParsedResumeData(resumeId: string, parsedData: any) {
   if (!resumeId) throw new Error("Missing resumeId");
 
   const {
-    personalInfo,
+    firstName,
+    lastName,
+    jobTitle,
+    email,
+    phone,
+    address,
+    website,
+    linkedin,
+    gitHub,
     summary,
     skills,
     education,
@@ -409,23 +426,22 @@ export async function saveParsedResumeData(resumeId: string, parsedData: any) {
   await prisma.resume.update({
     where: { id: resumeId },
     data: {
-      resumeTitle: personalInfo?.jobTitle || "Untitled",
+      resumeTitle: parsedData.resumeTitle || "Untitled",
       description: summary || "",
-      email: personalInfo?.email,
-      phone: personalInfo?.phone,
-      address: personalInfo?.address,
-      website: personalInfo?.website,
-      linkedin: personalInfo?.linkedin,
-      gitHub: personalInfo?.gitHub,
-      firstName: personalInfo?.firstName,
-      lastName: personalInfo?.lastName,
-      jobTitle: personalInfo?.jobTitle,
-      summary: summary || "",
 
+      firstName,
+      lastName,
+      jobTitle,
+      email,
+      phone,
+      address,
+      website,
+      linkedin,
+      gitHub,
+      summary: summary || "",
       // string[] fields
       skills: skills || [],
       interest: interests || [],
-
       // related records
       techSkills: {
         create: skills?.map((skill: string) => ({ name: skill })) || [],

@@ -4,6 +4,7 @@ import { put } from "@vercel/blob";
 import prisma from "@/lib/prisma";
 import pdfParse from "pdf-parse";
 import mammoth from "mammoth";
+import { parseResumeWithAI } from "@/app/(dashboard)/editor/forms/action";
 
 async function parseFileContent(file: File): Promise<string> {
   const buffer = Buffer.from(await file.arrayBuffer());
@@ -61,7 +62,22 @@ export async function POST(req: NextRequest) {
         rawTextContent: parsedText,
       },
     });
+    // ✅ Immediately parse with AI
+    const parsedData = await parseResumeWithAI(parsedText);
 
+    // (Optional) Store parsedData in the database:
+    await prisma.resume.create({
+      data: {
+        userId,
+        user: {
+          connect: {
+            clerkId: userId,
+          },
+        },
+        resumeId: resume.id,
+        content: parsedData, // Store as JSON/text depending on your schema
+      },
+    });
     return NextResponse.json(
       { success: true, url: blob.url, resumeId: resume.id },
       { status: 200 }

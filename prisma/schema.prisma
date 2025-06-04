@@ -61,6 +61,7 @@ model Resume {
   user            User             @relation(fields: [clerkId], references: [clerkId])
   jobs            Job[]
 rawTextContent   String?
+content   Json?
   @@index([clerkId])
 }
 
@@ -212,7 +213,7 @@ model CoverLetter {
   userId          String
   clerkId         String
   template        String?
-   themeColor      String?   @default("#000000")
+   themeColor      String?   
   borderStyle     String ?   @default("squircle")
 body            String?
 firstName       String?
