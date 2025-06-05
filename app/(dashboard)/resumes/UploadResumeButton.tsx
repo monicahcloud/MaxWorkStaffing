@@ -1,17 +1,21 @@
 // Enable client-side rendering for this component (required for hooks like useRef)
 "use client";
 
-import { useRef } from "react"; // React hook to persist a reference to the hidden file input element
+import { useRef, useState, useTransition } from "react"; // React hook to persist a reference to the hidden file input element
 import { Button } from "@/components/ui/button"; // Reusable button component styled with your design system
 import { UploadCloud } from "lucide-react"; // Icon from Lucide used to visually represent upload action
 import { toast } from "sonner"; // Notification library used to show success or error messages
+import { useRouter } from "next/navigation";
 
 // Component definition — expects a function `setUpdateResumes` as a prop
 // This function is called after a successful upload to trigger a refresh or update in parent
-export default function UploadResumeButton(setUpdateResumes) {
+export default function UploadResumeButton() {
   // Create a ref to access the hidden file input element in the DOM
   const inputRef = useRef<HTMLInputElement>(null);
-
+  // const [isPending, startTransition] = useTransition();
+  const [isPending, startTransition] = useTransition();
+  const [isUploading, setIsUploading] = useState(false);
+  const router = useRouter();
   // Handler for when a file is selected from the input
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     // Get the first selected file
@@ -21,7 +25,7 @@ export default function UploadResumeButton(setUpdateResumes) {
     // Prepare a FormData object to send the file to the server
     const formData = new FormData();
     formData.append("file", file); // Append the selected file under the key 'file'
-
+    setIsUploading(true); // Show loading spinner immediately
     try {
       // Send a POST request to the API endpoint responsible for resume upload
       const res = await fetch("/api/upload-resume", {
@@ -32,20 +36,22 @@ export default function UploadResumeButton(setUpdateResumes) {
       // If the request was successful, show success toast and notify parent to refresh resumes
       if (res.ok) {
         toast.success("Resume uploaded successfully!");
-        setUpdateResumes(true); // Notify parent component to re-fetch the resumes
+        // ✅ Refresh resumes list without full page reload
+        // startTransition(() => {
+        router.refresh(); // Refresh the page
+        // });
+        // setUpdateResumes(true); // Notify parent component to re-fetch the resumes
       } else {
         // Handle failed response with a toast error
         toast.error("Upload failed. Please try again.");
       }
     } catch {
-      // Catch any unexpected runtime/network errors and show a toast
       toast.error("Unexpected error occurred.");
+    } finally {
+      setIsUploading(false); // Hide spinner after upload completes
+      e.target.value = "";
     }
-
-    // Reset file input to allow re-uploading the same file if needed
-    e.target.value = "";
   };
-
   return (
     <>
       {/* Hidden file input for accepting .pdf, .doc, or .docx files only */}
@@ -59,10 +65,20 @@ export default function UploadResumeButton(setUpdateResumes) {
 
       {/* Styled button that, when clicked, opens the file picker by programmatically clicking the hidden input */}
       <Button
-        onClick={() => inputRef.current?.click()} // Trigger file input click when button is clicked
+        disabled={isUploading}
+        onClick={() => inputRef.current?.click()}
         className="upload-resume mx-auto flex w-fit gap-2">
-        <UploadCloud className="size-5" /> {/* Upload icon */}
-        Upload Resume
+        {isUploading ? (
+          <>
+            <span className="animate-spin rounded-full border-2 border-white border-t-transparent size-4"></span>
+            Uploading...
+          </>
+        ) : (
+          <>
+            <UploadCloud className="size-5" />
+            Upload Resume
+          </>
+        )}
       </Button>
     </>
   );
