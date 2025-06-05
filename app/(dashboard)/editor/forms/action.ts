@@ -317,6 +317,11 @@ function cleanJsonString(jsonStr: string): string {
     .trim();
 }
 
+function safeDate(value: any): Date | undefined {
+  const date = new Date(value);
+  return isNaN(date.getTime()) ? undefined : date;
+}
+
 export async function parseResumeWithAI(rawText: string) {
   const prompt = `
 You are a resume parser. Extract structured data from the resume text below in JSON format with these fields:
@@ -452,8 +457,10 @@ export async function saveParsedResumeData(resumeId: string, parsedData: any) {
             degree: edu.degree,
             school: edu.school,
             location: edu.location,
-            startDate: edu.startDate ? new Date(edu.startDate) : undefined,
-            endDate: edu.endDate ? new Date(edu.endDate) : undefined,
+            // startDate: edu.startDate ? new Date(edu.startDate) : undefined,
+            // endDate: edu.endDate ? new Date(edu.endDate) : undefined,
+            startDate: safeDate(edu.startDate),
+            endDate: safeDate(edu.endDate),
             description: edu.description,
           })) || [],
       },
@@ -463,8 +470,10 @@ export async function saveParsedResumeData(resumeId: string, parsedData: any) {
             position: job.position,
             company: job.company,
             location: job.location,
-            startDate: job.startDate ? new Date(job.startDate) : undefined,
-            endDate: job.endDate ? new Date(job.endDate) : undefined,
+            // startDate: job.startDate ? new Date(job.startDate) : undefined,
+            // endDate: job.endDate ? new Date(job.endDate) : undefined,
+            startDate: safeDate(job.startDate),
+            endDate: safeDate(job.endDate),
             description: job.description,
             status: job.status,
             clearance: job.clearance,

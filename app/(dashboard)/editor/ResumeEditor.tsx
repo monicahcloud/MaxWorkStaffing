@@ -1,31 +1,34 @@
-"use client";
+"use client"; // Enables client-side hooks like useState, useEffect, etc.
+
 import SectionTitle from "@/components/SectionTitle";
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { getSteps } from "./steps";
 
-import Breadcrumbs from "./Breadcrumbs";
-import Footer from "./forms/Footer";
+import Breadcrumbs from "./Breadcrumbs"; // Navigation steps UI
+import Footer from "./forms/Footer"; // Navigation + status bar
 import { ResumeValues } from "@/lib/validation";
 import ResumePreviewContainer from "./ResumePreviewContainer";
-import { cn, mapToResumeValues } from "@/lib/utils";
-import useUnloadWarning from "@/hooks/useUnloadWarning";
-import useAutoSaveResume from "./useAutoSaveResume";
-import { ResumeServerData } from "@/lib/types";
-import { parseResumeWithAI, saveParsedResumeData } from "./forms/action";
+import { cn, mapToResumeValues } from "@/lib/utils"; // cn = className joiner, mapToResumeValues = transforms DB data into form-ready format
+import useUnloadWarning from "@/hooks/useUnloadWarning"; // Warns user if they try to leave with unsaved changes
+import useAutoSaveResume from "./useAutoSaveResume"; // Tracks and autosaves resume changes
+import { ResumeServerData } from "@/lib/types"; // Resume type from DB
+import { parseResumeWithAI, saveParsedResumeData } from "./forms/action"; // AI parsing logic for uploaded resumes
+import SkeletonForm from "./forms/SkeletonForm"; // Placeholder skeleton shown while parsing
 
 interface ResumeEditorProps {
-  resumeToEdit: ResumeServerData | null;
+  resumeToEdit: ResumeServerData | null; // Incoming resume to edit, or null if new
 }
 
 function ResumeEditor({ resumeToEdit }: ResumeEditorProps) {
-  const searchParams = useSearchParams();
+  const searchParams = useSearchParams(); // For reading ?step= and ?resumeType=
+  const [isParsing, setIsParsing] = useState(false); // State to track whether parsing is in progress
+  const resumeTypeFromTemplate = searchParams.get("resumeType") || ""; // Resume type pulled from URL
 
-  const resumeTypeFromTemplate = searchParams.get("resumeType") || "";
-
+  // Initialize resumeData state
   const [resumeData, setResumeData] = useState<ResumeValues>(() => {
     if (resumeToEdit) {
-      // If resume has structured data, use it
+      // If resume has structured sections already, map them to form format
       if (
         resumeToEdit.education?.length ||
         resumeToEdit.workExperience?.length ||
@@ -34,7 +37,7 @@ function ResumeEditor({ resumeToEdit }: ResumeEditorProps) {
         return mapToResumeValues(resumeToEdit);
       }
 
-      // If resume has raw text only (e.g. uploaded), use fallback initially
+      // If resume has only raw text (e.g. uploaded), fall back to empty form + template
       return {
         resumeTitle: "",
         description: "",
@@ -42,7 +45,7 @@ function ResumeEditor({ resumeToEdit }: ResumeEditorProps) {
       };
     }
 
-    // New resume
+    // Brand new resume with no existing data
     return {
       resumeTitle: "",
       description: "",
@@ -50,7 +53,11 @@ function ResumeEditor({ resumeToEdit }: ResumeEditorProps) {
     };
   });
 
+  // AI-powered resume parsing logic (for uploaded text-based resumes)
   useEffect(() => {
+    const controller = new AbortController(); // Abort controller in case user navigates away
+
+    // Only parse if rawTextContent exists and there are no structured entries
     const shouldParse =
       resumeToEdit &&
       resumeToEdit.rawTextContent &&
@@ -58,61 +65,89 @@ function ResumeEditor({ resumeToEdit }: ResumeEditorProps) {
       !resumeToEdit.workExperience?.length &&
       !resumeToEdit.techSkills?.length;
 
-    if (shouldParse && resumeToEdit.rawTextContent) {
-      parseResumeWithAI(resumeToEdit.rawTextContent).then(async (parsed) => {
-        if (parsed) {
+    const parse = async () => {
+      if (shouldParse && resumeToEdit?.rawTextContent) {
+        setIsParsing(true); // Show skeleton UI
+
+        const parsed = await parseResumeWithAI(resumeToEdit.rawTextContent); // Use AI to extract structured info
+
+        if (parsed && !controller.signal.aborted) {
+          // Update form data with parsed values
           setResumeData((prev) => ({
             ...prev,
             ...parsed,
             resumeType: resumeTypeFromTemplate || prev.resumeType,
           }));
 
-          // Persist parsed data to DB
+          // Save structured data to DB
           await saveParsedResumeData(resumeToEdit.id, parsed);
         }
-      });
-    }
+
+        if (!controller.signal.aborted) {
+          setIsParsing(false); // Hide skeleton once parsing finishes
+        }
+      }
+    };
+
+    parse();
+
+    return () => {
+      controller.abort(); // Cancel parse if component unmounts
+      setIsParsing(false);
+    };
   }, [resumeToEdit, resumeTypeFromTemplate]);
 
+  // Fetch step definitions based on resume type
   const steps = getSteps(resumeData.resumeType);
+
+  // Track whether preview is shown on mobile
   const [showSmResumePreview, setShowSmResumePreview] = useState(false);
 
+  // Handle autosave and warn if user tries to leave with unsaved changes
   const { isSaving, hasUnsavedChanges } = useAutoSaveResume(resumeData);
   useUnloadWarning(hasUnsavedChanges);
 
+  // Get current step from URL, fallback to first step
   const currentStep = searchParams.get("step") || steps[0].key;
 
+  // Set step and update browser URL
   function setStep(key: string) {
     const newSearchParams = new URLSearchParams(searchParams);
     newSearchParams.set("step", key);
     window.history.pushState(null, "", `?${newSearchParams.toString()}`);
   }
 
+  // Get the form component for the current step
   const FormComponent = steps.find(
     (step) => step.key === currentStep
   )?.component;
 
   return (
     <div className="flex grow flex-col">
-      <header className=" px-3  font-semibold ">
+      {/* Header with title and instructions */}
+      <header className="px-3 font-semibold">
         <SectionTitle
           text="Build Your Resume"
-          subtext=" Follow the steps below to create your resume. Your progress will be
-          saved automatically."
+          subtext=" Follow the steps below to create your resume. Your progress will be saved automatically."
         />
       </header>
+
+      {/* Main content: left = form, right = preview */}
       <main className="relative grow">
         <div className="absolute bottom-0 top-0 flex w-full">
+          {/* Left side: step-by-step form editor */}
           <div
             className={cn(
-              "p-3 space-y-6 overflow-y-auto w-full md:w-1/2", // Ensure it's half on medium+
-              showSmResumePreview && "hidden"
+              "p-3 space-y-6 overflow-y-auto w-full md:w-1/2",
+              showSmResumePreview && "hidden" // Hide on mobile if preview is open
             )}>
             <Breadcrumbs
               currentStep={currentStep}
               setCurrentStep={setStep}
               resumeType={resumeData.resumeType}
             />
+
+            {/* Render current step’s form */}
             {FormComponent && (
               <FormComponent
                 resumeData={resumeData}
@@ -121,17 +156,22 @@ function ResumeEditor({ resumeToEdit }: ResumeEditorProps) {
             )}
           </div>
 
-          <div className=" md:block md:w-1/2 border-l">
-            {/* <pre>{JSON.stringify(resumeData, null, 2)}</pre> */}
-            <ResumePreviewContainer
-              resumeData={resumeData}
-              setResumeData={setResumeData}
-              className={cn("h-full w-full", showSmResumePreview && "flex")}
-            />
+          {/* Right side: live preview */}
+          <div className="md:block md:w-1/2 border-l">
+            {isParsing ? (
+              <SkeletonForm /> // Show loading placeholder while parsing
+            ) : (
+              <ResumePreviewContainer
+                resumeData={resumeData}
+                setResumeData={setResumeData}
+                className={cn("h-full w-full", showSmResumePreview && "flex")}
+              />
+            )}
           </div>
         </div>
       </main>
 
+      {/* Footer with next/back buttons and save status */}
       <Footer
         currentStep={currentStep}
         setCurrentStep={setStep}
