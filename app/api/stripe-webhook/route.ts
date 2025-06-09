@@ -1,23 +1,22 @@
-import { env } from "@/env"; // Environment variables including the Stripe webhook secret
-import prisma from "@/lib/prisma"; // Prisma ORM instance for database interactions
-import stripe from "@/lib/stripe"; // Stripe SDK instance
-import { clerkClient } from "@clerk/nextjs/server"; // Clerk SDK for user management
-import { NextRequest } from "next/server"; // Type for Next.js API route request
-import Stripe from "stripe"; // Stripe types
+import { env } from "@/env"; //
+import prisma from "@/lib/prisma"; //
+import stripe from "@/lib/stripe"; //
+import { clerkClient } from "@clerk/nextjs/server";
+import { NextRequest } from "next/server";
+import Stripe from "stripe";
 
-// export async function GET() {
-//   console.log("✅ Stripe webhook GET hit");
-//   return new Response("Webhook is connected", { status: 200 });
-// }
+export async function GET() {
+  console.log("✅ Stripe webhook GET hit");
+  return new Response("Webhook is connected", { status: 200 });
+}
 
-// Webhook handler for POST requests from Stripe
 export async function POST(req: NextRequest) {
-  try {
-    // Read the raw body payload from the request
-    const payload = await req.text();
-    const signature = req.headers.get("stripe-signature"); // Retrieve Stripe signature from headers
+  console.log("📩 Incoming stripe webhook");
 
-    // If signature is missing, respond with error
+  try {
+    const payload = await req.text();
+    const signature = req.headers.get("stripe-signature");
+
     if (!signature) {
       return new Response("Stripe signature is missing", { status: 400 });
     }

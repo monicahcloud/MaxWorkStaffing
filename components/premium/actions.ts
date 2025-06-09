@@ -18,7 +18,7 @@ async function createCheckoutSession(priceId: string) {
   const stripeCustomerId = user.privateMetadata.stripeCustomerId as
     | string
     | undefined;
-
+  console.log("stripeCustomerId", stripeCustomerId);
   // Create the Stripe Checkout Session
   const session = await stripe.checkout.sessions.create({
     mode: "subscription", // This is for recurring subscriptions
