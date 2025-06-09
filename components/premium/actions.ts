@@ -26,7 +26,7 @@ async function createCheckoutSession(priceId: string) {
 
     // Redirect URLs after successful or canceled checkout
     success_url: `${env.NEXT_PUBLIC_BASE_URL}/billing/success`,
-    cancel_url: `${env.NEXT_PUBLIC_BASE_URL}/billing/`,
+    cancel_url: `${env.NEXT_PUBLIC_BASE_URL}/billing`,
 
     // Attach the existing Stripe customer if available, or use user's email if new
     customer: stripeCustomerId,
@@ -47,7 +47,7 @@ async function createCheckoutSession(priceId: string) {
     // Display custom text about terms of service during checkout
     custom_text: {
       terms_of_service_acceptance: {
-        message: `I have read MaxWork Staffing [terms of services](${env.NEXT_PUBLIC_BASE_URL}/tos) and agree to them.`,
+        message: `I have read MaxResumeBuilder's [terms of services](${env.NEXT_PUBLIC_BASE_URL}/tos) and agree to them.`,
       },
     },
     // Require the user to accept terms of service before subscribing

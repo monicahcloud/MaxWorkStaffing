@@ -19,17 +19,17 @@ import { auth } from "@clerk/nextjs/server";
 // import { z } from "zod";
 
 export async function generateSummary(input: GenerateSummaryInput) {
-  const { userId } = await auth();
+  // const { userId } = await auth();
 
-  if (!userId) {
-    throw new Error("Unauthorized");
-  }
+  // if (!userId) {
+  //   throw new Error("Unauthorized");
+  // }
 
-  const subscriptionLevel = await getUserSubscriptionLevel(userId);
+  // const subscriptionLevel = await getUserSubscriptionLevel(userId);
 
-  if (!canUseAITools(subscriptionLevel)) {
-    throw new Error("Upgrade your subscription to use this feature");
-  }
+  // if (!canUseAITools(subscriptionLevel)) {
+  //   throw new Error("Upgrade your subscription to use this feature");
+  // }
 
   const { jobTitle, workExperiences, education, skills, techSkills } =
     generateSummarySchema.parse(input);
@@ -105,17 +105,17 @@ export async function generateSummary(input: GenerateSummaryInput) {
 export async function generateWorkExperience(
   input: GenerateWorkExperienceInput
 ) {
-  const { userId } = await auth();
+  // const { userId } = await auth();
 
-  if (!userId) {
-    throw new Error("Unauthorized");
-  }
+  // if (!userId) {
+  //   throw new Error("Unauthorized");
+  // }
 
-  const subscriptionLevel = await getUserSubscriptionLevel(userId);
+  // const subscriptionLevel = await getUserSubscriptionLevel(userId);
 
-  if (!canUseAITools(subscriptionLevel)) {
-    throw new Error("Upgrade your subscription to use this feature");
-  }
+  // if (!canUseAITools(subscriptionLevel)) {
+  //   throw new Error("Upgrade your subscription to use this feature");
+  // }
 
   const { description } = generateWorkExperienceSchema.parse(input);
 

@@ -4,6 +4,12 @@ import stripe from "@/lib/stripe"; // Stripe SDK instance
 import { clerkClient } from "@clerk/nextjs/server"; // Clerk SDK for user management
 import { NextRequest } from "next/server"; // Type for Next.js API route request
 import Stripe from "stripe"; // Stripe types
+
+export async function GET() {
+  console.log("✅ Stripe webhook GET hit");
+  return new Response("Webhook is connected", { status: 200 });
+}
+
 // Webhook handler for POST requests from Stripe
 export async function POST(req: NextRequest) {
   try {
@@ -13,7 +19,7 @@ export async function POST(req: NextRequest) {
 
     // If signature is missing, respond with error
     if (!signature) {
-      return new Response("Signature is missing", { status: 400 });
+      return new Response("Stripe signature is missing", { status: 400 });
     }
     console.log("🧪 Raw body:", payload);
 
@@ -24,7 +30,7 @@ export async function POST(req: NextRequest) {
       env.STRIPE_WEBHOOK_SECRET
     );
 
-    console.log(`Received event: ${event.type}`, event.data.object);
+    console.log(`Received stripe event: ${event.type}`, event.data.object);
 
     // Handle event based on type
     switch (event.type) {
@@ -56,11 +62,11 @@ async function handleSessionCompleted(session: Stripe.Checkout.Session) {
   const client = await clerkClient(); // Clerk client instance
 
   if (!userId) {
-    throw new Error("User ID is missing in session metadata");
+    throw new Error("User ID is missing in stripe session metadata");
   }
 
   // Update Clerk private metadata with Stripe customer ID
-  await client.users.updateUserMetadata(userId, {
+  (await client).users.updateUserMetadata(userId, {
     privateMetadata: {
       stripeCustomerId: session.customer as string,
     },
@@ -69,9 +75,17 @@ async function handleSessionCompleted(session: Stripe.Checkout.Session) {
 
 // Handles creation or update of a subscription
 async function handleSubscriptionCreatedOrUpdated(subscriptionId: string) {
-  const subscription = await stripe.subscriptions.retrieve(subscriptionId); // Get full subscription object
+  const subscription = await stripe.subscriptions.retrieve(subscriptionId);
 
-  // If subscription is active, trialing, or past due, upsert record into DB
+  const clerkId = subscription.metadata?.userId; // This is Clerk user ID
+  if (!clerkId) {
+    throw new Error("Clerk ID is missing in subscription metadata");
+  }
+
+  // Retrieve private metadata from Clerk in case you need userId
+  const clerkUser = await clerkClient.users.getUser(clerkId);
+  const userId = (clerkUser.privateMetadata?.userId as string) || clerkId;
+
   if (
     subscription.status === "active" ||
     subscription.status === "trialing" ||
@@ -79,10 +93,11 @@ async function handleSubscriptionCreatedOrUpdated(subscriptionId: string) {
   ) {
     await prisma.userSubscription.upsert({
       where: {
-        userId: subscription.metadata.userId,
+        userId: userId,
       },
       create: {
-        userId: subscription.metadata.userId,
+        userId: userId,
+        clerkId: clerkId,
         stripeSubscriptionId: subscription.id,
         stripeCustomerId: subscription.customer as string,
         stripePriceId: subscription.items.data[0].price.id,
@@ -100,7 +115,6 @@ async function handleSubscriptionCreatedOrUpdated(subscriptionId: string) {
       },
     });
   } else {
-    // If subscription is not active, remove it from the DB
     await prisma.userSubscription.deleteMany({
       where: {
         stripeCustomerId: subscription.customer as string,

@@ -46,7 +46,7 @@ async function Page() {
       where: { userId },
     }),
 
-    // 3. Retrieve the user's current subscription level (e.g., free, pro, premium)
+    // 3. Retrieve the user's current subscription level (e.g., trial, monthly, annual)
     getUserSubscriptionLevel(userId),
   ]);
 

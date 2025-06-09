@@ -5,7 +5,7 @@ import {
   // AppWindow,
   // AreaChart,
   CircleHelp,
-  // CreditCard,
+  CreditCard,
   HomeIcon,
   Layers,
   List,
@@ -82,12 +82,12 @@ const links: DashboardLinks[] = [
     href: "/resources",
     icon: <UserCheck2 />,
   },
-  // {
-  //   id: nanoid(),
-  //   label: "Billing",
-  //   href: "/billing",
-  //   icon: <CreditCard />,
-  // },
+  {
+    id: nanoid(),
+    label: "Billing",
+    href: "/billing",
+    icon: <CreditCard />,
+  },
 
   {
     id: nanoid(),

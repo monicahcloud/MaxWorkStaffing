@@ -35,9 +35,7 @@ export async function saveResume(values: ResumeValues) {
     const resumeCount = await prisma.resume.count({ where: { userId } });
 
     if (!canCreateResume(subscriptionLevel, resumeCount)) {
-      throw new Error(
-        "Maximum resume count reached for this subscription level."
-      );
+      throw new Error("Please check your subscription status.");
     }
   }
 

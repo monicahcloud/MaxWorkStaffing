@@ -19,7 +19,7 @@ export default function MainFooter() {
           <Link href="/privacy-policy" className="hover:underline">
             Privacy Policy
           </Link>
-          <Link href="/toc" className="hover:underline">
+          <Link href="/tos" className="hover:underline">
             Terms & Conditions
           </Link>
           <Link href="/accessibility" className="hover:underline">

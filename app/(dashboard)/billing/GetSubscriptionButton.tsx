@@ -6,8 +6,10 @@ import React from "react";
 function GetSubscriptionButton() {
   const premiumModal = usePremiumModal();
   return (
-    <Button onClick={() => premiumModal.setOpen(true)}>
-      Get Premium Subscription
+    <Button
+      className="flex mx-auto text-2xl p-6 uppercase bg-blue-800 rounded-xl items-center justify-center"
+      onClick={() => premiumModal.setOpen(true)}>
+      Continue
     </Button>
   );
 }
