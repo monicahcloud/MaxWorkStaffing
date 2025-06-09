@@ -5,10 +5,10 @@ import { clerkClient } from "@clerk/nextjs/server"; // Clerk SDK for user manage
 import { NextRequest } from "next/server"; // Type for Next.js API route request
 import Stripe from "stripe"; // Stripe types
 
-export async function GET() {
-  console.log("✅ Stripe webhook GET hit");
-  return new Response("Webhook is connected", { status: 200 });
-}
+// export async function GET() {
+//   console.log("✅ Stripe webhook GET hit");
+//   return new Response("Webhook is connected", { status: 200 });
+// }
 
 // Webhook handler for POST requests from Stripe
 export async function POST(req: NextRequest) {
@@ -77,14 +77,14 @@ async function handleSessionCompleted(session: Stripe.Checkout.Session) {
 async function handleSubscriptionCreatedOrUpdated(subscriptionId: string) {
   const subscription = await stripe.subscriptions.retrieve(subscriptionId);
 
-  const clerkId = subscription.metadata?.userId; // This is Clerk user ID
-  if (!clerkId) {
-    throw new Error("Clerk ID is missing in subscription metadata");
-  }
+  // const clerkId = subscription.metadata?.userId; // This is Clerk user ID
+  // if (!clerkId) {
+  //   throw new Error("Clerk ID is missing in subscription metadata");
+  // }
 
-  // Retrieve private metadata from Clerk in case you need userId
-  const clerkUser = await clerkClient.users.getUser(clerkId);
-  const userId = (clerkUser.privateMetadata?.userId as string) || clerkId;
+  // // Retrieve private metadata from Clerk in case you need userId
+  // const clerkUser = await clerkClient.users.getUser(clerkId);
+  // const userId = (clerkUser.privateMetadata?.userId as string) || clerkId;
 
   if (
     subscription.status === "active" ||
@@ -93,11 +93,10 @@ async function handleSubscriptionCreatedOrUpdated(subscriptionId: string) {
   ) {
     await prisma.userSubscription.upsert({
       where: {
-        userId: userId,
+        userId: subscription.metadata.userId,
       },
       create: {
-        userId: userId,
-        clerkId: clerkId,
+        userId: subscription.metadata.userId,
         stripeSubscriptionId: subscription.id,
         stripeCustomerId: subscription.customer as string,
         stripePriceId: subscription.items.data[0].price.id,

@@ -54,6 +54,10 @@ export const env = createEnv({
     STRIPE_WEBHOOK_SECRET: z.string().min(1),
     BLOB_READ_WRITE_TOKEN: z.string().min(1),
     CLERK_WEBHOOK_SIGNING_SECRET: z.string().min(1),
+    ADZUNA_APP_KEY: z.string().min(1),
+    ADZUNA_APP_ID: z.string().min(1),
+    PIKR_CLIENT_ID: z.string().min(1),
+    PIKR_CLIENT_AUTH_KEY: z.string().min(1),
   },
   client: {
     NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string().min(1),
@@ -65,6 +69,8 @@ export const env = createEnv({
     NEXT_PUBLIC_STRIPE_PRICE_ID_ANNUAL: z.string().min(1),
     NEXT_PUBLIC_STRIPE_PRICE_ID_MONTHLY: z.string().min(1),
     NEXT_PUBLIC_BASE_URL: z.string().min(1).url(),
+    NEXT_PUBLIC_VAPI_WEB_TOKEN: z.string().min(1),
+    NEXT_PUBLIC_VAPI_WORKFLOW_ID: z.string().min(1),
   },
   experimental__runtimeEnv: {
     NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY:
@@ -82,5 +88,7 @@ export const env = createEnv({
     NEXT_PUBLIC_STRIPE_PRICE_ID_MONTHLY:
       process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_MONTHLY,
     NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
+    NEXT_PUBLIC_VAPI_WEB_TOKEN: process.env.NEXT_PUBLIC_VAPI_WEB_TOKEN,
+    NEXT_PUBLIC_VAPI_WORKFLOW_ID: process.env.NEXT_PUBLIC_VAPI_WORKFLOW_ID,
   },
 });
