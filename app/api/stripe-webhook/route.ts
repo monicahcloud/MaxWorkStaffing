@@ -77,10 +77,15 @@ async function handleSessionCompleted(session: Stripe.Checkout.Session) {
 async function handleSubscriptionCreatedOrUpdated(subscriptionId: string) {
   const subscription = await stripe.subscriptions.retrieve(subscriptionId);
 
-  // const clerkId = subscription.metadata?.userId; // This is Clerk user ID
-  // if (!clerkId) {
-  //   throw new Error("Clerk ID is missing in subscription metadata");
-  // }
+  const clerkId = subscription.metadata?.userId;
+  if (!clerkId) {
+    throw new Error("Missing Clerk ID in metadata.");
+  }
+
+  const user = await prisma.user.findUnique({ where: { clerkId } });
+  if (!user) {
+    throw new Error("User not found for Clerk ID.");
+  }
 
   // // Retrieve private metadata from Clerk in case you need userId
   // const clerkUser = await clerkClient.users.getUser(clerkId);
@@ -93,10 +98,11 @@ async function handleSubscriptionCreatedOrUpdated(subscriptionId: string) {
   ) {
     await prisma.userSubscription.upsert({
       where: {
-        userId: subscription.metadata.userId,
+        clerkId,
       },
       create: {
-        userId: subscription.metadata.userId,
+        clerkId,
+        userId: user.id, // ← Internal Prisma user ID
         stripeSubscriptionId: subscription.id,
         stripeCustomerId: subscription.customer as string,
         stripePriceId: subscription.items.data[0].price.id,
