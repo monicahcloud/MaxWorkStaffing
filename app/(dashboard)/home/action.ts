@@ -27,12 +27,12 @@ export async function generateBlogPostsIfNeeded() {
   const existingPosts = await prisma.blogPost.count();
   console.log("Existing blog post count:", existingPosts);
 
-  if (existingPosts >= 12) return;
+  if (existingPosts >= 2) return;
 
   const { text } = await generateText({
     model: openai("gpt-4"),
     prompt: `
-Generate 12 unique blog posts for jobseekers in JSON format with the following fields:
+Generate 3 unique blog posts for jobseekers in JSON format with the following fields:
 
 - id (uuid)
 - title (unique, no duplicates)

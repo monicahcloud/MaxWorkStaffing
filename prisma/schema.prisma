@@ -115,18 +115,25 @@ model Education {
 model UserSubscription {
   id                      String   @id @default(cuid())
   userId                  String   @unique
-  clerkId         String    @unique // Clerk-provided user ID
-  stripeCustomerId        String?   @unique
-  stripeSubscriptionId    String?   @unique
+  clerkId                 String   @unique
+  stripeCustomerId        String?  @unique
+  stripeSubscriptionId    String?  @unique
   stripePriceId           String?
   stripeCurrentPeriodEnd  DateTime?
   stripeCancelAtPeriodEnd Boolean  @default(false)
+
+  stripePlanName          String?  // <-- add this
+  stripeInterval          String?  // <-- and this
+
   createdAt               DateTime @default(now())
   updatedAt               DateTime @updatedAt
-  user            User             @relation(fields: [clerkId], references: [clerkId])
+
+  user                    User     @relation(fields: [clerkId], references: [clerkId])
 
   @@map("user_subscriptions")
+  // @@unique([clerkId]) // to allow upsert by clerkId
 }
+
 
 model Job {
   id           String    @id @default(uuid())

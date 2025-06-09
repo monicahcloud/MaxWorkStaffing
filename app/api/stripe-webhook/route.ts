@@ -97,19 +97,21 @@ async function handleSubscriptionCreatedOrUpdated(subscriptionId: string) {
     subscription.status === "past_due"
   ) {
     await prisma.userSubscription.upsert({
-      where: {
-        clerkId,
-      },
+      where: { clerkId: subscription.metadata.userId }, // Clerk ID is in metadata
       create: {
-        clerkId,
-        userId: user.id, // ← Internal Prisma user ID
-        stripeSubscriptionId: subscription.id,
+        clerkId: subscription.metadata.userId,
+        userId: subscription.metadata.userId,
         stripeCustomerId: subscription.customer as string,
+        stripeSubscriptionId: subscription.id,
         stripePriceId: subscription.items.data[0].price.id,
         stripeCurrentPeriodEnd: new Date(
           subscription.current_period_end * 1000
         ),
         stripeCancelAtPeriodEnd: subscription.cancel_at_period_end,
+
+        stripePlanName: subscription.items.data[0].price.nickname ?? "", // or use product.name via Stripe API if not set
+        stripeInterval:
+          subscription.items.data[0].price.recurring?.interval ?? "",
       },
       update: {
         stripePriceId: subscription.items.data[0].price.id,
@@ -117,6 +119,10 @@ async function handleSubscriptionCreatedOrUpdated(subscriptionId: string) {
           subscription.current_period_end * 1000
         ),
         stripeCancelAtPeriodEnd: subscription.cancel_at_period_end,
+
+        stripePlanName: subscription.items.data[0].price.nickname ?? "",
+        stripeInterval:
+          subscription.items.data[0].price.recurring?.interval ?? "",
       },
     });
   } else {
