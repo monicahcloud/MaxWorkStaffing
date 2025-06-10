@@ -71,26 +71,9 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    // Parse structured content (like skills, experience) from raw text using AI
-    const parsedData = await parseResumeWithAI(parsedText);
-
-    // // (Optional) Save parsed structured data in a separate table or schema
-    // await prisma.resume.create({
-    //   data: {
-    //     userId,
-    //     user: {
-    //       connect: {
-    //         clerkId: userId,
-    //       },
-    //     },
-    //     resumeId: resume.id, // Link structured data to original resume
-    //     content: parsedData, // Save structured content (assumed to be JSON or text)
-    //   },
-    // });
-    // 4. Save structured data to same resume
-    await saveParsedResumeData(resume.id, parsedData);
-
-    // Respond with success and metadata
+    // const parsedData = await parseResumeWithAI(parsedText);
+    //   await saveParsedResumeData(resume.id, parsedData);
+    handleParsedData(parsedText, resume);
     return NextResponse.json(
       {
         success: true,
@@ -108,4 +91,9 @@ export async function POST(req: NextRequest) {
       { status: 500 }
     );
   }
+}
+
+async function handleParsedData(parsedText, resume) {
+  const parsedData = await parseResumeWithAI(parsedText);
+  await saveParsedResumeData(resume.id, parsedData);
 }
