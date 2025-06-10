@@ -403,7 +403,19 @@ Return only the JSON object.
 }
 
 export async function saveParsedResumeData(resumeId: string, parsedData: any) {
+  console.log("parsedData:", parsedData);
   if (!resumeId) throw new Error("Missing resumeId");
+
+  const {
+    personalInfo,
+
+    summary,
+    skills,
+    education,
+    workExperience,
+    interests,
+    parsed,
+  } = parsedData;
 
   const {
     firstName,
@@ -415,13 +427,7 @@ export async function saveParsedResumeData(resumeId: string, parsedData: any) {
     website,
     linkedin,
     gitHub,
-    summary,
-    skills,
-    education,
-    workExperience,
-    interests,
-  } = parsedData;
-
+  } = personalInfo;
   // 1. Clear previous nested data to avoid duplicates
   await prisma.techSkill.deleteMany({ where: { resumeId } });
   await prisma.education.deleteMany({ where: { resumeId } });
@@ -433,7 +439,7 @@ export async function saveParsedResumeData(resumeId: string, parsedData: any) {
     data: {
       resumeTitle: parsedData.resumeTitle || "Untitled",
       description: summary || "",
-
+      parsed: true,
       firstName,
       lastName,
       jobTitle,
