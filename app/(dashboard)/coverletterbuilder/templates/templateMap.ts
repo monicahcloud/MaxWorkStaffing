@@ -11,5 +11,4 @@ export const templateMap: Record<
   Shabach: ShabachTemplate,
   Todah: TodahTemplate,
   Zamar: Zamar,
-  // other templates...
 };

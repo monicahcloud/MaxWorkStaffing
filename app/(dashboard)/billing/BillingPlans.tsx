@@ -106,7 +106,7 @@ export default function BillingPlans() {
                 <span className="font-semibold">cover letters</span>
               </li>
               <li>Cancel anytime</li>
-              <li>After 14 days, auto-renews at $23.95 billed every 4 weeks</li>
+              <li>After 14 days, auto-renews at $22.95 billed every 4 weeks</li>
               <li className="font-semibold text-blue-700">
                 Money-Back Guarantee
               </li>

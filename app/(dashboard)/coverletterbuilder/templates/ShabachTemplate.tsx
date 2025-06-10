@@ -14,14 +14,6 @@ interface CoverLetterPreviewProps {
   contentRef?: React.Ref<HTMLDivElement>;
 }
 
-// Helper to get a safe photo src
-// function getUserPhotoSrc(userPhotoUrl: unknown): string | undefined {
-//   if (typeof userPhotoUrl === "string" && userPhotoUrl.trim() !== "") {
-//     return userPhotoUrl;
-//   }
-//   return undefined;
-// }
-// --- Main Template ---
 export function ShabachTemplate({
   className,
   contentRef,
@@ -47,7 +39,7 @@ export function ShabachTemplate({
           transform: `scale(${width / 794})`,
         }}
         ref={contentRef}
-        id="coverletterPreviewContent">
+        id="resumePreviewContent">
         <MemoizedHeaderSection coverletterData={coverletterData} />
         <MemoizedUserPhoto coverletterData={coverletterData} />
         <MemoizedRecipientSection coverletterData={coverletterData} />

@@ -28,19 +28,19 @@ export default function Zamar({
     <div
       ref={containerRef}
       className={cn(
-        " aspect-[210/297] bg-white text-black h-fit w-full ",
+        " aspect-[210/297] bg-white text-black h-fit w-full font-lora",
         className
       )}>
       <div
         className={cn(
-          "grid grid-cols-[9rem_1fr] origin-top-left h-full w-full"
+          "grid grid-cols-[9rem_1fr] origin-top-left h-full font-lora w-full"
         )}
         style={{
           width: "794px",
           transform: `scale(${width / 794})`,
         }}
         ref={contentRef}
-        id="coverletterPreviewContent">
+        id="resumePreviewContent">
         {/* Left Bar */}
         <MemoizedLeftBar coverletterData={coverletterData} />
 
@@ -247,4 +247,3 @@ function ContactSection({
   );
 }
 const MemoizedContactSection = React.memo(ContactSection);
-

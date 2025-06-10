@@ -32,7 +32,7 @@ function ChronologicalResumePreview({
       )}
       ref={containerRef}>
       <div
-        className={cn("space-y-6 p-6 origin-top-left ", !width && "invisible")}
+        className={cn("space-y-6 p-6 origin-top-left  ", !width && "invisible")}
         style={{
           width: "794px", // Lock original width
           transform: `scale(${width / 794})`,
