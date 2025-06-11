@@ -1,22 +1,20 @@
-// This export tells Next.js to render the page on every request (dynamic rendering)
-// instead of using static generation or caching.
 export const dynamic = "force-dynamic";
 
 import React from "react";
-import { Metadata } from "next"; // Next.js type to define page metadata like <title>
-import SectionTitle from "@/components/SectionTitle"; // UI component to show a section header
-import { resumeDataInclude } from "@/lib/types"; // Prisma include config to fetch related data for resumes
-import { auth } from "@clerk/nextjs/server"; // Clerk server-side auth function to retrieve the current session
-import prisma from "@/lib/prisma"; // Prisma client instance to query the database
-import ResumeItem from "./ResumeItem"; // Component to render a single resume preview card
-import CreateResumeButton from "./CreateReumeButton"; // Button that navigates to resume creation flow
-import { getUserSubscriptionLevel } from "@/lib/subscription"; // Helper to retrieve a user's subscription tier
-import { canCreateResume } from "@/lib/permissions"; // Logic that determines if user can create more resumes
-import UploadResumeButton from "./UploadResumeButton"; // Button to allow users to upload an existing resume file
+import { Metadata } from "next";
+import SectionTitle from "@/components/SectionTitle";
+import { resumeDataInclude } from "@/lib/types";
+import { auth } from "@clerk/nextjs/server";
+import prisma from "@/lib/prisma";
+import ResumeItem from "./ResumeItem";
+import CreateResumeButton from "./CreateReumeButton";
+import { getUserSubscriptionLevel } from "@/lib/subscription";
+import { canCreateResume } from "@/lib/permissions";
+import UploadResumeButton from "./UploadResumeButton";
 
 // Page-level metadata for SEO and browser tab title
 export const metadata: Metadata = {
-  title: "My Resumes", // Sets the <title> tag on this page to "My Resumes"
+  title: "My Resumes",
 };
 
 // Server Component: async function that fetches data before rendering
@@ -27,7 +25,6 @@ async function Page() {
   // Extract the user ID from the authenticated session
   const userId = (await session)?.userId;
 
-  // If the user is not authenticated (no userId), do not render anything
   if (!userId) {
     return null;
   }
@@ -53,26 +50,15 @@ async function Page() {
   // Render UI for resume dashboard
   return (
     <main>
-      {/* Optional: Resume onboarding tour button (commented out for now) */}
-      {/* 
-      <div className="justify-center items-center mx-auto flex">
-        <ResumesTourButton />
-      </div>
-      */}
-
-      {/* Section heading with total resume count */}
       <SectionTitle text="My Resumes" subtext={`Total: ${totalCount}`} />
 
-      {/* Outer container with responsive padding */}
       <div className="p-10 md:px-20 lg:px-32">
-        {/* Center-aligned action buttons (Create and Upload) */}
         <div className="w-full flex justify-center">
           <div className="flex items-center gap-4">
-            {/* "Create Resume" button — only enabled if user hasn't exceeded limit */}
             <CreateResumeButton
-              canCreate={canCreateResume(subscriptionLevel, totalCount)} // Check permission based on subscription plan and how many resumes already exist
+              canCreate={canCreateResume(subscriptionLevel, totalCount)} //
             />
-            {/* "Upload Resume" button — always available */}
+
             <UploadResumeButton />
           </div>
         </div>

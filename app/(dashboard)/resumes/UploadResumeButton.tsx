@@ -1,22 +1,18 @@
-// Enable client-side rendering for this component (required for hooks like useRef)
 "use client";
 
-import { useRef, useState, useTransition } from "react"; // React hook to persist a reference to the hidden file input element
-import { Button } from "@/components/ui/button"; // Reusable button component styled with your design system
-import { UploadCloud } from "lucide-react"; // Icon from Lucide used to visually represent upload action
-import { toast } from "sonner"; // Notification library used to show success or error messages
+import { useRef, useState, useTransition } from "react";
+import { Button } from "@/components/ui/button";
+import { UploadCloud } from "lucide-react"; //
+import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
-// Component definition — expects a function `setUpdateResumes` as a prop
-// This function is called after a successful upload to trigger a refresh or update in parent
 export default function UploadResumeButton() {
-  // Create a ref to access the hidden file input element in the DOM
   const inputRef = useRef<HTMLInputElement>(null);
-  // const [isPending, startTransition] = useTransition();
+
   const [isPending, startTransition] = useTransition();
   const [isUploading, setIsUploading] = useState(false);
   const router = useRouter();
-  // Handler for when a file is selected from the input
+
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     // Get the first selected file
     const file = e.target.files?.[0];
@@ -40,7 +36,6 @@ export default function UploadResumeButton() {
         // startTransition(() => {
         router.refresh(); // Refresh the page
         // });
-        // setUpdateResumes(true); // Notify parent component to re-fetch the resumes
       } else {
         // Handle failed response with a toast error
         toast.error("Upload failed. Please try again.");
@@ -48,7 +43,7 @@ export default function UploadResumeButton() {
     } catch {
       toast.error("Unexpected error occurred.");
     } finally {
-      setIsUploading(false); // Hide spinner after upload completes
+      setIsUploading(false);
       e.target.value = "";
     }
   };
@@ -63,7 +58,6 @@ export default function UploadResumeButton() {
         className="hidden" // Hidden from view; shown indirectly via button click
       />
 
-      {/* Styled button that, when clicked, opens the file picker by programmatically clicking the hidden input */}
       <Button
         disabled={isUploading}
         onClick={() => inputRef.current?.click()}
