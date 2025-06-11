@@ -59,7 +59,6 @@ export default function CoverLetterItem({ coverletter }: CoverLetterProps) {
         <Link
           href={`/coverletterbuilder/editor?coverLetterId=${coverletter.id}`}
           className="relative inline-block w-full">
-          {" "}
           <CoverLetterPreview
             coverLetterData={mapToCoverLetterValues(coverletter)}
             className="h-[216px] shadow-sm group-hover:shadow-lg transition-shadow overflow-hidden"

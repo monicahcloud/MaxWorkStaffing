@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 import { templateMetadata } from "./template";
 
@@ -18,17 +19,29 @@ export default function TemplateSelectionPage() {
     <main className="p-6 max-w-5xl mx-auto">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {templateMetadata.map((template) => (
-          <Card
+          <button
+            type="button"
             key={template.id}
-            className={`cursor-pointer hover:ring-2 hover:ring-primary transition`}
-            onClick={() => handleSelect(template.id)}>
-            <CardContent className="p-4">
-              <h2 className="font-semibold text-lg">{template.name}</h2>
-              <p className="text-sm text-muted-foreground mt-2">
-                Preview coming soon
-              </p>
-            </CardContent>
-          </Card>
+            onClick={() => handleSelect(template.id)}
+            className="w-full">
+            <Card className="cursor-pointer hover:shadow-lg transition-all p-4">
+              <CardContent className="flex flex-col items-center gap-4">
+                <div className="relative w-[300px] h-[400px]">
+                  {template.image && (
+                    <Image
+                      src={template.image}
+                      alt={template.name}
+                      className="rounded-lg object-contain w-full h-full"
+                    />
+                  )}
+                </div>
+                <div className="w-full border-t border-gray-300" />
+                <p className="text-center text-muted-foreground">
+                  {template.name}
+                </p>
+              </CardContent>
+            </Card>
+          </button>
         ))}
       </div>
     </main>

@@ -50,7 +50,6 @@ export default async function ChooseTemplatePage({
   params: { id: string };
 }) {
   const resumeId = params.id;
-  console.log("Rendering template chooser for resumeId:", resumeId);
 
   return (
     <>

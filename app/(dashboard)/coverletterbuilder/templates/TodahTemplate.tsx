@@ -19,27 +19,27 @@ export function TodahTemplate({
 }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { width } = useDimensions(containerRef as React.RefObject<HTMLElement>);
+  const themeColor = coverletterData.themeColor || "#ffd200";
 
   return (
     <div
       ref={containerRef}
       className={cn(
-        " aspect-[210/297] bg-white text-black h-fit w-full font-lora",
+        "aspect-[210/297] bg-white text-black h-fit w-full font-lora",
         className
       )}>
       <div
-        className={cn(" space-y-6 p-6 origin-top-left  z-10  font-lora")}
+        className={cn("space-y-6 p-10 origin-top-left z-10 font-lora")}
         style={{
           width: "794px",
           transform: `scale(${width / 794})`,
+          border: `20px double ${themeColor}`,
         }}
         ref={contentRef}
         id="resumePreviewContent">
-        <TopWave coverletterData={coverletterData} />
         <TodahHeaderSection coverletterData={coverletterData} />
         <TodahBodySection coverletterData={coverletterData} />
         <TodahSignatureSection coverletterData={coverletterData} />
-        <BottomWave coverletterData={coverletterData} />
       </div>
     </div>
   );
@@ -55,7 +55,7 @@ function TodahHeaderSection({
     coverletterData;
 
   return (
-    <div className="flex flex-col items-center justify-center text-center mt-20">
+    <div className="flex flex-col items-center justify-center text-center mt-10">
       <div className="flex items-end space-x-4">
         <h1 className="text-5xl font-serif leading-none tracking-wide">
           {firstName || "Lizzie"}
@@ -90,10 +90,18 @@ function TodahBodySection({
         {companyAddress || "1234 Main Street, Anytown, ST 12345"}
       </p>
       <div className="space-y-5 leading-relaxed mt-5">
-        <p className="text-xl">
-          <strong>Dear {recipientName || "Hiring Manager"},</strong>
+        <p>Dear {recipientName || "Mr. Gallego"},</p>
+        <p>
+          {body ||
+            `A cover letter allows you to professionally introduce yourself to a prospective
+          employer. Your goal in writing your cover letter should be to encourage the employer
+          to read your resume and consider you for a specific position. Highlight your achievements, skills, experiences, and training
+        that are relevant to the position you want to get. However, avoid
+        simply repeating the information you included in your resume.
+        Tailor your cover letter to each employer and job. Maintain a professional tone, but let your enthusiasm show. Think
+        of it as a smart casual gathering — not too formal, not too
+        personal.`}
         </p>
-        <div className="whitespace-pre-line text-md">{body}</div>
       </div>
     </div>
   );
@@ -150,38 +158,38 @@ function TodahSignatureSection({
 //     </div>
 //   );
 // }
-function TopWave({ coverletterData }: { coverletterData: CoverLetterValues }) {
-  const { themeColor } = coverletterData;
+// function TopWave({ coverletterData }: { coverletterData: CoverLetterValues }) {
+//   const { themeColor } = coverletterData;
 
-  return (
-    <div
-      className="absolute top-0 left-0 w-full pointer-events-none z-0"
-      style={{
-        height: "70px", // Adjust the thickness of the top border here
-        backgroundColor: themeColor || "#ffd200",
-      }}
-    />
-  );
-}
+//   return (
+//     <div
+//       className="absolute top-0 left-0 w-full pointer-events-none z-0"
+//       style={{
+//         height: "70px", // Adjust the thickness of the top border here
+//         backgroundColor: themeColor || "#ffd200",
+//       }}
+//     />
+//   );
+// }
 
 // --- Bottom Wave ---
-function BottomWave({
-  coverletterData,
-}: {
-  coverletterData: CoverLetterValues;
-}) {
-  const { themeColor } = coverletterData;
-  return (
-    <div className="absolute bottom-0 left-0 w-full pointer-events-none z-0 rotate-180">
-      <svg
-        className="w-full h-10"
-        viewBox="0 0 1440 320"
-        preserveAspectRatio="none">
-        <path
-          fill={themeColor}
-          d="M0,128L60,144C120,160,240,192,360,197.3C480,203,600,181,720,160C840,139,960,117,1080,117.3C1200,117,1320,139,1380,149.3L1440,160L1440,0L1380,0C1320,0,1200,0,1080,0C960,0,840,0,720,0C600,0,480,0,360,0C240,0,120,0,60,0L0,0Z"
-        />
-      </svg>
-    </div>
-  );
-}
+// function BottomWave({
+//   coverletterData,
+// }: {
+//   coverletterData: CoverLetterValues;
+// }) {
+//   const { themeColor } = coverletterData;
+//   return (
+//     <div className="absolute bottom-0 left-0 w-full pointer-events-none z-0 rotate-180">
+//       <svg
+//         className="w-full h-10"
+//         viewBox="0 0 1440 320"
+//         preserveAspectRatio="none">
+//         <path
+//           fill={themeColor}
+//           d="M0,128L60,144C120,160,240,192,360,197.3C480,203,600,181,720,160C840,139,960,117,1080,117.3C1200,117,1320,139,1380,149.3L1440,160L1440,0L1380,0C1320,0,1200,0,1080,0C960,0,840,0,720,0C600,0,480,0,360,0C240,0,120,0,60,0L0,0Z"
+//         />
+//       </svg>
+//     </div>
+//   );
+// }
