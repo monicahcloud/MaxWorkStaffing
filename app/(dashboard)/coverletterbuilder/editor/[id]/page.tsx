@@ -1,5 +1,6 @@
-import CoverLetterBuilder from "../CoverLetterBuilder";
+// import CoverLetterBuilder from "../CoverLetterBuilder";
 
-export default function EditCoverLetterPage() {
-  return <CoverLetterBuilder />;
-}
+// export default function EditCoverLetterPage() {
+//   console.log("you hit the coverltterbuilder>editor?[id]>page.tsx");
+//   return <CoverLetterBuilder />;
+// }

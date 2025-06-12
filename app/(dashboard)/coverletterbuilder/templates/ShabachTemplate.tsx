@@ -21,22 +21,21 @@ export function ShabachTemplate({
 }: CoverLetterPreviewProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { width } = useDimensions(containerRef as React.RefObject<HTMLElement>);
+  const scale = width ? Math.min(width / 794, 1) : 1;
 
   return (
     <div
       className={cn(
-        " aspect-[210/297] bg-black text-white h-fit w-full",
+        " aspect-[210/297] bg-black text-white h-fit w-full ",
         className
       )}
-      ref={containerRef}>
+      ref={containerRef}
+      style={{ overflow: "auto" }}>
       <div
-        className={cn(
-          "origin-top-left space-y-6 p-10  font-lora",
-          !width && "invisible"
-        )}
+        className={cn("origin-top-left space-y-6 p-10 print-friendly-bg")}
         style={{
           width: "794px",
-          transform: `scale(${width / 794})`,
+          transform: `scale(${scale})`,
         }}
         ref={contentRef}
         id="resumePreviewContent">
@@ -63,23 +62,23 @@ function HeaderSection({
       ? "white"
       : coverletterData.themeColor;
   return (
-    <div className="flex w-[100%] space-y-6  mt-20 justify-between">
+    <div className="flex w-[100%] space-y-6  mt-20 justify-between font-lora">
       {/* Name Block */}
       <div style={{ color: themeColor }}>
-        <h1 className="text-7xl font-serif leading-none tracking-widest">
-          {coverletterData.firstName || "Lizzie"}
+        <h1 className="text-7xl font-lora leading-none tracking-wider uppercase">
+          {coverletterData.firstName || ""}
         </h1>
-        <div className="h-1 w-20 bg-white my-9" />
-        <h2 className="text-7xl pl-25 -mt-20 font-serif tracking-widest">
-          {coverletterData.lastName || "Major"}
+        <div className="h-1 w-25 bg-white my-9" />
+        <h2 className="text-7xl pl-25 -mt-20 font-lora tracking-wider uppercase">
+          {coverletterData.lastName || ""}
         </h2>
       </div>
       {/* Contact Block */}
       <div
         className="text-lg text-right space-y-1 pr-5"
         style={{ color: themeColor }}>
-        <p>📧 {coverletterData.userEmail || "hello@reallygreatsite.com"}</p>
-        <p>🌐 {coverletterData.website || "@reallygreatsite"}</p>
+        <p>📧 {coverletterData.userEmail || ""}</p>
+        <p>🌐 {coverletterData.website || ""}</p>
       </div>
     </div>
   );
@@ -136,17 +135,18 @@ function RecipientSection({
   coverletterData: CoverLetterValues;
 }) {
   return (
-    <div className="text-lg -mt-50">
-      <p className="text-xl ">{new Date().toLocaleDateString()}</p>
-      <p className=" text-white">
-        {coverletterData.recipientName || "Hiring Manager Name"}
+    <div className="text-lg -mt-50 font-lora">
+      <p className="text-xl mb-5 ">
+        {new Date().toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        })}
       </p>
-      <p>{coverletterData.companyName || "Company Name"}</p>
-      <p>
-        {coverletterData.companyAddress ||
-          "123 Anywhere St., Any City, ST 12345"}
-      </p>
-      <div className="h-px w-16 bg-white/50 mt-2" />
+      <p className=" text-white">{coverletterData.recipientName}</p>
+      <p>{coverletterData.companyName}</p>
+      <p>{coverletterData.companyAddress}</p>
+      <div className="h-px w-50 bg-white mt-2" />
     </div>
   );
 }
@@ -158,20 +158,23 @@ function BodySection({
   coverletterData: CoverLetterValues;
 }) {
   return (
-    <div className="text-xl text-white/90 space-y-5 leading-relaxed">
+    <div className="text-lg font-lora text-white/90 space-y-5 leading-relaxed">
       <p>
-        <strong>
-          Dear {coverletterData.recipientName || "Hiring Manager"},
-        </strong>
+        {coverletterData.recipientName
+          ? `Dear ${coverletterData.recipientName},`
+          : "To Whom It May Concern,"}
       </p>
       {coverletterData.body ? (
         <div dangerouslySetInnerHTML={{ __html: coverletterData.body }} />
       ) : (
         <p>
-          A cover letter allows you to professionally introduce yourself to a
-          prospective employer. Your goal in writing your cover letter should be
-          to encourage the employer to read your resume and consider you for a
-          specific position.
+          Lorem, ipsum dolor sit amet consectetur adipisicing elit. Aperiam quo
+          alias adipisci iure, dignissimos sunt pariatur ratione, perspiciatis
+          error reprehenderit sequi tempore harum facere assumenda qui. Sit
+          placeat natus a? Lorem ipsum dolor sit amet consectetur adipisicing
+          elit. Aut officiis vitae, expedita quae necessitatibus omnis
+          aspernatur eveniet praesentium voluptas molestias in cupiditate dicta
+          optio ex, voluptatem tenetur itaque eligendi ut!
         </p>
       )}
     </div>
@@ -192,28 +195,22 @@ function SignatureSection({
   const displayName =
     (coverletterData.firstName || "") + " " + (coverletterData.lastName || "");
   return (
-    <div className="mt-4 text-xl  ">
+    <div className="mt-4 text-xl font-lora ">
       <p>Best Regards,</p>
       {signatureUrl ? (
-        <Image
-          src={signatureUrl}
-          alt="Signature"
-          width={120}
-          height={40}
-          className="object-contain inline-block"
-          priority
-        />
+        <div className="w-[250px] -ml-10">
+          <Image
+            src={signatureUrl}
+            alt="Signature"
+            width={200}
+            height={100}
+            className="object-contain"
+          />
+        </div>
       ) : (
-        <p
-          className="italic text-xl"
-          style={{
-            color: coverletterData.signatureColor || "white",
-          }}>
-          {displayName.trim() || "Your Name"}
-        </p>
+        <p className="italic text-xl">{displayName}</p>
       )}
-      <p className="font-bold">{displayName.trim() || "Lizzie Major"}</p>
-      <p className="text-md ">{coverletterData.userPhone || "123-456-7890"}</p>
+      <p className="">{displayName.trim() || ""}</p>
     </div>
   );
 }
@@ -229,10 +226,10 @@ function FooterSection({
       ? "white"
       : coverletterData.themeColor;
   return (
-    <div className="pt-6 border-t border-white/20 text-center text-lg text-white/70 mt-4">
-      <p style={{ color: themeColor }}>
-        {coverletterData.userAddress || "1234 Main St, Anytown USA"}
-      </p>
+    <div
+      className="pt-6 border-t border-white/20 text-center text-xl mt-4 font-lora"
+      style={{ color: themeColor || "rgba(255,255,255,0.7)" }}>
+      <p>{coverletterData.userAddress}</p>
     </div>
   );
 }

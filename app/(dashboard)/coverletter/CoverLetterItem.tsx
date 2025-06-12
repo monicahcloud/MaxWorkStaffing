@@ -28,6 +28,7 @@ import { useReactToPrint } from "react-to-print";
 
 import { useRouter } from "next/navigation";
 import { deleteCoverLetter } from "../coverletterbuilder/editor/actions";
+import ShareResume from "@/components/ReactShareButton";
 
 interface CoverLetterProps {
   coverletter: CoverLetterServerData;
@@ -35,6 +36,7 @@ interface CoverLetterProps {
 
 export default function CoverLetterItem({ coverletter }: CoverLetterProps) {
   const contentRef = useRef<HTMLDivElement>(null);
+
   const reactToPrintFn = useReactToPrint({
     contentRef,
     documentTitle: coverletter.companyName
@@ -51,7 +53,7 @@ export default function CoverLetterItem({ coverletter }: CoverLetterProps) {
             {coverletter.companyName || "Untitled Cover Letter"}
           </p>
           <p className="text-xs text-muted-foreground">
-            {wasUpdated ? "Updated" : "Created"} on{" "}
+            {wasUpdated ? "Updated" : "Created"} on
             {formatDate(coverletter.updatedAt, "MMM d, yyyy ")}
           </p>
         </div>
@@ -138,13 +140,13 @@ function MoreMenu({ coverletter, onPrintClick }: MoreMenuProps) {
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-      {/* <ShareResume
+      <ShareResume
         coverletterUrl={
           isUploaded
             ? coverletter.uploadedFileUrl!
             : `${process.env.NEXT_PUBLIC_BASE_URL}/coverletters/${coverletter.id}`
         }
-      /> */}
+      />
 
       <DeleteConfirmationDialog
         coverletterId={coverletter.id}
