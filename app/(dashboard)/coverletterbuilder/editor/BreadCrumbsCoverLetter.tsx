@@ -8,12 +8,10 @@ import {
 } from "@/components/ui/breadcrumb";
 import React from "react";
 import { allSteps } from "./stepsCoverLetter";
-// Make sure this path is correct
 
 interface BreadcrumbsProps {
   currentStep: string;
   setCurrentStep: (step: string) => void;
-  template?: string; // Optional, but unused here
 }
 
 export default function BreadcrumbsCoverLetter({

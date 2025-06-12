@@ -26,7 +26,7 @@ export default function useAutoSaveCoverLetter(
       try {
         setIsSaving(true);
         setIsError(false);
-        // Log debounced data before saving
+
         console.log("Saving cover letter. Debounced data:", debounced);
 
         const newData = structuredClone(debounced);

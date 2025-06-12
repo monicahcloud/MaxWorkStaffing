@@ -91,32 +91,39 @@ export default function SignatureForm({
   };
 
   return (
-    <div className="space-y-4">
-      <h3 className="text-lg font-semibold">Signature</h3>
-
-      {/* Color Picker */}
-      <div className="flex items-center gap-2">
-        <label htmlFor="penColor" className="font-medium">
-          Signature Color:
-        </label>
-        <input
-          id="penColor"
-          type="color"
-          value={penColor}
-          onChange={(e) => setPenColor(e.target.value)}
-          className="w-8 h-8 p-0 border-0"
-        />
-        <span className="text-sm">{penColor}</span>
+    <div className="max-w-xl mx-auto space-y-6">
+      <div className="space-y-1.5 text-center">
+        <h2 className="font-semibold text-2xl">Signature</h2>
+        <p className="text-sm text-muted-foreground">
+          Add your personal touch—draw your signature, type it in your favorite
+          font, or upload a polished version to complete your cover letter with
+          style.
+        </p>
       </div>
 
       <Tabs defaultValue="draw" className="w-full">
-        <TabsList className="mb-4">
-          <TabsTrigger value="draw">Draw</TabsTrigger>
-          <TabsTrigger value="type">Type</TabsTrigger>
-          <TabsTrigger value="upload">Upload</TabsTrigger>
-        </TabsList>
-
         {/* Draw Tab */}
+        <div className="flex justify-between items-center mb-4">
+          <TabsList className="">
+            <TabsTrigger value="draw">Draw</TabsTrigger>
+            <TabsTrigger value="type">Type</TabsTrigger>
+            <TabsTrigger value="upload">Upload</TabsTrigger>
+          </TabsList>
+          {/* Color Picker */}
+          <div className="flex items-center gap-2">
+            <label htmlFor="penColor" className="font-medium">
+              Signature Color:
+            </label>
+            <input
+              id="penColor"
+              type="color"
+              value={penColor}
+              onChange={(e) => setPenColor(e.target.value)}
+              className="w-8 h-8 p-0 border-0"
+            />
+            <span className="text-sm">{penColor}</span>
+          </div>
+        </div>
         <TabsContent value="draw">
           <SignaturePad
             ref={sigPadRef}
@@ -128,6 +135,7 @@ export default function SignatureForm({
             penColor={penColor}
             backgroundColor="rgba(0,0,0,0)"
           />
+
           <div className="flex gap-2 mt-2">
             <Button
               type="button"

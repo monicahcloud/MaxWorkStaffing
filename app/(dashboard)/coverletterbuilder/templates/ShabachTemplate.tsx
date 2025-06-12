@@ -24,11 +24,11 @@ export function ShabachTemplate({
 
   return (
     <div
-      ref={containerRef}
       className={cn(
-        "aspect-[210/297] bg-black  text-white w-full h-fit",
+        " aspect-[210/297] bg-black text-white h-fit w-full",
         className
-      )}>
+      )}
+      ref={containerRef}>
       <div
         className={cn(
           "origin-top-left space-y-6 p-10  font-lora",

@@ -5,14 +5,8 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import { Textarea } from "@/components/ui/textarea";
 import { CoverLetterFormProps } from "@/lib/types";
-import {
-  letterBodySchema,
-  LetterBodyValues,
-  summarySchema,
-  SummaryValues,
-} from "@/lib/validation";
+import { letterBodySchema, LetterBodyValues } from "@/lib/validation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -67,12 +61,10 @@ export default function CoverLetterBody({
   return (
     <div className="max-w-xl mx-auto space-y-6">
       <div className="space-y-1.5 text-center">
-        {" "}
         <h2 className="font-semibold text-2xl">Cover Letter Body</h2>
         <p className="text-sm text-muted-foreground">
-          {" "}
-          Write a brief introduction for your cover letter, or let AI craft a
-          personalized message based on the information you provide.
+          Start your cover letter with a strong introduction, or let AI create a
+          personalized message tailored to the details you share.
         </p>
       </div>
       <Form {...form}>

@@ -9,9 +9,8 @@ import { ResumeValues } from "@/lib/validation";
 
 // UI controls for modifying resume appearance
 import BorderStyleButton from "./BorderStyleButton"; // Button group to change border styles
-import ColorPicker from "./ColorPicker"; // Color picker component to change the theme color
+import ColorPicker from "./ColorPicker";
 
-// Define props expected by this component
 interface ResumePreviewSectionProps {
   resumeData: ResumeValues; // Current resume data to preview and edit
   setResumeData: (data: ResumeValues) => void; // Callback to update resume data in parent

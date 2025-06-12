@@ -10,7 +10,6 @@ interface FooterProps {
   showSmCoverLetterPreview: boolean;
   setShowSmCoverLetterPreview: (show: boolean) => void;
   isSaving: boolean;
-  template?: string; // Optional, can remove if unused
 }
 
 function CoverLetterFooter2({

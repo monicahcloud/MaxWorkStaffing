@@ -2,8 +2,8 @@
 
 import openai from "@/lib/openai";
 import { auth } from "@clerk/nextjs/server";
-import { canUseAITools } from "@/lib/permissions";
-import { getUserSubscriptionLevel } from "@/lib/subscription";
+// import { canUseAITools } from "@/lib/permissions";
+// import { getUserSubscriptionLevel } from "@/lib/subscription";
 import prisma from "@/lib/prisma";
 import { del } from "@vercel/blob";
 import { revalidatePath } from "next/cache";
@@ -22,10 +22,10 @@ export async function generateCoverLetter({
   const { userId } = await auth();
   if (!userId) throw new Error("Unauthorized");
 
-  const subscriptionLevel = await getUserSubscriptionLevel(userId);
-  if (!canUseAITools(subscriptionLevel)) {
-    throw new Error("Upgrade your subscription to use this feature");
-  }
+  // const subscriptionLevel = await getUserSubscriptionLevel(userId);
+  // if (!canUseAITools(subscriptionLevel)) {
+  //   throw new Error("Upgrade your subscription to use this feature");
+  // }
 
   const achievementsText =
     achievements?.trim() && achievements.trim() !== "" ? `${achievements}` : "";

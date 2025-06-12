@@ -212,20 +212,6 @@ export const feedbackSchema = z.object({
 });
 
 export const userInfoSchema = z.object({
-  // userPhoto: z
-  //   .union([z.instanceof(File), z.string(), z.null(), z.undefined()])
-  //   .refine(
-  //     (file) =>
-  //       !file ||
-  //       typeof file === "string" ||
-  //       (file instanceof File && file.type.startsWith("image/")),
-  //     "Must be an image file"
-  //   )
-  //   .refine(
-  //     (file) =>
-  //       !file || typeof file === "string" || file.size <= 1024 * 1024 * 4,
-  //     "File must be less than 4MB"
-  //   ),
   userPhoto: z
     .custom<File | undefined>()
     .refine(

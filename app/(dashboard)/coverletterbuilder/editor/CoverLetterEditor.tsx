@@ -3,9 +3,7 @@
 import SectionTitle from "@/components/SectionTitle";
 import React, { useState } from "react";
 import { useSearchParams } from "next/navigation";
-
 import useUnloadWarning from "@/hooks/useUnloadWarning";
-
 import { CoverLetterServerData } from "@/lib/types";
 import { CoverLetterValues } from "@/lib/validation";
 import { cn, mapToCoverLetterValues } from "@/lib/utils";
@@ -74,7 +72,6 @@ function CoverLetterEditor({ coverletterToEdit }: CoverLetterEditorProps) {
             <BreadcrumbsCoverLetter
               currentStep={currentStep}
               setCurrentStep={setStep}
-              template={coverLetterData.template}
             />
             {FormComponent && (
               <FormComponent

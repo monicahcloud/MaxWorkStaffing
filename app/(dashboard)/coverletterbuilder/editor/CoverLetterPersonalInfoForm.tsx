@@ -20,8 +20,6 @@ function CoverLetterPersonalInfoForm({
   coverLetterData,
   setCoverLetterData,
 }: CoverLetterFormProps) {
-  console.log("Resume Type:", coverLetterData.template);
-
   const form = useForm<UserInfoValues>({
     resolver: zodResolver(userInfoSchema),
     defaultValues: {
@@ -64,12 +62,9 @@ function CoverLetterPersonalInfoForm({
             <FormField
               control={form.control}
               name="userPhoto"
-              // eslint-disable-next-line @typescript-eslint/no-unused-vars
               render={({ field: { value, ...fieldValues } }) => (
                 <FormItem className="mb-2">
-                  <FormLabel>
-                    Your Photo (May not be used in all templates)
-                  </FormLabel>
+                  <FormLabel>Your Photo</FormLabel>
                   <div className=" flex items-center gap-2">
                     <FormControl>
                       <Input
@@ -134,7 +129,7 @@ function CoverLetterPersonalInfoForm({
             name="jobTitle"
             render={({ field }) => (
               <FormItem className="mb-2">
-                <FormLabel>Coverletter/Job Title</FormLabel>
+                <FormLabel>Job Title / CoverLetter Title</FormLabel>
                 <FormControl>
                   <Input {...field} />
                 </FormControl>

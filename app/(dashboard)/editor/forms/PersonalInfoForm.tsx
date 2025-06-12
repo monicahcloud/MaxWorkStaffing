@@ -61,7 +61,7 @@ function PersonalInfoForm({ resumeData, setResumeData }: EditorFormProps) {
             <FormField
               control={form.control}
               name="photo"
-              // eslint-disable-next-line @typescript-eslint/no-unused-vars
+           
               render={({ field: { value, ...fieldValues } }) => (
                 <FormItem className="mb-2">
                   <FormLabel>Your Photo</FormLabel>
