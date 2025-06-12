@@ -67,7 +67,9 @@ function CoverLetterPersonalInfoForm({
               // eslint-disable-next-line @typescript-eslint/no-unused-vars
               render={({ field: { value, ...fieldValues } }) => (
                 <FormItem className="mb-2">
-                  <FormLabel>Your Photo</FormLabel>
+                  <FormLabel>
+                    Your Photo (May not be used in all templates)
+                  </FormLabel>
                   <div className=" flex items-center gap-2">
                     <FormControl>
                       <Input
@@ -132,7 +134,7 @@ function CoverLetterPersonalInfoForm({
             name="jobTitle"
             render={({ field }) => (
               <FormItem className="mb-2">
-                <FormLabel>Job Title</FormLabel>
+                <FormLabel>Coverletter/Job Title</FormLabel>
                 <FormControl>
                   <Input {...field} />
                 </FormControl>
@@ -187,7 +189,7 @@ function CoverLetterPersonalInfoForm({
             name="website"
             render={({ field }) => (
               <FormItem className="mb-2">
-                <FormLabel>Website</FormLabel>
+                <FormLabel>Website/LinkedIn</FormLabel>
                 <FormControl>
                   <Input {...field} />
                 </FormControl>
@@ -195,7 +197,7 @@ function CoverLetterPersonalInfoForm({
               </FormItem>
             )}
           />
-          <div className="grid grid-cols-2 gap-3">
+          {/* <div className="grid grid-cols-2 gap-3">
             <FormField
               control={form.control}
               name="linkedin"
@@ -208,8 +210,8 @@ function CoverLetterPersonalInfoForm({
                   <FormMessage />
                 </FormItem>
               )}
-            />
-            <FormField
+            /> */}
+          {/* <FormField
               control={form.control}
               name="gitHub"
               render={({ field }) => (
@@ -221,8 +223,8 @@ function CoverLetterPersonalInfoForm({
                   <FormMessage />
                 </FormItem>
               )}
-            />
-          </div>
+            /> */}
+          {/* </div> */}
         </form>
       </Form>
     </div>

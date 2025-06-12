@@ -26,7 +26,6 @@ export const BlogPostGrid: React.FC<BlogPostGridProps> = ({ posts }) => {
   };
 
   const visiblePosts = posts.slice(0, visibleCount);
-  console.log("BlogPostGrid received posts:", posts);
 
   return (
     <>

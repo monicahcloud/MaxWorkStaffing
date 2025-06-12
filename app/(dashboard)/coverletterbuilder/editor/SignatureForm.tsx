@@ -4,9 +4,9 @@ import React, { useRef, useState, useEffect } from "react";
 import SignaturePad from "react-signature-canvas";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { UseFormReturn } from "react-hook-form";
 import Image from "next/image";
 import { CoverLetterFormProps } from "@/lib/types";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function SignatureForm({
   form,
@@ -17,9 +17,17 @@ export default function SignatureForm({
   const [previewUrl, setPreviewUrl] = useState<string | undefined>(
     coverLetterData.signatureUrl
   );
-  const [penColor, setPenColor] = useState<string>(
+  const [penColor, setPenColor] = useState(
     coverLetterData.signatureColor || "#000000"
   );
+  const [typedName, setTypedName] = useState("");
+  const fontOptions = [
+    { label: "Dancing Script", value: "Dancing Script, cursive" },
+    { label: "Great Vibes", value: "Great Vibes, cursive" },
+    { label: "Pacifico", value: "Pacifico, cursive" },
+    { label: "Caveat", value: "Caveat, cursive" },
+  ];
+  const [selectedFont, setSelectedFont] = useState(fontOptions[0].value);
 
   useEffect(() => {
     setPreviewUrl(coverLetterData.signatureUrl);
@@ -38,10 +46,34 @@ export default function SignatureForm({
     };
   }, [previewUrl]);
 
-  const handleSaveSignature = () => {
+  const handleSaveDrawn = () => {
     const pad = sigPadRef.current;
     if (pad && !pad.isEmpty()) {
       const url = pad.getTrimmedCanvas().toDataURL("image/png");
+      setPreviewUrl(url);
+      form.setValue("signatureUrl", url);
+      setCoverLetterData({ ...coverLetterData, signatureUrl: url });
+    }
+  };
+
+  const handleSaveTyped = () => {
+    const canvas = document.createElement("canvas");
+    canvas.width = 400;
+    canvas.height = 120;
+    const ctx = canvas.getContext("2d");
+
+    if (ctx) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "rgba(0,0,0,0)"; // transparent background
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.fillStyle = penColor;
+      ctx.font = `48px ${selectedFont}`;
+      ctx.textBaseline = "middle";
+      ctx.textAlign = "center";
+      ctx.fillText(typedName, canvas.width / 2, canvas.height / 2);
+
+      const url = canvas.toDataURL("image/png");
       setPreviewUrl(url);
       form.setValue("signatureUrl", url);
       setCoverLetterData({ ...coverLetterData, signatureUrl: url });
@@ -60,7 +92,9 @@ export default function SignatureForm({
 
   return (
     <div className="space-y-4">
-      <h3 className="text-lg font-semibold">Draw Your Signature</h3>
+      <h3 className="text-lg font-semibold">Signature</h3>
+
+      {/* Color Picker */}
       <div className="flex items-center gap-2">
         <label htmlFor="penColor" className="font-medium">
           Signature Color:
@@ -74,31 +108,79 @@ export default function SignatureForm({
         />
         <span className="text-sm">{penColor}</span>
       </div>
-      <SignaturePad
-        ref={sigPadRef}
-        canvasProps={{
-          width: 400,
-          height: 120,
-          className: "border rounded bg-white",
-        }}
-        penColor={penColor}
-        backgroundColor="rgba(0,0,0,0)"
-      />
-      <div className="flex gap-2">
-        <Button
-          type="button"
-          onClick={() => sigPadRef.current?.clear()}
-          variant="outline">
-          Clear
-        </Button>
-        <Button type="button" onClick={handleSaveSignature}>
-          Save Signature
-        </Button>
-      </div>
-      <div>
-        <h4 className="font-medium">Or upload an image:</h4>
-        <Input type="file" accept="image/*" onChange={handleUpload} />
-      </div>
+
+      <Tabs defaultValue="draw" className="w-full">
+        <TabsList className="mb-4">
+          <TabsTrigger value="draw">Draw</TabsTrigger>
+          <TabsTrigger value="type">Type</TabsTrigger>
+          <TabsTrigger value="upload">Upload</TabsTrigger>
+        </TabsList>
+
+        {/* Draw Tab */}
+        <TabsContent value="draw">
+          <SignaturePad
+            ref={sigPadRef}
+            canvasProps={{
+              width: 400,
+              height: 120,
+              className: "border rounded bg-white",
+            }}
+            penColor={penColor}
+            backgroundColor="rgba(0,0,0,0)"
+          />
+          <div className="flex gap-2 mt-2">
+            <Button
+              type="button"
+              onClick={() => sigPadRef.current?.clear()}
+              variant="outline">
+              Clear
+            </Button>
+            <Button type="button" onClick={handleSaveDrawn}>
+              Save Signature
+            </Button>
+          </div>
+        </TabsContent>
+
+        {/* Type Tab */}
+        <TabsContent value="type">
+          <Input
+            placeholder="Type your name"
+            value={typedName}
+            onChange={(e) => setTypedName(e.target.value)}
+          />
+          <div className="flex gap-2 flex-wrap mt-2">
+            {fontOptions.map((font) => (
+              <button
+                key={font.value}
+                type="button"
+                onClick={() => setSelectedFont(font.value)}
+                className={`border px-2 py-1 rounded ${
+                  selectedFont === font.value
+                    ? "border-purple-600"
+                    : "border-gray-300"
+                }`}>
+                <span style={{ fontFamily: font.value }}>{font.label}</span>
+              </button>
+            ))}
+          </div>
+          <div className="border rounded bg-white px-4 py-2 mt-4">
+            <p
+              className="text-3xl"
+              style={{ color: penColor, fontFamily: selectedFont }}
+            />
+          </div>
+          <Button className="mt-2" type="button" onClick={handleSaveTyped}>
+            Save Typed Signature
+          </Button>
+        </TabsContent>
+
+        {/* Upload Tab */}
+        <TabsContent value="upload">
+          <Input type="file" accept="image/*" onChange={handleUpload} />
+        </TabsContent>
+      </Tabs>
+
+      {/* Preview */}
       <div>
         <h4 className="font-medium">Preview:</h4>
         {previewUrl && (
