@@ -36,6 +36,7 @@ model Resume {
   resumeTitle     String?
   parsed            Boolean?     @default(false)
   description     String?
+  shareToken String?  @unique
   photoUrl        String?
   themeColor      String           @default("#000000")
   borderStyle     String           @default("squircle")
@@ -228,6 +229,7 @@ model CoverLetter {
   borderStyle     String ?   @default("squircle")
 body            String?
 firstName       String?
+shareToken String?  @unique
   lastName        String?
   userEmail           String?
   userPhone           String?

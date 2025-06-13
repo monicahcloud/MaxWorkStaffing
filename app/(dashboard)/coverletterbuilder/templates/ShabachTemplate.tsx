@@ -44,7 +44,7 @@ export function ShabachTemplate({
         <MemoizedRecipientSection coverletterData={coverletterData} />
         <MemoizedBodySection coverletterData={coverletterData} />
         <MemoizedSignatureSection coverletterData={coverletterData} />
-        <MemoizedFooterSection coverletterData={coverletterData} />
+        {/* <MemoizedFooterSection coverletterData={coverletterData} /> */}
       </div>
     </div>
   );
@@ -62,14 +62,14 @@ function HeaderSection({
       ? "white"
       : coverletterData.themeColor;
   return (
-    <div className="flex w-[100%] space-y-6  mt-20 justify-between font-lora">
+    <div className="flex w-[100%] space-y-6  mt-10 justify-between font-lora">
       {/* Name Block */}
       <div style={{ color: themeColor }}>
-        <h1 className="text-7xl font-lora leading-none tracking-wider uppercase">
+        <h1 className="text-6xl font-lora leading-none tracking-wider uppercase">
           {coverletterData.firstName || ""}
         </h1>
-        <div className="h-1 w-25 bg-white my-9" />
-        <h2 className="text-7xl pl-25 -mt-20 font-lora tracking-wider uppercase">
+        <div className="h-1 w-20 bg-white my-9" />
+        <h2 className="text-6xl pl-25 -mt-20 font-lora tracking-wider uppercase">
           {coverletterData.lastName || ""}
         </h2>
       </div>
@@ -202,7 +202,7 @@ function SignatureSection({
           <Image
             src={signatureUrl}
             alt="Signature"
-            width={200}
+            width={300}
             height={100}
             className="object-contain"
           />
@@ -210,27 +210,27 @@ function SignatureSection({
       ) : (
         <p className="italic text-xl">{displayName}</p>
       )}
-      <p className="">{displayName.trim() || ""}</p>
+      <p className=""></p>
     </div>
   );
 }
 const MemoizedSignatureSection = React.memo(SignatureSection);
 
-function FooterSection({
-  coverletterData,
-}: {
-  coverletterData: CoverLetterValues;
-}) {
-  const themeColor =
-    !coverletterData.themeColor || coverletterData.themeColor === "#000000"
-      ? "white"
-      : coverletterData.themeColor;
-  return (
-    <div
-      className="pt-6 border-t border-white/20 text-center text-xl mt-4 font-lora"
-      style={{ color: themeColor || "rgba(255,255,255,0.7)" }}>
-      <p>{coverletterData.userAddress}</p>
-    </div>
-  );
-}
-const MemoizedFooterSection = React.memo(FooterSection);
+// function FooterSection({
+//   coverletterData,
+// }: {
+//   coverletterData: CoverLetterValues;
+// }) {
+//   const themeColor =
+//     !coverletterData.themeColor || coverletterData.themeColor === "#000000"
+//       ? "white"
+//       : coverletterData.themeColor;
+//   return (
+//     <div
+//       className="pt-6 border-t border-white/20 text-center text-xl mt-4 font-lora"
+//       style={{ color: themeColor || "rgba(255,255,255,0.7)" }}>
+//       {/* <p>{coverletterData.userAddress}</p> */}
+//     </div>
+//   );
+// }
+// const MemoizedFooterSection = React.memo(FooterSection);

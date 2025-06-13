@@ -41,6 +41,7 @@ import {
 } from "@/components/ui/tooltip";
 import { useRouter } from "next/navigation";
 import ShareResume from "@/components/ReactShareButton";
+import ShareButton from "@/app/share/ShareButton";
 
 interface ResumeItemProps {
   resume: ResumeServerData;
@@ -256,13 +257,11 @@ function MoreMenu({ resume, isUploaded, onPrintClick }: MoreMenuProps) {
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-      <ShareResume
-        resumeUrl={
-          isUploaded
-            ? resume.uploadedFileUrl!
-            : `${process.env.NEXT_PUBLIC_BASE_URL}/resumes/${resume.id}`
-        }
-      />
+      {isUploaded ? (
+        <ShareResume resumeUrl={resume.uploadedFileUrl!} />
+      ) : (
+        <ShareButton type="resume" id={resume.id} />
+      )}
 
       <DeleteConfirmationDialog
         resumeId={resume.id}
