@@ -29,6 +29,12 @@ export const getUserSubscriptionLevel = cache(
       return "annual";
     }
 
+    // Unexpected priceId — log or report here if needed
+    console.warn(
+      `Unknown stripePriceId for user ${userId}: ${subscription.stripePriceId}`
+    );
+    return "trial";
+
     throw new Error("Invalid subscription");
   }
 );
