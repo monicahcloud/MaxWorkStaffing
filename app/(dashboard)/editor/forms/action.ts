@@ -310,19 +310,15 @@ export async function generateSkills(
   }
 }
 
-function cleanJsonString(jsonStr: string): string {
-  return jsonStr
-    .replace(/```json\s*/i, "") // remove opening
-    .replace(/```$/, "") // remove *all* triple backticks
-    .trim();
-}
-
-function safeDate(value: any): Date | undefined {
-  const date = new Date(value);
-  return isNaN(date.getTime()) ? undefined : date;
-}
-
 export async function parseResumeWithAI(rawText: string) {
+  // Truncate input early
+  if (rawText.length > 10000) {
+    console.warn(
+      "[parseResumeWithAI] Input too large, truncating to 10,000 chars"
+    );
+    rawText = rawText.slice(0, 10000);
+  }
+
   const prompt = `
 You are a resume parser. Extract structured data from the resume text below in JSON format with these fields:
 
@@ -373,67 +369,46 @@ Here is the resume text:
 
 Return only the JSON object.
 `;
+
   console.log("[parseResumeWithAI] Starting resume parse");
 
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 8000);
-  const completion = await openai.chat.completions.create({
-    model: "gpt-4o-mini",
-    messages: [
-      {
-        role: "system",
-        content: "You are a resume parser AI that outputs JSON only.",
-      },
-      {
-        role: "user",
-        content: prompt + `\n\nResume Text:\n${rawText}`,
-      },
-    ],
-    // signal: controller.signal,
-    temperature: 0,
-  });
-  clearTimeout(timeout);
 
-  console.log("[parseResumeWithAI] OpenAI response received");
-
-  if (rawText.length > 10000) {
-    console.warn("Input too large, truncating to avoid OpenAI timeout.");
-    rawText = rawText.slice(0, 10000); // or a more sophisticated smart truncator
-  }
-
-  // const aiResponse = completion.choices[0].message.content;
-  let aiResponse;
+  let completion;
   try {
-    const completion = await openai.chat.completions.create({
+    completion = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
         {
           role: "system",
           content: "You are a resume parser AI that outputs JSON only.",
         },
-        {
-          role: "user",
-          content: prompt + `\n\nResume Text:\n${rawText}`,
-        },
+        { role: "user", content: prompt },
       ],
       temperature: 0,
+      signal: controller.signal,
     });
-
-    aiResponse = completion.choices[0].message.content;
-    console.log("AI raw response:", aiResponse);
   } catch (err) {
-    console.error("OpenAI call failed in production:", err);
+    clearTimeout(timeout);
+    console.error("[parseResumeWithAI] OpenAI call failed:", err);
     throw new Error("Resume parsing failed due to OpenAI error");
   }
 
+  clearTimeout(timeout);
+
+  const aiResponse = completion.choices[0].message.content;
+  console.log("[parseResumeWithAI] AI raw response:", aiResponse);
+
   if (!aiResponse) throw new Error("Failed to generate AI response");
-  const parsedData = await parseResumeWithAI(rawText);
-  console.log("[POST] Parsed data result:", parsedData);
+
   try {
     const clean = cleanJsonString(aiResponse);
-    return JSON.parse(clean);
+    const parsedData = JSON.parse(clean);
+    console.log("[parseResumeWithAI] Parsed JSON data:", parsedData);
+    return parsedData;
   } catch (err) {
-    console.error("Resume parsing error:", err, aiResponse);
+    console.error("[parseResumeWithAI] JSON parse error:", err, aiResponse);
     throw new Error("Failed to parse structured resume data.");
   }
 }
