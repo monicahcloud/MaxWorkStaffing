@@ -13,7 +13,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { Download, FilePen, MoreVertical, Printer, Trash2 } from "lucide-react";
+import {
+  Download,
+  FilePen,
+  MoreVertical,
+  Printer,
+  Eye,
+  Trash2,
+} from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -25,10 +32,8 @@ import {
 import LoadingButton from "@/components/LoadingButton";
 import { toast } from "sonner";
 import { useReactToPrint } from "react-to-print";
-
 import { useRouter } from "next/navigation";
 import { deleteCoverLetter } from "../coverletterbuilder/editor/actions";
-// import ShareResume from "@/components/ReactShareButton";
 import ShareButton from "@/app/share/ShareButton";
 
 interface CoverLetterProps {
@@ -40,9 +45,7 @@ export default function CoverLetterItem({ coverletter }: CoverLetterProps) {
 
   const reactToPrintFn = useReactToPrint({
     contentRef,
-    documentTitle: coverletter.companyName
-      ? `${coverletter.companyName} Cover Letter`
-      : "Cover Letter",
+    documentTitle: coverletter.companyName || "Cover Letter",
   });
   const wasUpdated = coverletter.updatedAt !== coverletter.createdAt;
 
@@ -51,23 +54,24 @@ export default function CoverLetterItem({ coverletter }: CoverLetterProps) {
       <div className="space-y-3 text-left">
         <div>
           <p className="font-semibold line-clamp-1 cursor-default">
-            {coverletter.companyName || "Untitled Cover Letter"}
+            {coverletter.companyName || "Untitled"}
           </p>
           <p className="text-xs text-muted-foreground">
             {wasUpdated ? "Updated" : "Created"} on
             {formatDate(coverletter.updatedAt, "MMM d, yyyy ")}
           </p>
         </div>
-
-        <Link
-          href={`/coverletterbuilder/editor?coverLetterId=${coverletter.id}`}
-          className="relative inline-block w-full">
-          <CoverLetterPreview
-            coverLetterData={mapToCoverLetterValues(coverletter)}
-            className="h-[216px] shadow-sm group-hover:shadow-lg transition-shadow overflow-hidden"
-            contentRef={contentRef}
-          />
-        </Link>
+        <div ref={contentRef}>
+          <Link
+            href={`/coverletterbuilder/editor?coverLetterId=${coverletter.id}`}
+            className="relative inline-block w-full">
+            <CoverLetterPreview
+              coverLetterData={mapToCoverLetterValues(coverletter)}
+              className="h-[216px] shadow-sm group-hover:shadow-lg transition-shadow overflow-hidden"
+              // contentRef={contentRef}
+            />
+          </Link>
+        </div>
         <div className="absolute inset-x-0 bottom-0 16 bg-gradient-to-t from-white to-transparent" />
       </div>
       {/* More Menu Actions */}
@@ -82,7 +86,7 @@ export default function CoverLetterItem({ coverletter }: CoverLetterProps) {
 interface MoreMenuProps {
   coverletter: CoverLetterServerData;
   onPrintClick: () => void;
-  contentRef: React.RefObject<HTMLDivElement | null>; // ✅ allow null
+  contentRef: React.RefObject<HTMLDivElement | null>;
 }
 
 function MoreMenu({ coverletter, onPrintClick }: MoreMenuProps) {
@@ -118,7 +122,7 @@ function MoreMenu({ coverletter, onPrintClick }: MoreMenuProps) {
             <DropdownMenuItem
               className="flex items-center gap-2"
               onClick={handleView}>
-              <FilePen className="size-4" />
+              <Eye className="size-4" />
               View
             </DropdownMenuItem>
             <DropdownMenuItem

@@ -14,23 +14,20 @@ export default function useAutoSaveCoverLetter(
   const [coverletterId, setCoverletterId] = useState(coverletterData.id);
   const debounced = useDebounce(coverletterData, 1500);
   const [lastSaved, setLastSaved] = useState(structuredClone(coverletterData));
+
   const [isSaving, setIsSaving] = useState(false);
   const [isError, setIsError] = useState(false);
 
   useEffect(() => {
     setIsError(false);
   }, [debounced]);
-  console.log("Saving cover letter:", coverletterData);
+
   useEffect(() => {
     async function save() {
       try {
         setIsSaving(true);
         setIsError(false);
-
-        console.log("Saving cover letter. Debounced data:", debounced);
-
         const newData = structuredClone(debounced);
-        console.log("newData (no userPhoto):", newData);
 
         const updateCoverLetter = await saveCoverLetter({
           ...newData,
@@ -52,9 +49,8 @@ export default function useAutoSaveCoverLetter(
             `?${newSearchParams.toString()}`
           );
         }
-      } catch (error) {
+      } catch {
         setIsError(true);
-        console.error("Autosave failed:", error);
 
         toast.error("Could not save changes", {
           description: () => (

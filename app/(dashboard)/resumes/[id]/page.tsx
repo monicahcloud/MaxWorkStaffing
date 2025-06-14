@@ -14,14 +14,13 @@ export default async function ResumePublicPage({
   if (!resume) return notFound();
 
   return (
-    <main className="max-w-4xl mx-auto py-10 px-4">
-      <h1 className="text-4xl font-bold mb-6 text-center">
-        {resume.resumeTitle || "Resume"}
-      </h1>
-      <ResumePreview
-        resumeData={mapToResumeValues(resume)}
-        className="shadow border rounded"
-      />
+    <main className="py-10 px-4 flex justify-center">
+      <div className="scale-[0.55] origin-top shadow border rounded">
+        <ResumePreview
+          resumeData={mapToResumeValues(resume)}
+          className="shadow border rounded"
+        />
+      </div>
     </main>
   );
 }

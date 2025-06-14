@@ -18,17 +18,32 @@ export async function updateResumeType(formData: FormData) {
   if (!uploadedResume || !uploadedResume.rawTextContent) {
     throw new Error("Uploaded resume not found or missing raw text");
   }
-  const pollForParsed = async (id) => {
-    while (true) {
+  // const pollForParsed = async (id) => {
+  //   while (true) {
+  //     const data = await prisma.resume.findUnique({
+  //       where: { id: resumeId },
+  //       include: { education: true, workExperience: true },
+  //     });
+  //     if (data?.parsed) {
+  //       return data;
+  //     }
+  //     await new Promise((resolve) => setTimeout(resolve, 2000));
+  //   }
+  // };
+  const pollForParsed = async (id: string, maxAttempts = 15) => {
+    let attempts = 0;
+    while (attempts < maxAttempts) {
       const data = await prisma.resume.findUnique({
-        where: { id: resumeId },
+        where: { id },
         include: { education: true, workExperience: true },
       });
       if (data?.parsed) {
         return data;
       }
+      attempts++;
       await new Promise((resolve) => setTimeout(resolve, 2000));
     }
+    throw new Error("Resume parsing timed out. Please try again later.");
   };
   const parsedData = await pollForParsed(resumeId);
   const newResume = await prisma.resume.create({
@@ -87,5 +102,5 @@ export async function updateResumeType(formData: FormData) {
     },
   });
 
-  redirect(`/editor?resumeId=${newResume.id}&resumeType=Uploaded`);
+  redirect(`/editor?resumeId=${newResume.id}&resumeType=${resumeType}`);
 }

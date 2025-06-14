@@ -8,14 +8,14 @@ import path from "path";
 
 export async function saveCoverLetter(values: CoverLetterValues) {
   const { id } = values;
-  console.log("saveCoverLetter recieved values", values);
+
   const { userPhoto, ...coverLetterValues } = coverLetterSchema.parse(values);
   const { userId } = await auth();
-  console.log("creating coverLetter for userId", userId);
 
   if (!userId) {
     throw new Error("User not authenticated");
   }
+  // TODO: Check subscription trial end
 
   const existingCoverLetter = id
     ? await prisma.coverLetter.findUnique({ where: { id, userId } })
@@ -24,7 +24,9 @@ export async function saveCoverLetter(values: CoverLetterValues) {
   if (id && !existingCoverLetter) {
     throw new Error("CoverLetter not found");
   }
+
   let newPhotoUrl: string | undefined | null = undefined;
+
   if (userPhoto instanceof File) {
     if (existingCoverLetter?.userPhotoUrl) {
       await del(existingCoverLetter.userPhotoUrl);
@@ -41,8 +43,6 @@ export async function saveCoverLetter(values: CoverLetterValues) {
     if (existingCoverLetter?.userPhotoUrl) {
       await del(existingCoverLetter.userPhotoUrl);
     }
-    newPhotoUrl = null;
-  } else {
     newPhotoUrl = null;
   }
 

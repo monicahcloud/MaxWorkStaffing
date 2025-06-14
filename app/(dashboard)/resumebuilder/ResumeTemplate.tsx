@@ -2,7 +2,7 @@ import { StaticImageData } from "next/image";
 import federal from "../../../assets/fed.png";
 import functional from "../../../assets/func.png";
 import combination from "../../../assets/combo.png";
-import chronological from "../../../assets/chron.png";
+import chronological from "../../../assets/chronologicaltemplate.png";
 export interface ResumeTemplate {
   title: string;
   image: string | StaticImageData;

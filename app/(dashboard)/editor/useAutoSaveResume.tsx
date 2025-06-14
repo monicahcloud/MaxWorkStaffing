@@ -51,12 +51,12 @@ export default function useAutoSaveResume(resumeData: ResumeValues) {
         }
       } catch (error) {
         setIsError(true);
-        console.error(error);
+        console.error("Autosave failed:", error);
 
         toast.error("Could not save changes", {
           description: (
             <div className="space-y-3">
-              <p>Could not save changes.</p>
+              <p>We couldn&apos;t save your changes. Please try again.</p>
               <Button variant="secondary" onClick={() => save()}>
                 Retry
               </Button>

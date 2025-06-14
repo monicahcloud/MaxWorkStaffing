@@ -101,7 +101,6 @@ function ResumeItem({ resume }: ResumeItemProps) {
                 </div>
               )}
 
-              {/* New "Choose Template" Button */}
               <Link href={`/resumes/${resume.id}/chooseTemplate`}>
                 <Button variant="outline" className="w-full">
                   Choose Template
@@ -109,7 +108,9 @@ function ResumeItem({ resume }: ResumeItemProps) {
               </Link>
             </div>
           ) : (
-            <Link href={`/editor?resumeId=${resume.id}`}>
+            <Link
+              href={`/editor?resumeId=${resume.id}`}
+              className="relative inline-block w-full">
               <ResumePreview
                 resumeData={mapToResumeValues(resume)}
                 className="h-[216px] shadow-sm group-hover:shadow-lg transition-shadow overflow-hidden"
@@ -139,18 +140,12 @@ interface MoreMenuProps {
   isUploaded: boolean;
   isPDF: boolean;
   onPrintClick: () => void;
-  contentRef: React.RefObject<HTMLDivElement | null>; // ✅ allow null
+  contentRef: React.RefObject<HTMLDivElement | null>;
 }
 
 function MoreMenu({ resume, isUploaded, onPrintClick }: MoreMenuProps) {
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const router = useRouter();
-  // const contentRef = useRef<HTMLDivElement>(null);
-
-  // const downloadResumeAsPDF = useReactToPrint({
-  //   content: () => contentRef.current,
-  //   documentTitle: resume.resumeTitle || "Resume",
-  // } as Parameters<typeof useReactToPrint>[0]);
 
   function handleEdit() {
     router.push(`/editor?resumeId=${resume.id}`);
