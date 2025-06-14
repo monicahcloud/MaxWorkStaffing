@@ -55,11 +55,11 @@ export default function ShareButton({ type, id }: ShareButtonProps) {
   };
 
   const shareTitle =
-    type === "resume" ? "Check out my resume!" : "Check out my cover letter!";
+    type === "resume" ? "Resume Submission!" : "Cover Letter Submission!";
   const shareSummary =
     type === "resume"
-      ? "Here is my latest resume – take a look!"
-      : "Here is my latest cover letter – take a look!";
+      ? "I hope this message finds you well. Please find attached my resume for your review. I am enthusiastic about the opportunity to contribute to [Company Name/Department Name], and I believe my background and experience align well with the needs of your team. Should you require any additional information or documentation, please don't hesitate to reach out. I appreciate your time and consideration and look forward to the possibility of speaking further."
+      : "I hope this message finds you well. Please find attached my cover letter for your review. I am enthusiastic about the opportunity to contribute to [Company Name/Department Name], and I believe my background and experience align well with the needs of your team.Should you require any additional information or documentation, please don't hesitate to reach out. I appreciate your time and consideration and look forward to the possibility of speaking further.";
 
   return (
     <div className="space-y-2">

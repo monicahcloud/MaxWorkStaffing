@@ -12,30 +12,22 @@ interface Props {
   contentRef?: React.Ref<HTMLDivElement>;
 }
 
-export function TodahTemplate({
-  coverletterData,
-  className,
-  contentRef,
-}: Props) {
+export function TodahTemplate({ coverletterData, className }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { width } = useDimensions(containerRef as React.RefObject<HTMLElement>);
-  const scale = width ? Math.min(width / 794, 1) : 1;
 
   return (
     <div
       className={cn(
-        "aspect-[210/297] bg-white text-black h-fit w-full",
+        "bg-white text-black h-fit w-full aspect-[210/297]",
         className
       )}
-      ref={containerRef}
-      style={{ overflow: "auto" }}>
+      ref={containerRef}>
       <div
-        className={cn("space-y-6 p-6 origin-top-left")}
+        className={cn("", !width && "invisible")}
         style={{
-          width: "794px",
-          transform: `scale(${scale})`,
+          zoom: (1 / 794) * width,
         }}
-        ref={contentRef}
         id="resumePreviewContent">
         <TodahHeaderSection coverletterData={coverletterData} />
         <TodahBodySection coverletterData={coverletterData} />
@@ -105,9 +97,9 @@ function TodahBodySection({
       <p className="text-md">{companyEmail}</p>
       <p className="text-md">{companyAddress}</p>
       <div className="space-y-5 leading-relaxed mt-5">
-        <p>
+        <h1>
           {recipientName ? `Dear ${recipientName},` : "To Whom It May Concern,"}
-        </p>
+        </h1>
         <div
           className="space-y-5 leading-relaxed mt-5 text-md"
           dangerouslySetInnerHTML={{
@@ -137,11 +129,11 @@ function TodahSignatureSection({
     <div className="mt-5 text-md space-y-2 mx-10 font-serif">
       <p>Sincerely,</p>
       {signatureUrl ? (
-        <div className="w-[250px] -ml-10">
+        <div className="w-[250px] ">
           <Image
             src={signatureUrl}
             alt="Signature"
-            width={200}
+            width={150}
             height={100}
             className="object-contain"
           />

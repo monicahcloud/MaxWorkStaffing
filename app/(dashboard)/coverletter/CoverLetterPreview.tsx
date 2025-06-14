@@ -3,6 +3,7 @@ import { Ref } from "react";
 import Zamar from "../coverletterbuilder/templates/Zamar";
 import { TodahTemplate } from "../coverletterbuilder/templates/TodahTemplate";
 import { ShabachTemplate } from "../coverletterbuilder/templates/ShabachTemplate";
+import ClassicTemplate from "../coverletterbuilder/templates/ClassicTemplate";
 
 interface CoverLetterPreviewProps {
   coverLetterData: CoverLetterValues;
@@ -20,6 +21,14 @@ export default function CoverLetterPreview({
     case "Zamar":
       return (
         <Zamar
+          coverletterData={coverLetterData}
+          className={className}
+          contentRef={contentRef}
+        />
+      );
+    case "Classic":
+      return (
+        <ClassicTemplate
           coverletterData={coverLetterData}
           className={className}
           contentRef={contentRef}

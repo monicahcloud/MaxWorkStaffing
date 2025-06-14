@@ -16,28 +16,23 @@ interface CoverLetterPreviewProps {
 
 export function ShabachTemplate({
   className,
-  contentRef,
   coverletterData,
 }: CoverLetterPreviewProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { width } = useDimensions(containerRef as React.RefObject<HTMLElement>);
-  const scale = width ? Math.min(width / 794, 1) : 1;
 
   return (
     <div
       className={cn(
-        " aspect-[210/297] bg-black text-white h-fit w-full ",
+        "bg-black text-white h-fit w-full aspect-[210/297]",
         className
       )}
-      ref={containerRef}
-      style={{ overflow: "auto" }}>
+      ref={containerRef}>
       <div
-        className={cn("origin-top-left space-y-6 p-10 print-friendly-bg")}
+        className={cn("m-10", !width && "invisible")}
         style={{
-          width: "794px",
-          transform: `scale(${scale})`,
+          zoom: (1 / 794) * width,
         }}
-        ref={contentRef}
         id="resumePreviewContent">
         <MemoizedHeaderSection coverletterData={coverletterData} />
         <MemoizedUserPhoto coverletterData={coverletterData} />
@@ -62,7 +57,7 @@ function HeaderSection({
       ? "white"
       : coverletterData.themeColor;
   return (
-    <div className="flex w-[100%] space-y-6  mt-10 justify-between font-lora">
+    <div className="flex w-[100%] space-y-6  justify-between font-lora">
       {/* Name Block */}
       <div style={{ color: themeColor }}>
         <h1 className="text-6xl font-lora leading-none tracking-wider uppercase">
@@ -105,14 +100,14 @@ function UserPhoto({
   }, [userPhoto]);
 
   return (
-    <div className="flex justify-end -mt-20">
+    <div className="flex justify-end -my-10">
       <div className="overflow-hidden">
         <Image
           src={photoSrc || fallbackImage}
           alt="User Photo"
           width={100}
           height={100}
-          className="object-cover w-70 h-70"
+          className="object-cover w-62"
           style={{
             borderRadius:
               borderStyle === BorderStyles.SQUARE
@@ -135,8 +130,8 @@ function RecipientSection({
   coverletterData: CoverLetterValues;
 }) {
   return (
-    <div className="text-lg -mt-50 font-lora">
-      <p className="text-xl mb-5 ">
+    <div className=" text-xl -mt-40 font-lora">
+      <p className=" mb-5 ">
         {new Date().toLocaleDateString("en-US", {
           year: "numeric",
           month: "long",
@@ -146,7 +141,7 @@ function RecipientSection({
       <p className=" text-white">{coverletterData.recipientName}</p>
       <p>{coverletterData.companyName}</p>
       <p>{coverletterData.companyAddress}</p>
-      <div className="h-px w-50 bg-white mt-2" />
+      <div className="h-px w-50 bg-white mt-4" />
     </div>
   );
 }
@@ -158,7 +153,7 @@ function BodySection({
   coverletterData: CoverLetterValues;
 }) {
   return (
-    <div className="text-lg font-lora text-white/90 space-y-5 leading-relaxed">
+    <div className="text-lg mt-5 font-lora text-white/90 space-y-5 leading-relaxed">
       <p>
         {coverletterData.recipientName
           ? `Dear ${coverletterData.recipientName},`
@@ -198,11 +193,11 @@ function SignatureSection({
     <div className="mt-4 text-xl font-lora ">
       <p>Best Regards,</p>
       {signatureUrl ? (
-        <div className="w-[250px] -ml-10">
+        <div className="w-[250px] pt-2">
           <Image
             src={signatureUrl}
             alt="Signature"
-            width={300}
+            width={200}
             height={100}
             className="object-contain"
           />

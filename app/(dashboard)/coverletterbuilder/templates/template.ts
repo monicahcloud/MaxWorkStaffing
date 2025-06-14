@@ -1,12 +1,14 @@
-import blackminimalist from "../../../../assets/blackmini.png";
-import modern from "../../../../assets/modernT.png";
-import minimalist from "../../../../assets/minimalist.png";
+import blackminimalist from "../../../../assets/modern.png";
+import simple from "../../../../assets/simple.png";
+import minimal from "../../../../assets/minimal.png";
+import classic from "../../../../assets/classic.png";
 export const templateMetadata = [
   {
     id: "Shabach",
-    name: "Black Minimalist CoverLetter Template",
+    name: "Modern CoverLetter Template",
     image: blackminimalist,
   },
-  { id: "Todah", name: " Minimalist CoverLetter Template", image: minimalist },
-  { id: "Zamar", name: "Modern CoverLetter Template", image: modern },
+  { id: "Todah", name: " Minimalist CoverLetter Template", image: minimal },
+  { id: "Zamar", name: "Simple CoverLetter Template", image: simple },
+  { id: "Classic", name: " Classic CoverLetter Template", image: classic },
 ];
