@@ -373,12 +373,12 @@ Return only the JSON object.
   console.log("[parseResumeWithAI] Starting resume parse");
 
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 8000);
+  const timeout = setTimeout(() => controller.abort(), 20000);
 
   let completion;
   try {
     completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
+      model: "gpt-4o",
       messages: [
         {
           role: "system",
