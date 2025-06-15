@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import Logo from "../../assets/logo.png";
@@ -5,19 +7,23 @@ import { RainbowButton } from "./RainbowButton";
 
 export function NavBar() {
   return (
-    <div className="flex items-center justify-between py-2 mt-4 -mb-6">
-      <Link href="/" className="flex items-center gap-10">
-        <Image
-          src={Logo}
-          alt="Logo"
-          width={200} // wider
-          height={100} // not too tall
-          priority
-        />
-      </Link>
-      <Link href="/sign-in">
-        <RainbowButton>Login</RainbowButton>
-      </Link>
-    </div>
+    <nav className="w-full border-b border-gray-200 bg-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+        <Link href="/" className="flex items-center gap-4">
+          <Image
+            src={Logo}
+            alt="Logo"
+            width={160}
+            height={80}
+            priority
+            className="object-contain"
+          />
+        </Link>
+
+        <Link href="/sign-in">
+          <RainbowButton>Login</RainbowButton>
+        </Link>
+      </div>
+    </nav>
   );
 }

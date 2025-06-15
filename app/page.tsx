@@ -1,15 +1,17 @@
-// "use client";
+"use client";
 
 import { Hero } from "@/components/landingPage/Hero";
 import { NavBar } from "@/components/landingPage/NavBar";
 
 export default function Home() {
   return (
-    <>
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="bg-gray-100 min-h-screen">
+      <header>
         <NavBar />
+      </header>
+      <main>
         <Hero />
       </main>
-    </>
+    </div>
   );
 }
