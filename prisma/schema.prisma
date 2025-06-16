@@ -35,6 +35,7 @@ model Resume {
   resumeType      String?
   resumeTitle     String?
   parsed            Boolean?     @default(false)
+    parsedWith      String?  // "Affinda" | "OpenAI" | null
   description     String?
   shareToken String?  @unique
   photoUrl        String?

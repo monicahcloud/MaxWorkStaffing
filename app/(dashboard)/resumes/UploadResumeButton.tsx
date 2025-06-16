@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useTransition } from "react";
+import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { UploadCloud } from "lucide-react"; //
 import { toast } from "sonner";
@@ -8,8 +8,6 @@ import { useRouter } from "next/navigation";
 
 export default function UploadResumeButton() {
   const inputRef = useRef<HTMLInputElement>(null);
-
-  const [isPending, startTransition] = useTransition();
   const [isUploading, setIsUploading] = useState(false);
   const router = useRouter();
 
@@ -38,7 +36,8 @@ export default function UploadResumeButton() {
         // });
       } else {
         // Handle failed response with a toast error
-        toast.error("Upload failed. Please try again.");
+        const data = await res.json();
+        toast.error(data?.error || "Upload failed.");
       }
     } catch {
       toast.error("Unexpected error occurred.");
@@ -53,7 +52,7 @@ export default function UploadResumeButton() {
       <input
         ref={inputRef} // Associate this element with the useRef hook
         type="file"
-        accept=".pdf,.doc,.docx" // Restrict file types
+        accept=".pdf,.doc,.docx,.txt" // Restrict file types
         onChange={handleFileChange} // Trigger upload when a file is selected
         className="hidden" // Hidden from view; shown indirectly via button click
       />

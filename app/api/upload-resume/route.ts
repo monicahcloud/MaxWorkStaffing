@@ -1,99 +1,179 @@
-import { NextRequest, NextResponse } from "next/server"; // Import Next.js API types
-import { auth } from "@clerk/nextjs/server"; // Clerk authentication for getting the current user
-import { put } from "@vercel/blob"; // Vercel's Blob Storage API for file uploads
-import prisma from "@/lib/prisma"; // Prisma client for database access
-import pdfParse from "pdf-parse"; // Library to parse PDF content into plain text
-import mammoth from "mammoth"; // Library to extract raw text from DOCX files
+import { NextRequest, NextResponse } from "next/server";
+import { auth } from "@clerk/nextjs/server";
+import { put } from "@vercel/blob";
+import prisma from "@/lib/prisma";
+import pdfParse from "pdf-parse";
+import mammoth from "mammoth";
+import { parseResumeWithAffinda } from "@/lib/parseWithAffinda";
+
 import {
   parseResumeWithAI,
   saveParsedResumeData,
-} from "@/app/(dashboard)/editor/forms/action"; // Custom AI function to extract structured data from resume text
+} from "@/app/(dashboard)/editor/forms/action";
 
-// Helper function to extract raw text from uploaded files
-async function parseFileContent(file: File): Promise<string> {
-  const buffer = Buffer.from(await file.arrayBuffer()); // Convert file into buffer for parsing
-
-  if (file.name.endsWith(".pdf")) {
-    const data = await pdfParse(buffer); // Extract text from PDF
-    return data.text;
-  }
-
-  if (file.name.endsWith(".docx")) {
-    const result = await mammoth.extractRawText({ buffer }); // Extract raw text from DOCX
-    return result.value;
-  }
-
-  return "Unsupported file type."; // Fallback for unsupported formats
+async function bufferFromFile(file: File) {
+  return Buffer.from(await file.arrayBuffer());
 }
 
-// POST route handler to handle resume uploads
+async function extractText(file: File): Promise<string> {
+  const buffer = await bufferFromFile(file);
+  const ext = file.name.split(".").pop()?.toLowerCase();
+
+  switch (ext) {
+    case "pdf": {
+      const { text } = await pdfParse(buffer);
+      return text;
+    }
+    case "doc":
+    case "docx": {
+      const { value } = await mammoth.extractRawText({ buffer });
+      return value;
+    }
+    case "txt":
+      return buffer.toString("utf-8");
+    default:
+      // ❗️Throwing an error instead of returning dummy string
+      throw new Error("Unsupported file type");
+  }
+}
+
 export async function POST(req: NextRequest) {
   try {
-    const { userId } = await auth(); // Get authenticated user ID
-
-    if (!userId) {
-      // If user is not authenticated, return 401
+    const { userId } = await auth();
+    if (!userId)
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
 
-    const formData = await req.formData(); // Extract form data from request
-    const file = formData.get("file") as File; // Get the uploaded file
+    const formData = await req.formData();
+    const file = formData.get("file") as File;
 
-    if (!file) {
-      // If no file is included in the request, return 400
+    if (!file)
       return NextResponse.json({ error: "No file provided" }, { status: 400 });
+
+    // ✅ 5MB File Size Limit
+    const MAX_SIZE = 5 * 1024 * 1024;
+    if (file.size > MAX_SIZE) {
+      return NextResponse.json(
+        { error: "File too large. Maximum size is 5MB." },
+        { status: 400 }
+      );
     }
 
-    const parsedText = await parseFileContent(file); // Convert file to plain text
+    let parsedText: string;
 
-    // Upload original file to Vercel Blob Storage
+    try {
+      parsedText = await extractText(file);
+    } catch (extractErr) {
+      console.error("❌ Error extracting text:", extractErr);
+      return NextResponse.json(
+        { error: "Unsupported file type or failed to extract content." },
+        { status: 415 }
+      );
+    }
+    // ✅ Upload the original file to Vercel Blob Storage
     const blob = await put(
-      `uploaded_resumes/${Date.now()}-${file.name}`, // Unique path using timestamp
+      `uploaded_resumes/${Date.now()}-${file.name}`,
       file,
-      { access: "public" } // Make file publicly accessible
+      {
+        access: "public",
+      }
     );
 
-    console.log("✅ Uploaded to Blob:", blob.url); // Log the blob URL
-
-    // Save uploaded resume metadata and text content in the database
+    // ✅ Create resume record in the DB
     const resume = await prisma.resume.create({
       data: {
         userId,
-        user: {
-          connect: {
-            clerkId: userId, // Connect resume to user via Clerk ID
-          },
-        },
-        resumeTitle: file.name, // Use file name as default title
-        uploadedFileUrl: blob.url, // Store blob URL in DB
-        isUploaded: true, // Mark as uploaded (not manually created)
-        rawTextContent: parsedText, // Store extracted plain text
+        user: { connect: { clerkId: userId } },
+        resumeTitle: file.name,
+        uploadedFileUrl: blob.url,
+        isUploaded: true,
+        rawTextContent: parsedText,
+
+        parsedWith: "",
       },
     });
+    let parserUsed = "";
+    try {
+      const affindaParsed = await parseResumeWithAffinda(file);
+      parserUsed = "Affinda";
 
-    // const parsedData = await parseResumeWithAI(parsedText);
-    //   await saveParsedResumeData(resume.id, parsedData);
-    handleParsedData(parsedText, resume);
-    return NextResponse.json(
-      {
-        success: true,
-        url: blob.url,
-        resumeId: resume.id,
-        resumeType: "Uploaded",
-        resumeTitle: file.name,
-      },
-      { status: 200 }
-    );
-  } catch (err: unknown) {
-    console.error("🔥 Error uploading file:", err); // Log any unexpected error
+      const mapped = {
+        personalInfo: {
+          firstName: affindaParsed.name?.first ?? "",
+          lastName: affindaParsed.name?.last ?? "",
+          jobTitle: affindaParsed.profession ?? "",
+          email: affindaParsed.emails?.[0] ?? "",
+          phone: affindaParsed.phoneNumbers?.[0] ?? "",
+          address: affindaParsed.location?.text ?? "",
+          website: affindaParsed.websites?.[0] ?? "",
+          linkedin: affindaParsed.linkedin ?? "",
+          gitHub: "",
+        },
+        summary: affindaParsed.summary ?? "",
+        skills: affindaParsed.skills?.map((s: any) => s.name) ?? [],
+        education:
+          affindaParsed.education?.map((e: any) => ({
+            degree: e.accreditation,
+            school: e.organization,
+            location: e.location?.text,
+            startDate: e.dates?.startDate,
+            endDate: e.dates?.endDate,
+            description: e.summary,
+          })) ?? [],
+        workExperience:
+          affindaParsed.workExperience?.map((w: any) => ({
+            position: w.jobTitle,
+            company: w.organization,
+            location: w.location?.text,
+            startDate: w.dates?.startDate,
+            endDate: w.dates?.endDate,
+            description: w.summary,
+            status: "",
+            clearance: "",
+            duties: "",
+            responsibilities: "",
+            grade: "",
+            hours: "",
+          })) ?? [],
+        interests: affindaParsed.interests ?? [],
+      };
+
+      await saveParsedResumeData(resume.id, mapped);
+    } catch (affindaErr: any) {
+      console.error(
+        "❌ Affinda parsing failed:",
+        affindaErr?.response?.data || affindaErr?.message || affindaErr
+      );
+
+      const openaiParsed = await parseResumeWithAI(parsedText);
+      parserUsed = "OpenAI";
+
+      await saveParsedResumeData(resume.id, openaiParsed);
+    }
+    // ✅ Optionally update resume record with parser tag
+    console.log("Updating resume with:", {
+      id: resume.id,
+      parsedWith: parserUsed,
+    });
+    const checkResume = await prisma.resume.findUnique({
+      where: { id: resume.id },
+    });
+    console.log("Resume exists?", checkResume);
+    await prisma.resume.update({
+      where: { id: resume.id },
+      data: { parsedWith: parserUsed },
+    });
+    return NextResponse.json({
+      success: true,
+      url: blob.url,
+      resumeId: resume.id,
+      resumeType: "Uploaded",
+      resumeTitle: file.name,
+    });
+  } catch (err) {
+    console.error("🔥 Error uploading resume:", err);
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 }
     );
   }
-}
-
-async function handleParsedData(parsedText, resume) {
-  const parsedData = await parseResumeWithAI(parsedText);
-  await saveParsedResumeData(resume.id, parsedData);
 }

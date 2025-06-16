@@ -18,18 +18,7 @@ export async function updateResumeType(formData: FormData) {
   if (!uploadedResume || !uploadedResume.rawTextContent) {
     throw new Error("Uploaded resume not found or missing raw text");
   }
-  // const pollForParsed = async (id) => {
-  //   while (true) {
-  //     const data = await prisma.resume.findUnique({
-  //       where: { id: resumeId },
-  //       include: { education: true, workExperience: true },
-  //     });
-  //     if (data?.parsed) {
-  //       return data;
-  //     }
-  //     await new Promise((resolve) => setTimeout(resolve, 2000));
-  //   }
-  // };
+
   const pollForParsed = async (id: string, maxAttempts = 15) => {
     let attempts = 0;
     while (attempts < maxAttempts) {

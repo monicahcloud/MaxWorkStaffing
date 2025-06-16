@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import { useTransition, useState } from "react";
-import { useRouter } from "next/navigation";
 import { Card, CardContent, CardDescription } from "@/components/ui/card";
 import { resumeTemplates } from "@/app/(dashboard)/resumebuilder/ResumeTemplate";
 import { updateResumeType } from "./action";
@@ -15,7 +14,6 @@ export default function ChooseTemplatePage({
   params: { id: string };
 }) {
   const resumeId = params.id;
-  const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [showModal, setShowModal] = useState(false);
 
@@ -35,13 +33,15 @@ export default function ChooseTemplatePage({
   return (
     <>
       {showModal && <LoadingModal />}
-      <div className="px-4 templates">
+
+      <div className="px-4 sm:px-6 lg:px-8 templates">
         <SectionTitle
           text="Choose a Template"
           subtext="Create a brand new resume using your uploaded resume."
         />
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 px-4 py-8">
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-4 sm:px-6 lg:px-8 py-8">
         {resumeTemplates.map((template) => (
           <button
             key={template.title}
@@ -53,15 +53,17 @@ export default function ChooseTemplatePage({
                 isPending ? "opacity-60" : "hover:shadow-lg"
               }`}>
               <CardContent className="flex flex-col items-center gap-4">
-                <div className="relative w-[300px] h-[400px]">
+                <div className="relative w-full aspect-[3/4] max-w-[300px]">
                   <Image
                     src={template.image}
                     alt={template.title}
-                    className="rounded-lg object-contain w-full h-full"
+                    fill
+                    className="rounded-lg object-contain"
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   />
                 </div>
                 <div className="w-full border-t border-gray-300" />
-                <CardDescription className="text-center">
+                <CardDescription className="text-center text-sm sm:text-base">
                   {template.title}
                 </CardDescription>
               </CardContent>

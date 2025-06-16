@@ -58,7 +58,7 @@ export function HeroCarousel() {
                 src={src}
                 alt={title}
                 priority={index === 0}
-                className="max-h-full object-contain rounded-xl shadow-lg"
+                className="h-8/10 object-contain rounded-xl shadow-lg"
               />
             </div>
           </div>

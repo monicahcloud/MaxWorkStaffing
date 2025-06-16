@@ -318,6 +318,7 @@ function cleanJsonString(jsonStr: string): string {
 }
 
 function safeDate(value: any): Date | undefined {
+  if (!value) return undefined;
   const date = new Date(value);
   return isNaN(date.getTime()) ? undefined : date;
 }
@@ -407,88 +408,101 @@ export async function saveParsedResumeData(resumeId: string, parsedData: any) {
   if (!resumeId) throw new Error("Missing resumeId");
 
   const {
-    personalInfo,
-
-    summary,
-    skills,
-    education,
-    workExperience,
-    interests,
-    parsed,
+    personalInfo = {},
+    summary = "",
+    skills = [],
+    education = [],
+    workExperience = [],
+    interest = [],
+    parsed = true,
   } = parsedData;
 
   const {
-    firstName,
-    lastName,
-    jobTitle,
-    email,
-    phone,
-    address,
-    website,
-    linkedin,
-    gitHub,
+    firstName = "",
+    lastName = "",
+    jobTitle = "",
+    email = "",
+    phone = "",
+    address = "",
+    website = "",
+    linkedin = "",
+    gitHub = "",
   } = personalInfo;
-  // 1. Clear previous nested data to avoid duplicates
-  await prisma.techSkill.deleteMany({ where: { resumeId } });
-  await prisma.education.deleteMany({ where: { resumeId } });
-  await prisma.workExperience.deleteMany({ where: { resumeId } });
 
-  // 2. Update resume with new parsed data
-  await prisma.resume.update({
-    where: { id: resumeId },
-    data: {
-      resumeTitle: parsedData.resumeTitle || "Untitled",
-      description: summary || "",
-      parsed: parsed ?? true,
-      firstName,
-      lastName,
-      jobTitle,
-      email,
-      phone,
-      address,
-      website,
-      linkedin,
-      gitHub,
-      summary: summary || "",
-      // string[] fields
-      skills: skills || [],
-      interest: interests || [],
-      // related records
-      techSkills: {
-        create: skills?.map((skill: string) => ({ name: skill })) || [],
+  // Use a transaction to ensure consistency
+  await prisma.$transaction(async (tx) => {
+    // 1. Clear existing related data to prevent duplicates
+    await Promise.all([
+      tx.techSkill.deleteMany({ where: { resumeId } }),
+      tx.education.deleteMany({ where: { resumeId } }),
+      tx.workExperience.deleteMany({ where: { resumeId } }),
+    ]);
+
+    // 2. Update main resume record with personal info and summary
+    await tx.resume.update({
+      where: { id: resumeId },
+      data: {
+        firstName,
+        lastName,
+        jobTitle,
+        email,
+        phone,
+        address,
+        website,
+        linkedin,
+        gitHub,
+        summary,
+        parsed,
+        // Optionally update resume title if present
+        resumeTitle: parsedData.resumeTitle || undefined,
+        interest,
       },
-      education: {
-        create:
-          education?.map((edu: any) => ({
-            degree: edu.degree,
-            school: edu.school,
-            location: edu.location,
-            // startDate: edu.startDate ? new Date(edu.startDate) : undefined,
-            // endDate: edu.endDate ? new Date(edu.endDate) : undefined,
-            startDate: safeDate(edu.startDate),
-            endDate: safeDate(edu.endDate),
-            description: edu.description,
-          })) || [],
-      },
-      workExperience: {
-        create:
-          workExperience?.map((job: any) => ({
-            position: job.position,
-            company: job.company,
-            location: job.location,
-            // startDate: job.startDate ? new Date(job.startDate) : undefined,
-            // endDate: job.endDate ? new Date(job.endDate) : undefined,
-            startDate: safeDate(job.startDate),
-            endDate: safeDate(job.endDate),
-            description: job.description,
-            status: job.status,
-            clearance: job.clearance,
-            duties: job.duties,
-            responsibilities: job.responsibilities,
-            grade: job.grade,
-            hours: job.hours,
-          })) || [],
-      },
-    },
+    });
+
+    // 3. Create related tech skills
+    if (skills.length > 0) {
+      await tx.techSkill.createMany({
+        data: skills.map((name: string) => ({ resumeId, name })),
+      });
+    }
+
+    // 4. Create related education entries
+    if (education.length > 0) {
+      await tx.education.createMany({
+        data: education.map((edu: any) => ({
+          resumeId,
+          degree:
+            typeof edu.degree === "string"
+              ? edu.degree
+              : edu.degree?.education || "", // fallback to nested `education` field
+          school: edu.school || "",
+          location: edu.location || "",
+          startDate: safeDate(edu.startDate),
+          endDate: safeDate(edu.endDate),
+          description: edu.description || "",
+        })),
+      });
+    }
+
+    // 5. Create related work experience entries
+    if (workExperience.length > 0) {
+      await tx.workExperience.createMany({
+        data: workExperience.map((job: any) => ({
+          resumeId,
+          position: job.position || "",
+          company: job.company || "",
+          location: job.location || "",
+          startDate: safeDate(job.startDate),
+          endDate: safeDate(job.endDate),
+          description: job.description || "",
+          status: job.status || "",
+          clearance: job.clearance || "",
+          duties: job.duties || "",
+          responsibilities: job.responsibilities || "",
+          grade: job.grade || "",
+          hours: job.hours || "",
+        })),
+      });
+    }
   });
 }
