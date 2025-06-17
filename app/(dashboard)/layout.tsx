@@ -5,7 +5,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { redirect } from "next/navigation";
 import { auth } from "@clerk/nextjs/server";
-
 import Logo from "../../assets/logo.png";
 import ThemeToggle from "@/components/ThemeToggle";
 import { Button } from "@/components/ui/button";
@@ -24,14 +23,13 @@ import SubscriptionLevelProvider from "./SubscriptionLevelProvider";
 import PremiumModal from "@/components/premium/PremiumModal";
 import FirstTimeModal from "@/components/FirstTimeModal";
 import MainFooter from "@/components/MainFooter";
-
 import { getUserSubscriptionLevel } from "@/lib/subscription";
 import { getUserMetadata, markUserAsReturning } from "@/lib/user";
 import { Metadata } from "next";
 import { UserProgressProvider } from "@/components/UserProgressContext";
 
 export const metadata: Metadata = {
-  title: "Support",
+  title: "Dashboard",
 };
 
 async function Dashboardlayout({ children }: PropsWithChildren) {

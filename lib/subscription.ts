@@ -2,7 +2,11 @@ import { cache } from "react";
 import prisma from "./prisma";
 import { env } from "@/env";
 
-export type SubscriptionLevel = "trial" | "monthly" | "annual";
+export type SubscriptionLevel =
+  | "trial"
+  | "trial_expired"
+  | "monthly"
+  | "annual";
 
 export const getUserSubscriptionLevel = cache(
   async (userId: string): Promise<SubscriptionLevel> => {
@@ -15,8 +19,12 @@ export const getUserSubscriptionLevel = cache(
       },
     });
 
-    if (!subscription || subscription.stripeCurrentPeriodEnd < new Date()) {
-      return "trial";
+    if (
+      !subscription ||
+      !subscription.stripeCurrentPeriodEnd ||
+      subscription.stripeCurrentPeriodEnd < new Date()
+    ) {
+      return "trial_expired"; // Or whatever fallback logic you'd like
     }
 
     if (
@@ -35,6 +43,6 @@ export const getUserSubscriptionLevel = cache(
     );
     return "trial";
 
-    throw new Error("Invalid subscription");
+    // throw new Error("Invalid subscription");
   }
 );

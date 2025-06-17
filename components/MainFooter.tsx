@@ -26,7 +26,7 @@ export default function MainFooter() {
           <Link href="/home" className="hover:underline">
             Dashboard
           </Link>
-          <Link href="/billing" className="hover:underline">
+          <Link href="/billing/success" className="hover:underline">
             Manage Subscription
           </Link>
           <Link href="/tos" className="hover:underline">

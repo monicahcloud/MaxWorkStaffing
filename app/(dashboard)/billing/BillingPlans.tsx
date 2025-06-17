@@ -61,9 +61,42 @@ const features = [
       "Get access to resume tips, salary insights, and career-building resources to support your job hunt.",
   },
 ];
+type SubscriptionType = {
+  stripeCurrentPeriodEnd: Date | null;
+  stripeCancelAtPeriodEnd: boolean;
+  stripePriceId: string | null;
+} | null;
 
-export default function BillingPlans() {
+type Props = {
+  subscription?: SubscriptionType;
+};
+export default function BillingPlans({ subscription }: Props) {
   const [loading, setLoading] = useState(false);
+  let planName = "No Active Plan";
+  let renewalText = "";
+
+  if (subscription?.stripePriceId) {
+    if (
+      subscription.stripePriceId ===
+      process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_ANNUAL
+    ) {
+      planName = "Annual Plan";
+    } else if (
+      subscription.stripePriceId ===
+      process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_MONTHLY
+    ) {
+      planName = "Monthly Plan";
+    } else {
+      planName = "Trial";
+    }
+    if (subscription.stripeCurrentPeriodEnd instanceof Date) {
+      const formattedDate =
+        subscription.stripeCurrentPeriodEnd.toLocaleDateString();
+      renewalText = subscription.stripeCancelAtPeriodEnd
+        ? `— Cancels on ${formattedDate}`
+        : `— Renews on ${formattedDate}`;
+    }
+  }
 
   async function handlePremiumClick(priceId: string) {
     try {
@@ -81,6 +114,9 @@ export default function BillingPlans() {
   return (
     <>
       <div className="mt-10 max-w-4xl mx-auto space-y-6">
+        <h2 className="text-center text-2xl font-medium text-gray-800 mb-5">
+          Current Plan: {planName} {renewalText && `— ${renewalText}`}
+        </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div className="border border-gray-300 rounded-lg p-4 shadow-md relative">
             <div className="absolute top-[-10px] left-1/2 -translate-x-1/2 bg-red-500 text-white px-3 py-1 text-xs font-semibold rounded-full">
