@@ -40,6 +40,10 @@ export async function POST(req: NextRequest) {
       case "customer.subscription.updated":
         await handleSubscriptionCreatedOrUpdated(event.data.object.id); // Subscription created or updated
         break;
+      case "subscription_schedule.updated":
+      case "subscription_schedule.released":
+        await handleSubscriptionScheduleUpdated(event.data.object);
+        break;
       case "customer.subscription.deleted":
         await handleSubscriptionDeleted(event.data.object); // Subscription deleted
         break;
@@ -82,12 +86,6 @@ async function handleSessionCompleted(session: Stripe.Checkout.Session) {
     throw new Error("User ID is missing in stripe session metadata");
   }
 
-  // // Update Clerk private metadata with Stripe customer ID
-  // (await client).users.updateUserMetadata(userId, {
-  //   privateMetadata: {
-  //     stripeCustomerId: session.customer as string,
-  //   },
-  // });
   console.log("📦 Subscription ID:", session.subscription);
   console.log("🧠 Clerk User ID:", userId);
 }
@@ -105,10 +103,6 @@ async function handleSubscriptionCreatedOrUpdated(subscriptionId: string) {
   if (!user) {
     throw new Error("User not found for Clerk ID.");
   }
-
-  // // Retrieve private metadata from Clerk in case you need userId
-  // const clerkUser = await clerkClient.users.getUser(clerkId);
-  // const userId = (clerkUser.privateMetadata?.userId as string) || clerkId;
 
   if (
     subscription.status === "active" ||
@@ -151,6 +145,22 @@ async function handleSubscriptionCreatedOrUpdated(subscriptionId: string) {
       },
     });
   }
+}
+async function handleSubscriptionScheduleUpdated(
+  schedule: Stripe.SubscriptionSchedule
+) {
+  const subscription = schedule.subscription;
+
+  if (!subscription) return;
+
+  const activeSubscription = await stripe.subscriptions.retrieve(subscription);
+  const clerkId = activeSubscription.metadata?.userId;
+
+  if (!clerkId) {
+    throw new Error("Missing Clerk ID from subscription schedule.");
+  }
+
+  await handleSubscriptionCreatedOrUpdated(subscription); // re-use your logic
 }
 
 // Handles subscription cancellation
