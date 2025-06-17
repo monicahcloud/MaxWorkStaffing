@@ -8,6 +8,7 @@ import Stripe from "stripe";
 import SectionTitle from "@/components/SectionTitle";
 import BillingPlans from "./BillingPlans";
 import { getUserSubscriptionLevel } from "@/lib/subscription"; // Adjust import path if needed
+import ManageSubscriptionButton from "./ManageSubscriptionButton";
 
 export const metadata: Metadata = {
   title: "All Subscription Features",
@@ -52,10 +53,11 @@ export default async function BillingPage() {
   console.log("in billiing page", subscription, planName, renewalText);
   return (
     <main className="px-4 sm:px-6 lg:px-8 py-10">
-      <SectionTitle
-        text="Explore Your Benefits"
-        subtext={`Current Plan: ${planName}${renewalText}`}
-      />
+      {subscription?.stripePriceId && subscription.stripeCurrentPeriodEnd ? (
+        <ManageSubscriptionButton />
+      ) : (
+        <SectionTitle text="Explore Your Benefits" subtext="No active plan" />
+      )}
       <BillingPlans subscription={subscription} />
     </main>
   );
