@@ -15,6 +15,7 @@ interface CoverLetterPreviewProps {
 export default function ClassicTemplate({
   coverletterData,
   className,
+  contentRef,
 }: CoverLetterPreviewProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { width } = useDimensions(containerRef as React.RefObject<HTMLElement>);
@@ -31,6 +32,7 @@ export default function ClassicTemplate({
         style={{
           zoom: (1 / 794) * width,
         }}
+        ref={contentRef}
         id="resumePreviewContent">
         <div className="flex w-full h-full">
           <SideBar coverletterData={coverletterData} />

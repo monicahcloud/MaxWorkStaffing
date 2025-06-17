@@ -12,7 +12,11 @@ interface Props {
   contentRef?: React.Ref<HTMLDivElement>;
 }
 
-export function TodahTemplate({ coverletterData, className }: Props) {
+export function TodahTemplate({
+  coverletterData,
+  className,
+  contentRef,
+}: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { width } = useDimensions(containerRef as React.RefObject<HTMLElement>);
 
@@ -28,6 +32,7 @@ export function TodahTemplate({ coverletterData, className }: Props) {
         style={{
           zoom: (1 / 794) * width,
         }}
+        ref={contentRef}
         id="resumePreviewContent">
         <TodahHeaderSection coverletterData={coverletterData} />
         <TodahBodySection coverletterData={coverletterData} />

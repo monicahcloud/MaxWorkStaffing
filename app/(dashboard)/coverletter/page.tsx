@@ -8,6 +8,8 @@ import { auth } from "@clerk/nextjs/server";
 import prisma from "@/lib/prisma";
 import CoverLetterItem from "./CoverLetterItem";
 import { coverLetterInclude } from "@/lib/types";
+import { canCreateResume } from "@/lib/permissions";
+import { getUserSubscriptionLevel } from "@/lib/subscription";
 
 export const metadata: Metadata = {
   title: "Cover Letters",
@@ -20,7 +22,7 @@ async function CoverLetterRoute() {
     return null;
   }
 
-  const [coverletter, totalCount] = await Promise.all([
+  const [coverletter, totalCount, subscriptionLevel] = await Promise.all([
     prisma.coverLetter.findMany({
       where: {
         userId,
@@ -30,19 +32,24 @@ async function CoverLetterRoute() {
       },
       include: coverLetterInclude,
     }),
-    prisma.resume.count({
+    prisma.coverLetter.count({
       where: {
         userId,
       },
     }),
+    // 3. Retrieve the user's current subscription level (e.g., trial, monthly, annual)
+    getUserSubscriptionLevel(userId),
   ]);
+
   return (
     <main>
       <SectionTitle text="my Cover Letters" subtext={`Total: ${totalCount}`} />
       <div className="p-10 md:px-20 lg:px-32">
         <div className="w-full flex justify-center">
           <div className="flex items-center gap-4">
-            <CreateLetterButton />
+            <CreateLetterButton
+              canCreate={canCreateResume(subscriptionLevel, totalCount)}
+            />
           </div>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 mt-10 gap-5">

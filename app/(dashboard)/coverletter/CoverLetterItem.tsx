@@ -67,6 +67,7 @@ export default function CoverLetterItem({ coverletter }: CoverLetterProps) {
             className="relative inline-block w-full">
             <CoverLetterPreview
               coverLetterData={mapToCoverLetterValues(coverletter)}
+              contentRef={contentRef}
               className="h-[216px] shadow-sm group-hover:shadow-lg transition-shadow overflow-hidden"
             />
           </Link>

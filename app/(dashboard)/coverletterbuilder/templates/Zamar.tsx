@@ -14,7 +14,11 @@ interface Props {
   contentRef?: React.Ref<HTMLDivElement>;
 }
 
-export default function Zamar({ coverletterData, className }: Props) {
+export default function Zamar({
+  coverletterData,
+  className,
+  contentRef,
+}: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { width } = useDimensions(containerRef as React.RefObject<HTMLElement>);
 
@@ -30,6 +34,7 @@ export default function Zamar({ coverletterData, className }: Props) {
         style={{
           zoom: (1 / 794) * width,
         }}
+        ref={contentRef}
         id="resumePreviewContent">
         <div className="">
           <MemoizedHeaderSection coverletterData={coverletterData} />
