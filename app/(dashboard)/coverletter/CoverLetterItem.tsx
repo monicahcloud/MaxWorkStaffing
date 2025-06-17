@@ -68,7 +68,6 @@ export default function CoverLetterItem({ coverletter }: CoverLetterProps) {
             <CoverLetterPreview
               coverLetterData={mapToCoverLetterValues(coverletter)}
               className="h-[216px] shadow-sm group-hover:shadow-lg transition-shadow overflow-hidden"
-              // contentRef={contentRef}
             />
           </Link>
         </div>

@@ -1,4 +1,3 @@
-/* ✅ Google Fonts (import all at once, no need to split) */
 @import url("https://fonts.googleapis.com/css2?family=Caveat&family=Dancing+Script&family=Great+Vibes&family=Pacifico&family=Lora:ital,wght@0,400;0,700;1,400&family=Kings&display=swap");
 
 /* ✅ TailwindCSS base, components, utilities */
@@ -144,7 +143,14 @@
     transform: none !important;
     zoom: 1 !important;
     width: 794px !important;
-    padding: 5;
+    padding: 0;
+  }
+
+  #coverletterPreviewContent {
+    transform: none !important;
+    zoom: 1 !important;
+    width: 794px !important;
+    padding: 0;
   }
 }
 
@@ -161,25 +167,6 @@
 }
 #coverletterPreviewContent {
   font-family: "Lora", serif;
-}
-
-.a4-page {
-  width: 794px;
-  height: 1123px;
-  background: #000;
-  color: #fff;
-  margin: 0 auto;
-  padding: 40px 50px;
-  box-sizing: border-box;
-  overflow: hidden;
-  position: relative;
-}
-@media print {
-  .a4-page {
-    break-after: page;
-    page-break-after: always;
-    page: a4;
-  }
 }
 
 @page {
@@ -226,6 +213,9 @@ html {
   /* Firefox-specific fixes */
   @-moz-document url-prefix() {
     #resumePreviewContent {
+      width: 210mm !important;
+    }
+    #coverletterPreviewContent {
       width: 210mm !important;
     }
   }
@@ -277,5 +267,20 @@ html {
     to {
       opacity: 1;
     }
+  }
+}
+@media print {
+  #coverletterPreviewContent {
+    transform: none !important;
+    width: 794px !important;
+    height: auto !important;
+    zoom: 100% !important;
+    overflow: visible !important;
+  }
+
+  .print-container {
+    transform: none !important;
+    zoom: 100% !important;
+    overflow: visible !important;
   }
 }

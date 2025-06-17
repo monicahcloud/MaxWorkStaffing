@@ -58,18 +58,38 @@ export async function POST(req: NextRequest) {
 // Handles when a checkout session is completed
 async function handleSessionCompleted(session: Stripe.Checkout.Session) {
   const userId = session.metadata?.userId; // Extract userId from session metadata
+
+  if (!userId) {
+    throw new Error("User ID is missing in stripe session metadata");
+  }
   const client = await clerkClient(); // Clerk client instance
+
+  // ✅ Save customer ID to Clerk
+  await client.users.updateUserMetadata(userId, {
+    privateMetadata: {
+      stripeCustomerId: session.customer as string,
+    },
+  });
+
+  // ✅ Process subscription using the ID from session
+  if (session.subscription) {
+    await handleSubscriptionCreatedOrUpdated(session.subscription as string);
+  } else {
+    console.warn("No subscription found in session");
+  }
 
   if (!userId) {
     throw new Error("User ID is missing in stripe session metadata");
   }
 
-  // Update Clerk private metadata with Stripe customer ID
-  (await client).users.updateUserMetadata(userId, {
-    privateMetadata: {
-      stripeCustomerId: session.customer as string,
-    },
-  });
+  // // Update Clerk private metadata with Stripe customer ID
+  // (await client).users.updateUserMetadata(userId, {
+  //   privateMetadata: {
+  //     stripeCustomerId: session.customer as string,
+  //   },
+  // });
+  console.log("📦 Subscription ID:", session.subscription);
+  console.log("🧠 Clerk User ID:", userId);
 }
 
 // Handles creation or update of a subscription

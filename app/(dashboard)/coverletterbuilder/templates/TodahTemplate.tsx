@@ -129,11 +129,11 @@ function TodahSignatureSection({
     <div className="mt-5 text-md space-y-2 mx-10 font-serif">
       <p>Sincerely,</p>
       {signatureUrl ? (
-        <div className="w-[250px] ">
+        <div className="w-[250px] -ml-10 ">
           <Image
             src={signatureUrl}
             alt="Signature"
-            width={150}
+            width={200}
             height={100}
             className="object-contain"
           />

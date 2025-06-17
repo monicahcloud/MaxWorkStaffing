@@ -22,7 +22,7 @@ function FederalResumePreview({
   return (
     <div
       className={cn(
-        "  bg-white text-black h-fit w-full aspect-[210/297]",
+        "bg-white text-black h-fit w-full aspect-[210/297]",
         className
       )}
       ref={containerRef}>

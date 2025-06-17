@@ -82,7 +82,7 @@ function CoverLetterEditor({ coverletterToEdit }: CoverLetterEditorProps) {
             )}
           </div>
 
-          <div className="md:block md:w-1/2 border-l">
+          <div className="grow md:block md:w-1/2 border-l">
             <CoverLetterPreviewSection
               coverLetterData={coverLetterData}
               setCoverLetterData={setCoverLetterData}

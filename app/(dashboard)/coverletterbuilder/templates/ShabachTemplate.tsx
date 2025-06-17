@@ -17,6 +17,7 @@ interface CoverLetterPreviewProps {
 export function ShabachTemplate({
   className,
   coverletterData,
+  contentRef,
 }: CoverLetterPreviewProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { width } = useDimensions(containerRef as React.RefObject<HTMLElement>);
@@ -24,7 +25,7 @@ export function ShabachTemplate({
   return (
     <div
       className={cn(
-        "bg-black text-white h-fit w-full aspect-[210/297]",
+        "bg-black text-white h-fit w-full aspect-[210/297] print-friendly-bg",
         className
       )}
       ref={containerRef}>
@@ -33,7 +34,8 @@ export function ShabachTemplate({
         style={{
           zoom: (1 / 794) * width,
         }}
-        id="resumePreviewContent">
+        ref={contentRef}
+        id="coverletterPreviewContent">
         <MemoizedHeaderSection coverletterData={coverletterData} />
         <MemoizedUserPhoto coverletterData={coverletterData} />
         <MemoizedRecipientSection coverletterData={coverletterData} />
