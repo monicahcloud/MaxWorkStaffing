@@ -35,9 +35,11 @@ import { useReactToPrint } from "react-to-print";
 import { useRouter } from "next/navigation";
 import { deleteCoverLetter } from "../coverletterbuilder/editor/actions";
 import ShareButton from "@/app/share/ShareButton";
+import { SubscriptionLevel } from "@/lib/subscription";
 
 interface CoverLetterProps {
   coverletter: CoverLetterServerData;
+  subscriptionLevel: SubscriptionLevel;
 }
 
 export default function CoverLetterItem({ coverletter }: CoverLetterProps) {

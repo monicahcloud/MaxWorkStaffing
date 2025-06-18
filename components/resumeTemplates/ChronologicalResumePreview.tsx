@@ -50,7 +50,7 @@ function ChronologicalResumePreview({
     </div>
   );
 }
-
+// --- Subcomponents ---
 export default ChronologicalResumePreview;
 
 interface ResumePreviewProps {

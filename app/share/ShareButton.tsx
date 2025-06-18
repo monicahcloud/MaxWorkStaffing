@@ -68,11 +68,11 @@ export default function ShareButton({ type, id }: ShareButtonProps) {
           onClick={generateShareUrl}
           disabled={loading}
           variant="outline"
-          className="w-full">
+          className="w-full text-sm sm:text-base md:text-base lg:text-lg px-2 py-2">
           {loading ? "Generating..." : " Share Resume Link"}
         </Button>
       ) : (
-        <div className="flex gap-3 items-center">
+        <div className="flex flex-wrap gap-3 items-center justify-center max-w-full">
           <LinkedinShareButton url={shareUrl} summary={shareSummary}>
             <LinkedinIcon size={32} round />
           </LinkedinShareButton>

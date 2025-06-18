@@ -53,11 +53,21 @@ export default async function BillingPage() {
   console.log("in billiing page", subscription, planName, renewalText);
   return (
     <main className="px-4 sm:px-6 lg:px-8 py-10">
-      {subscription?.stripePriceId && subscription.stripeCurrentPeriodEnd ? (
-        <ManageSubscriptionButton />
-      ) : (
-        <SectionTitle text="Explore Your Benefits" subtext="No active plan" />
+      <SectionTitle
+        text="Explore Your Benefits"
+        subtext={
+          subscription?.stripePriceId && subscription.stripeCurrentPeriodEnd
+            ? "Active Plan"
+            : "No active plan"
+        }
+      />
+
+      {subscription?.stripePriceId && subscription.stripeCurrentPeriodEnd && (
+        <div className="flex justify-center my-4">
+          <ManageSubscriptionButton />
+        </div>
       )}
+
       <BillingPlans subscription={subscription} />
     </main>
   );

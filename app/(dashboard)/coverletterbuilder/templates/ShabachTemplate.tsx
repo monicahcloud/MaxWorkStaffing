@@ -25,7 +25,7 @@ export function ShabachTemplate({
   return (
     <div
       className={cn(
-        "bg-black text-white h-fit w-full aspect-[210/297] print-friendly-bg",
+        " aspect-[210/297] bg-black text-white h-fit w-full",
         className
       )}
       ref={containerRef}>
@@ -41,7 +41,6 @@ export function ShabachTemplate({
         <MemoizedRecipientSection coverletterData={coverletterData} />
         <MemoizedBodySection coverletterData={coverletterData} />
         <MemoizedSignatureSection coverletterData={coverletterData} />
-        {/* <MemoizedFooterSection coverletterData={coverletterData} /> */}
       </div>
     </div>
   );
@@ -212,22 +211,3 @@ function SignatureSection({
   );
 }
 const MemoizedSignatureSection = React.memo(SignatureSection);
-
-// function FooterSection({
-//   coverletterData,
-// }: {
-//   coverletterData: CoverLetterValues;
-// }) {
-//   const themeColor =
-//     !coverletterData.themeColor || coverletterData.themeColor === "#000000"
-//       ? "white"
-//       : coverletterData.themeColor;
-//   return (
-//     <div
-//       className="pt-6 border-t border-white/20 text-center text-xl mt-4 font-lora"
-//       style={{ color: themeColor || "rgba(255,255,255,0.7)" }}>
-//       {/* <p>{coverletterData.userAddress}</p> */}
-//     </div>
-//   );
-// }
-// const MemoizedFooterSection = React.memo(FooterSection);

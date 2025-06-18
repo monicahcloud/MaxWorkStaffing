@@ -225,7 +225,7 @@ html {
   .grid,
   .md\:grid-cols-3 {
     display: grid !important;
-    grid-template-columns: 2fr 1fr 1fr !important; /* Adjust as needed */
+    grid-template-columns: 2fr 1fr 1fr !important;
     gap: 1.5rem !important;
   }
   .md\:col-span-2 {

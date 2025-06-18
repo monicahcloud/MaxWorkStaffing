@@ -8,6 +8,7 @@ export function canCreateResume(
     trial: 1,
     monthly: Infinity,
     annual: Infinity,
+    trial_expired: 0,
   };
 
   const maxResumes = maxResumeMap[subscriptionLevel];

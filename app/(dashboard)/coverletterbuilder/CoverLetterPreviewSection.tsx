@@ -1,4 +1,3 @@
-"use client";
 import { cn } from "@/lib/utils";
 import ColorPicker from "../editor/ColorPicker";
 import BorderStyleButton from "../editor/BorderStyleButton";
