@@ -10,10 +10,8 @@ import { useUser } from "@clerk/nextjs";
 
 export default function FirstTimeModal({
   openOnLoad,
-  userId,
 }: {
   openOnLoad: boolean;
-  userId: string;
 }) {
   const [open, setOpen] = useState(false);
   const { user } = useUser();
@@ -34,10 +32,10 @@ export default function FirstTimeModal({
       try {
         await fetch("/api/user/mark-returning", {
           method: "POST",
-          body: JSON.stringify({ userId }),
-          headers: {
-            "Content-Type": "application/json",
-          },
+          // body: JSON.stringify({ userId }),
+          // headers: {
+          //   "Content-Type": "application/json",
+          // },
         });
       } catch (error) {
         console.error("Failed to update user first-time status", error);

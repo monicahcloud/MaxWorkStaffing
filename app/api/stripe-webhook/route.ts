@@ -153,14 +153,19 @@ async function handleSubscriptionScheduleUpdated(
 
   if (!subscription) return;
 
-  const activeSubscription = await stripe.subscriptions.retrieve(subscription);
+  const subscriptionId =
+    typeof subscription === "string" ? subscription : subscription.id;
+
+  const activeSubscription = await stripe.subscriptions.retrieve(
+    subscriptionId
+  );
   const clerkId = activeSubscription.metadata?.userId;
 
   if (!clerkId) {
     throw new Error("Missing Clerk ID from subscription schedule.");
   }
 
-  await handleSubscriptionCreatedOrUpdated(subscription); // re-use your logic
+  await handleSubscriptionCreatedOrUpdated(subscriptionId); // re-use your logic
 }
 
 // Handles subscription cancellation

@@ -93,8 +93,6 @@ export default function BillingPlans({ subscription }: Props) {
     }
   }
 
-  // type PlanType = "14Day" | "annual";
-
   async function handlePremiumClick(plan: "14Day" | "annual") {
     try {
       setLoading(true);
@@ -158,12 +156,7 @@ export default function BillingPlans({ subscription }: Props) {
             </ul>
             <Button
               className="w-full mt-6 bg-gradient-to-r from-red-600 to-red-400 text-white font-bold text-lg"
-              onClick={() =>
-                handlePremiumClick(
-                  // process.env.STRIPE_PRICE_ID_MONTHLY!
-                  "14Day"
-                )
-              }
+              onClick={() => handlePremiumClick("14Day")}
               disabled={loading}>
               Get Started
             </Button>
@@ -189,12 +182,7 @@ export default function BillingPlans({ subscription }: Props) {
             </ul>
             <Button
               className="w-full mt-6 bg-gradient-to-r from-red-600 to-red-400 text-white font-bold text-lg"
-              onClick={() =>
-                handlePremiumClick(
-                  // process.env.STRIPE_PRICE_ID_ANNUAL!
-                  "annual"
-                )
-              }
+              onClick={() => handlePremiumClick("annual")}
               disabled={loading}>
               Annual Plan
             </Button>

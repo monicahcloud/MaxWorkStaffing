@@ -1,10 +1,10 @@
-"use client";
-import { Button } from "@/components/ui/button";
+// "use client";
+// import { Button } from "@/components/ui/button";
 
-export function GeneratePostButton() {
-  const generate = async () => {
-    await fetch("/api/generate-blog-post");
-  };
+// export function GeneratePostButton() {
+//   const generate = async () => {
+//     await fetch("/api/generate-blog-post");
+//   };
 
-  return <Button onClick={generate}>Generate New Blog Post</Button>;
-}
+//   return <Button onClick={generate}>Generate New Blog Post</Button>;
+// }

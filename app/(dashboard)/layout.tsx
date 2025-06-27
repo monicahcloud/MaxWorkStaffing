@@ -24,7 +24,7 @@ import PremiumModal from "@/components/premium/PremiumModal";
 import FirstTimeModal from "@/components/FirstTimeModal";
 import MainFooter from "@/components/MainFooter";
 import { getUserSubscriptionLevel } from "@/lib/subscription";
-import { getUserMetadata, markUserAsReturning } from "@/lib/user";
+import { getUserMetadata } from "@/lib/user";
 import { Metadata } from "next";
 import { UserProgressProvider } from "@/components/UserProgressContext";
 
@@ -46,9 +46,9 @@ async function Dashboardlayout({ children }: PropsWithChildren) {
 
   const shouldShowModal = isFirstTimeUser;
 
-  if (isFirstTimeUser) {
-    await markUserAsReturning(userId); // Mark only once
-  }
+  // if (isFirstTimeUser) {
+  //   await markUserAsReturning(userId); // Mark only once
+  // }
 
   return (
     <SubscriptionLevelProvider userSubscriptionLevel={userSubscriptionLevel}>
@@ -110,7 +110,7 @@ async function Dashboardlayout({ children }: PropsWithChildren) {
             {/* Body */}
             <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-8 lg:p-8">
               {children}
-              <FirstTimeModal openOnLoad={shouldShowModal} userId={userId} />
+              <FirstTimeModal openOnLoad={shouldShowModal} />
               <PremiumModal />
             </main>
           </div>
