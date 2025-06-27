@@ -1,12 +1,7 @@
 import { cache } from "react";
 import prisma from "./prisma";
-import { env } from "@/env";
 
-export type SubscriptionLevel =
-  | "trial"
-  | "trial_expired"
-  | "monthly"
-  | "annual";
+export type SubscriptionLevel = "free" | "14Day" | "annual" | "trial";
 
 export const getUserSubscriptionLevel = cache(
   async (userId: string): Promise<SubscriptionLevel> => {
@@ -24,16 +19,10 @@ export const getUserSubscriptionLevel = cache(
       !subscription.stripeCurrentPeriodEnd ||
       subscription.stripeCurrentPeriodEnd < new Date()
     ) {
-      return "trial_expired"; // Or whatever fallback logic you'd like
+      return "free"; // Or whatever fallback logic you'd like
     }
 
-    if (
-      subscription.stripePriceId === env.NEXT_PUBLIC_STRIPE_PRICE_ID_MONTHLY
-    ) {
-      return "monthly";
-    }
-
-    if (subscription.stripePriceId === env.NEXT_PUBLIC_STRIPE_PRICE_ID_ANNUAL) {
+    if (subscription.stripePriceId === process.env.STRIPE_PRICE_ID_ANNUAL) {
       return "annual";
     }
 
@@ -41,7 +30,7 @@ export const getUserSubscriptionLevel = cache(
     console.warn(
       `Unknown stripePriceId for user ${userId}: ${subscription.stripePriceId}`
     );
-    return "trial";
+    return "free";
 
     // throw new Error("Invalid subscription");
   }

@@ -1,3 +1,4 @@
+// FILE: app/(dashboard)/billing/page.tsx
 import React from "react";
 import { Metadata } from "next";
 import { auth } from "@clerk/nextjs/server";
@@ -7,8 +8,9 @@ import stripe from "@/lib/stripe";
 import Stripe from "stripe";
 import SectionTitle from "@/components/SectionTitle";
 import BillingPlans from "./BillingPlans";
-import { getUserSubscriptionLevel } from "@/lib/subscription"; // Adjust import path if needed
+import { getUserSubscriptionLevel } from "@/lib/subscription";
 import ManageSubscriptionButton from "./ManageSubscriptionButton";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "All Subscription Features",
@@ -28,36 +30,40 @@ export default async function BillingPage() {
   let renewalText = "";
 
   if (subscription?.stripePriceId) {
-    const priceInfo = await stripe.prices.retrieve(subscription.stripePriceId, {
-      expand: ["product"],
-    });
+    try {
+      const priceInfo = await stripe.prices.retrieve(
+        subscription.stripePriceId,
+        {
+          expand: ["product"],
+        }
+      );
 
-    planName =
-      plan === "trial"
-        ? "Trial"
-        : (priceInfo.product as Stripe.Product).name ?? "Monthly";
+      planName =
+        plan === "trial"
+          ? "Trial"
+          : (priceInfo.product as Stripe.Product)?.name ?? "Monthly";
 
-    if (subscription.stripeCurrentPeriodEnd) {
-      renewalText = subscription.stripeCancelAtPeriodEnd
-        ? ` — Cancels on ${format(
-            new Date(subscription.stripeCurrentPeriodEnd),
-            "MMM dd, yyyy"
-          )}`
-        : ` — Renews on ${format(
-            new Date(subscription.stripeCurrentPeriodEnd),
-            "MMM dd, yyyy"
-          )}`;
+      if (subscription.stripeCurrentPeriodEnd) {
+        const formattedDate = format(
+          new Date(subscription.stripeCurrentPeriodEnd),
+          "MMM dd, yyyy"
+        );
+        renewalText = subscription.stripeCancelAtPeriodEnd
+          ? ` — Cancels on ${formattedDate}`
+          : ` — Renews on ${formattedDate}`;
+      }
+    } catch (err) {
+      console.error("Failed to fetch Stripe price info:", err);
     }
   }
 
-  console.log("in billiing page", subscription, planName, renewalText);
   return (
     <main className="px-4 sm:px-6 lg:px-8 py-10">
       <SectionTitle
         text="Explore Your Benefits"
         subtext={
           subscription?.stripePriceId && subscription.stripeCurrentPeriodEnd
-            ? "Active Plan"
+            ? `Current Plan: ${planName} ${renewalText}`
             : "No active plan"
         }
       />
@@ -67,6 +73,12 @@ export default async function BillingPage() {
           <ManageSubscriptionButton />
         </div>
       )}
+
+      <div className="text-start mt-8">
+        <Link href="/home" className="text-blue-600 hover:underline text-lg">
+          ← Back to Dashboard
+        </Link>
+      </div>
 
       <BillingPlans subscription={subscription} />
     </main>

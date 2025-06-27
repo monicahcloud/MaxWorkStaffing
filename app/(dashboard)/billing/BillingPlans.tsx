@@ -13,7 +13,6 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
-import createCheckoutSession from "@/components/premium/actions";
 import { toast } from "sonner";
 
 const features = [
@@ -76,14 +75,10 @@ export default function BillingPlans({ subscription }: Props) {
   let renewalText = "";
 
   if (subscription?.stripePriceId) {
-    if (
-      subscription.stripePriceId ===
-      process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_ANNUAL
-    ) {
+    if (subscription.stripePriceId === process.env.STRIPE_PRICE_ID_ANNUAL) {
       planName = "Annual Plan";
     } else if (
-      subscription.stripePriceId ===
-      process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_MONTHLY
+      subscription.stripePriceId === process.env.STRIPE_PRICE_ID_MONTHLY
     ) {
       planName = "Monthly Plan";
     } else {
@@ -98,14 +93,28 @@ export default function BillingPlans({ subscription }: Props) {
     }
   }
 
-  async function handlePremiumClick(priceId: string) {
+  // type PlanType = "14Day" | "annual";
+
+  async function handlePremiumClick(plan: "14Day" | "annual") {
     try {
       setLoading(true);
-      const redirectUrl = await createCheckoutSession(priceId);
-      window.location.href = redirectUrl;
-    } catch (error) {
-      console.error(error);
-      toast.error("Something went wrong. Please try again.");
+
+      const res = await fetch("/api/stripe/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ plan }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok && data.url) {
+        window.location.href = data.url;
+      } else {
+        toast.error(data.error || "Something went wrong.");
+      }
+    } catch (err) {
+      toast.error("Checkout failed.");
+      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -151,7 +160,8 @@ export default function BillingPlans({ subscription }: Props) {
               className="w-full mt-6 bg-gradient-to-r from-red-600 to-red-400 text-white font-bold text-lg"
               onClick={() =>
                 handlePremiumClick(
-                  process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_MONTHLY!
+                  // process.env.STRIPE_PRICE_ID_MONTHLY!
+                  "14Day"
                 )
               }
               disabled={loading}>
@@ -181,7 +191,8 @@ export default function BillingPlans({ subscription }: Props) {
               className="w-full mt-6 bg-gradient-to-r from-red-600 to-red-400 text-white font-bold text-lg"
               onClick={() =>
                 handlePremiumClick(
-                  process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_ANNUAL!
+                  // process.env.STRIPE_PRICE_ID_ANNUAL!
+                  "annual"
                 )
               }
               disabled={loading}>

@@ -6,42 +6,47 @@ import { Button } from "../ui/button";
 import usePremiumModal from "@/hooks/usePremiumModal";
 import { useState } from "react";
 import { toast } from "sonner";
-import createCheckoutSession from "./actions";
-import { env } from "@/env";
 
 export default function PremiumModal() {
   const { open, setOpen } = usePremiumModal();
   const [loading, setLoading] = useState(false);
 
-  async function handlePremiumClick(priceId: string) {
+  async function handlePremiumClick(plan: "14Day" | "annual") {
     try {
       setLoading(true);
-      const redirectUrl = await createCheckoutSession(priceId);
-      window.location.href = redirectUrl;
+
+      const res = await fetch("/api/stripe/checkout", {
+        method: "POST",
+        body: JSON.stringify({ plan }),
+      });
+
+      const data = await res.json();
+
+      if (data?.url) {
+        window.location.href = data.url;
+      } else {
+        toast.error("Failed to start checkout session.");
+      }
     } catch (error) {
       console.error(error);
-      toast.error("Something went wrong. Please try again.");
+      toast.error("Something went wrong.");
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <Dialog
-      open={open}
-      onOpenChange={(newState) => {
-        if (!loading) setOpen(newState);
-      }}>
+    <Dialog open={open} onOpenChange={(state) => !loading && setOpen(state)}>
       <DialogContent className="w-full max-w-[90vw] sm:p-12 p-6">
         <div className="mx-auto w-full max-w-[1200px]">
           <DialogHeader className="text-center">
-            <DialogTitle className="text-2xl sm:text-2xl text-center font-bold text-gray-900 mb-6">
+            <DialogTitle className="text-2xl sm:text-2xl font-bold text-gray-900 mb-6">
               Get Closer to Your Next Opportunity—Faster
             </DialogTitle>
           </DialogHeader>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* 14-Day Access Card */}
+            {/* Trial Plan */}
             <div className="border border-gray-200 rounded-xl p-6 shadow-md relative bg-white">
               <span className="absolute top-[-12px] left-1/2 -translate-x-1/2 bg-red-500 text-white px-3 py-1 text-xs font-semibold rounded-full shadow text-center mb-2">
                 MOST POPULAR
@@ -72,15 +77,13 @@ export default function PremiumModal() {
               </ul>
               <Button
                 className="w-full mt-6 bg-gradient-to-r from-red-600 to-red-400 text-white font-bold text-lg"
-                onClick={() =>
-                  handlePremiumClick(env.NEXT_PUBLIC_STRIPE_PRICE_ID_MONTHLY)
-                }
+                onClick={() => handlePremiumClick("14Day")}
                 disabled={loading}>
                 Get Started
               </Button>
             </div>
 
-            {/* Annual Access Card */}
+            {/* Annual Plan */}
             <div className="border border-gray-200 rounded-xl p-6 shadow-md bg-white">
               <h3 className="text-center text-xl font-bold text-red-600 mb-2">
                 Annual Access
@@ -111,9 +114,7 @@ export default function PremiumModal() {
               </ul>
               <Button
                 className="w-full mt-6 bg-gradient-to-r from-red-600 to-red-400 text-white font-bold text-lg"
-                onClick={() =>
-                  handlePremiumClick(env.NEXT_PUBLIC_STRIPE_PRICE_ID_ANNUAL)
-                }
+                onClick={() => handlePremiumClick("annual")}
                 disabled={loading}>
                 Annual Plan
               </Button>

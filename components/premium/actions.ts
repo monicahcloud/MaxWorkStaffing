@@ -1,15 +1,14 @@
 "use server";
-
-import { env } from "@/env"; // Loads environment variables (like URLs and Stripe keys)
-import stripe from "@/lib/stripe"; // Your configured Stripe client
-import { currentUser } from "@clerk/nextjs/server"; // Clerk helper to get the currently logged-in user
+import { env } from "@/env";
+import stripe from "@/lib/stripe";
+import { currentUser } from "@clerk/nextjs/server";
 
 // This function creates a Stripe Checkout Session for a subscription
-async function createCheckoutSession(priceId: string) {
-  // Get the currently authenticated user from Clerk
+async function createCheckoutSession(
+  lineItems: { price: string; quantity: number }[]
+) {
   const user = await currentUser();
 
-  // If there's no authenticated user, throw an error
   if (!user) {
     throw new Error("Unauthorized");
   }
@@ -22,8 +21,8 @@ async function createCheckoutSession(priceId: string) {
   // Create the Stripe Checkout Session
   const session = await stripe.checkout.sessions.create({
     mode: "subscription", // This is for recurring subscriptions
-    line_items: [{ price: priceId, quantity: 1 }], // The price plan ID and quantity
-
+    // line_items: [{ price: priceId, quantity: 1 }], // The price plan ID and quantity
+    line_items: lineItems,
     // Redirect URLs after successful or canceled checkout
     success_url: `${env.NEXT_PUBLIC_BASE_URL}/billing/success`,
     cancel_url: `${env.NEXT_PUBLIC_BASE_URL}/billing`,
