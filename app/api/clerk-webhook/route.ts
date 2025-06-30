@@ -205,7 +205,9 @@ async function handleUserCreated(user: UserJSON) {
       console.warn(`[Clerk Webhook] ⚠️ User ${user.id} has no email.`);
       return;
     }
-
+    const existing = await prisma.user.findUnique({
+      where: { clerkId: user.id },
+    });
     const newUser = await prisma.user.upsert({
       where: { clerkId: user.id },
       update: {
@@ -214,6 +216,7 @@ async function handleUserCreated(user: UserJSON) {
         lastName: user.last_name || "",
         imageUrl: user.image_url || "",
         updatedAt: new Date(),
+        isFirstTimeUser: existing?.isFirstTimeUser ?? true,
       },
       create: {
         clerkId: user.id,

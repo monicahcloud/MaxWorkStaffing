@@ -39,19 +39,18 @@ async function Dashboardlayout({ children }: PropsWithChildren) {
     redirect("/");
   }
 
-  let isFirstTimeUser = await getUserMetadata(userId);
-  const userSubscriptionLevel = await getUserSubscriptionLevel(userId);
-  const shouldShowModal = isFirstTimeUser;
+  // Fetch metadata and subscription level in parallel
+  const [isFirstTimeUser, userSubscriptionLevel] = await Promise.all([
+    getUserMetadata(userId),
+    getUserSubscriptionLevel(userId),
+  ]);
 
-  // const [userSubscriptionLevel, isFirstTimeUser] = await Promise.all([
-  //   getUserSubscriptionLevel(userId),
-  //   getUserMetadata(userId),
-  // ]);
+  // Decide whether to show the modal
+  let shouldShowModal = false;
 
-  // Immediately mark the user as not first-time so it doesn't repeat
   if (isFirstTimeUser) {
-    await markUserAsReturning(userId);
-    isFirstTimeUser = false; // In case used later again
+    shouldShowModal = true;
+    await markUserAsReturning(userId); // ✅ Mark BEFORE using the flag
   }
 
   return (
