@@ -9,7 +9,7 @@ import logo from "../../assets/logo.png";
 
 export function Hero() {
   return (
-    <section className="relative w-full py-20 px-6 bg-gradient-to-b from-white to-gray-50 overflow-hidden">
+    <section className="relative w-full pt-20 px-6 bg-gradient-to-b from-white to-gray-100 overflow-hidden">
       <div className="flex flex-col lg:flex-row items-center justify-between gap-16 lg:gap-20 max-w-7xl mx-auto">
         {/* Left Column */}
         <div className="w-full lg:w-1/2 text-center lg:text-left">

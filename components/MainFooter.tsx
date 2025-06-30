@@ -13,9 +13,7 @@ export default function MainFooter() {
           <Image
             src={logo}
             alt="Max ResumeBuilder logo"
-            width={160}
-            height={40}
-            className="h-auto w-auto"
+            className="w-32 sm:w-40 md:w-48 lg:w-56 h-auto"
           />
 
           <p>

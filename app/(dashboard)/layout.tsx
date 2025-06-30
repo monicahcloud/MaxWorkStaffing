@@ -24,7 +24,7 @@ import PremiumModal from "@/components/premium/PremiumModal";
 import FirstTimeModal from "@/components/FirstTimeModal";
 import MainFooter from "@/components/MainFooter";
 import { getUserSubscriptionLevel } from "@/lib/subscription";
-import { getUserMetadata } from "@/lib/user";
+import { getUserMetadata, markUserAsReturning } from "@/lib/user";
 import { Metadata } from "next";
 import { UserProgressProvider } from "@/components/UserProgressContext";
 
@@ -39,16 +39,20 @@ async function Dashboardlayout({ children }: PropsWithChildren) {
     redirect("/");
   }
 
-  const [userSubscriptionLevel, isFirstTimeUser] = await Promise.all([
-    getUserSubscriptionLevel(userId),
-    getUserMetadata(userId),
-  ]);
-
+  let isFirstTimeUser = await getUserMetadata(userId);
+  const userSubscriptionLevel = await getUserSubscriptionLevel(userId);
   const shouldShowModal = isFirstTimeUser;
 
-  // if (isFirstTimeUser) {
-  //   await markUserAsReturning(userId); // Mark only once
-  // }
+  // const [userSubscriptionLevel, isFirstTimeUser] = await Promise.all([
+  //   getUserSubscriptionLevel(userId),
+  //   getUserMetadata(userId),
+  // ]);
+
+  // Immediately mark the user as not first-time so it doesn't repeat
+  if (isFirstTimeUser) {
+    await markUserAsReturning(userId);
+    isFirstTimeUser = false; // In case used later again
+  }
 
   return (
     <SubscriptionLevelProvider userSubscriptionLevel={userSubscriptionLevel}>
