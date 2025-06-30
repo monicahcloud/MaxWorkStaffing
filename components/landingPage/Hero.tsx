@@ -4,6 +4,8 @@ import Link from "next/link";
 import { RainbowButton } from "./RainbowButton";
 import { HeroCarousel } from "../HeroCarousel";
 import { Bot, PencilLine, Mail, BarChart2, Mic, Briefcase } from "lucide-react";
+import Image from "next/image";
+import logo from "../../assets/logo.png";
 
 export function Hero() {
   return (
@@ -11,12 +13,13 @@ export function Hero() {
       <div className="flex flex-col lg:flex-row items-center justify-between gap-16 lg:gap-20 max-w-7xl mx-auto">
         {/* Left Column */}
         <div className="w-full lg:w-1/2 text-center lg:text-left">
-          <span className="inline-block mb-4 px-4 py-2 bg-red-100 text-red-700 font-semibold text-sm rounded-full shadow-sm">
+          {/* <span className="inline-block mb-4 px-4 py-2 bg-red-100 text-red-700 font-semibold text-sm rounded-full shadow-sm">
             Max ResumeBuilder 1.0
-          </span>
+          </span> */}
 
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-tight">
-            Max <span className="text-red-600">ResumeBuilder</span>
+            {/* Max <span className="text-red-600">ResumeBuilder</span> */}
+            <Image src={logo} alt="logo" />
             <span className="block mt-3 text-3xl sm:text-4xl font-medium bg-gradient-to-r from-rose-500 to-red-600 bg-clip-text text-transparent animate-pulse">
               Build <span className="text-black mx-2">|</span>
               Track <span className="text-black mx-2">|</span>

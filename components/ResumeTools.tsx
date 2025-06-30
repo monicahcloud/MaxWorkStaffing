@@ -1,27 +1,27 @@
 "use client";
 
 import { Card } from "@/components/ui/card";
-import { File, FileText, IdCard, NotebookPen } from "lucide-react";
+import { File, FileText, NotebookPen } from "lucide-react";
 
 const toolCards = [
   {
-    icon: <FileText className="text-blue-600 w-6 h-6" />,
-    title: "Create A resume",
+    icon: <FileText className="text-blue-600 w-6 h-6 " />,
+    title: "Create A Resume",
     description: "Build a resume for the job you want. Fast and easy to use!",
     linkText: "Get Resume",
     linkHref: "resumebuilder",
   },
   {
-    icon: <NotebookPen className="text-blue-600 w-6 h-6" />,
+    icon: <NotebookPen className="text-blue-600 w-6 h-6 capitalize" />,
     title: "Create A Cover Letter",
     description:
-      "Instantly create a professional Cover Letter to impress employers",
+      "Instantly create a professional Cover Letter to impress employers.",
     linkText: "Get Cover Letter",
     linkHref: "coverletter",
   },
   {
-    icon: <File className="text-blue-600 w-6 h-6" />,
-    title: "Add Job to Job Tracker",
+    icon: <File className="text-blue-600 w-6 h-6 " />,
+    title: "Add Job To Job Tracker",
     description:
       "Manage and monitor your job search with a simple, streamlined tracker.",
     linkText: "Add Job",

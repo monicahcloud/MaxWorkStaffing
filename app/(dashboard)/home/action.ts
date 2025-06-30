@@ -37,7 +37,7 @@ Generate 3 unique blog posts for jobseekers in JSON format with the following fi
 - id (uuid)
 - title (unique, no duplicates)
 - description (2–3 sentences, unique)
-- imageUrl (choose from "/blog/office.jpg", "/blog/handshake.jpg", "/blog/transition.jpg")
+- imageUrl (choose from "/blog/laptop.jpg", /blog/team.jpg", /blog/office.jpg", "/blog/handshake.jpg", "/blog/transition.jpg")
 - tag (one of "Career", "Job Search", "Advice", "Remote Work", "Transitions")
 - content (IGNORE for now — we'll generate detailed content separately)
 

@@ -1,11 +1,11 @@
 import { CreateAssistantDTO } from "@vapi-ai/web/dist/api";
 // import { z } from "zod";
 export const tagToImageMap: Record<string, string> = {
-  Career: "/blogs/office.webp",
-  Advice: "/blogs/handshake.webp",
-  "Remote Work": "/blogs/laptop.jpg",
-  Transitions: "/blogs/transition.jpg",
-  "Job Hunt": "/blogs/team.jpg",
+  Career: "/blog/office.webp",
+  Advice: "/blog/handshake.webp",
+  "Remote Work": "/blog/laptop.jpg",
+  Transitions: "/blog/transition.jpg",
+  "Job Hunt": "/blog/team.jpg",
 };
 
 export const mappings = {

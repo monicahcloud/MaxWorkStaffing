@@ -53,7 +53,7 @@ async function Dashboardlayout({ children }: PropsWithChildren) {
   return (
     <SubscriptionLevelProvider userSubscriptionLevel={userSubscriptionLevel}>
       <UserProgressProvider>
-        <main className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr] pt-4">
+        <main className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr] ">
           {/* Sidebar */}
           <aside className="hidden border-r bg-muted/40 md:block">
             <div className="flex flex-col  gap-2 ">

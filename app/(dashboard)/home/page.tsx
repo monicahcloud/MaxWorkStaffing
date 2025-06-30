@@ -2,8 +2,7 @@ export const dynamic = "force-dynamic";
 
 import { ResumeTools } from "@/components/ResumeTools";
 import ClientHome from "@/components/tourGuide/ClientHome";
-import defaultImage from "@/public/blogs/team.jpg";
-
+import defaultImage from "@/public/blog/team.jpg";
 import prisma from "@/lib/prisma";
 import JobSearchWrapper from "../jobsearch/JobSearchWrapper";
 import { BlogPostGrid } from "@/components/BlogPost";
@@ -11,7 +10,7 @@ import { generateBlogPostsIfNeeded } from "./action";
 import { tagToImageMap } from "@/utils/constants";
 
 export default async function HomePageWrapper() {
-  await generateBlogPostsIfNeeded(); //
+  await generateBlogPostsIfNeeded();
   const getImageByTag = (tag: string | null) =>
     tagToImageMap[tag ?? ""] || defaultImage;
 
@@ -28,8 +27,7 @@ export default async function HomePageWrapper() {
       tag: post.tag ?? undefined,
       slug: post.slug!, // non-null assertion since filtered
     }));
-  console.log("Fetched posts:", posts);
-
+  
   return (
     <>
       <ClientHome />
@@ -37,7 +35,7 @@ export default async function HomePageWrapper() {
         <ResumeTools />
         <hr className="border-4 my-8" />
         <h1 className="text-2xl font-extrabold text-blue-900 mb-4 mt-8 capitalize">
-          Let's find your next beginning together.
+          Let's find your next beginning together
         </h1>
         <JobSearchWrapper />
         <hr className="border-4 my-8" />

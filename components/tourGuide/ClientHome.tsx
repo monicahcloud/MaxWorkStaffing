@@ -9,9 +9,9 @@ function ClientHome() {
   const username = user?.firstName || user?.username;
   const { hasResume, hasCoverLetter, hasJob } = useUserProgress();
 
-  const completedSteps = [hasResume, hasCoverLetter, hasJob].filter(
-    Boolean
-  ).length;
+  // const completedSteps = [hasResume, hasCoverLetter, hasJob].filter(
+  //   Boolean
+  // ).length;
 
   return (
     <div className="bg-muted p-4 sm:p-6 md:p-8 mb-4 rounded flex flex-col sm:flex-col md:flex-row items-start md:items-center justify-between gap-6">
@@ -27,7 +27,16 @@ function ClientHome() {
       </div>
 
       <div className="flex flex-col items-start sm:items-center  mr-15 gap-4 w-full md:w-auto">
-        <ResumeProgress completedSteps={completedSteps} />
+        <ResumeProgress
+          completed={
+            [
+              hasResume && "Create Resume",
+              hasCoverLetter && "Cover Letter",
+              hasJob && "Job\nTracker",
+            ].filter(Boolean) as string[]
+          }
+        />
+
         {/* <pre>
           {JSON.stringify(
             { hasResume, hasCoverLetter, hasJob, completedSteps },

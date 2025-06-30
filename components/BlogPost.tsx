@@ -47,10 +47,12 @@ export const BlogPostGrid: React.FC<BlogPostGridProps> = ({ posts }) => {
                 {post.title}
               </h2>
               <p className="text-sm text-gray-700 mb-4">{post.description}</p>
-              <Link href={`/blog/${post.slug || ""}`} key={post.id}>
-                <Button variant="outline" size="sm">
-                  Read More
-                </Button>
+              <Link href={`/blog/${post.slug || ""}`} legacyBehavior>
+                <a target="_blank" rel="noopener noreferrer">
+                  <Button variant="outline" size="sm">
+                    Read More
+                  </Button>
+                </a>
               </Link>
             </CardContent>
           </Card>

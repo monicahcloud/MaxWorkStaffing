@@ -12,10 +12,11 @@ const inter = Inter({
 });
 export const metadata: Metadata = {
   title: {
-    template: "%s - MaxWork Staffing Agency",
-    absolute: "MaxWork Staffing Agency",
+    template: "%s - Max ResumeBuilder",
+    absolute: "Max ResumeBuilder",
   },
-  description: "MaxWork Staffing Agency is for all jobseekers and employers",
+  description:
+    "Max ResumeBuilder is your AI-powered job search companion — create polished resumes and cover letters, build a professional profile, and find and track job opportunities in one place.",
 };
 
 export default function RootLayout({

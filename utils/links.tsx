@@ -84,7 +84,7 @@ const links: DashboardLinks[] = [
   },
   {
     id: nanoid(),
-    label: "Billing",
+    label: "Pricing",
     href: "/billing",
     icon: <CreditCard />,
   },

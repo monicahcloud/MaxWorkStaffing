@@ -13,17 +13,20 @@ import {
 
 // Tooltip descriptions for each link label
 const tooltipDescriptions = {
-  Dashboard: "Your personalized space to stay organized.",
-  Resumes: "Upload, create and manage your resumes",
-  "Cover Letter": "Upload, create and manage your cover letter",
-  "Personal Profile": "Online professional profile to share with recruiters.",
-  "Job Tracker": "Track your job applications and their status",
-  "Job Search": "Search for open positions and apply",
-  Stats: "View your real-time job application stats",
-  "AI Mock Interview": "AI-powered mock interview",
-  "Interviewing Tools": "Access resources to prepare for interviews",
-  FAQs: "Find answers to common questions",
-  Support: "Contact support for help",
+  Dashboard: "Your central hub to manage your job search efficiently.",
+  Resumes: "Create, upload, and organize all your resumes in one place.",
+  "Cover Letter":
+    "Build, upload, and manage custom cover letters for each job.",
+  "Personal Profile":
+    "Your shareable professional profile to impress recruiters.",
+  "Job Tracker": "Keep track of applications and monitor their progress.",
+  "Job Search": "Find and apply to job opportunities tailored to you.",
+  Stats: "See real-time insights into your job search activity and results.",
+  "AI Mock Interview": "Practice interviews with instant AI-powered feedback.",
+  "Interviewing Tools": "Browse resources to help you prep and stand out.",
+  Pricing: "Explore plans and features to level up your job search tools.",
+  FAQs: "Get quick answers to the most common questions.",
+  Support: "Reach out to our team for help and guidance.",
 };
 
 export default function LinksDropdown() {
