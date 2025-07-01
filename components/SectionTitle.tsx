@@ -1,6 +1,7 @@
 import { Separator } from "./ui/separator";
+import { ReactNode } from "react";
 
-function SectionTitle({ text, subtext }: { text: string; subtext: string }) {
+function SectionTitle({ text, subtext }: { text: string; subtext: ReactNode }) {
   return (
     <div>
       <h2 className="text-3xl font-extrabold text-blue-900 tracking-wider capitalize mb-2">
@@ -11,4 +12,5 @@ function SectionTitle({ text, subtext }: { text: string; subtext: string }) {
     </div>
   );
 }
+
 export default SectionTitle;

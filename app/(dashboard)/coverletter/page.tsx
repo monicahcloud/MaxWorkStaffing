@@ -54,7 +54,11 @@ async function CoverLetterRoute() {
         </div>
         <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 mt-10 gap-5">
           {coverletter.map((letter) => (
-            <CoverLetterItem key={letter.id} coverletter={letter} />
+            <CoverLetterItem
+              key={letter.id}
+              coverletter={letter}
+              subscriptionLevel={"free"}
+            />
           ))}
         </div>
       </div>

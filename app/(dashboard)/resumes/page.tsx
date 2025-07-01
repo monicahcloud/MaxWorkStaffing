@@ -9,7 +9,6 @@ import prisma from "@/lib/prisma";
 import ResumeItem from "./ResumeItem";
 import CreateResumeButton from "./CreateReumeButton";
 import { getUserSubscriptionLevel } from "@/lib/subscription";
-import { canCreateResume } from "@/lib/permissions";
 import UploadResumeButton from "./UploadResumeButton";
 
 export const metadata: Metadata = {
@@ -45,9 +44,7 @@ async function Page() {
       <div className="p-10 md:px-20 lg:px-32">
         <div className="w-full flex justify-center">
           <div className="flex items-center gap-4">
-            <CreateResumeButton
-              canCreate={canCreateResume(subscriptionLevel, totalCount)}
-            />
+            <CreateResumeButton />
             <UploadResumeButton />
           </div>
         </div>

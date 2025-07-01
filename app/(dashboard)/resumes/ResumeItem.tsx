@@ -42,7 +42,6 @@ import {
 import { useRouter } from "next/navigation";
 import ShareResume from "@/components/ReactShareButton";
 import ShareButton from "@/app/share/ShareButton";
-import { canUseResume } from "@/lib/permissions";
 import { SubscriptionLevel } from "@/lib/subscription";
 
 interface ResumeItemProps {
@@ -50,7 +49,7 @@ interface ResumeItemProps {
   subscriptionLevel: SubscriptionLevel;
 }
 
-function ResumeItem({ resume, subscriptionLevel }: ResumeItemProps) {
+function ResumeItem({ resume }: ResumeItemProps) {
   const contentRef = useRef<HTMLDivElement>(null);
 
   const reactToPrintFn = useReactToPrint({
@@ -104,13 +103,11 @@ function ResumeItem({ resume, subscriptionLevel }: ResumeItemProps) {
                 </div>
               )}
 
-              {canUseResume(subscriptionLevel) && (
-                <Link href={`/resumes/${resume.id}/chooseTemplate`}>
-                  <Button variant="outline" className="w-full">
-                    Choose Template
-                  </Button>
-                </Link>
-              )}
+              <Link href={`/resumes/${resume.id}/chooseTemplate`}>
+                <Button variant="outline" className="w-full">
+                  Choose Template
+                </Button>
+              </Link>
             </div>
           ) : (
             <Link

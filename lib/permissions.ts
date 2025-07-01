@@ -5,10 +5,10 @@ export function canCreateResume(
   currentResumeCount: number
 ) {
   const maxResumeMap: Record<SubscriptionLevel, number> = {
-    trial: 1,
-    monthly: Infinity,
+    trial: Infinity,
     annual: Infinity,
-    trial_expired: 0,
+    free: 0,
+    "14Day": Infinity,
   };
 
   const maxResumes = maxResumeMap[subscriptionLevel];

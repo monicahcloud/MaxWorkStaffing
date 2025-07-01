@@ -22,18 +22,25 @@ export async function updateResumeType(formData: FormData) {
   const pollForParsed = async (id: string, maxAttempts = 15) => {
     let attempts = 0;
     while (attempts < maxAttempts) {
+      console.log(`🔍 Polling DB for parsed resume... Attempt ${attempts + 1}`);
       const data = await prisma.resume.findUnique({
         where: { id },
         include: { education: true, workExperience: true },
       });
+
       if (data?.parsed) {
+        console.log("✅ Resume is parsed and ready.");
         return data;
       }
+
       attempts++;
       await new Promise((resolve) => setTimeout(resolve, 2000));
     }
+
+    console.error("⏰ Resume parsing timed out.");
     throw new Error("Resume parsing timed out. Please try again later.");
   };
+
   const parsedData = await pollForParsed(resumeId);
   const newResume = await prisma.resume.create({
     data: {

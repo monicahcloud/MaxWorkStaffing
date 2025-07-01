@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { put } from "@vercel/blob";
@@ -93,7 +94,8 @@ export async function POST(req: NextRequest) {
     });
     let parserUsed = "";
     try {
-      const affindaParsed = await parseResumeWithAffinda(file);
+      const documentTypeId = process.env.AFFINDA_DOCUMENT_TYPE_ID; // or get from config/env
+      const affindaParsed = await parseResumeWithAffinda(file, documentTypeId);
       parserUsed = "Affinda";
 
       const mapped = {

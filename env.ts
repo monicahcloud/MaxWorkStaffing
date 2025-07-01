@@ -24,6 +24,7 @@ export const env = createEnv({
     CLERK_WEBHOOK_SIGNING_SECRET: z.string().min(1),
     ADZUNA_APP_KEY: z.string().min(1),
     ADZUNA_APP_ID: z.string().min(1),
+    AFFINDA_DOCUMENT_TYPE_ID: z.string().min(1),
     PIKR_CLIENT_ID: z.string().min(1),
     PIKR_CLIENT_AUTH_KEY: z.string().min(1),
     STRIPE_PRICE_ID_TRIAL: z.string().min(1),

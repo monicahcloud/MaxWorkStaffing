@@ -19,47 +19,48 @@ const features = [
   {
     icon: <Brain className="w-6 h-6 text-primary" />,
     text: "Use our A.I. to help build your resume",
-    subtext: "Get personalized content suggestions",
+    subtext: "Smart suggestions to make your resume stand out",
   },
   {
     icon: <FileText className="w-6 h-6 text-primary" />,
     text: "Download or email your resume",
-    subtext: "Easily share your resume in PDF format",
+    subtext: "Send or save your resume instantly as a PDF",
   },
   {
     icon: <TrendingUp className="w-6 h-6 text-primary" />,
     text: "Track your job application status",
-    subtext: "Stay organized with a visual tracker",
+    subtext: "Monitor your applications all in one place",
   },
   {
     icon: <Target className="w-6 h-6 text-primary" />,
     text: "Career Advice Blog",
     subtext:
-      "Get expert tips on job searching, interviews, and professional growth to boost your career.",
+      "Practical guidance to improve your job search and grow professionally",
   },
   {
     icon: <Pencil className="w-6 h-6 text-primary" />,
     text: "Create a custom cover letter in minutes",
-    subtext: "Tailor it to every job application",
+    subtext: "Easily adapt your letter for any opportunity",
   },
   {
     icon: <Globe2 className="w-6 h-6 text-primary" />,
     text: "Search for jobs",
-    subtext: "Access curated job boards",
+    subtext: "Find listings from reliable sources tailored to your interests",
   },
   {
     icon: <DollarSign className="w-6 h-6 text-primary" />,
     text: "Money-Back Guarantee:",
     subtext:
-      "If you are unhappy for any reason during the first 14 days, just let us know - we'll refund your money",
+      "Not satisfied in the first 14 days? We'll issue a full refund—no hassle",
   },
   {
     icon: <Briefcase className="w-6 h-6 text-primary" />,
     text: "Career Tools and Resources:",
     subtext:
-      "Get access to resume tips, salary insights, and career-building resources to support your job hunt.",
+      "Discover insights on resumes, salaries, and job hunting strategies",
   },
 ];
+
 type SubscriptionType = {
   stripeCurrentPeriodEnd: Date | null;
   stripeCancelAtPeriodEnd: boolean;
@@ -126,34 +127,37 @@ export default function BillingPlans({ subscription }: Props) {
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div className="border border-gray-300 rounded-lg p-4 shadow-md relative">
-            <div className="absolute top-[-10px] left-1/2 -translate-x-1/2 bg-red-500 text-white px-3 py-1 text-xs font-semibold rounded-full">
+            <div className="absolute top-[-10px] left-1/2 -translate-x-1/2 bg-red-500 text-white px-3 py-1  text-xs font-semibold rounded-full">
               MOST POPULAR
             </div>
-            <h3 className="font-semibold text-gray-700 text-2xl text-center mb-1">
-              14–Day Access
+            <h3 className="font-semibold text-gray-700 text-2xl text-center mb-1 mt-4">
+              14–Day Plan
             </h3>
             <p className="text-center text-2xl font-bold text-gray-900 mb-4">
               $2.95
             </p>
             <ul className="text-sm text-gray-700 list-disc pl-5 space-y-2">
               <li>
-                <span className="font-semibold">Unlimited</span> edits,
-                downloads & emails
+                <span className="font-semibold">Make unlimited changes</span>{" "}
+                and send or save as needed
               </li>
               <li>
-                Create & customize{" "}
-                <span className="font-semibold">unlimited resumes</span>
+                Build as many{" "}
+                <span className="font-semibold">custom resumes</span> as you
+                like
               </li>
               <li>
-                Create matching{" "}
-                <span className="font-semibold">cover letters</span>
+                Design{" "}
+                <span className="font-semibold">coordinated cover letters</span>{" "}
+                for each role
               </li>
-              <li>Cancel anytime</li>
-              <li>After 14 days, auto-renews at $22.95 billed every 4 weeks</li>
+              <li>End your plan anytime — no commitment</li>
+              <li>After 14 days, renews at $22.95 every 4 weeks</li>
               <li className="font-semibold text-blue-700">
-                Money-Back Guarantee
+                Full refund if you’re not satisfied
               </li>
             </ul>
+
             <Button
               className="w-full mt-6 bg-gradient-to-r from-red-600 to-red-400 text-white font-bold text-lg"
               onClick={() => handlePremiumClick("14Day")}
@@ -164,22 +168,23 @@ export default function BillingPlans({ subscription }: Props) {
 
           <div className="border border-gray-300 rounded-lg p-4 shadow-md">
             <h3 className="font-semibold text-gray-700 text-2xl text-center mb-1">
-              Annual Access
+              Annual Plan
             </h3>
             <p className="text-center text-2xl font-bold text-gray-900 mb-4">
               $7.95<span className="text-sm">/mo</span>
             </p>
             <ul className="text-sm text-gray-700 list-disc pl-5 space-y-2">
-              <li>Billed annually</li>
-              <li>Pay $95.40 up-front and save 69%</li>
+              <li>One-time payment billed yearly</li>
+              <li>Pay $95.40 now and keep 69% in savings</li>
               <li>
-                Full access to all features including cover letters unlimited
-                printing and downloads
+                Access everything — unlimited letters, downloads, and resume
+                tools
               </li>
-              <li>Automatically renews each year, cancel anytime</li>
-              <li>Pay once, use all year long</li>
-              <li className="text-white">Pay once, use all year long</li>
+              <li>Renews automatically each year unless canceled</li>
+              <li>One payment covers an entire year of usage</li>
+              <li>Use freely with no monthly fees</li>
             </ul>
+
             <Button
               className="w-full mt-6 bg-gradient-to-r from-red-600 to-red-400 text-white font-bold text-lg"
               onClick={() => handlePremiumClick("annual")}
@@ -193,7 +198,7 @@ export default function BillingPlans({ subscription }: Props) {
       <div className="mt-14 max-w-6xl mx-auto">
         <Card className="rounded-xl shadow-lg border border-gray-300">
           <CardTitle className="text-center text-2xl sm:text-2xl font-bold text-blue-900 p-2 border-b border-gray-200">
-            All Subscription Features
+            Subscription Package
           </CardTitle>
 
           <CardContent className="p-2 sm:p-8">

@@ -47,18 +47,28 @@ export default async function SuccessPage() {
 
   return (
     <main className="min-h-screen flex flex-col justify-center items-center px-4 py-12 bg-gradient-to-br from-green-50 to-white text-center space-y-8">
-      <div className="flex justify-center">
+      <div className="flex justify-center ">
         <CheckCircle2 className="text-green-500 w-20 h-20 animate-pulse" />
       </div>
 
-      <div className="max-w-2xl space-y-4">
+      <div className="max-w-2xl space-y-4 ">
         <SectionTitle
-          text="🎉 Subscription Active!"
-          subtext={`Your checkout was successful, and your subscription has been activated.\nCurrent Plan: ${planName}${renewalText}`}
+          text="🎉 Subscription Plan Active!"
+          subtext={
+            <>
+              Your checkout was successful, and your subscription has been
+              activated.
+              <br />
+              <strong>
+                Current Plan: {planName}
+                {renewalText}
+              </strong>
+            </>
+          }
         />
 
         <p className="text-gray-600 text-lg">
-          You now have full access to all premium features. Manage your
+          You now have full access to all subscription features. Manage your
           subscription anytime using the button below.
         </p>
 
