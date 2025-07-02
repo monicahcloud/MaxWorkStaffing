@@ -7,7 +7,7 @@ import { del, put } from "@vercel/blob";
 import path from "path";
 
 export async function saveResume(values: ResumeValues) {
-  const { id } = values; 
+  const { id } = values;
 
   const { photo, workExperiences, education, techSkills, ...resumeValues } =
     resumeSchema.parse(values);
@@ -27,7 +27,6 @@ export async function saveResume(values: ResumeValues) {
     throw new Error("Resume not found");
   }
 
-  
   let newPhotoUrl: string | undefined | null = undefined;
 
   if (photo instanceof File) {
