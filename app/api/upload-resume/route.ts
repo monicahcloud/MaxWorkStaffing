@@ -58,7 +58,6 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
-
     let parsedText: string;
 
     try {
@@ -88,7 +87,6 @@ export async function POST(req: NextRequest) {
         uploadedFileUrl: blob.url,
         isUploaded: true,
         rawTextContent: parsedText,
-
         parsedWith: "",
       },
     });
@@ -111,10 +109,13 @@ export async function POST(req: NextRequest) {
           gitHub: "",
         },
         summary: affindaParsed.summary ?? "",
-        skills: affindaParsed.skills?.map((s: any) => s.name) ?? [],
+        skills: (affindaParsed.skill ?? [])
+          .map((s: any) => s.name)
+          .filter((s: any) => !!s), // removes undefined/null/empty
+
         education:
           affindaParsed.education?.map((e: any) => ({
-            degree: e.accreditation,
+            degree: e.accreditation ?? e.degree?.name ?? e.major ?? "",
             school: e.organization,
             location: e.location?.text,
             startDate: e.dates?.startDate,
@@ -128,7 +129,7 @@ export async function POST(req: NextRequest) {
             location: w.location?.text,
             startDate: w.dates?.startDate,
             endDate: w.dates?.endDate,
-            description: w.summary,
+            description: w.jobDescription,
             status: "",
             clearance: "",
             duties: "",
