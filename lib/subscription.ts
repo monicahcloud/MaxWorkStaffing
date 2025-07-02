@@ -35,3 +35,8 @@ export const getUserSubscriptionLevel = cache(
     // throw new Error("Invalid subscription");
   }
 );
+
+// ✅ Add this to centralize access check logic
+export function hasProAccess(level: SubscriptionLevel): boolean {
+  return level === "annual" || level === "14Day" || level === "trial";
+}

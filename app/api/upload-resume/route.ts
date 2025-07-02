@@ -109,9 +109,9 @@ export async function POST(req: NextRequest) {
           gitHub: "",
         },
         summary: affindaParsed.summary ?? "",
-        skills: (affindaParsed.skill ?? [])
+        skills: (affindaParsed.skills ?? [])
           .map((s: any) => s.name)
-          .filter((s: any) => !!s), // removes undefined/null/empty
+          .filter((s: any) => !!s),
 
         education:
           affindaParsed.education?.map((e: any) => ({

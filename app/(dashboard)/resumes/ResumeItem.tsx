@@ -31,7 +31,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import LoadingButton from "@/components/LoadingButton";
-import { toast } from "sonner";
 import { useReactToPrint } from "react-to-print";
 import {
   Tooltip,
@@ -42,14 +41,14 @@ import {
 import { useRouter } from "next/navigation";
 import ShareResume from "@/components/ReactShareButton";
 import ShareButton from "@/app/share/ShareButton";
-import { SubscriptionLevel } from "@/lib/subscription";
+import { hasProAccess, SubscriptionLevel } from "@/lib/subscription";
 
 interface ResumeItemProps {
   resume: ResumeServerData;
   subscriptionLevel: SubscriptionLevel;
 }
 
-function ResumeItem({ resume }: ResumeItemProps) {
+function ResumeItem({ resume, subscriptionLevel }: ResumeItemProps) {
   const contentRef = useRef<HTMLDivElement>(null);
 
   const reactToPrintFn = useReactToPrint({
@@ -65,7 +64,6 @@ function ResumeItem({ resume }: ResumeItemProps) {
   return (
     <TooltipProvider>
       <div className="group relative border rounded-lg hover:border-border transition-colors p-3 bg-secondary space-y-3">
-        {/* Title + Tooltip on hover */}
         <div className="text-left space-y-1">
           <Tooltip>
             <TooltipTrigger asChild>
@@ -87,7 +85,6 @@ function ResumeItem({ resume }: ResumeItemProps) {
           </p>
         </div>
 
-        {/* Preview Area */}
         <div>
           {isUploaded ? (
             <div className="space-y-2">
@@ -122,13 +119,13 @@ function ResumeItem({ resume }: ResumeItemProps) {
           )}
         </div>
 
-        {/* More Menu Actions */}
         <MoreMenu
           resume={resume}
           isUploaded={!!resume.isUploaded}
           isPDF={isPDF}
           onPrintClick={() => reactToPrintFn?.()}
           contentRef={contentRef}
+          subscriptionLevel={subscriptionLevel}
         />
       </div>
     </TooltipProvider>
@@ -143,17 +140,27 @@ interface MoreMenuProps {
   isPDF: boolean;
   onPrintClick: () => void;
   contentRef: React.RefObject<HTMLDivElement | null>;
+  subscriptionLevel: SubscriptionLevel;
 }
 
-function MoreMenu({ resume, isUploaded, onPrintClick }: MoreMenuProps) {
+function MoreMenu({
+  resume,
+  isUploaded,
+  onPrintClick,
+  subscriptionLevel,
+}: MoreMenuProps) {
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const router = useRouter();
+  const canAccessPremium = hasProAccess(subscriptionLevel);
 
   function handleEdit() {
     router.push(`/editor?resumeId=${resume.id}`);
   }
   function handleView() {
     router.push(`/resumes/${resume.id}`);
+  }
+  function redirectToBilling() {
+    router.push("/billing");
   }
 
   return (
@@ -178,43 +185,32 @@ function MoreMenu({ resume, isUploaded, onPrintClick }: MoreMenuProps) {
                   </span>
                 </Link>
               </DropdownMenuItem>
-
-              <DropdownMenuItem asChild>
-                <Link
-                  href={resume.uploadedFileUrl!}
-                  target="_blank"
-                  rel="noopener noreferrer">
-                  <span className="flex items-center gap-2">
-                    <Eye className="size-4" />
-                    View
-                  </span>
-                </Link>
+              <DropdownMenuItem
+                onClick={() =>
+                  canAccessPremium
+                    ? window.open(resume.uploadedFileUrl!, "_blank")
+                    : redirectToBilling()
+                }>
+                <Eye className="size-4" />
+                View
               </DropdownMenuItem>
-
-              <DropdownMenuItem asChild>
-                <Link
-                  href={resume.uploadedFileUrl!}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  download>
-                  <span className="flex items-center gap-2">
-                    <Printer className="size-4" />
-                    Print
-                  </span>
-                </Link>
+              <DropdownMenuItem
+                onClick={() =>
+                  canAccessPremium
+                    ? window.open(resume.uploadedFileUrl!, "_blank")
+                    : redirectToBilling()
+                }>
+                <Printer className="size-4" />
+                Print
               </DropdownMenuItem>
-
-              <DropdownMenuItem asChild>
-                <Link
-                  href={resume.uploadedFileUrl!}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  download>
-                  <span className="flex items-center gap-2">
-                    <Download className="size-4" />
-                    Download
-                  </span>
-                </Link>
+              <DropdownMenuItem
+                onClick={() =>
+                  canAccessPremium
+                    ? window.open(resume.uploadedFileUrl!, "_blank")
+                    : redirectToBilling()
+                }>
+                <Download className="size-4" />
+                Download
               </DropdownMenuItem>
             </>
           )}
@@ -234,12 +230,16 @@ function MoreMenu({ resume, isUploaded, onPrintClick }: MoreMenuProps) {
                 View
               </DropdownMenuItem>
               <DropdownMenuItem
-                className="flex items-center gap-2"
-                onClick={onPrintClick}>
+                onClick={() =>
+                  canAccessPremium ? onPrintClick() : redirectToBilling()
+                }>
                 <Printer className="size-4" />
                 Print
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => onPrintClick()}>
+              <DropdownMenuItem
+                onClick={() =>
+                  canAccessPremium ? onPrintClick() : redirectToBilling()
+                }>
                 <Download className="size-4" />
                 Download
               </DropdownMenuItem>
@@ -254,10 +254,20 @@ function MoreMenu({ resume, isUploaded, onPrintClick }: MoreMenuProps) {
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-      {isUploaded ? (
-        <ShareResume resumeUrl={resume.uploadedFileUrl!} />
+
+      {canAccessPremium ? (
+        isUploaded ? (
+          <ShareResume resumeUrl={resume.uploadedFileUrl!} />
+        ) : (
+          <ShareButton type="resume" id={resume.id} />
+        )
       ) : (
-        <ShareButton type="resume" id={resume.id} />
+        <Button
+          variant="outline"
+          className="w-full justify-center text-left text-sm"
+          onClick={redirectToBilling}>
+          Share Resume
+        </Button>
       )}
 
       <DeleteConfirmationDialog
@@ -283,14 +293,12 @@ function DeleteConfirmationDialog({
   const [isPending, startTransition] = useTransition();
 
   async function handleDelete() {
-    startTransition(async () => {
-      try {
-        await deleteResume(resumeId);
-        onOpenChange(false);
-      } catch (error) {
-        console.error(error);
-        toast.error("Something went wrong. Please try again.");
-      }
+    startTransition(() => {
+      deleteResume(resumeId)
+        .then(() => onOpenChange(false))
+        .catch((error) => {
+          console.error(error);
+        });
     });
   }
 

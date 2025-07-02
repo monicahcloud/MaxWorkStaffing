@@ -30,6 +30,7 @@ export async function POST(req: NextRequest) {
     );
 
     console.log(`Received stripe event: ${event.type}`, event.data.object);
+    console.log("✅ Stripe Webhook Secret:", !!env.STRIPE_WEBHOOK_SECRET);
 
     // Handle event based on type
     switch (event.type) {
