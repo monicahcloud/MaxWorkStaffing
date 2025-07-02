@@ -42,6 +42,7 @@ import { useRouter } from "next/navigation";
 import ShareResume from "@/components/ReactShareButton";
 import ShareButton from "@/app/share/ShareButton";
 import { hasProAccess, SubscriptionLevel } from "@/lib/subscription";
+import RedirectToBilling from "../billing/RedirectToBilling";
 
 interface ResumeItemProps {
   resume: ResumeServerData;
@@ -150,17 +151,17 @@ function MoreMenu({
   subscriptionLevel,
 }: MoreMenuProps) {
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const [showRedirect, setShowRedirect] = useState(false);
   const router = useRouter();
   const canAccessPremium = hasProAccess(subscriptionLevel);
+
+  if (showRedirect) return <RedirectToBilling />;
 
   function handleEdit() {
     router.push(`/editor?resumeId=${resume.id}`);
   }
   function handleView() {
     router.push(`/resumes/${resume.id}`);
-  }
-  function redirectToBilling() {
-    router.push("/billing");
   }
 
   return (
@@ -189,7 +190,7 @@ function MoreMenu({
                 onClick={() =>
                   canAccessPremium
                     ? window.open(resume.uploadedFileUrl!, "_blank")
-                    : redirectToBilling()
+                    : setShowRedirect(true)
                 }>
                 <Eye className="size-4" />
                 View
@@ -198,7 +199,7 @@ function MoreMenu({
                 onClick={() =>
                   canAccessPremium
                     ? window.open(resume.uploadedFileUrl!, "_blank")
-                    : redirectToBilling()
+                    : setShowRedirect(true)
                 }>
                 <Printer className="size-4" />
                 Print
@@ -207,7 +208,7 @@ function MoreMenu({
                 onClick={() =>
                   canAccessPremium
                     ? window.open(resume.uploadedFileUrl!, "_blank")
-                    : redirectToBilling()
+                    : setShowRedirect(true)
                 }>
                 <Download className="size-4" />
                 Download
@@ -231,14 +232,14 @@ function MoreMenu({
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() =>
-                  canAccessPremium ? onPrintClick() : redirectToBilling()
+                  canAccessPremium ? onPrintClick() : setShowRedirect(true)
                 }>
                 <Printer className="size-4" />
                 Print
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() =>
-                  canAccessPremium ? onPrintClick() : redirectToBilling()
+                  canAccessPremium ? onPrintClick() : setShowRedirect(true)
                 }>
                 <Download className="size-4" />
                 Download
@@ -265,7 +266,7 @@ function MoreMenu({
         <Button
           variant="outline"
           className="w-full justify-center text-left text-sm"
-          onClick={redirectToBilling}>
+          onClick={() => setShowRedirect(true)}>
           Share Resume
         </Button>
       )}
