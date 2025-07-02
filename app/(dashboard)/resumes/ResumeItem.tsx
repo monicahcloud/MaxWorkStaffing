@@ -155,7 +155,7 @@ function MoreMenu({
   const router = useRouter();
   const canAccessPremium = hasProAccess(subscriptionLevel);
 
-  if (showRedirect) return <RedirectToBilling />;
+  if (showRedirect && !canAccessPremium) return <RedirectToBilling />;
 
   function handleEdit() {
     router.push(`/editor?resumeId=${resume.id}`);
