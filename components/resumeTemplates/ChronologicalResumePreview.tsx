@@ -349,7 +349,7 @@ function TechnicalSkillsSection({ resumeData }: ResumePreviewProps) {
                     className="h-2"
                     style={{
                       width: `${ratingPercentage}%`,
-                      backgroundColor: themeColor,
+                      backgroundColor: themeColor || "#000",
                     }}></div>
                 </div>
               </div>

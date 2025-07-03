@@ -287,7 +287,7 @@ function TechnicalSkillsSection({ resumeData }: ResumePreviewProps) {
                     className="absolute top-0 left-0 h-2 rounded"
                     style={{
                       width: `${ratingPercentage}%`,
-                      backgroundColor: themeColor, // Consider making `themeColor` dynamic or contextual
+                      backgroundColor: themeColor || "#000", // Consider making `themeColor` dynamic or contextual
                     }}
                   />
                 </div>

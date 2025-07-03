@@ -1,3 +1,6 @@
+"use client";
+
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { getSteps } from "../steps";
@@ -21,32 +24,57 @@ function Footer({
   isSaving,
   resumeType,
 }: FooterProps) {
+  const router = useRouter();
   const steps = getSteps(resumeType);
-  const previousStep = steps.find(
-    (_, index) => steps[index + 1]?.key === currentStep
-  )?.key;
-  const nextStep = steps.find(
-    (_, index) => steps[index - 1]?.key === currentStep
-  )?.key;
+  const validKeys = steps.map((s) => s.key);
+
+  const currentIndex = steps.findIndex((s) => s.key === currentStep);
+  const previousStep = steps[currentIndex - 1]?.key;
+  const nextStep = steps[currentIndex + 1]?.key;
+  const isLastStep = currentIndex === steps.length - 1;
+
+  const handleNext = () => {
+    if (nextStep && validKeys.includes(nextStep)) {
+      setCurrentStep(nextStep);
+    }
+  };
+
+  const handleFinish = () => {
+    router.push("/resumes");
+  };
 
   return (
     <footer className="w-full border-t px-3 py-5">
       <div className="max-w-7xl mx-auto flex flex-wrap justify-between gap-3">
+        {/* Navigation buttons */}
         <div className="flex items-center gap-3">
           <Button
             variant="secondary"
             onClick={
-              previousStep ? () => setCurrentStep(previousStep) : undefined
+              previousStep && validKeys.includes(previousStep)
+                ? () => setCurrentStep(previousStep)
+                : undefined
             }
-            disabled={!previousStep}>
+            disabled={!previousStep || !validKeys.includes(previousStep)}>
             Previous Step
           </Button>
-          <Button
-            onClick={nextStep ? () => setCurrentStep(nextStep) : undefined}
-            disabled={!nextStep}>
-            Next Step
-          </Button>
+
+          {isLastStep ? (
+            <Button
+              onClick={handleFinish}
+              className="bg-green-600 hover:bg-green-700 text-white">
+              Finish
+            </Button>
+          ) : (
+            <Button
+              onClick={handleNext}
+              disabled={!nextStep || !validKeys.includes(nextStep)}>
+              Next Step
+            </Button>
+          )}
         </div>
+
+        {/* Mobile toggle preview */}
         <Button
           variant="outline"
           size="icon"
@@ -57,6 +85,8 @@ function Footer({
           }>
           {showSmResumePreview ? <PenLineIcon /> : <FileUserIcon />}
         </Button>
+
+        {/* Close + Saving status */}
         <div className="flex items-center gap-3">
           <Button variant="secondary" asChild>
             <Link href="/resumes">Close</Link>
@@ -64,7 +94,7 @@ function Footer({
           <p
             className={cn(
               "text-muted-foreground opacity-0",
-              isSaving && " opacity-100"
+              isSaving && "opacity-100"
             )}>
             Saving...
           </p>

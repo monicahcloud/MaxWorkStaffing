@@ -72,7 +72,7 @@ const links: DashboardLinks[] = [
   // },
   {
     id: nanoid(),
-    label: "Interviewing Tools",
+    label: "Expert Interview Tips",
     href: "/resources",
     icon: <UserCheck2 />,
   },

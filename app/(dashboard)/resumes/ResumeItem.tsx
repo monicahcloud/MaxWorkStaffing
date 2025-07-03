@@ -256,20 +256,17 @@ function MoreMenu({
         </DropdownMenuContent>
       </DropdownMenu>
 
-      {canAccessPremium ? (
-        isUploaded ? (
-          <ShareResume resumeUrl={resume.uploadedFileUrl!} />
-        ) : (
+      {!isUploaded &&
+        (canAccessPremium ? (
           <ShareButton type="resume" id={resume.id} />
-        )
-      ) : (
-        <Button
-          variant="outline"
-          className="w-full justify-center text-left text-sm"
-          onClick={() => setShowRedirect(true)}>
-          Share Resume
-        </Button>
-      )}
+        ) : (
+          <Button
+            variant="outline"
+            className="w-full justify-center text-left text-sm"
+            onClick={() => setShowRedirect(true)}>
+            Share Resume
+          </Button>
+        ))}
 
       <DeleteConfirmationDialog
         resumeId={resume.id}
