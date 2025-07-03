@@ -1,21 +1,15 @@
 "use client";
 
 import {
-  AreaChart,
-  // AppWindow,
-  // AreaChart,
+  AppWindow,
   CircleHelp,
   CreditCard,
   HomeIcon,
   Layers,
   List,
   MessageCircleQuestion,
-  // SquareTerminal,
   FilePen,
-  // Globe,
-  // Users,
   UserCheck2,
-  //Users,
 } from "lucide-react";
 import { nanoid } from "nanoid";
 type DashboardLinks = {
@@ -51,12 +45,12 @@ const links: DashboardLinks[] = [
   //   href: "/profile",
   //   icon: <Globe />,
   // },
-  // {
-  //   id: nanoid(),
-  //   label: "Job Search",
-  //   href: "/jobsearch",
-  //   icon: <AppWindow />,
-  // },
+  {
+    id: nanoid(),
+    label: "Job Search",
+    href: "/jobsearch",
+    icon: <AppWindow />,
+  },
   {
     id: nanoid(),
     label: "Job Tracker",
@@ -64,12 +58,12 @@ const links: DashboardLinks[] = [
     icon: <Layers />,
   },
 
-  {
-    id: nanoid(),
-    label: "Stats",
-    href: "/stats",
-    icon: <AreaChart />,
-  },
+  // {
+  //   id: nanoid(),
+  //   label: "Stats",
+  //   href: "/stats",
+  //   icon: <AreaChart />,
+  // },
   // {
   //   id: nanoid(),
   //   label: "AI Mock Interview",
