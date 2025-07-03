@@ -15,7 +15,7 @@ interface FooterProps {
   setShowSmResumePreview: (show: boolean) => void;
   isSaving: boolean;
   resumeType?: string;
-  resume: ResumeServerData;
+  resume?: ResumeServerData;
 }
 
 function Footer({
@@ -43,6 +43,11 @@ function Footer({
   };
 
   const handleFinish = () => {
+    if (!resume?.id) {
+      console.error("Resume is missing in Footer. Cannot finish.");
+      return;
+    }
+
     router.push(`/resumes/${resume.id}`);
   };
 
