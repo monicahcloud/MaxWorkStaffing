@@ -6,6 +6,7 @@ import Link from "next/link";
 import { getSteps } from "../steps";
 import { FileUserIcon, PenLineIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ResumeServerData } from "@/lib/types";
 
 interface FooterProps {
   currentStep: string;
@@ -14,7 +15,7 @@ interface FooterProps {
   setShowSmResumePreview: (show: boolean) => void;
   isSaving: boolean;
   resumeType?: string;
-  resumeId: string; // <--- ADD THIS
+  resume: ResumeServerData;
 }
 
 function Footer({
@@ -24,7 +25,7 @@ function Footer({
   setShowSmResumePreview,
   isSaving,
   resumeType,
-  resumeId,
+  resume,
 }: FooterProps) {
   const router = useRouter();
   const steps = getSteps(resumeType);
@@ -42,7 +43,7 @@ function Footer({
   };
 
   const handleFinish = () => {
-    router.push(`/resumes/${resumeId}`);
+    router.push(`/resumes/${resume.id}`);
   };
 
   return (

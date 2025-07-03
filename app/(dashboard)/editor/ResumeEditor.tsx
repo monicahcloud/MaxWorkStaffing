@@ -358,6 +358,7 @@ function ResumeEditor({ resumeToEdit }: ResumeEditorProps) {
         setShowSmResumePreview={setShowSmResumePreview}
         isSaving={isSaving}
         resumeType={resumeData.resumeType}
+        resume={resumeToEdit}
       />
     </div>
   );
