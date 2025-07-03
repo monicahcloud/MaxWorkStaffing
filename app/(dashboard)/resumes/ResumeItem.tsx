@@ -50,6 +50,7 @@ interface ResumeItemProps {
 }
 
 function ResumeItem({ resume, subscriptionLevel }: ResumeItemProps) {
+  console.log("Subscription Level:", subscriptionLevel);
   const contentRef = useRef<HTMLDivElement>(null);
 
   const reactToPrintFn = useReactToPrint({
