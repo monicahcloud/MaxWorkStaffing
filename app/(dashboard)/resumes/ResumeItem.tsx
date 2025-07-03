@@ -39,7 +39,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useRouter } from "next/navigation";
-import ShareResume from "@/components/ReactShareButton";
+// import ShareResume from "@/components/ReactShareButton";
 import ShareButton from "@/app/share/ShareButton";
 import { hasProAccess, SubscriptionLevel } from "@/lib/subscription";
 import RedirectToBilling from "../billing/RedirectToBilling";

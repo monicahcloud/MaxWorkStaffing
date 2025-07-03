@@ -14,6 +14,7 @@ interface FooterProps {
   setShowSmResumePreview: (show: boolean) => void;
   isSaving: boolean;
   resumeType?: string;
+  resumeId: string; // <--- ADD THIS
 }
 
 function Footer({
@@ -23,6 +24,7 @@ function Footer({
   setShowSmResumePreview,
   isSaving,
   resumeType,
+  resumeId,
 }: FooterProps) {
   const router = useRouter();
   const steps = getSteps(resumeType);
@@ -40,7 +42,7 @@ function Footer({
   };
 
   const handleFinish = () => {
-    router.push("/resumes/${resume.id}");
+    router.push(`/resumes/${resumeId}`);
   };
 
   return (
