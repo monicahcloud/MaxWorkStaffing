@@ -40,7 +40,7 @@ function Footer({
   };
 
   const handleFinish = () => {
-    router.push("/resumes");
+    router.push("/resumes/${resume.id}");
   };
 
   return (
