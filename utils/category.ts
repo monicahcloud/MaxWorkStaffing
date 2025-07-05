@@ -1,34 +1,24 @@
-export const categoryMap: Record<string, string> = {
-  "Information Technology": "it-jobs",
-  "Accounting & Finance": "accounting-finance-jobs",
-  "Trade and Construction": "trade-construction-jobs",
-  "Retail a": "retail-jobs",
-  "Healthcare and Nursing": "healthcare-nursing-jobs",
-  Manufacturing: "manufacturing-jobs",
-  "Creative & Design": "creative-design-jobs",
-  "Financial Services": "accounting-finance-jobs",
-  "PR, Advertising & Marketing": "pr-advertising-marketing-jobs",
+// Runs only on the server (App-Router). Safe to use "server-only".
 
-  // Additional from moreCategories
-  "Hospitality & Catering": "hospitality-catering-jobs",
-  "Government & Public Administration": "admin-jobs",
-  "Human Resources & Recuritment": "hr-recruitment-jobs",
-  Engineering: "engineering-jobs",
-  Agriculture: "agriculture-jobs",
-  "Social Work": "social-work-jobs",
-  "Arts, Entertainment & Recreation": "creative-design-jobs",
-  Education: "teaching-jobs",
-  "Energy, Mining & Utilities": "energy-oil-gas-jobs",
-  "Real Estate": "property-jobs",
-  Insurance: "accounting-finance-jobs",
-  "Customer Service": "customer-services-jobs",
-  Travel: "travel-jobs",
-  "Transportation & Logistics": "logistics-warehouse-jobs",
-  Legal: "legal-jobs",
-  Sales: "sales-jobs",
-  Graduate: "graduate-jobs",
-  "Scientific & QA": "scientific-qa-jobs",
-  "Nonprofit & NGO": "charity-voluntary-jobs",
-  "Management & Consulting": "consultancy-jobs",
-  "Other/General": "other-general-jobs",
-};
+import { cache } from "react";
+
+const { ADZUNA_APP_ID: id, ADZUNA_APP_KEY: key } = process.env;
+if (!id || !key) throw new Error("Missing Adzuna credentials");
+
+/**  Pull the live Adzuna category list once every 10 minutes  */
+export const getCategories = cache(async () => {
+  const url =
+    `https://api.adzuna.com/v1/api/jobs/us/categories` +
+    `?app_id=${id}&app_key=${key}&content-type=application/json`;
+
+  const res = await fetch(url, { next: { revalidate: 600 } }); // 10 min
+  if (!res.ok) throw new Error("Adzuna /categories failed");
+
+  const json = await res.json();
+  return (json.results ?? []).map(({ label, tag }: any) => ({
+    /** Adzuna labels end with “ Jobs” – strip it for display */
+    label: label.replace(/ Jobs$/i, ""),
+    slug: tag, // ← what Adzuna expects for the &category= parameter
+  })) as { label: string; slug: string }[];
+});
+/**  Build a map of category label → slug  */

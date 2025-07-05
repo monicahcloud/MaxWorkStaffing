@@ -1,75 +1,184 @@
 "use client";
 
-import { Input } from "@/components/ui/input";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { ArrowRight } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import SectionTitle from "@/components/SectionTitle";
+import Image from "next/image";
 
-type Job = {
-  id: string;
-  title: string;
-  company: string;
-  location: string;
-  isNew?: boolean;
-};
+import { US_STATES } from "@/utils/states";
+import { jobIndustries } from "@/utils/industry";
 
-interface JobSearchProps {
-  jobs: Job[];
-}
+/* ------------ local images ------------ */
+import healthcare from "../../../assets/healthcare.jpg";
+import manufactoring from "../../../assets/manufactoring.jpg";
+import construction from "../../../assets/construction.jpg";
+import media from "../../../assets/media.jpg";
+import retail from "../../../assets/retail.jpg";
+import telecom from "../../../assets/telecom.jpg";
+import business from "../../../assets/business.jpg";
+import engineer from "../../../assets/engineer.jpg";
 
-export const JobSearch: React.FC<JobSearchProps> = ({ jobs }) => {
+/* ------------ helper data ------------ */
+const featured = [
+  { title: "Financial Services", image: business },
+  { title: "Healthcare", image: healthcare },
+  { title: "Manufacturing", image: manufactoring },
+  { title: "Information Technology", image: engineer },
+  { title: "Construction, Repair and Maintenance", image: construction },
+  { title: "Media Communications", image: media },
+  { title: "Retail and Customer Service", image: retail },
+  { title: "Telecommunications", image: telecom },
+];
+
+const moreCategories = [
+  "Hotels & Travel Accommodation",
+  "Government & Public Administration",
+  "Human Resources & Staffing",
+  "Aerospace & Defense",
+  "Agriculture",
+  "Arts, Entertainment & Recreation",
+  "Education",
+  "Energy, Mining & Utilities",
+  "Real Estate",
+  "Insurance",
+  "Personal Consumer Services",
+  "Restaurants & Food Service",
+  "Transportation & Logistics",
+  "Legal",
+  "Pharmaceutical & Biotechnology",
+  "Nonprofit & NGO",
+  "Management & Consulting",
+];
+
+/* =========================================================== */
+/*                          COMPONENT                          */
+/* =========================================================== */
+export default function JobSearch() {
+  const router = useRouter();
+
+  /* controlled inputs */
+  const [keyword, setKeyword] = useState("");
+  const [state, setState] = useState("");
+  const [category, setCategory] = useState<string | undefined>(undefined);
+
+  /** Build query-string and navigate to /joblistings */
+  const goToJobListings = (params: {
+    q?: string;
+    state?: string;
+    cat?: string;
+  }) => {
+    const qs = new URLSearchParams();
+    if (params.q) qs.set("q", params.q);
+    if (params.state) qs.set("state", params.state);
+    if (params.cat) qs.set("cat", params.cat);
+    router.push(`/joblistings${qs.toString() ? `?${qs.toString()}` : ""}`);
+  };
+
+  /* ------------------------------ UI ------------------------------ */
   return (
-    <section className=" p-6 rounded-xl">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-2xl font-bold">Job Search</h2>
-        {/* <a
-          href="/jobsearch"
-          className="text-sm font-medium underline text-black hover:text-blue-600">
-          View more
-        </a> */}
-      </div>
+    <div className="px-4 sm:px-6 lg:px-8 py-6 max-w-7xl mx-auto">
+      <SectionTitle
+        text="Find Your Perfect Job"
+        subtext="Whether you're looking for a new career or your next assignment, take a look at some of our open positions and find the perfect job for you."
+      />
 
-      <div className="flex flex-col md:flex-row gap-4 mb-6">
-        <Input placeholder="Job Title" className="md:flex-1" />
-        <Input placeholder="Location" className="md:flex-1" />
-        <Button className="bg-black text-white px-6 flex items-center gap-2">
-          <svg
-            className="h-4 w-4"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            viewBox="0 0 24 24">
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-            />
-          </svg>
-          Search available jobs
+      {/* ───────────── Search Form ───────────── */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 my-8">
+        <Input
+          placeholder="Job title or keyword"
+          value={keyword}
+          onChange={(e) => setKeyword(e.target.value)}
+        />
+
+        {/* State dropdown */}
+        <Select value={state} onValueChange={setState}>
+          <SelectTrigger>
+            <SelectValue placeholder="Select State" />
+          </SelectTrigger>
+          <SelectContent>
+            {US_STATES.map((s) => (
+              <SelectItem key={s} value={s}>
+                {s}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
+        {/* Category dropdown */}
+        <Select
+          value={category}
+          onValueChange={(v) => setCategory(v || undefined)}>
+          <SelectTrigger>
+            <SelectValue placeholder="Select Category" />
+          </SelectTrigger>
+          <SelectContent>
+            {jobIndustries.map((cat) => (
+              <SelectItem key={cat} value={cat}>
+                {cat}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
+        {/* Search button */}
+        <Button
+          className="bg-red-700 hover:bg-red-800 text-white"
+          onClick={() => goToJobListings({ q: keyword, state, cat: category })}>
+          Search
         </Button>
       </div>
 
-      <h3 className="text-lg font-semibold mb-3">Search Results</h3>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {jobs.map((job) => (
-          <Card
-            key={job.id}
-            className="p-4 flex flex-col justify-between relative">
-            {job.isNew && (
-              <span className="absolute top-3 left-3 bg-gray-800 text-white text-xs px-2 py-1 rounded-full">
-                New
-              </span>
-            )}
-            <h4 className="text-lg font-bold mt-6">{job.title}</h4>
-            <p className="text-sm text-gray-500 mt-1">{`${job.company} in ${job.location}`}</p>
-            <div className="mt-auto flex justify-end">
-              <Button variant="ghost" size="icon">
-                <ArrowRight className="w-4 h-4" />
-              </Button>
-            </div>
-          </Card>
+      {/* ───────────── Featured Categories ───────────── */}
+      <section aria-label="Popular Job Categories">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {featured.map(({ title, image }) => (
+            <Card
+              key={title}
+              className="relative group overflow-hidden focus-within:ring-2 focus-within:ring-red-500">
+              <Image
+                src={image}
+                alt={title}
+                className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+              />
+              <CardContent className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent text-white p-4">
+                <h2 className="text-lg text-center font-bold">{title}</h2>
+                <Button
+                  variant="secondary"
+                  className="mt-2 w-full bg-gray-100 text-black text-sm hover:bg-gray-200"
+                  onClick={() => goToJobListings({ cat: title })}>
+                  View Opportunities
+                </Button>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </section>
+
+      {/* ───────────── More Categories chips ───────────── */}
+      <section
+        aria-label="More Job Categories"
+        className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 text-center mt-10">
+        {moreCategories.map((cat) => (
+          <Button
+            key={cat}
+            variant="outline"
+            className="hover:underline hover:text-red-700 font-semibold text-sm whitespace-normal break-words"
+            onClick={() => goToJobListings({ cat })}>
+            {cat}
+          </Button>
         ))}
-      </div>
-    </section>
+      </section>
+    </div>
   );
-};
+}
