@@ -90,7 +90,7 @@ export default function JobListingsView({ filters, initialJobs }: Props) {
       const result = await fetchJobsBrowser(next);
       console.log("[runSearch] jobs:", result.slice(0, 3)); // first 3
       setJobs(result);
-      console.error("[runSearch] failed:", err);
+      console.error("[runSearch] failed:");
     } finally {
       setLoading(false);
     }
