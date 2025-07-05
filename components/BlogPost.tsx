@@ -61,7 +61,7 @@ export const BlogPostGrid: React.FC<BlogPostGridProps> = ({ posts }) => {
 
       {visibleCount < posts.length && (
         <div className="mt-6 text-center">
-          <Button onClick={showMore}>See More</Button>
+          <Button onClick={showMore}>See More Articles</Button>
         </div>
       )}
     </>

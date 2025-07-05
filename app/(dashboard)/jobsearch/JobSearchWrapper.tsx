@@ -1,6 +1,7 @@
+// app/(dashboard)/jobsearch/JobSearchWrapper.tsx
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 
 import { Input } from "@/components/ui/input";
@@ -14,10 +15,10 @@ import {
 } from "@/components/ui/select";
 
 import { US_STATES } from "@/utils/states";
-import { loadCategories, Category } from "@/utils/categories.client";
+import { loadCategories } from "@/utils/categories.client";
 import AdzunaJobList from "./AdzunaJoblist";
 
-/* ---------------------------- Types ---------------------------- */
+/* ---------- types ---------- */
 type Job = {
   id: string;
   title: string;
@@ -26,43 +27,44 @@ type Job = {
   redirect_url: string;
 };
 
-/* ---------------------------- Constants ---------------------------- */
+/* ---------- constants ---------- */
 const CARDS_ON_HOME = 12;
 
-/* ---------------------------- Component ---------------------------- */
+/* ---------- component ---------- */
 export default function JobSearchWrapper() {
-  const [cats, setCats] = useState<Category[]>([]);
+  /* categories fetched client-side */
+  const [cats, setCats] = useState<{ label: string; slug: string }[]>([]);
+
+  /* jobs */
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState(false);
 
+  /* form inputs (uncontrolled by network) */
   const [query, setQuery] = useState("");
   const [state, setState] = useState("");
   const [city, setCity] = useState("");
   const [catSlug, setCatSlug] = useState("");
 
-  /* Load categories on mount */
+  /* load categories once */
   useEffect(() => {
-    loadCategories()
-      .then(setCats)
-      .catch((err) => {
-        console.error("⚠️ Failed to load categories:", err);
-        setCats([]);
-      });
+    loadCategories().then(setCats).catch(console.error);
   }, []);
 
-  /* Fetch jobs from API */
-  const fetchJobs = useCallback(async () => {
+  /* fetch helper – called ONLY on initial mount + Search click */
+  const fetchJobs = async (
+    opts: { q?: string; state?: string; city?: string; cat?: string } = {}
+  ) => {
     setLoading(true);
     try {
-      const params = new URLSearchParams({
-        q: query.trim(),
-        state,
-        city: city.trim(),
+      const p = new URLSearchParams({
+        q: opts.q?.trim() ?? "",
+        state: opts.state ?? "",
+        city: opts.city?.trim() ?? "",
         page: "1",
       });
-      if (catSlug) params.set("cat", catSlug);
+      if (opts.cat) p.set("cat", opts.cat);
 
-      const res = await fetch(`/api/adzuna?${params.toString()}`);
+      const res = await fetch(`/api/adzuna?${p.toString()}`);
       const data = (await res.json()) as Job[];
       setJobs(data);
     } catch (err) {
@@ -71,17 +73,22 @@ export default function JobSearchWrapper() {
     } finally {
       setLoading(false);
     }
-  }, [query, state, city, catSlug]);
+  };
 
+  /* initial blank load once */
   useEffect(() => {
-    fetchJobs();
-  }, [fetchJobs]);
+    fetchJobs(); // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
+  /* onClick handler */
+  const onSearch = () => fetchJobs({ q: query, state, city, cat: catSlug });
+
+  /* ---------- UI ---------- */
   return (
     <section className="p-6 rounded-xl">
       <h2 className="mb-4 text-2xl font-bold">Job Search</h2>
 
-      {/* ───────────── Search Controls ───────────── */}
+      {/* controls */}
       <div className="mb-6 flex flex-col gap-4 md:flex-row">
         <Input
           placeholder="Job title / keywords"
@@ -90,6 +97,7 @@ export default function JobSearchWrapper() {
           className="md:flex-1"
         />
 
+        {/* state */}
         <Select value={state} onValueChange={setState}>
           <SelectTrigger className="md:flex-1">
             <SelectValue placeholder="Select State" />
@@ -103,6 +111,7 @@ export default function JobSearchWrapper() {
           </SelectContent>
         </Select>
 
+        {/* category */}
         <Select value={catSlug} onValueChange={setCatSlug}>
           <SelectTrigger className="md:flex-1">
             <SelectValue placeholder="Select Category" />
@@ -116,6 +125,7 @@ export default function JobSearchWrapper() {
           </SelectContent>
         </Select>
 
+        {/* city */}
         <Input
           placeholder="City (optional)"
           value={city}
@@ -123,14 +133,14 @@ export default function JobSearchWrapper() {
           className="md:flex-1"
         />
 
-        <Button onClick={fetchJobs} disabled={loading}>
+        <Button onClick={onSearch} disabled={loading}>
           {loading ? "Searching…" : "Search"}
         </Button>
       </div>
 
-      {/* ───────────── Results Section ───────────── */}
+      {/* results */}
       {!loading && jobs.length === 0 && (
-        <p className="text-center italic">No jobs found.</p>
+        <p className="italic text-center">No jobs found.</p>
       )}
 
       {jobs.length > 0 && (
@@ -154,7 +164,7 @@ export default function JobSearchWrapper() {
                 },
               }}
               className="inline-block font-semibold text-blue-600 hover:text-blue-800">
-              See more jobs →
+              See More Jobs →
             </Link>
           </div>
         </>
@@ -162,4 +172,3 @@ export default function JobSearchWrapper() {
     </section>
   );
 }
-// This component wraps the Adzuna job search functionality, allowing users to search for jobs by title, state, city, and category.

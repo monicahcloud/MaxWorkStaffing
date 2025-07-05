@@ -14,18 +14,24 @@ import { Card } from "@/components/ui/card";
 import SectionTitle from "@/components/SectionTitle";
 import { US_STATES } from "@/utils/states";
 import { jobIndustries } from "@/utils/industry";
-import { fetchJobs } from "./actions";
+import { fetchJobsBrowser } from "./fetchJobsBrowser";
+import { useRouter } from "next/navigation";
+import { loadCategories } from "@/utils/categories.client";
 
 interface Job {
-  id: number;
+  id: string | number;
   title: string;
+  company: string; // 🆕
   location: string;
   type: string;
-  salary: string;
+  salaryMin?: number; // 🆕 raw numbers
+  salaryMax?: number; // 🆕
+  salaryDisplay: string; // nicely formatted range / “N/A”
   posted: string;
   description: string;
   requirements: string[];
   category: string;
+  url: string; // 🆕 redirect_url
 }
 
 interface Filters {
@@ -36,20 +42,24 @@ interface Filters {
 }
 
 interface Props {
+  initialJobs: Job[];
   filters: Filters;
-  onBack: () => void;
 }
 
-export default function JobListingsView({ filters, onBack }: Props) {
+export default function JobListingsView({ filters, initialJobs }: Props) {
   /* --------------------------- controlled inputs --------------------------- */
   const [keyword, setKeyword] = useState(filters.keyword ?? "");
   const [state, setState] = useState(filters.state ?? "");
   const [city, setCity] = useState(filters.city ?? "");
   const [category, setCategory] = useState(filters.category ?? "");
+  const router = useRouter();
+  const [slugToLabel, setSlugToLabel] = useState<Record<string, string>>({});
 
   /* --------------------------- job data & ui state ------------------------- */
-  const [jobs, setJobs] = useState<Job[]>([]);
-  const [selectedJob, setSelectedJob] = useState<Job | null>(null);
+  const [jobs, setJobs] = useState<Job[]>(initialJobs);
+  const [selectedJob, setSelectedJob] = useState<Job | null>(
+    initialJobs[0] ?? null
+  );
   const [loading, setLoading] = useState(false);
 
   /* ---------- keep inputs in sync if parent props change (Back button) ----- */
@@ -60,32 +70,31 @@ export default function JobListingsView({ filters, onBack }: Props) {
     setCategory(filters.category ?? "");
   }, [filters]);
 
+  /* extend the existing “load categories once” effect */
+  useEffect(() => {
+    loadCategories()
+      .then((arr) => {
+        const map: Record<string, string> = {};
+        arr.forEach(({ slug, label }) => (map[slug] = label));
+        setSlugToLabel(map);
+      })
+      .catch(console.error);
+  }, []);
+
   /* ----------------------------- fetch jobs -------------------------------- */
-  const runSearch = async () => {
+
+  const runSearch = async (next: Filters) => {
     setLoading(true);
     try {
-      const newFilters: Filters = {
-        keyword,
-        state,
-        city,
-        category,
-      };
-      const fetched = await fetchJobs(newFilters);
-      setJobs(fetched);
-      setSelectedJob(fetched[0] ?? null);
-    } catch (err) {
-      console.error("Failed fetching jobs:", err);
-      setJobs([]);
+      console.log("[runSearch] filters:", next);
+      const result = await fetchJobsBrowser(next);
+      console.log("[runSearch] jobs:", result.slice(0, 3)); // first 3
+      setJobs(result);
+      console.error("[runSearch] failed:", err);
     } finally {
       setLoading(false);
     }
   };
-
-  /* fetch once on mount with initial filters */
-  useEffect(() => {
-    runSearch();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // run only once
 
   /* -------------------------------- render --------------------------------- */
   return (
@@ -93,11 +102,16 @@ export default function JobListingsView({ filters, onBack }: Props) {
       <SectionTitle text="Detailed Job Search" subtext="" />
 
       <div className="flex justify-between items-center">
-        <Button variant="secondary" onClick={onBack} className="text-black">
+        <Button
+          variant="secondary"
+          onClick={() => router.back()}
+          className="text-black">
           ← Back to Categories
         </Button>
         <h1 className="text-xl font-bold text-red-700">
-          {category ? `Jobs in ${category}` : "Job Listings"}
+          {category
+            ? `Jobs in ${slugToLabel[category] ?? category}`
+            : "Job Listings"}
         </h1>
       </div>
 
@@ -149,7 +163,14 @@ export default function JobListingsView({ filters, onBack }: Props) {
 
         {/* Search button */}
         <Button
-          onClick={runSearch}
+          onClick={() =>
+            runSearch({
+              keyword,
+              state,
+              city,
+              category,
+            })
+          }
           disabled={loading}
           className="bg-red-700 hover:bg-red-800 text-white">
           {loading ? "Searching…" : "Search"}
@@ -163,7 +184,15 @@ export default function JobListingsView({ filters, onBack }: Props) {
           {loading ? (
             <p>Loading jobs…</p>
           ) : jobs.length === 0 ? (
-            <p>No jobs found.</p>
+            <div className="rounded-lg border p-6 text-center text-gray-600">
+              <p className="text-lg font-semibold">
+                Nothing matched your search 🤔
+              </p>
+              <p className="mt-1 text-sm">
+                Try a different keyword, broaden the location, or pick another
+                category.
+              </p>
+            </div>
           ) : (
             jobs.map((job) => (
               <Card
@@ -174,11 +203,10 @@ export default function JobListingsView({ filters, onBack }: Props) {
                 }`}>
                 <p className="text-sm text-gray-500">{job.location}</p>
                 <h3 className="text-lg font-semibold">{job.title}</h3>
-                <p className="text-sm text-gray-600">{job.type}</p>
-                <p className="text-sm font-medium text-gray-800">
-                  {job.salary}
-                </p>
-                <p className="text-xs text-gray-400 mt-2">{job.posted}</p>
+                <p className="text-sm text-gray-600">{job.company}</p>{" "}
+                {/* 🆕 */}
+                <p className="text-sm">{job.salaryDisplay}</p> {/* 🆕 */}
+                <p className="mt-1 text-xs text-gray-400">{job.posted}</p>
               </Card>
             ))
           )}
@@ -189,15 +217,27 @@ export default function JobListingsView({ filters, onBack }: Props) {
           <div className="lg:col-span-2 border p-6 rounded-xl bg-gray-50 space-y-4">
             <div>
               <h2 className="text-xl font-bold">{selectedJob.title}</h2>
-              <p className="text-sm text-gray-600">{selectedJob.location}</p>
+              <p className="text-sm text-gray-600">
+                {selectedJob.company} — {selectedJob.location}
+              </p>
               <p className="flex gap-4 mt-2 text-sm">
                 <span>{selectedJob.type}</span>
-                <span>{selectedJob.salary}</span>
+                <span>{selectedJob.salaryDisplay}</span>
                 <span>{selectedJob.posted}</span>
               </p>
             </div>
 
-            <Button className="bg-red-700 text-white w-fit">Apply</Button>
+            {/*  APPLY  */}
+            <Button
+              asChild /* ⬅️  renders the child element itself   */
+              className="bg-red-700 text-white">
+              <a
+                href={selectedJob.url} /* external URL from Adzuna */
+                target="_blank"
+                rel="noopener noreferrer">
+                Apply
+              </a>
+            </Button>
 
             <div>
               <h3 className="font-semibold mt-4 mb-2">Description</h3>

@@ -1,64 +1,73 @@
-// export async function fetchJobsByCategory(category: string) {
-//   const endpoint = `/api/adzuna?category=${encodeURIComponent(category)}`;
-//   const res = await fetch(endpoint);
-//   if (!res.ok) throw new Error("Failed to fetch jobs");
+// import "server-only";
+// import { getCategoryMap } from "@/utils/categories.server";
+// import { Filters, Job } from "./types";
 
-import { categoryMap } from "@/utils/category";
+// export async function fetchJobs(filters: Filters): Promise<Job[]> {
+//   const p = new URLSearchParams({ page: "1" });
 
-export async function fetchJobs(filters: {
-  keyword?: string;
-  location?: string;
-  category?: string;
-}) {
-  const query = new URLSearchParams();
+//   if (filters.keyword) p.set("q", filters.keyword);
+//   if (filters.state) p.set("state", filters.state);
+//   if (filters.city) p.set("city", filters.city);
 
-  if (filters.keyword) query.append("what", filters.keyword);
-  if (filters.location) query.append("where", filters.location);
+//   if (filters.category) {
+//     const map = await getCategoryMap();
+//     p.set("cat", map.get(filters.category) ?? filters.category);
+//   }
+
+//   const r = await fetch(`/api/adzuna?${p.toString()}`);
+//   const api = (await r.json()) as any[];
+
+//   /* very light mapping – adjust to your taste */
+//   return api.map(
+//     (j, i): Job => ({
+//       id: j.id ?? i,
+//       title: j.title,
+//       location: j.location?.display_name ?? "Unknown",
+//       type: j.contract_time ?? "N/A",
+//       salary: j.salary_display ?? "N/A",
+//       posted: j.created ?? "N/A",
+//       description: j.description ?? "",
+//       requirements: [],
+//       category: j.category?.label ?? "",
+//     })
+//   );
+// }
+// server-only file – safe to import creds & category map
+import "server-only";
+import { getCategoryMap } from "@/utils/categories.server";
+import { Filters, Job } from "./types";
+
+export async function fetchJobsServer(filters: Filters): Promise<Job[]> {
+  const qs = new URLSearchParams({ page: "1" });
+
+  if (filters.keyword) qs.set("q", filters.keyword);
+  if (filters.state) qs.set("state", filters.state);
+  if (filters.city) qs.set("city", filters.city);
 
   if (filters.category) {
-    const tag = categoryMap[filters.category];
-    if (tag) {
-      query.append("category", tag);
-    } else {
-      console.warn(`Unknown category: ${filters.category}`);
-    }
-  }
-  console.log("Fetching with:", query.toString());
-
-  const endpoint = `/api/adzuna?${query.toString()}`;
-  const res = await fetch(endpoint);
-  const data = await res.json();
-
-  console.log(" fetchJobs Adzuna API raw response:", data);
-
-  const jobsArray = Array.isArray(data.results)
-    ? data.results
-    : Array.isArray(data)
-    ? data
-    : [];
-
-  if (jobsArray.length === 0) {
-    throw new Error("No jobs found or invalid structure.");
+    const map = await getCategoryMap(); // <- server-only import
+    const slug = map.get(filters.category) ?? filters.category;
+    qs.set("cat", slug);
   }
 
-  return jobsArray
-    .filter((job: any) => {
-      if (!filters.category) return true;
+  /** call *internal* API route – fine on the server */
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/adzuna?${qs}`
+  );
+  if (!res.ok) throw new Error("Adzuna request failed (server)");
+  const raw = (await res.json()) as any[];
 
-      const categoryLabel = job.category?.label?.toLowerCase();
-      const selectedCategory = filters.category.toLowerCase();
-
-      return categoryLabel?.includes(selectedCategory);
-    })
-    .map((job: any, index: number) => ({
-      id: job.id || index,
-      title: job.title,
-      location: job.location?.display_name || "Unknown",
-      type: job.contract_time || "N/A",
-      salary: job.salary_display || "N/A",
-      posted: job.created || "N/A",
-      description: job.description,
+  return raw.map(
+    (j, i): Job => ({
+      id: j.id ?? i,
+      title: j.title,
+      location: j.location?.display_name ?? "Unknown",
+      type: j.contract_time ?? "N/A",
+      salary: j.salary_display ?? "N/A",
+      posted: j.created ?? "N/A",
+      description: j.description ?? "",
       requirements: [],
-      category: job.category?.label || "Uncategorized",
-    }));
+      category: j.category?.label ?? "",
+    })
+  );
 }
