@@ -1,9 +1,7 @@
 "use client";
-
 import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import AdzunaJobList from "./AdzunaJoblist"; // Your AdzunaJobList component
 import {
   Select,
   SelectContent,
@@ -12,115 +10,130 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { US_STATES } from "@/utils/states";
+import AdzunaJobList from "./AdzunaJoblist";
 
-// Updated Job type to match the expected structure
 type Job = {
   id: string;
   title: string;
   company: { display_name: string };
-  location: {
-    area: string[]; // e.g., ["US", "California", "San Francisco"]
-    display_name: string;
-  };
-  state: {
-    display_name: string;
-    area: string[]; // Added area property to match the structure expected in AdzunaJobList
-  };
-  description: string;
+  location: { area: string[]; display_name: string };
   redirect_url: string;
 };
 
+const RESULTS_PER_PAGE = 30; //  ← keep in sync with API route
+
 export default function JobSearchWrapper() {
   const [jobs, setJobs] = useState<Job[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [searchQuery, setSearchQuery] = useState<string>(""); // User input for job title
-  const [state, setState] = useState<string>(""); // User input for state
+  const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
 
-  const fetchJobs = async () => {
+  // user inputs
+  const [searchQuery, setSearchQuery] = useState("");
+  const [state, setState] = useState("");
+  const [city, setCity] = useState("");
+
+  /** Fetch helper (append or replace based on reset flag) */
+  const fetchJobs = async (pageToLoad = 1, reset = false) => {
     setLoading(true);
     try {
-      const res = await fetch(`/api/adzuna?q=${searchQuery}&state=${state}`);
-      const data = await res.json();
-      setJobs(data);
+      const params = new URLSearchParams({
+        q: searchQuery,
+        state,
+        city,
+        page: pageToLoad.toString(),
+      });
+      const res = await fetch(`/api/adzuna?${params.toString()}`);
+      const data = (await res.json()) as Job[];
+
+      setJobs((prev) => (reset ? data : [...prev, ...data]));
+      setHasMore(data.length === RESULTS_PER_PAGE); // if less, last page
+      setPage(pageToLoad);
     } catch (err) {
-      console.error("Failed to fetch jobs:", err);
-      setJobs([]);
+      console.error(err);
+      if (reset) setJobs([]);
+      setHasMore(false);
     } finally {
       setLoading(false);
     }
   };
 
+  /** Initial load */
   useEffect(() => {
-    // Fetch default jobs on first load
-    const fetchDefaultJobs = async () => {
-      setLoading(true);
-      try {
-        const res = await fetch(`/api/adzuna?q=${searchQuery}&state=${state}`); // default query
-        const data = await res.json();
-        setJobs(data);
-      } catch (err) {
-        console.error("Failed to fetch default jobs:", err);
-        setJobs([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchDefaultJobs();
+    fetchJobs(1, true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleSearch = () => {
-    fetchJobs(); // Trigger the API call with the search query
-  };
+  /** Top “Search” button */
+  const runNewSearch = () => fetchJobs(1, true);
+
+  /** Bottom “Load More” button */
+  const loadNextPage = () => fetchJobs(page + 1);
 
   return (
     <section className="p-6 rounded-xl">
+      {/* header */}
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-2xl font-bold">Job Search</h2>
-        {/* <a
-          href="/jobsearch"
-          className="text-md font-medium underline text-black hover:text-blue-600">
-          View more
-        </a> */}
       </div>
 
+      {/* controls */}
       <div className="flex flex-col md:flex-row gap-4 mb-6">
         <Input
-          placeholder="Job Title"
-          className="md:flex-1"
+          placeholder="Job title / keywords"
           value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)} // Update job title query
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="md:flex-1"
         />
-        <Select onValueChange={(value) => setState(value)}>
+
+        <Select onValueChange={setState}>
           <SelectTrigger className="md:flex-1">
             <SelectValue placeholder="Select State" />
           </SelectTrigger>
           <SelectContent>
-            {US_STATES.map((state) => (
-              <SelectItem key={state} value={state}>
-                {state}
+            {US_STATES.map((s) => (
+              <SelectItem key={s} value={s}>
+                {s}
               </SelectItem>
             ))}
           </SelectContent>
         </Select>
 
-        <Button
-          className="bg-black text-white px-6 flex items-center gap-2"
-          onClick={handleSearch}>
-          Search available jobs
+        <Input
+          placeholder="City (optional)"
+          value={city}
+          onChange={(e) => setCity(e.target.value)}
+          className="md:flex-1"
+        />
+
+        <Button onClick={runNewSearch} disabled={loading}>
+          {loading ? "Searching…" : "Search"}
         </Button>
       </div>
 
-      {loading ? (
-        <p>Loading jobs...</p>
-      ) : (
-        <>
-          <h3 className="text-xl mt-5 font-semibold mb-3">
-            {" "}
-            Top 10 Search Results
-          </h3>
-          <AdzunaJobList jobs={jobs} />
-        </>
+      {/* results grid */}
+      {jobs.length === 0 && !loading && (
+        <p className="italic text-center">
+          No jobs found. Try different terms.
+        </p>
+      )}
+
+      {/* dynamic heading */}
+      {jobs.length > 0 && (
+        <h3 className="text-xl font-semibold mb-3">
+          Showing {jobs.length} result{jobs.length > 1 && "s"}
+        </h3>
+      )}
+
+      <AdzunaJobList jobs={jobs} />
+
+      {/* load-more control */}
+      {hasMore && (
+        <div className="flex justify-center mt-6">
+          <Button variant="outline" onClick={loadNextPage} disabled={loading}>
+            {loading ? "Loading…" : "Load More"}
+          </Button>
+        </div>
       )}
     </section>
   );

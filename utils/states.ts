@@ -1,3 +1,4 @@
+// utils/usStates.ts
 export const US_STATES = [
   "Alabama",
   "Alaska",

@@ -405,7 +405,8 @@ Return only the JSON object.
 }
 
 export async function saveParsedResumeData(resumeId: string, parsedData: any) {
-  console.log("parsedData:", parsedData);
+  console.log("🧠 parsedData received:", JSON.stringify(parsedData, null, 2));
+
   if (!resumeId) throw new Error("Missing resumeId");
 
   const {
@@ -475,12 +476,12 @@ export async function saveParsedResumeData(resumeId: string, parsedData: any) {
           degree:
             typeof edu.degree === "string"
               ? edu.degree
-              : edu.degree?.education || "", // fallback to nested `education` field
+              : edu.degree?.education || "", // fallback
           school: edu.school || "",
           location: edu.location || "",
           startDate: safeDate(edu.startDate),
           endDate: safeDate(edu.endDate),
-          description: edu.description || "",
+          description: edu.description || "", // <-- currently missing in some cases
         })),
       });
     }
