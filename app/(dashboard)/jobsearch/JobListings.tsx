@@ -15,7 +15,7 @@ import SectionTitle from "@/components/SectionTitle";
 import { US_STATES } from "@/utils/states";
 import { jobIndustries } from "@/utils/industry";
 import { fetchJobsBrowser } from "./fetchJobsBrowser";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { loadCategories } from "@/utils/categories.client";
 
 interface Job {
@@ -54,6 +54,8 @@ export default function JobListingsView({ filters, initialJobs }: Props) {
   const [category, setCategory] = useState(filters.category ?? "");
   const router = useRouter();
   const [slugToLabel, setSlugToLabel] = useState<Record<string, string>>({});
+  const pathname = usePathname(); // ← current route ( “/joblistings” )
+  const searchParams = useSearchParams(); // ← live QueryString reader
 
   /* --------------------------- job data & ui state ------------------------- */
   const [jobs, setJobs] = useState<Job[]>(initialJobs);
@@ -80,17 +82,39 @@ export default function JobListingsView({ filters, initialJobs }: Props) {
       })
       .catch(console.error);
   }, []);
+  useEffect(() => {
+    const urlFilters: Filters = {
+      keyword: searchParams.get("q") ?? undefined,
+      state: searchParams.get("state") ?? undefined,
+      city: searchParams.get("city") ?? undefined,
+      category: searchParams.get("cat") ?? undefined,
+    };
 
-  /* ----------------------------- fetch jobs -------------------------------- */
+    // avoid an extra network call the very first time (already have initialJobs)
+    if (initialJobs.length === 0) runSearch(urlFilters);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]); // <- triggers whenever the URL query changes
+
+  /* ----------------------------- fetch + push jobs -------------------------------- */
 
   const runSearch = async (next: Filters) => {
+    /* 1️⃣ build the new query-string -------------------------------------- */
+    const qs = new URLSearchParams();
+    if (next.keyword) qs.set("q", next.keyword.trim());
+    if (next.state) qs.set("state", next.state);
+    if (next.city) qs.set("city", next.city.trim());
+    if (next.category) qs.set("cat", next.category);
+
+    /* 2️⃣ push it to the router  (this updates the address-bar *and*
+           gives us a navigation entry we can “Back” to)               */
+    router.push(`${pathname}?${qs.toString()}`);
+
+    /* 3️⃣ fetch with the same params ------------------------------------- */
     setLoading(true);
     try {
-      console.log("[runSearch] filters:", next);
       const result = await fetchJobsBrowser(next);
-      console.log("[runSearch] jobs:", result.slice(0, 3)); // first 3
       setJobs(result);
-      console.error("[runSearch] failed:");
+      setSelectedJob(null); // clear right-hand pane
     } finally {
       setLoading(false);
     }
