@@ -140,3 +140,53 @@ export type CoverLetterTemplateProps = CoverLetterValues & {
 
   setCoverLetterData: React.Dispatch<React.SetStateAction<CoverLetterValues>>;
 };
+
+export interface ParsedResumeData {
+  /* wrapped because saveParsedResumeData expects it */
+  personalInfo: {
+    firstName: string;
+    lastName: string;
+    jobTitle: string;
+    email: string;
+    phone: string;
+    address: string;
+    website: string;
+    linkedin: string;
+    gitHub: string;
+  };
+
+  summary: string;
+  skills: string[];
+
+  education: Array<{
+    degree: string;
+    school: string;
+    location: string;
+    startDate?: Date;
+    endDate?: Date;
+    description: string;
+  }>;
+
+  workExperience: Array<{
+    position: string;
+    company: string;
+    location: string;
+    startDate?: Date;
+    endDate?: Date;
+    description: string;
+    status: string;
+    clearance: string;
+    duties: string;
+    responsibilities: string;
+    accomplishments: string;
+    grade: string;
+    hours: string;
+  }>;
+
+  interest: string[];
+
+  /* meta (optional) */
+  resumeTitle?: string;
+  resumeType?: string;
+  parsed?: boolean; // default true
+}

@@ -1,7 +1,19 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { CoverLetterServerData, ResumeServerData } from "./types";
 import { CoverLetterValues, ResumeValues } from "./validation";
+import { extractFederalFields } from "./extractFederalFields";
+import { parseISO } from "date-fns";
+import { ParsedResumeData } from "@/utils/types";
+
+/** Safely turn "YYYY-MM-DD" into Date or undefined */
+const toDate = (d?: { date?: string }) =>
+  d?.date ? parseISO(d.date) : undefined;
+
+/** Pick the first non-empty string from an array, else "" */
+const first = (arr?: (string | null)[]) =>
+  (arr ?? []).find((s) => !!s?.trim()) ?? "";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -97,5 +109,76 @@ export function mapToCoverLetterValues(
     signatureUrl: data.signatureUrl ?? "",
     borderStyle: data.borderStyle ?? "",
     themeColor: data.themeColor ?? "",
+  };
+}
+
+export function mapAffindaToResumeValues(
+  parsed: any,
+  template: "federal" | "standard"
+): ParsedResumeData {
+  const data = parsed;
+
+  /* ------------ PERSONAL ------------------------------------------------ */
+  const nameObj = data.candidateName?.[0] ?? {};
+  const phoneObj = data.phoneNumber?.[0] ?? {};
+
+  const personalInfo = {
+    firstName: nameObj.firstName ?? "",
+    lastName: nameObj.familyName ?? "",
+    jobTitle: data.objective ?? "",
+    email: first(data.email),
+    phone: phoneObj.formattedNumber ?? phoneObj.rawText ?? "",
+    address: data.location?.formatted ?? "",
+    website: first(data.website),
+    linkedin: data.linkedin ?? "",
+    gitHub: "",
+  };
+
+  /* ------------ EDUCATION ---------------------------------------------- */
+  const education = (data.education ?? []).map((e: any) => ({
+    degree: [e.educationAccreditation, ...(e.educationMajor ?? [])]
+      .filter(Boolean)
+      .join(" "),
+    school: e.educationOrganization ?? "",
+    location: e.educationLocation?.formatted ?? "",
+    startDate: toDate(e.educationDates?.start),
+    endDate: toDate(e.educationDates?.end),
+    description: "",
+  }));
+
+  /* ------------ WORK EXPERIENCE ---------------------------------------- */
+  const workExperience = (data.workExperience ?? []).map((w: any) => {
+    const base = {
+      position: w.workExperienceJobTitle ?? "",
+      company: w.workExperienceOrganization ?? "",
+      location: w.workExperienceLocation?.formatted ?? "",
+      startDate: toDate(w.workExperienceDates?.start),
+      endDate: toDate(w.workExperienceDates?.end),
+      description: w.workExperienceDescription ?? "",
+      status: "",
+      clearance: "",
+      duties: "",
+      responsibilities: "",
+      accomplishments: "",
+      grade: "",
+      hours: "",
+    };
+
+    return template === "federal" && base.description
+      ? { ...base, ...extractFederalFields(base.description) }
+      : base;
+  });
+
+  /* ------------ BUILD ParsedResumeData --------------------------------- */
+  return {
+    personalInfo,
+    summary: data.summary ?? "",
+    skills: (data.skill ?? []).map((s: any) => s.name).filter(Boolean),
+    education,
+    workExperience,
+    interest: [],
+    parsed: true,
+    resumeTitle: `${personalInfo.firstName}_${personalInfo.lastName}_Resume`,
+    resumeType: template === "federal" ? "Federal Resume" : "Standard Resume",
   };
 }
