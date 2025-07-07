@@ -1,4 +1,5 @@
 "use client";
+
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { resumes } from "../utils/resumes";
@@ -22,32 +23,34 @@ const Slider = () => {
     return () => clearTimeout(timer);
   }, [activeImage]);
 
+  const current = resumes[activeImage];
+
   return (
-    <main className="grid place-items-center md:grid-cols-2 grid-cols-1 w-full mx-auto max-w-4xl shadow-xl rounded-2xl overflow-hidden bg-white">
-      <div className="w-full flex justify-center items-center transition-transform ease-in-out duration-500 p-4 md:p-0 bg-black">
-        {resumes.map((elem, idx) => (
-          <div
-            key={elem.id}
-            className={`${
-              idx === activeImage ? "block" : "hidden"
-            } w-full h-[60vh]`}>
-            <Image
-              src={elem.src}
-              alt={elem.title}
-              width={500}
-              height={500}
-              className="w-full h-full object-cover md:rounded-tl-3xl md:rounded-bl-3xl"
-              priority
-            />
-          </div>
-        ))}
+    <div className="w-full max-w-3xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden p-4 space-y-6">
+      {/* Title */}
+      <h2 className="text-2xl font-bold text-center text-red-600">
+        {current.title}
+      </h2>
+
+      {/* Image */}
+      <div className="w-full aspect-[4/3] bg-black rounded-xl overflow-hidden">
+        <Image
+          src={current.src}
+          alt={current.title}
+          width={800}
+          height={600}
+          className="w-full h-full object-cover"
+          priority
+        />
       </div>
+
+      {/* Description + Buttons */}
       <Description
         activeImage={activeImage}
         clickNext={clickNext}
         clickPrev={clickPrev}
       />
-    </main>
+    </div>
   );
 };
 

@@ -1,47 +1,43 @@
-import React from "react";
-import { InterviewQuestion } from "../../../utils/questions";
+"use client";
+import { useState } from "react";
+import { InterviewQuestion } from "@/utils/questions";
 
-type SingleQuestionProps = {
-  questions: InterviewQuestion[];
-};
+type Props = { questions: InterviewQuestion[] };
 
-const SingleInterviewQuestion = ({ questions }: SingleQuestionProps) => {
-  const publicQuestions = questions.filter((q) => q.type === "public");
-  const privateQuestions = questions.filter((q) => q.type === "private");
+export default function SingleInterviewQuestion({ questions }: Props) {
+  const [openId, setOpenId] = useState<string | null>(null);
+  const groups = {
+    Public: questions.filter((q) => q.type === "public"),
+    Private: questions.filter((q) => q.type === "private"),
+  };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full px-4 ">
-      {/* Public Questions */}
-      <div>
-        <h2 className="text-xl font-bold text-center mb-4">Public Sector</h2>
-        {publicQuestions.map((q) => (
-          <details
-            key={q.id}
-            className="mb-2 border hover:scale-105 rounded-lg p-4 transition duration-300 hover:bg-gray-50 hover:shadow">
-            <summary className="cursor-pointer font-medium">
-              {q.question}
-            </summary>
-            <p className="mt-2 text-gray-700">Example: {q.answer}</p>
-          </details>
-        ))}
-      </div>
+    <div className="grid gap-6 md:grid-cols-2 w-full">
+      {Object.entries(groups).map(([label, qs]) => (
+        <div
+          key={label}
+          className="space-y-3 max-h-[70vh] overflow-y-auto pr-2">
+          <h3 className="text-xl font-bold text-center sticky top-0 bg-gray-50 py-2">
+            {label} Sector
+          </h3>
 
-      {/* Private Questions */}
-      <div>
-        <h2 className="text-xl font-bold text-center mb-4">Private Sector</h2>
-        {privateQuestions.map((q) => (
-          <details
-            key={q.id}
-            className="mb-2 border rounded-lg p-4 hover:scale-105 transition duration-300 hover:bg-gray-50 hover:shadow">
-            <summary className="cursor-pointer font-medium">
-              {q.question}
-            </summary>
-            <p className="mt-2 text-gray-700">Example: {q.answer}</p>
-          </details>
-        ))}
-      </div>
+          {qs.map((q) => {
+            const open = openId === q.id;
+            return (
+              <details
+                key={q.id}
+                open={open}
+                onClick={() => setOpenId(open ? null : q.id)}
+                className="border rounded-lg p-4 transition hover:shadow-sm">
+                <summary className="cursor-pointer font-medium">
+                  {q.question}
+                </summary>
+                <p className="mt-2 text-gray-700">Example: {q.answer}</p>
+              </details>
+            );
+          })}
+        </div>
+      ))}
     </div>
   );
-};
-
-export default SingleInterviewQuestion;
+}

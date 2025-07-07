@@ -1,16 +1,12 @@
 "use client";
-
-import React from "react";
 import Slider from "@/components/Slider";
 
-function ResumeTypes() {
+export default function ResumeTypes() {
   return (
-    <div className="bg-black max-w-4xl min-h-[600px] mx-auto flex items-center justify-center p-4 rounded-xl shadow-md">
-      <div>
+    <div className="w-full flex justify-center">
+      <div className="max-w-3xl w-full">
         <Slider />
       </div>
     </div>
   );
 }
-
-export default ResumeTypes;

@@ -80,7 +80,7 @@ const steps: Tour[] = [
         showSkip: true,
       },
       {
-        title: "Interviewing Tools",
+        title: "Expert Interview Tips",
         selector: ".interviewing-tools-link",
         side: "right",
         icon: "👋",
