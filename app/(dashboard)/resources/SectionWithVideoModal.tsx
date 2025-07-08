@@ -4,107 +4,108 @@ import { useState } from "react";
 import Image, { StaticImageData } from "next/image";
 import { X } from "lucide-react";
 import { motion } from "framer-motion";
-import {
-  Dialog,
-  DialogContent,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 
-type Props = {
-  title: string;
-  description: string;
-  video: string;
+type VideoItem = {
+  src: string;
   poster: StaticImageData | string;
-  children: React.ReactNode;
-  /** flips columns + animation direction on desktop */
-  reverse?: boolean;
+  label?: string;
 };
+
+interface SectionWithVideoModalProps {
+  title: string;
+  description?: string;
+  videos: VideoItem[]; // one or more videos
+}
 
 export default function SectionWithVideoModal({
   title,
-  description,
-  video,
-  poster,
-  children,
-  reverse = false,
-}: Props) {
-  const [open, setOpen] = useState(false);
+  description = "",
+  videos,
+}: SectionWithVideoModalProps) {
+  const [openSrc, setOpenSrc] = useState<string | null>(null);
 
-  /* Motion variants */
-  const slideVideo = {
-    hidden: { opacity: 0, x: reverse ? 100 : -100 },
-    show:   { opacity: 1, x: 0, transition: { duration: 0.6 } },
+  // Simple slide-in for both columns
+  const slideLeft = {
+    hidden: { opacity: 0, x: -100 },
+    show: { opacity: 1, x: 0, transition: { duration: 0.6 } },
   };
-
-  const slideContent = {
-    hidden: { opacity: 0, x: reverse ? -100 : 100 },
-    show:   { opacity: 1, x: 0, transition: { duration: 0.6 } },
+  const slideRight = {
+    hidden: { opacity: 0, x: 100 },
+    show: { opacity: 1, x: 0, transition: { duration: 0.6 } },
   };
 
   return (
     <section className="max-w-7xl mx-auto px-4 py-16">
-      {/* Title centered over both columns */}
-      <h2 className="text-3xl md:text-4xl font-bold text-red-600 text-center mb-10">
+      <h2 className="text-3xl md:text-4xl font-bold text-red-600 text-center mb-5">
         {title}
       </h2>
-
+      {description && (
+        <p className="text-muted-foreground text-center max-w-3xl mx-auto mb-10 text-lg">
+          {description}
+        </p>
+      )}
       <motion.div
         initial="hidden"
         whileInView="show"
         viewport={{ once: true, amount: 0.2 }}
-        className="grid md:grid-cols-2 gap-10 items-center"
-      >
-        {/* ─────────── Video (trigger) ─────────── */}
+        className="grid gap-10  items-center">
+        {/* ───────── Videos grid ───────── */}
         <motion.div
-          variants={slideVideo}
-          className={`flex justify-center ${reverse ? "order-2 md:order-2" : "order-2 md:order-1"}`}
-        >
-          <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
-              <div
-                className="w-full max-w-[380px] aspect-video relative rounded-lg overflow-hidden cursor-pointer shadow-lg border"
-                onClick={() => setOpen(true)}
-              >
-                <Image
-                  src={poster}
-                  alt="Video thumbnail"
-                  fill
-                  className="object-cover"
-                />
-                <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                  <span className="text-white text-5xl bg-red-600 rounded-full p-4 shadow-lg">
-                    ▶
-                  </span>
+          variants={slideLeft}
+          className={`grid gap-6 ${
+            videos.length === 1 ? "" : "sm:grid-cols-2"
+          }`}>
+          {videos.map((v) => (
+            <Dialog
+              key={v.src}
+              open={openSrc === v.src}
+              onOpenChange={(isOpen) => !isOpen && setOpenSrc(null)} // ⬅ only reset on close
+            >
+              <DialogTrigger asChild>
+                <div>
+                  <button
+                    onClick={() => setOpenSrc(v.src)}
+                    className="relative w-full aspect-video rounded-lg overflow-hidden shadow-lg border group">
+                    <Image
+                      src={v.poster}
+                      alt={v.label ?? "Video poster"}
+                      fill
+                      className="object-cover"
+                    />
+                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center transition group-hover:scale-105">
+                      <span className="text-white text-5xl bg-red-600 rounded-full p-4 shadow-lg">
+                        ▶
+                      </span>
+                    </div>
+                  </button>
+                  {v.label && (
+                    <span className="mt-2 text-sm text-center text-muted-foreground block">
+                      {v.label ?? "Video"}
+                    </span>
+                  )}
                 </div>
-              </div>
-            </DialogTrigger>
+              </DialogTrigger>
 
-            {/* Modal */}
-            <DialogContent className="max-w-4xl w-full p-0 bg-black rounded-lg overflow-hidden aspect-video">
-              <button
-                onClick={() => setOpen(false)}
-                className="absolute top-2 right-2 z-10 text-white bg-black/50 hover:bg-black p-2 rounded-full"
-              >
-                <X className="w-5 h-5" />
-              </button>
-              <iframe
-                src={`${video}?autoplay=1`}
-                className="w-full h-full"
-                allow="autoplay; encrypted-media"
-                allowFullScreen
-              />
-            </DialogContent>
-          </Dialog>
+              <DialogContent className="max-w-4xl w-full p-0 bg-black rounded-lg overflow-hidden aspect-video">
+                <button
+                  onClick={() => setOpenSrc(null)}
+                  className="absolute top-2 right-2 z-10 text-white bg-black/50 hover:bg-black p-2 rounded-full">
+                  <X className="w-5 h-5" />
+                </button>
+                <iframe
+                  src={`${v.src}?autoplay=1`}
+                  className="w-full h-full"
+                  allow="autoplay; encrypted-media"
+                  allowFullScreen
+                />
+              </DialogContent>
+            </Dialog>
+          ))}
         </motion.div>
 
-        {/* ─────────── Content ─────────── */}
-        <motion.div
-          variants={slideContent}
-          className={`space-y-6 ${reverse ? "order-1 md:order-1" : "order-1 md:order-2"}`}
-        >
-          <p className="text-gray-700">{description}</p>
-          {children}
-        </motion.div>
+        {/* ───────── Text content ───────── */}
+        <motion.div variants={slideRight}></motion.div>
       </motion.div>
     </section>
   );
