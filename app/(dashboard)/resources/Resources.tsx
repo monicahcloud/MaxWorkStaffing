@@ -2,9 +2,7 @@
 
 import ResourceCategories from "./ResourceCategories";
 import SectionWithVideoModal from "./SectionWithVideoModal";
-
 import TypesofInterviews from "./TypesofInterviews";
-import ResumeTypes from "./ResumeTypes";
 
 /* ── Poster thumbnails ────────────────────────────── */
 import interviewPoster from "../../../assets/questionsthumb.png";
@@ -12,6 +10,7 @@ import resumePoster from "../../../assets/resumesthumb.png";
 import questionsPoster from "../../../assets/interviewthumb.png";
 import InterviewPlaybookDownload from "./InterviewPlaybookDownload";
 import SectionTitle from "@/components/SectionTitle";
+import TypesofResumes from "./TypesofResumes";
 
 const Resources = () => (
   <>
@@ -57,7 +56,7 @@ const Resources = () => (
           },
         ]}
       />
-      <ResumeTypes />
+      <TypesofResumes />
     </section>
 
     {/* ────────────────────── 4. Downloadable eBook ─────────────────────── */}

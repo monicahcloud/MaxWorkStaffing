@@ -19,7 +19,7 @@ const Slider = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       clickNext();
-    }, 5000);
+    }, 10000);
     return () => clearTimeout(timer);
   }, [activeImage]);
 
@@ -33,12 +33,12 @@ const Slider = () => {
       </h2>
 
       {/* Image */}
-      <div className="w-full aspect-[4/3] bg-black rounded-xl overflow-hidden">
+      <div className="w-full aspect-[5/3] bg-black rounded-xl overflow-hidden">
         <Image
           src={current.src}
           alt={current.title}
-          width={800}
-          height={600}
+          width={500}
+          height={500}
           className="w-full h-full object-cover"
           priority
         />

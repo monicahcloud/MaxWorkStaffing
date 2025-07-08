@@ -5,18 +5,26 @@ import * as React from "react";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
+import Image from "next/image";
 
+/* ——— Local content components ——— */
 import InterviewTips from "./InterviewTips";
 import InterviewTypes from "./InterviewTypes";
 import InterviewEtiquette from "./InterviewEtiquette";
 import SingleInterviewQuestion from "./SingleInterviewQuestion";
 
-/* 👉 questions data array */
+/* ——— Local images ——— */
+import interviewtips from "./../../../assets/interviewtips.png";
+import interviewtypes from "./../../../assets/interviewtypes.png";
+import interviewetiquette from "./../../../assets/interviewetiquette.png";
+import interviewquestions from "./../../../assets/interviewquestions.png";
+
+/* ——— Data ——— */
 import { interviewQuestions } from "@/utils/questions";
 
-/* ———————————————————————————
-   Bullet labels
-   ——————————————————————————— */
+/* --------------------------------------------------------------------- */
+/*  Config                                                              */
+/* --------------------------------------------------------------------- */
 const bullets = [
   "Interview Tips",
   "Interview Types",
@@ -25,9 +33,14 @@ const bullets = [
 ] as const;
 type BulletTitle = (typeof bullets)[number];
 
-/* ———————————————————————————
-   Fallback snippets
-   ——————————————————————————— */
+/*  Map a title → image  */
+const imageMap: Record<BulletTitle, any> = {
+  "Interview Tips": interviewtips,
+  "Interview Types": interviewtypes,
+  "Interview Etiquette": interviewetiquette,
+  "Interview Questions": interviewquestions,
+};
+
 const bulletDetails: Record<BulletTitle, string> = {
   "Interview Tips":
     "Practical guidance on research, rehearsal, professional presentation, and follow-up.",
@@ -39,9 +52,6 @@ const bulletDetails: Record<BulletTitle, string> = {
     "Review common and tricky questions, plus STAR/CAR frameworks for structuring strong answers.",
 };
 
-/* ———————————————————————————
-   Map each title → JSX element (note all 4 keys)
-   ——————————————————————————— */
 const contentMap: Record<BulletTitle, () => React.JSX.Element> = {
   "Interview Tips": () => <InterviewTips />,
   "Interview Types": () => <InterviewTypes />,
@@ -51,9 +61,7 @@ const contentMap: Record<BulletTitle, () => React.JSX.Element> = {
   ),
 };
 
-/* ———————————————————————————
-   Framer Motion variants
-   ——————————————————————————— */
+/*  Framer-motion variants  */
 const variants = {
   hidden: { opacity: 0, y: 40 },
   show: (i: number) => ({
@@ -63,9 +71,6 @@ const variants = {
   }),
 };
 
-/* ———————————————————————————
-   Main Section
-   ——————————————————————————— */
 export default function InterviewDetailsSection() {
   const [active, setActive] = useState<BulletTitle | null>(null);
   const Feature = active ? contentMap[active] : null;
@@ -73,7 +78,7 @@ export default function InterviewDetailsSection() {
   return (
     <section id="interview-details" className="bg-white py-16 px-4">
       <div className="max-w-7xl mx-auto">
-        {/* ───────── Grid ───────── */}
+        {/* ───────── Grid view ───────── */}
         {!active && (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
             {bullets.map((title, idx) => (
@@ -87,14 +92,25 @@ export default function InterviewDetailsSection() {
                 <button
                   onClick={() => setActive(title)}
                   className="w-full text-left">
-                  <Card className="rounded-2xl overflow-hidden shadow-xl bg-white/90 hover:scale-[1.02] hover:shadow-2xl transition-all cursor-pointer">
-                    <div className="flex items-center justify-center h-40 bg-gradient-to-br from-red-600/80 to-rose-800 text-white text-xl font-semibold text-center px-4">
-                      {title}
+                  <Card className="rounded-2xl overflow-hidden shadow-xl hover:scale-[1.02] hover:shadow-2xl transition">
+                    {/* ─ Image header ─ */}
+                    <div className="relative h-40">
+                      <Image
+                        src={imageMap[title]}
+                        alt={title}
+                        fill
+                        className="object-cover transition-transform duration-300 group-hover:scale-105"
+                        sizes="(max-width: 768px) 100vw,
+                               (max-width: 1200px) 50vw,
+                               33vw"
+                        priority
+                      />
+                      {/* Optional overlay for readability */}
+                      <div className="absolute inset-0 bg-white/10 flex items-center justify-center"></div>
                     </div>
+
+                    {/* ─ Description ─ */}
                     <div className="p-6">
-                      <h3 className="text-xl font-semibold mb-2 text-red-600">
-                        {title}
-                      </h3>
                       <p className="text-muted-foreground text-sm line-clamp-6">
                         {bulletDetails[title]}
                       </p>

@@ -31,7 +31,7 @@ const categories = [
   },
   {
     id: "resume-details",
-    title: "Resume Types and Tips",
+    title: "Resume Tips and Tricks",
     poster: resumes,
     bullets: [
       "Resume Tips",
