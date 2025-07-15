@@ -15,8 +15,8 @@ import TypesofResumes from "./TypesofResumes";
 const Resources = () => (
   <>
     <SectionTitle
-      text="Resources"
-      subtext="Explore our comprehensive resources to help you ace your interviews and build a standout resume."
+      text="Get Noticed. Get the Job."
+      subtext="Supercharge your resume and master interviews with bold, actionable tips that work."
     />
     {/* Top quick-nav grid */}
     <ResourceCategories />
@@ -30,12 +30,12 @@ const Resources = () => (
           {
             src: "/interviewtypes.mp4",
             poster: questionsPoster,
-            label: "Interview Types",
+            label: "Interview Types (1:25 mins)",
           },
           {
             src: "/commonquestions.mp4",
             poster: interviewPoster,
-            label: "Interview Tips",
+            label: "Common Interview Questions (1:10 mins)",
           },
         ]}
       />
@@ -52,7 +52,7 @@ const Resources = () => (
           {
             src: "/resumetypes.mp4",
             poster: resumePoster,
-            label: "Interview Types",
+            label: "Resume Types (1:17 mins)",
           },
         ]}
       />

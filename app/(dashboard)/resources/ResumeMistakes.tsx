@@ -3,6 +3,7 @@
 import React from "react";
 import { XCircle, CheckCircle } from "lucide-react";
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 const mistakes = [
   {
@@ -60,9 +61,19 @@ const ResumeMistakes = () => {
           for—and how to fix it.
         </p>
       </div>
-
-      {/* Mistakes Grid */}
       <div className="grid gap-8 md:grid-cols-2">
+        {/* ⬅️ Image takes first slot in right column */}
+        <div className="col-span-1 md:col-start-2">
+          <Image
+            src="/blog/avoid.png"
+            alt="career changes"
+            width={500}
+            height={300}
+            className="rounded-lg shadow bg-white text-gray-800 border p-1 hover:bg-gray-100 transition"
+          />
+        </div>
+        {/* Mistakes Grid */}
+        {/* <div className="grid gap-8 md:grid-cols-2"> */}
         {mistakes.map((item, idx) => (
           <motion.div
             key={idx}

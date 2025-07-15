@@ -3,7 +3,7 @@
 import { FileText } from "lucide-react";
 
 type PlaybookDownloadProps = {
-  /** Path to the file in /public (e.g., "/interview_playbook_full.pdf") */
+  /** Path to the file in /public (e.g., "/The_Ultimate_Interview_Guide.pdf") */
   filePath?: string;
   /** The filename the user will see when they download the file */
   fileName?: string;
@@ -16,8 +16,8 @@ type PlaybookDownloadProps = {
 };
 
 const InterviewPlaybookDownload = ({
-  filePath = "/interview_playbook_full.pdf",
-  fileName = "The_Interview_Playbook_MaxResumeBuilder.pdf",
+  filePath = "/The_Ultimate_Interview_Guide.pdf",
+  fileName = "The_Ultimate_Interview_Guide.pdf",
   heading = "The Interview Playbook Every Jobseeker Needs",
   subheading = "Your ultimate guide to mastering every stage of the interview process—from preparation to follow-up.",
   brand,

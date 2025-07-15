@@ -2,7 +2,7 @@
 
 import React from "react";
 import { CheckCircle, Clock, Mail, ThumbsUp } from "lucide-react";
-
+import Image from "next/image";
 const etiquetteTips = [
   {
     icon: <Clock className="text-red-600 w-6 h-6" />,
@@ -40,7 +40,6 @@ const InterviewEtiquette = () => {
         <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
           First impressions matter. Your conduct before, during, and after an
           interview can influence hiring decisions just as much as your resume.
-          Here's what professional etiquette looks like in every stage.
         </p>
       </section>
 
@@ -60,7 +59,14 @@ const InterviewEtiquette = () => {
         ))}
       </section>
 
-      <section className="bg-gray-50 border border-dashed border-red-200 rounded-xl p-6 sm:p-8 mt-6">
+      <section className="bg-gray-50 border border-dashed border-red-200 rounded-xl p-6 sm:p-8 mt-3">
+        <Image
+          src="/blog/interviewquestions.webp"
+          alt="Man transitioning from military to civilian career"
+          width={325}
+          height={300}
+          className="rounded-lg shadow mx-auto absolute  bottom-12 right-25 z-90 bg-white text-gray-800 border p-1 hover:bg-gray-100 transition"
+        />
         <h3 className="text-xl font-bold mb-3 text-gray-800">
           Bonus Tips from Max ResumeBuilder
         </h3>

@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import prisma from "@/lib/prisma";
 import Image from "next/image";
-import { cn } from "@/lib/utils"; // optional, if using ShadCN's `cn` util
+// import { cn } from "@/lib/utils"; // optional, if using ShadCN's `cn` util
 import { Separator } from "@/components/ui/separator";
 
 interface BlogPostPageProps {

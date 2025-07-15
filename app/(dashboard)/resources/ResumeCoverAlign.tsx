@@ -47,7 +47,7 @@ const rules = [
 /* ─── Component ───────────────────────────────────── */
 const ResumeCoverAlign = () => {
   return (
-    <section className="space-y-16">
+    <section className="space-y-10">
       {/* Header */}
       <div className="text-center space-y-4">
         <h2 className="text-3xl font-bold text-red-600">
@@ -64,7 +64,7 @@ const ResumeCoverAlign = () => {
         collapsible
         className="bg-gray-100 rounded-xl p-6 max-w-8xl mx-auto ">
         <AccordionItem value="item-1">
-          <AccordionTrigger className="text-lg text-red-500 font-semibold">
+          <AccordionTrigger className="text-xl text-red-500 font-semibold">
             🎯 Quick Alignment Checklist
           </AccordionTrigger>
           <AccordionContent asChild>
@@ -96,7 +96,7 @@ const ResumeCoverAlign = () => {
         }}>
         {rules.map((rule, idx) => (
           <motion.div
-            key={rule.title}
+            key={idx}
             variants={{
               hidden: { opacity: 0, y: 40 },
               show: { opacity: 1, y: 0, transition: { duration: 0.6 } },

@@ -1,7 +1,13 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
+import resumeTipsImg from "@/assets/resume.jpg";
+import Image from "next/image";
+import MilitaryToCivilianDetail from "./details/MilitaryToCivilianDetail";
+import CollegeToCareerDetail from "./details/CollegeToCareerDetail";
+import CareerChangersDetail from "./details/CareerChangeDetail";
+import UniversalTipsDetail from "./details/UniversalTipsDetail";
 
 /* ── Animation variants ───────────────────────────── */
 const containerVariants = {
@@ -10,6 +16,8 @@ const containerVariants = {
     transition: { staggerChildren: 0.15, delayChildren: 0.2 },
   },
 };
+
+type ResumeTopic = "military" | "college" | "careerChange" | "universal" | null;
 
 const cardVariants = {
   hidden: { opacity: 0, y: 40 },
@@ -24,8 +32,14 @@ interface TipCardProps {
   bullets: string[];
 }
 
-const TipCard = ({ title, emoji, bullets }: TipCardProps) => (
+const TipCard = ({
+  title,
+  emoji,
+  bullets,
+  onClick,
+}: TipCardProps & { onClick: () => void }) => (
   <motion.div
+    onClick={onClick}
     variants={cardVariants}
     initial="hidden"
     whileInView="show"
@@ -45,18 +59,48 @@ const TipCard = ({ title, emoji, bullets }: TipCardProps) => (
 
 /* ── Main component ───────────────────────────────── */
 const ResumeTips = () => {
+  const [activeTopic, setActiveTopic] = useState<ResumeTopic>(null);
+
+  const renderDetailView = () => {
+    switch (activeTopic) {
+      case "military":
+        return <MilitaryToCivilianDetail onBack={() => setActiveTopic(null)} />;
+      case "college":
+        return <CollegeToCareerDetail onBack={() => setActiveTopic(null)} />;
+      case "careerChange":
+        return <CareerChangersDetail onBack={() => setActiveTopic(null)} />;
+      case "universal":
+        return <UniversalTipsDetail onBack={() => setActiveTopic(null)} />;
+      default:
+        return null;
+    }
+  };
+
+  if (activeTopic) return renderDetailView();
+
   return (
-    <section className="space-y-10">
-      {/* Title */}
-      <div className="text-center space-y-3">
-        <h2 className="text-3xl font-bold text-red-600">
-          Resume Tips for Every Journey
-        </h2>
-        <p className="text-gray-700 max-w-2xl mx-auto">
-          Whether you're transitioning from the military, stepping out of
-          college, or switching careers—these resume tips will help you tell
-          your story with clarity and confidence.
-        </p>
+    <section className="">
+      {/* Title + Image Side by Side on Desktop */}
+      <div className="flex flex-col p-10 bg-gray-50 mb-5 md:flex-row items-center md:items-center justify-around gap-10 text-center">
+        <div className="md:flex-1 space-y-3 ">
+          <h2 className="text-3xl font-bold text-red-600">
+            Resume Tips for Every Journey
+          </h2>
+          <p className="text-gray-700 ">
+            Whether you're transitioning from the military, stepping out of
+            college, or switching careers—these resume tips will help you tell
+            your story with clarity and confidence.
+          </p>
+        </div>
+        <div className="w-full max-w-[250px] mx-auto md:mx-0">
+          <Image
+            src={resumeTipsImg}
+            alt="Resume Tips Illustration"
+            width={400}
+            height={300}
+            className="rounded-lg shadow w-full h-auto "
+          />
+        </div>
       </div>
 
       {/* Tips Grid with stagger */}
@@ -75,6 +119,7 @@ const ResumeTips = () => {
             "Avoid acronyms unless they’re explained.",
             "Use a skills summary to connect your experience to the target job.",
           ]}
+          onClick={() => setActiveTopic("military")}
         />
 
         <TipCard
@@ -86,6 +131,7 @@ const ResumeTips = () => {
             "Include relevant coursework or certifications.",
             "Keep it to one page unless your experience warrants more.",
           ]}
+          onClick={() => setActiveTopic("college")}
         />
 
         <TipCard
@@ -97,6 +143,7 @@ const ResumeTips = () => {
             "Show how previous roles build toward this new path.",
             'Explain your "why" in the cover letter.',
           ]}
+          onClick={() => setActiveTopic("careerChange")}
         />
 
         <TipCard
@@ -108,6 +155,7 @@ const ResumeTips = () => {
             "Quantify results (“increased efficiency by 25%”).",
             "Proofread—typos are deal-breakers.",
           ]}
+          onClick={() => setActiveTopic("universal")}
         />
       </motion.div>
 
@@ -124,102 +172,6 @@ const ResumeTips = () => {
           table.”
         </p>
       </motion.div>
-      {/* Top 20 Resume Tips Section */}
-      {/* <div className="bg-white rounded-xl shadow-lg p-6 md:p-10 space-y-6">
-  <h2 className="text-2xl font-bold text-red-600 text-center">
-    ✅ Top 20 Resume Tips (With Examples)
-  </h2>
-  <ul className="space-y-6 text-gray-800 text-base leading-relaxed list-decimal list-inside">
-    {[
-      {
-        title: "Start With a Strong Summary",
-        example: `“Results-driven project manager with 10+ years of experience... Seeking to contribute to a growing tech company.”`,
-      },
-      {
-        title: "Customize for Every Job",
-        example: `If a job description says “experience with CRM systems,” update your resume to include “CRM systems like Salesforce and HubSpot.”`,
-      },
-      {
-        title: "Keep the Format Clean and Simple",
-        example: `Use bold section titles like “Experience” and “Education,” 11-12 pt font, and consistent spacing.`,
-      },
-      {
-        title: "Add a Skills or Core Competencies Section",
-        example: `Skills: Project Management | Budgeting | Data Analysis | Excel | Remote Team Leadership | Government Contracting`,
-      },
-      {
-        title: "Use Numbers to Show Impact",
-        example: `“Increased client retention by 25% in 6 months.”`,
-      },
-      {
-        title: "Start Bullet Points With Strong Verbs",
-        example: `“Managed a team of 12 technicians across five locations.”`,
-      },
-      {
-        title: "Focus on Results, Not Just Tasks",
-        example: `✅ “Streamlined employee schedules, reducing overtime by 20%.”`,
-      },
-      {
-        title: "Keep It 1–2 Pages",
-        example: `1 page for early career, 2 pages if 10+ years. Focus on the last 10–15 years.`,
-      },
-      {
-        title: "Ditch the Objective Statement",
-        example: `✅ “Experienced logistics coordinator with a track record of reducing supply chain delays by 40%.”`,
-      },
-      {
-        title: "Send as a PDF (Unless Told Otherwise)",
-        example: `Only use Word if the employer requests it.`,
-      },
-      {
-        title: "Show Career Growth",
-        example: `Each job title in a promotion ladder proves progression.`,
-      },
-      {
-        title: "List Certifications & Clearances",
-        example: `CompTIA Security+ | PMP Certified | Active Secret Clearance`,
-      },
-      {
-        title: "Translate Military to Civilian Language",
-        example: `✅ “Led administrative operations for a 400-member unit.”`,
-      },
-      {
-        title: "Use Job Description Keywords",
-        example: `✅ “Managed vendor relationships to improve delivery time by 15%.”`,
-      },
-      {
-        title: "Include Your LinkedIn Profile",
-        example: `linkedin.com/in/yourname`,
-      },
-      {
-        title: "Mention Remote or Hybrid Work Experience",
-        example: `✅ “Managed virtual teams across 3 time zones.”`,
-      },
-      {
-        title: "Prove Soft Skills with Actions",
-        example: `✅ “Facilitated weekly cross-department meetings to reduce delays by 20%.”`,
-      },
-      {
-        title: "Include Volunteer or Side Projects",
-        example: `✅ “Coordinated logistics for a nonprofit food drive.”`,
-      },
-      {
-        title: "Be Consistent with Formatting",
-        example: `Same date formats, bullet style, and font throughout.`,
-      },
-      {
-        title: "Proofread. Then Proofread Again.",
-        example: `Use Grammarly or read out loud to catch typos.`,
-      },
-    ].map((tip, idx) => (
-      <li key={idx}>
-        <strong>{tip.title}</strong>
-        <br />
-        <span className="text-gray-600 italic">Example:</span> {tip.example}
-      </li>
-    ))}
-  </ul>
-</div> */}
     </section>
   );
 };

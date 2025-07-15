@@ -70,7 +70,7 @@ const ResourceCategories = () => {
              bg-white px-6 sm:px-8 py-3 sm:py-4
              rounded-3xl shadow-2xl">
         <h2 className="text-red-500 text-3xl sm:text-5xl font-extrabold text-center">
-          Explore
+          Explore Interview & Resume Tips
         </h2>
       </div>
 

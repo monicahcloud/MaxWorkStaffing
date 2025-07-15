@@ -40,10 +40,9 @@ export default function LinksDropdown() {
     "Personal Profile": "profile-link",
     "Job Search": "job-search-link",
     "Job Tracker": "job-tracker-link",
-
     Stats: "stats-link",
     "AI Mock Interview": "mock-interview-link",
-    "Interviewing Tools": "interviewing-tools-link",
+    "Expert Interview & Resume Tips": "interviewing-tools-link",
     FAQs: "faqs-link",
     Support: "support-link",
   };

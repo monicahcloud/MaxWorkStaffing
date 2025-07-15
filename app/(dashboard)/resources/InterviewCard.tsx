@@ -8,11 +8,6 @@ type Props = {
   card: Card;
 };
 
-/**
- * A standalone card that can expand/collapse itself.
- * If you later prefer a dialog modal, swap the internal state
- * for ShadCN <Dialog> primitives without touching the parent list.
- */
 export default function InterviewCard({ card }: Props) {
   const [expanded, setExpanded] = useState(false);
 

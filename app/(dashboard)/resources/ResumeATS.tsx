@@ -100,10 +100,21 @@ const ResumeATS = () => {
       <div className="text-center space-y-6">
         <div className="space-y-3">
           <h2 className="text-4xl font-bold text-red-600">
-            ATS Resume Optimization
+            Application Tracking System (ATS) Resume Optimization
           </h2>
-          <p className="text-gray-700 max-w-2xl mx-auto text-lg">
+          {/* <p className="text-gray-700 max-w-2xl mx-auto text-lg">
             Choose a view to learn how to make your resume ATS-friendly.
+          </p> */}
+          <p className="text-gray-700 max-w-2xl mx-auto text-md italic">
+            Many companies use Applicant Tracking Systems (ATS) to filter
+            resumes before a human even sees them. <br />
+            If your resume isn’t optimized, it could be rejected automatically.
+            <br />
+            The good news?{" "}
+            <span className="text-red-600 font-extrabold">
+              You can beat the bots
+            </span>
+            —and we’ll show you how.
           </p>
         </div>
 
@@ -112,13 +123,13 @@ const ResumeATS = () => {
             active={view === "timeline"}
             onClick={() => setView("timeline")}
             icon={ListOrdered}
-            label="Timeline Tips"
+            label="ATS-Proof Your Resume"
           />
           <ToggleButton
             active={view === "preview"}
             onClick={() => setView("preview")}
             icon={LayoutIcon}
-            label="Before / After Preview"
+            label="Before & After Preview"
           />
         </div>
       </div>
@@ -175,7 +186,7 @@ const ResumeATS = () => {
           {/* FULL RESUME COMPARISON */}
           <div className="max-w-5xl mx-auto space-y-6 mt-20">
             <h3 className="text-3xl font-bold text-center text-red-600">
-              🖼️ Full Resume Example: Before vs. After
+              Full Resume Example: Before vs. After
             </h3>
             <p className="text-gray-700 text-center max-w-2xl mx-auto text-lg">
               A side-by-side comparison of a poorly formatted resume and an

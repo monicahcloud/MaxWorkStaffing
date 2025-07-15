@@ -4,9 +4,10 @@ import { useState } from "react";
 import { ChevronDown, Check } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { InterviewQuestion } from "@/utils/questions";
+import Image from "next/image";
 
 /* Tooltip span helper */
-const FrameworkBadge = ({ type }: { type: "STAR" | "CAR" }) => (
+const FrameworkBadge = ({ type }: { type: "STAR" | "CAR" | "FOCUS AREA" }) => (
   <span
     className={`ml-2 group relative cursor-help inline-block px-2 py-0.5 rounded-full text-[11px] font-semibold uppercase   ${
       type === "STAR"
@@ -48,14 +49,21 @@ export default function SingleInterviewQuestion({ questions }: Props) {
     <div className="space-y-10 w-full">
       {/* Intro & Legend */}
       <section className="text-center">
+        {/* <Image
+          src="/blog/questionmark.png"
+          alt="Man transitioning from military to civilian career"
+          width={140}
+          height={300}
+          className="mx-auto absolute left-10 top-20  transition"
+          style={{ transform: "scaleX(-1)" }}
+        /> */}
         <h2 className="text-3xl sm:text-4xl font-bold text-red-600 mb-4">
           Mastering Interview Questions
         </h2>
-        <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
-          Preparation is key to standing out. From behavioral prompts to
-          technical challenges, review real-world questions and sample answers
-          to craft responses that reflect your experience, values, and
-          strengths.
+        <p className="text-muted-foreground max-w-2xl mx-auto text-md">
+          From behavioral prompts to technical challenges, review real-world
+          questions and sample answers to craft responses that reflect your
+          experience, values, and strengths.
         </p>
 
         {/* STAR / CAR legend */}
@@ -73,15 +81,22 @@ export default function SingleInterviewQuestion({ questions }: Props) {
             </span>
           </div>
         </div>
+        <Image
+          src="/blog/questionmark.png"
+          alt="Man transitioning from military to civilian career"
+          width={140}
+          height={300}
+          className="mx-auto absolute right-15 top-10 z-90   transition"
+        />
         {/* Extended legend */}
         <div className="mt-4 text-sm text-muted-foreground text-center max-w-xl mx-auto">
           <p>
-            <span className="inline-block px-2 py-0.5 rounded-full bg-red-100 text-red-600 text-[11px] font-semibold uppercase tracking-wide mr-1">
-              Communication
+            <span className="inline-block px-2 py-0.5 rounded-full bg-red-100 text-red-600 text-[10px] font-semibold uppercase mr-1">
+              Focus Area
             </span>{" "}
-            Tag badges indicate the core competency or skill the question
-            targets. These help you understand what employers are evaluating
-            (e.g., "Teamwork", "Leadership", "Data Analysis").
+            Indicates the core competency or skill the question targets. These
+            question help you understand what employers are evaluating (e.g.,
+            "Teamwork", "Leadership", "Data Analysis").
           </p>
         </div>
       </section>
@@ -166,7 +181,7 @@ export default function SingleInterviewQuestion({ questions }: Props) {
                           exit={{ opacity: 0, height: 0 }}
                           transition={{ duration: 0.3 }}
                           className="overflow-hidden px-4 pb-4">
-                          <div className="bg-gray-50 p-4 rounded-md mt-1 text-sm text-gray-700 leading-relaxed relative">
+                          <div className="bg-gray-50 p-4 rounded-md mt-1 text-sm text-gray-700 leading-relaxed relative whitespace-pre-line">
                             <div className="flex items-center gap-2 mb-2">
                               <span className="font-semibold text-red-600">
                                 Answer:

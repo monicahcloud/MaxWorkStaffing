@@ -10,6 +10,7 @@ import {
   MessageCircleQuestion,
   FilePen,
   UserCheck2,
+  BookOpen,
 } from "lucide-react";
 import { nanoid } from "nanoid";
 type DashboardLinks = {
@@ -58,12 +59,12 @@ const links: DashboardLinks[] = [
     icon: <Layers />,
   },
 
-  // {
-  //   id: nanoid(),
-  //   label: "Stats",
-  //   href: "/stats",
-  //   icon: <AreaChart />,
-  // },
+  {
+    id: nanoid(),
+    label: "Articles & Insights",
+    href: "/blog",
+    icon: <BookOpen />,
+  },
   // {
   //   id: nanoid(),
   //   label: "AI Mock Interview",
@@ -72,7 +73,7 @@ const links: DashboardLinks[] = [
   // },
   {
     id: nanoid(),
-    label: "Expert Interview Tips",
+    label: "Expert Interview & Resume Tips",
     href: "/resources",
     icon: <UserCheck2 />,
   },
