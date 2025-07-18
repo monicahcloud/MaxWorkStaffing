@@ -89,8 +89,10 @@ export const linkGroups: LinkGroup[] = [
     ],
   },
 ];
-
-export const GroupedSidebarLinks = () => {
+interface Props {
+  onLinkClick?: () => void;
+}
+export const GroupedSidebarLinks = ({ onLinkClick }: Props) => {
   const pathname = usePathname();
 
   return (
@@ -105,6 +107,7 @@ export const GroupedSidebarLinks = () => {
               <li key={link.href}>
                 <Link
                   href={link.href}
+                  onClick={onLinkClick} // 👈 Add this line
                   className={clsx(
                     "flex items-center gap-3 px-3 py-1 rounded-md transition-colors text-lg",
                     pathname === link.href

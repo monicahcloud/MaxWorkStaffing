@@ -13,7 +13,7 @@ export function DashboardLinks() {
     <>
       {/* Replace dynamic name with static fallback */}
       <div className="flex mx-auto justify-center items-center text-center mb-4">
-        <h1 className="text-2xl font-extrabold text-blue-900 capitalize">
+        <h1 className="text-2xl font-extrabold text-primary capitalize">
           Welcome, {user?.firstName || user?.username || "User"}{" "}
           {user?.lastName || ""}
         </h1>

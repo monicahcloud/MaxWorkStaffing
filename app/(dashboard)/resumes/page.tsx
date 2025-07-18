@@ -1,7 +1,6 @@
 export const dynamic = "force-dynamic";
 
 import React from "react";
-import { Metadata } from "next";
 import SectionTitle from "@/components/SectionTitle";
 import { resumeDataInclude } from "@/lib/types";
 import { auth } from "@clerk/nextjs/server";
@@ -11,8 +10,26 @@ import CreateResumeButton from "./CreateReumeButton";
 import { getUserSubscriptionLevel } from "@/lib/subscription";
 import UploadResumeButton from "./UploadResumeButton";
 
-export const metadata: Metadata = {
-  title: "My Resumes",
+export const metadata = {
+  title: "My Resume",
+  description:
+    "Easily build a professional, recruiter-approved resume with AI-powered guidance. Start from scratch or upload your current resume to enhance it.",
+  openGraph: {
+    title: "My Resume | Max ResumeBuilder",
+    description:
+      "Build a job-winning resume in minutes. ATS-friendly, customizable templates designed to get you hired.",
+    url: "https://www.maxresumebuilder.com/resumebuilder",
+    images: [{ url: "/og/resume-builder.png", width: 1200, height: 630 }],
+    siteName: "Max ResumeBuilder",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Build Your Resume with AI",
+    description:
+      "Fast, flexible, and proven to impress recruiters. Create a resume that gets results.",
+    images: ["/og/resume-builder.png"],
+  },
 };
 
 async function Page() {

@@ -3,6 +3,26 @@ import prisma from "@/lib/prisma";
 import Image from "next/image";
 // import { cn } from "@/lib/utils"; // optional, if using ShadCN's `cn` util
 import { Separator } from "@/components/ui/separator";
+export const metadata = {
+  title: "Career & Resume Tips Blog",
+  description:
+    "Expert advice on resumes, interviews, cover letters, and career growth. Updated weekly with actionable content.",
+  openGraph: {
+    title: "Max ResumeBuilder Blog",
+    description:
+      "Insights to level up your job search — from resume writing to acing your next interview.",
+    url: "https://www.maxresumebuilder.com/blog",
+    images: [{ url: "/og/blog-home.png", width: 1200, height: 630 }],
+    siteName: "Max ResumeBuilder",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Career Tips & Resume Advice",
+    description: "Weekly content to help you stand out and get hired faster.",
+    images: ["/og/blog-home.png"],
+  },
+};
 
 interface BlogPostPageProps {
   params: Promise<{ slug: string }>;
