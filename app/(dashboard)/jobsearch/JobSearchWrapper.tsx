@@ -77,7 +77,7 @@ export default function JobSearchWrapper() {
 
   /* initial blank load once */
   useEffect(() => {
-    fetchJobs(); // eslint-disable-next-line react-hooks/exhaustive-deps
+    fetchJobs();
   }, []);
 
   /* onClick handler */
