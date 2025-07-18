@@ -97,7 +97,7 @@ export const GroupedSidebarLinks = () => {
     <div className="space-y-6 text-muted-foreground">
       {linkGroups.map((group, groupIdx) => (
         <div key={group.title}>
-          <h4 className="px-3 text-md font-semibold tracking-wide text-gray-400 uppercase mb-2">
+          <h4 className="px-3 text-lg font-semibold tracking-wide text-gray-400 uppercase mb-2">
             {group.title}
           </h4>
           <ul className="space-y-1">
@@ -106,9 +106,9 @@ export const GroupedSidebarLinks = () => {
                 <Link
                   href={link.href}
                   className={clsx(
-                    "flex items-center gap-3 px-3 py-2 rounded-md transition-colors",
+                    "flex items-center gap-3 px-3 py-1 rounded-md transition-colors text-lg",
                     pathname === link.href
-                      ? "bg-muted text-foreground font-semibold"
+                      ? "bg-muted font-semibold text-red-700"
                       : "hover:bg-muted/70"
                   )}>
                   {link.icon}

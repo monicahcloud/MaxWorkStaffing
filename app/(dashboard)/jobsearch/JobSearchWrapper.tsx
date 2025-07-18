@@ -91,7 +91,7 @@ export default function JobSearchWrapper() {
       {/* controls */}
       <div className="mb-6 flex flex-col gap-4 md:flex-row">
         <Input
-          placeholder="Job title / keywords"
+          placeholder="Job Title / Keywords"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           className="md:flex-1"
@@ -111,6 +111,13 @@ export default function JobSearchWrapper() {
           </SelectContent>
         </Select>
 
+        {/* city */}
+        <Input
+          placeholder="City (optional)"
+          value={city}
+          onChange={(e) => setCity(e.target.value)}
+          className="md:flex-1"
+        />
         {/* category */}
         <Select value={catSlug} onValueChange={setCatSlug}>
           <SelectTrigger className="md:flex-1">
@@ -124,14 +131,6 @@ export default function JobSearchWrapper() {
             ))}
           </SelectContent>
         </Select>
-
-        {/* city */}
-        <Input
-          placeholder="City (optional)"
-          value={city}
-          onChange={(e) => setCity(e.target.value)}
-          className="md:flex-1"
-        />
 
         <Button onClick={onSearch} disabled={loading}>
           {loading ? "Searching…" : "Search"}

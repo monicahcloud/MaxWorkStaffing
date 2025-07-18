@@ -13,7 +13,7 @@ import {
 import { Card } from "@/components/ui/card";
 import SectionTitle from "@/components/SectionTitle";
 import { US_STATES } from "@/utils/states";
-import { jobIndustries } from "@/utils/industry";
+// import { jobIndustries } from "@/utils/industry";
 import { fetchJobsBrowser } from "./fetchJobsBrowser";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { loadCategories } from "@/utils/categories.client";
@@ -63,7 +63,11 @@ export default function JobListingsView({ filters, initialJobs }: Props) {
     initialJobs[0] ?? null
   );
   const [loading, setLoading] = useState(false);
-
+  const [cats, setCats] = useState<{ label: string; slug: string }[]>([]);
+  const [catSlug, setCatSlug] = useState<string | undefined>();
+  useEffect(() => {
+    loadCategories().then(setCats).catch(console.error);
+  }, []);
   /* ---------- keep inputs in sync if parent props change (Back button) ----- */
   useEffect(() => {
     setKeyword(filters.keyword ?? "");
@@ -119,8 +123,7 @@ export default function JobListingsView({ filters, initialJobs }: Props) {
       setLoading(false);
     }
   };
-
-  /* -------------------------------- render --------------------------------- */
+  /* ----------------------------- render inputs ----------------------------- */
   return (
     <div className="p-6 space-y-6 max-w-7xl mx-auto">
       <SectionTitle text="Detailed Job Search" subtext="" />
@@ -172,14 +175,14 @@ export default function JobListingsView({ filters, initialJobs }: Props) {
         />
 
         {/* Category */}
-        <Select value={category} onValueChange={setCategory}>
-          <SelectTrigger className="min-w-[160px]" aria-label="Category">
+        <Select value={catSlug} onValueChange={setCatSlug}>
+          <SelectTrigger className="w-full md:w-56 h-10">
             <SelectValue placeholder="Category" />
           </SelectTrigger>
           <SelectContent>
-            {jobIndustries.map((cat) => (
-              <SelectItem key={cat} value={cat}>
-                {cat}
+            {cats.map((c) => (
+              <SelectItem key={c.slug} value={c.slug}>
+                {c.label}
               </SelectItem>
             ))}
           </SelectContent>
@@ -213,8 +216,8 @@ export default function JobListingsView({ filters, initialJobs }: Props) {
                 Nothing matched your search 🤔
               </p>
               <p className="mt-1 text-sm">
-                Try a different keyword, broaden the location, or pick another
-                category.
+                Try a different keyword, broaden the location, check your
+                spelling or pick another category.
               </p>
             </div>
           ) : (

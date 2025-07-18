@@ -26,20 +26,20 @@ import manufactoring from "../../../assets/manufactoring.jpg";
 import construction from "../../../assets/construction.jpg";
 import media from "../../../assets/media.jpg";
 import retail from "../../../assets/retail.jpg";
-import telecom from "../../../assets/telecom.jpg";
+import consult from "../../../assets/consult.jpg";
 import business from "../../../assets/business.jpg";
 import engineer from "../../../assets/engineer.jpg";
 
 /* ------------ featured category definitions ------------ */
 const FEATURED: { title: string; image: any }[] = [
-  { title: "Financial Services", image: business },
-  { title: "Healthcare and Nursing", image: healthcare },
+  { title: "Accounting & Finance", image: business },
+  { title: "Healthcare & Nursing", image: healthcare },
   { title: "Manufacturing", image: manufactoring },
-  { title: "Information Technology", image: engineer },
-  { title: "Trade and Construction", image: construction },
+  { title: "Engineering", image: engineer },
+  { title: "Trade & Construction", image: construction },
   { title: "PR, Advertising & Marketing", image: media },
   { title: "Retail", image: retail },
-  { title: "Telecommunications", image: telecom },
+  { title: "HR & Recruitment", image: consult },
 ];
 
 export default function JobSearch() {

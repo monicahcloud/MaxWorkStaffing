@@ -84,6 +84,8 @@ export async function GET(req: NextRequest) {
     console.error("❌ Adzuna error payload:", text.slice(0, 200));
     return NextResponse.json({ error: "Adzuna error" }, { status: 502 });
   }
+  console.log("🔍 Adzuna URL:", url);
+  console.log("🧭 category:", { input: catRaw, resolved: catSlug });
 
   const { results = [] } = await res.json();
   return NextResponse.json(results);
