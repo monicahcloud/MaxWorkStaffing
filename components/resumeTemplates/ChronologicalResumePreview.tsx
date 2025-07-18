@@ -106,23 +106,23 @@ function PersonalInfoHeader({ resumeData }: ResumePreviewProps) {
       )}
 
       {/* Centered content */}
-      <div className="text-center space-y-1 capitalize">
-        <div className="capitalize">
+      <div className="text-center space-y-1 ">
+        <div className="">
           <p
-            className="text-4xl font-bold"
+            className="text-4xl font-bold capitalize"
             style={{
               color: themeColor,
             }}>
             {firstName} {lastName}
           </p>
           <p
-            className="text-2xl"
+            className="text-2xl capitalize"
             style={{
               color: themeColor,
             }}>
             {jobTitle}
           </p>
-          <p className="text-xl">{address}</p>
+          <p className="text-xl capitalize">{address}</p>
         </div>
 
         <p className="text-sm text-gray-700">
@@ -211,7 +211,7 @@ function WorkExperienceSection({ resumeData }: ResumePreviewProps) {
 
               <span>{exp.location}</span>
             </div>
-            <div className="whitespace-pre-line text-xs capitalize">
+            <div className="whitespace-pre-line text-xs ">
               {exp.description}
             </div>
           </div>

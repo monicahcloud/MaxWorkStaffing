@@ -97,7 +97,7 @@ export const GroupedSidebarLinks = () => {
     <div className="space-y-6 text-muted-foreground">
       {linkGroups.map((group, groupIdx) => (
         <div key={group.title}>
-          <h4 className="px-3 text-xs font-semibold tracking-wide text-gray-400 uppercase mb-2">
+          <h4 className="px-3 text-md font-semibold tracking-wide text-gray-400 uppercase mb-2">
             {group.title}
           </h4>
           <ul className="space-y-1">
@@ -118,7 +118,7 @@ export const GroupedSidebarLinks = () => {
             ))}
           </ul>
           {groupIdx < linkGroups.length - 1 && (
-            <hr className="my-4 border-muted" />
+            <hr className="my-4 border-red-700" />
           )}
         </div>
       ))}
