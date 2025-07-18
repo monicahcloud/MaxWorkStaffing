@@ -106,8 +106,8 @@ function PersonalInfoHeader({ resumeData }: ResumePreviewProps) {
       )}
 
       {/* Centered content */}
-      <div className="text-center space-y-1">
-        <div className="">
+      <div className="text-center space-y-1 capitalize">
+        <div className="capitalize">
           <p
             className="text-4xl font-bold"
             style={{
@@ -155,11 +155,11 @@ function SummarySection({ resumeData }: ResumePreviewProps) {
       />
       <div className="break-inside-avoid space-y-3">
         <p
-          className="text-lg font-semibold text-center"
+          className="text-lg font-semibold text-center capitalize"
           style={{
             color: themeColor,
           }}>
-          Professional profile
+          Professional Summary
         </p>
         <div className="whitespace-pre-line text-sm">{summary}</div>
       </div>
@@ -178,7 +178,7 @@ function WorkExperienceSection({ resumeData }: ResumePreviewProps) {
   return (
     <>
       <hr
-        className="border-2"
+        className="border-2 capitalize"
         style={{
           borderColor: themeColor,
         }}
@@ -192,7 +192,7 @@ function WorkExperienceSection({ resumeData }: ResumePreviewProps) {
           Work experience
         </p>
         {workExperiencesNotEmpty.map((exp, index) => (
-          <div key={index} className="break-inside-avoid space-y-1">
+          <div key={index} className="break-inside-avoid space-y-1 capitalize">
             <div
               className="flex items-center justify-between text-sm font-semibold"
               style={{
@@ -206,12 +206,14 @@ function WorkExperienceSection({ resumeData }: ResumePreviewProps) {
                 </span>
               )}
             </div>
-            <div className="flex items-center justify-between text-xs font-semibold">
+            <div className="flex items-center justify-between capitalize text-xs font-semibold">
               <span>{exp.company}</span>
 
               <span>{exp.location}</span>
             </div>
-            <div className="whitespace-pre-line text-xs">{exp.description}</div>
+            <div className="whitespace-pre-line text-xs capitalize">
+              {exp.description}
+            </div>
           </div>
         ))}
       </div>
@@ -235,7 +237,7 @@ function EducationSection({ resumeData }: ResumePreviewProps) {
           borderColor: themeColor,
         }}
       />
-      <div className="space-y-3">
+      <div className="space-y-3 capitalize">
         <p
           className="text-lg font-semibold uppercase text-center"
           style={{
@@ -244,7 +246,7 @@ function EducationSection({ resumeData }: ResumePreviewProps) {
           Education
         </p>
         {educationsNotEmpty.map((edu, index) => (
-          <div key={index} className="break-inside-avoid space-y-1">
+          <div key={index} className="break-inside-avoid space-y-1 capitalize">
             <div
               className="flex items-center justify-between text-sm font-semibold"
               style={{
@@ -286,7 +288,7 @@ function SkillsSection({ resumeData }: ResumePreviewProps) {
           borderColor: themeColor,
         }}
       />
-      <div className="break-inside-avoid space-y-3">
+      <div className="break-inside-avoid space-y-3 capitalize">
         <p
           className="text-lg font-semibold uppercase text-center"
           style={{
@@ -294,11 +296,11 @@ function SkillsSection({ resumeData }: ResumePreviewProps) {
           }}>
           Skills
         </p>
-        <div className="flex break-inside-avoid flex-wrap gap-2">
+        <div className="flex break-inside-avoid flex-wrap gap-2 capitalize">
           {skills.map((skill, index) => (
             <Badge
               key={index}
-              className="rounded-md bg-black text-white hover:bg-black  justify-between"
+              className="rounded-md bg-black text-white hover:bg-black capitalize justify-between"
               style={{
                 backgroundColor: themeColor,
                 borderRadius:
@@ -327,7 +329,7 @@ function TechnicalSkillsSection({ resumeData }: ResumePreviewProps) {
           borderColor: themeColor,
         }}
       />
-      <div className="break-inside-avoid space-y-3">
+      <div className="break-inside-avoid space-y-3 capitalize">
         <p
           className="text-lg font-semibold uppercase text-center"
           style={{
@@ -335,16 +337,16 @@ function TechnicalSkillsSection({ resumeData }: ResumePreviewProps) {
           }}>
           Technical Skills
         </p>
-        <div className="flex break-inside-avoid flex-wrap gap-2">
+        <div className="flex break-inside-avoid flex-wrap gap-2 capitalize">
           {techSkills.map((skill, index) => {
             const ratingPercentage = skill.rating * 20;
 
             return (
               <div
                 key={index}
-                className="flex items-center justify-between gap-4">
+                className="flex items-center justify-between gap-4 capitalize">
                 <h2 className="text-xs">{skill.name}</h2>
-                <div className="h-2 bg-gray-200 w-[120px]">
+                <div className="h-2 bg-gray-200 w-[120px] capitalize">
                   <div
                     className="h-2"
                     style={{
@@ -382,9 +384,11 @@ function InterestSection({ resumeData }: ResumePreviewProps) {
           }}>
           Interests
         </p>
-        <ul className="flex flex-wrap gap-x-4 gap-y-2 list-none">
+        <ul className="flex flex-wrap gap-x-4 gap-y-2 list-none capitalize">
           {interest.map((item, index) => (
-            <li key={index} className="flex items-center gap-2 text-sm">
+            <li
+              key={index}
+              className="flex items-center gap-2 text-sm capitalize">
               <Heart size={14} style={{ color: themeColor }} />
               {item}
             </li>

@@ -27,6 +27,7 @@ import { getUserSubscriptionLevel } from "@/lib/subscription";
 import { getUserMetadata, markUserAsReturning } from "@/lib/user";
 import { Metadata } from "next";
 import { UserProgressProvider } from "@/components/UserProgressContext";
+import { GroupedSidebarLinks } from "@/utils/links";
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -72,7 +73,7 @@ async function Dashboardlayout({ children }: PropsWithChildren) {
                   />
                 </Link>
               </div>
-              <nav className="flex-1 grid items-start text-white text-sm font-medium mt-20 px-2 lg:px-4">
+              <nav className="flex-1 grid items-start text-sm font-medium mt-20 px-2 lg:px-4">
                 <DashboardLinks />
               </nav>
             </div>
@@ -95,7 +96,7 @@ async function Dashboardlayout({ children }: PropsWithChildren) {
                 </SheetTrigger>
                 <SheetContent side="left">
                   <nav className="grid gap-2 mt-15">
-                    <LinksDropdown />
+                    <GroupedSidebarLinks />
                   </nav>
                 </SheetContent>
               </Sheet>

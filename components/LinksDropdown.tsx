@@ -1,6 +1,7 @@
 "use client";
+
 import { cn } from "@/lib/utils";
-import links from "@/utils/links";
+import { linkGroups } from "@/components/DashboardLink"; // ✅ Updated
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
@@ -23,7 +24,9 @@ const tooltipDescriptions = {
   "Job Search": "Find and apply to job opportunities tailored to you.",
   Stats: "See real-time insights into your job search activity and results.",
   "AI Mock Interview": "Practice interviews with instant AI-powered feedback.",
-  "Interviewing Tools": "Browse resources to help you prep and stand out.",
+  "Expert Interview & Resume Tips":
+    "Browse resources to help you prep and stand out.",
+  "Articles & Insights": "Explore expert-written posts and career insights.",
   Pricing: "Explore plans and features to level up your job search tools.",
   FAQs: "Get quick answers to the most common questions.",
   Support: "Reach out to our team for help and guidance.",
@@ -43,34 +46,47 @@ export default function LinksDropdown() {
     Stats: "stats-link",
     "AI Mock Interview": "mock-interview-link",
     "Expert Interview & Resume Tips": "interviewing-tools-link",
+    "Articles & Insights": "articles-link",
+    Pricing: "pricing-link",
     FAQs: "faqs-link",
     Support: "support-link",
   };
 
   return (
     <TooltipProvider>
-      {links.map((link) => (
-        <Tooltip key={link.id}>
-          <TooltipTrigger asChild>
-            <Link
-              className={cn(
-                linkClassNames[link.label], // <-- Add unique class here
-                pathname === link.href
-                  ? "text-primary bg-primary/10"
-                  : "text-muted-foreground hover:text-foreground",
-                "flex items-center gap-3 rounded-lg px-3 py-1.5 text-xl transition-all hover:text-primary"
-              )}
-              href={link.href}>
-              {link.icon}
-              <span className="capitalize">{link.label}</span>
-            </Link>
-          </TooltipTrigger>
-          <TooltipContent
-            side="right"
-            className="bg-primary text-white px-4 py-2 rounded-lg shadow-lg border border-primary/60 text-base font-medium">
-            {tooltipDescriptions[link.label]}
-          </TooltipContent>
-        </Tooltip>
+      {linkGroups.map((group) => (
+        <div key={group.title} className="mb-4">
+          <div className="text-md font-bold uppercase text-muted-foreground px-3 mb-1">
+            {group.title}
+          </div>
+          <div className="space-y-1">
+            {group.items.map((link) => (
+              <Tooltip key={link.href}>
+                <TooltipTrigger asChild>
+                  <Link
+                    href={link.href}
+                    className={cn(
+                      linkClassNames[link.label as keyof typeof linkClassNames],
+                      pathname === link.href
+                        ? "text-primary bg-primary/10"
+                        : "text-muted-foreground hover:text-foreground",
+                      "flex items-center gap-3 rounded-lg px-3 py-1.5 text-base transition-all hover:text-primary"
+                    )}>
+                    {link.icon}
+                    <span className="capitalize">{link.label}</span>
+                  </Link>
+                </TooltipTrigger>
+                <TooltipContent
+                  side="right"
+                  className="bg-primary text-white px-4 py-2 rounded-lg shadow-lg border border-primary/60 text-sm font-medium">
+                  {tooltipDescriptions[link.label] ??
+                    "Navigate to this section."}
+                </TooltipContent>
+              </Tooltip>
+            ))}
+          </div>
+          <hr className="my-4 border-muted" />
+        </div>
       ))}
     </TooltipProvider>
   );

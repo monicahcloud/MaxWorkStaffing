@@ -68,7 +68,7 @@
 "use client";
 
 import { Card } from "@/components/ui/card";
-import { File, FileText, NotebookPen } from "lucide-react";
+import { File, FileSearch, FileText, NotebookPen } from "lucide-react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 
@@ -84,8 +84,13 @@ const toolCards = [
     linkHref: "coverletter",
   },
   {
+    icon: <FileSearch className="text-blue-600 w-6 h-6" />,
+    title: "Job Search",
+    linkHref: "jobsearch",
+  },
+  {
     icon: <File className="text-blue-600 w-6 h-6" />,
-    title: "Add Job To Job Tracker",
+    title: " Job Tracker",
     linkHref: "addJob",
   },
 ];
@@ -99,7 +104,7 @@ export const ResumeTools = () => {
         <h3 className="text-2xl font-extrabold text-blue-900 mb-4">
           Explore Our Job Tools
         </h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           {toolCards.map((tool, idx) => (
             <motion.button
               key={idx}
