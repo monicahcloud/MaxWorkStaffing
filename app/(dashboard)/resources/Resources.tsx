@@ -3,26 +3,31 @@
 import ResourceCategories from "./ResourceCategories";
 import SectionWithVideoModal from "./SectionWithVideoModal";
 import TypesofInterviews from "./TypesofInterviews";
+import InterviewPlaybookDownload from "./InterviewPlaybookDownload";
+import SectionTitle from "@/components/SectionTitle";
+import TypesofResumes from "./TypesofResumes";
 
 /* ── Poster thumbnails ────────────────────────────── */
 import interviewPoster from "../../../assets/questionsthumb.png";
 import resumePoster from "../../../assets/resumesthumb.png";
 import questionsPoster from "../../../assets/interviewthumb.png";
-import InterviewPlaybookDownload from "./InterviewPlaybookDownload";
-import SectionTitle from "@/components/SectionTitle";
-import TypesofResumes from "./TypesofResumes";
 
 const Resources = () => (
-  <>
+  <div className="w-full ">
     <SectionTitle
       text="Get Noticed. Get the Job."
       subtext="Supercharge your resume and master interviews with bold, actionable tips that work."
     />
+
     {/* Top quick-nav grid */}
-    <ResourceCategories />
+    <div className="px-4 sm:px-6 md:px-10 mt-20">
+      <ResourceCategories />
+    </div>
 
     {/* ────────────────────── 1. Interview Types ────────────────────── */}
-    <section id="interview-details" className="py-5 px-4 bg-gray-50">
+    <section
+      id="interview-details"
+      className="py-6 px-4 sm:px-6 md:px-10 bg-gray-50">
       <SectionWithVideoModal
         title="Cracking the Interview Code"
         description="Explore two key areas of interview prep: understanding different interview types and mastering how to respond to common questions with confidence."
@@ -39,12 +44,15 @@ const Resources = () => (
           },
         ]}
       />
-
-      <TypesofInterviews />
+      <div className="mt-6">
+        <TypesofInterviews />
+      </div>
     </section>
 
     {/* ────────────────────── 2. Resume Types ──────────────────────── */}
-    <section id="resume-details" className="py-5 px-4 bg-white">
+    <section
+      id="resume-details"
+      className="py-6 px-4 sm:px-6 md:px-10 bg-white">
       <SectionWithVideoModal
         title="Resumes Tips and Tricks"
         description="Choose the resume format that best showcases your experience."
@@ -56,12 +64,16 @@ const Resources = () => (
           },
         ]}
       />
-      <TypesofResumes />
+      <div className="mt-6">
+        <TypesofResumes />
+      </div>
     </section>
 
-    {/* ────────────────────── 4. Downloadable eBook ─────────────────────── */}
-    <InterviewPlaybookDownload />
-  </>
+    {/* ────────────────────── 3. Downloadable eBook ─────────────────────── */}
+    <div className="px-4 sm:px-6 md:px-10">
+      <InterviewPlaybookDownload />
+    </div>
+  </div>
 );
 
 export default Resources;
