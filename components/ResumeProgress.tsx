@@ -52,7 +52,7 @@ export default function ResumeProgress({ completed }: ResumeProgressProps) {
       {/* Progress Bar */}
       <div className="relative h-3 bg-gray-200 rounded-full w-full">
         <div
-          className="absolute top-0 left-0 h-3 bg-rose-800 rounded-full transition-all duration-300"
+          className="absolute top-0 left-0 h-3 bg-red-600 rounded-full transition-all duration-300"
           style={{ width: `${percentage}%` }}
         />
       </div>

@@ -21,11 +21,11 @@ const toolCards = [
     title: "Job Search",
     linkHref: "jobsearch",
   },
-  {
-    icon: <File className="text-blue-600 w-6 h-6" />,
-    title: " Job Tracker",
-    linkHref: "addJob",
-  },
+  // {
+  //   icon: <File className="text-blue-600 w-6 h-6" />,
+  //   title: " Job Tracker",
+  //   linkHref: "addJob",
+  // },
 ];
 
 export const ResumeTools = () => {
@@ -37,7 +37,7 @@ export const ResumeTools = () => {
         <h3 className="text-2xl font-extrabold text-blue-900 mb-4">
           Explore Our Job Tools
         </h3>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {toolCards.map((tool, idx) => (
             <motion.button
               key={idx}

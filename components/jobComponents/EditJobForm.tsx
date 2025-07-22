@@ -19,12 +19,35 @@ import SectionTitle from "../SectionTitle";
 
 function EditJobForm({ jobId }: { jobId: string }) {
   const queryClient = useQueryClient();
-
   const router = useRouter();
 
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["job", jobId],
     queryFn: () => getSingleJobAction(jobId),
+  });
+
+  const form = useForm<CreateAndEditJobType>({
+    resolver: zodResolver(createAndEditJobSchema),
+    defaultValues: {
+      position: "",
+      company: "",
+      location: "",
+      status: JobStatus.Pending,
+      mode: JobMode.FullTime,
+      dateApplied:
+        data?.dateApplied?.toISOString().split("T")[0] ??
+        new Date().toISOString().split("T")[0],
+    },
+    values: data
+      ? {
+          position: data.position,
+          company: data.company,
+          location: data.location,
+          status: data.status as JobStatus,
+          mode: data.mode as JobMode,
+          dateApplied: data.dateApplied?.toISOString().split("T")[0] ?? "",
+        }
+      : undefined,
   });
 
   const { mutate, isPending } = useMutation({
@@ -32,69 +55,78 @@ function EditJobForm({ jobId }: { jobId: string }) {
       updateJobAction(jobId, values),
     onSuccess: (data) => {
       if (!data) {
-        toast("there was an error");
+        toast("There was an error");
         return;
       }
-      toast("job updated");
+      toast("Job updated");
       queryClient.invalidateQueries({ queryKey: ["jobs"] });
       queryClient.invalidateQueries({ queryKey: ["job", jobId] });
       queryClient.invalidateQueries({ queryKey: ["stats"] });
       router.push("/addJob");
-      // form.reset();
     },
   });
 
-  // 1. Define your form.
-  const form = useForm<CreateAndEditJobType>({
-    resolver: zodResolver(createAndEditJobSchema),
-    defaultValues: {
-      position: data?.position || "",
-      company: data?.company || "",
-      location: data?.location || "",
-      status: (data?.status as JobStatus) || JobStatus.Pending,
-      mode: (data?.mode as JobMode) || JobMode.FullTime,
-    },
-  });
-
-  // 2. Define a submit handler.
   function onSubmit(values: CreateAndEditJobType) {
-    // Do something with the form values.
-    // This will be type-safe and validated.
     mutate(values);
+  }
+
+  if (isLoading || !data) {
+    return (
+      <div className="text-center py-6 text-muted-foreground">
+        Loading job details...
+      </div>
+    );
   }
 
   return (
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="bg-muted p-8 rounded ">
-        <SectionTitle
-          text="Edit Job"
-          subtext="Keep your job search on track by updating details for each position you've applied to."
-        />
-        {/* <h2 className="capitalize font-semibold text-4xl mb-6">edit job</h2> */}
+        className="bg-muted p-8 rounded">
+        <div className="flex flex-col gap-2 mb-4">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => router.push("/addJob")}
+            className="w-fit mb-4">
+            ← Back to Job Tracker
+          </Button>
+          <SectionTitle
+            text="Edit Job"
+            subtext="Keep your job search on track by updating details for each position you've applied to."
+          />
+        </div>
+
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 items-start mt-5">
-          {/* position */}
           <CustomFormField name="position" control={form.control} />
-          {/* company */}
           <CustomFormField name="company" control={form.control} />
-          {/* location */}
           <CustomFormField name="location" control={form.control} />
-          {/* job status */}
           <CustomFormSelect
             name="status"
             control={form.control}
             labelText="job status"
             items={Object.values(JobStatus)}
           />
-          {/* job  type */}
           <CustomFormSelect
             name="mode"
             control={form.control}
             labelText="job mode"
             items={Object.values(JobMode)}
           />
-
+          <CustomFormField
+            name="dateApplied"
+            control={form.control}
+            render={({ field }) => (
+              <div className="flex flex-col space-y-1">
+                <label className="text-sm font-medium">Date Applied</label>
+                <input
+                  type="date"
+                  className="border rounded-md px-3 py-2 text-sm bg-white"
+                  {...field}
+                />
+              </div>
+            )}
+          />
           <Button
             type="submit"
             className="self-end capitalize"
@@ -106,4 +138,5 @@ function EditJobForm({ jobId }: { jobId: string }) {
     </Form>
   );
 }
+
 export default EditJobForm;

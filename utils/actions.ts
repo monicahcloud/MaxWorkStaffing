@@ -42,7 +42,8 @@ export async function createJobAction(
       data: {
         ...values,
         clerkId: clerkUserId,
-        userId: dbUser.id, // ✅ required for schema
+        userId: dbUser.id,
+        dateApplied: new Date(values.dateApplied),
       },
     });
 
@@ -153,6 +154,7 @@ export async function updateJobAction(
       },
       data: {
         ...values,
+        dateApplied: new Date(values.dateApplied),
       },
     });
     return job;
@@ -228,36 +230,43 @@ export async function getChartsDataAction(): Promise<
   Array<{ date: string; count: number }>
 > {
   const userId = await authenticateAndRedirect();
-  const sixMonthsAgo = dayjs().subtract(6, "month").toDate();
+  const sixMonthsAgo = dayjs().subtract(5, "month").startOf("month"); // go back 5 months + current
+
   try {
     const jobs = await prisma.job.findMany({
       where: {
         clerkId: userId,
-        createdAt: {
-          gte: sixMonthsAgo,
+        dateApplied: {
+          gte: sixMonthsAgo.toDate(),
         },
       },
       orderBy: {
-        createdAt: "asc",
+        dateApplied: "asc",
       },
     });
 
-    const applicationsPerMonth = jobs.reduce((acc, job) => {
-      const date = dayjs(job.createdAt).format("MMM YY");
+    // Count jobs by month
+    const counts: Record<string, number> = {};
 
-      const existingEntry = acc.find((entry) => entry.date === date);
+    for (const job of jobs) {
+      if (!job.dateApplied) continue;
+      const label = dayjs(job.dateApplied).format("MMM YY");
+      counts[label] = (counts[label] || 0) + 1;
+    }
 
-      if (existingEntry) {
-        existingEntry.count += 1;
-      } else {
-        acc.push({ date, count: 1 });
-      }
+    // Generate last 6 months in order
+    const lastSixMonths = Array.from({ length: 6 }).map((_, i) =>
+      sixMonthsAgo.add(i, "month").format("MMM YY")
+    );
 
-      return acc;
-    }, [] as Array<{ date: string; count: number }>);
+    const filledData = lastSixMonths.map((month) => ({
+      date: month,
+      count: counts[month] || 0,
+    }));
 
-    return applicationsPerMonth;
+    return filledData;
   } catch (error) {
+    console.error("Failed to load chart data:", error);
     redirect("/addJob");
   }
 }

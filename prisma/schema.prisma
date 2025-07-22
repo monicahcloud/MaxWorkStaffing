@@ -156,6 +156,7 @@ model Job {
   requirements String[]
   category     String?
   url          String?
+dateApplied DateTime? // <- Add this line if not present
 
   user     User       @relation(fields: [clerkId], references: [clerkId])
   resume   Resume?    @relation(fields: [resumeId], references: [id])

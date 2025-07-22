@@ -20,6 +20,7 @@ type CustomFormFieldProps = {
   name: string;
   control: Control<any>;
   placeholder?: string;
+  render?: (field: any) => React.ReactNode;
 };
 
 export function CustomFormField({

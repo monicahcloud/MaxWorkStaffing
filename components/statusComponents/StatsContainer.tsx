@@ -2,7 +2,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { getStatsAction } from "@/utils/actions";
 import StatsCard, { StatsLoadingCard } from "./StatsCard";
-import SectionTitle from "../SectionTitle";
 
 function StatsContainer() {
   const { data, isPending } = useQuery({
@@ -21,14 +20,7 @@ function StatsContainer() {
 
   return (
     <>
-      <div>
-        <SectionTitle
-          text="Stats"
-          subtext="Monitor your job application activity at a glance with real-time stats."
-        />
-      </div>
-
-      <div className="grid md:grid-cols-2 gap-4 lg:grid-cols-3 stats-section">
+      <div className="hidden md:grid grid-cols-1 md:grid-cols-2 gap-4 lg:grid-cols-2">
         <StatsCard title="pending jobs" value={data?.Pending || 0} />
         <StatsCard title="interviews set" value={data?.Interview || 0} />
         <StatsCard title="jobs declined" value={data?.Declined || 0} />

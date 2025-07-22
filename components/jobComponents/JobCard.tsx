@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { JobType } from "@/utils/types";
 import {
@@ -17,37 +19,41 @@ import DeleteJob from "./DeleteJob";
 import { Separator } from "../ui/separator";
 
 export default function JobCard({ job }: { job: JobType }) {
-  const date = new Date(job.createdAt).toLocaleDateString();
+  const date = job.dateApplied
+    ? new Date(job.dateApplied).toLocaleDateString()
+    : "N/A";
+
   return (
-    <>
-      <Card className="bg-muted">
-        <CardHeader>
-          <CardTitle className="capitalize text-2xl">{job.position}</CardTitle>
-          <CardDescription className="uppercase text-xl font-bold">
-            {job.company}
-          </CardDescription>
-        </CardHeader>
+    <Card className="bg-muted">
+      <CardHeader>
+        <CardTitle className="capitalize text-2xl">{job.position}</CardTitle>
+        <CardDescription className="uppercase text-xl font-bold text-muted-foreground">
+          {job.company}
+        </CardDescription>
+      </CardHeader>
 
-        <Separator />
-        <CardContent className="mt-1 grid grid-cols-2 gap-4">
-          <JobInfo icon={<Briefcase />} text={job.mode} />
-          <JobInfo icon={<MapPin />} text={job.location} />
-          <JobInfo icon={<CalendarDays />} text={date} />
+      <Separator />
 
-          <Badge className="inline-flex items-center px-3 py-1">
+      <CardContent className=" grid grid-cols-2 gap-4">
+        <JobInfo icon={<Briefcase />} text={job.mode} />
+        <JobInfo icon={<MapPin />} text={job.location} />
+        <JobInfo icon={<CalendarDays />} text={`Applied: ${date}`} />
+        <div className="flex items-center">
+          <Badge variant="outline" className="capitalize">
             <JobInfo
               icon={<RadioTower className="w-4 h-4" />}
               text={job.status}
             />
           </Badge>
-        </CardContent>
-        <CardFooter className="flex gap-4">
-          <Button asChild size="sm">
-            <Link href={`/jobs/${job.id}`}>edit</Link>
-          </Button>
-          <DeleteJob id={job.id} />
-        </CardFooter>
-      </Card>
-    </>
+        </div>
+      </CardContent>
+
+      <CardFooter className="flex justify-end gap-3">
+        <Button asChild size="sm" variant="outline">
+          <Link href={`/jobs/${job.id}`}>Edit</Link>
+        </Button>
+        <DeleteJob id={job.id} />
+      </CardFooter>
+    </Card>
   );
 }

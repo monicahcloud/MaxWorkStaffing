@@ -53,6 +53,7 @@ export async function parseResumeWithAffinda(
   }
 
   console.log(`📄 Affinda document uploaded. ID: ${documentId}`);
+  console.log("Affinda key:", process.env.AFFINDA_API_KEY?.slice(0, 10));
 
   // Step 2: Poll until status is "ready"
   let parsedData;

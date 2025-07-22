@@ -11,6 +11,7 @@ export type JobType = {
   location: string;
   status: string;
   mode: string;
+  dateApplied: Date | null;
 };
 
 export enum JobStatus {
@@ -43,6 +44,9 @@ export const createAndEditJobSchema = z.object({
   }),
   status: z.nativeEnum(JobStatus),
   mode: z.nativeEnum(JobMode),
+  dateApplied: z.string().min(1, {
+    message: "Date applied is required.",
+  }),
 });
 
 export type CreateAndEditJobType = z.infer<typeof createAndEditJobSchema>;

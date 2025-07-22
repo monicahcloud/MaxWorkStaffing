@@ -31,11 +31,15 @@ function ChartsContainer() {
   const hasData = data && data.length > 0;
 
   return (
-    <section className="mt-16">
-      <h1 className="text-4xl font-semibold text-center mb-8">
+    <section className="mt-5">
+      <h1 className="text-3xl font-semibold text-center mb-2">
         Monthly Applications
       </h1>
-
+      <p className="">
+        <span className="font-bold text-red-700">Note:</span> This chart
+        displays your job applications over the past 6 months. Only applications
+        with a recorded "Date Applied" will appear here.{" "}
+      </p>
       {!hasData ? (
         <EmptyState
           buttontext="Add Job"
@@ -44,13 +48,13 @@ function ChartsContainer() {
           href="/addJob"
         />
       ) : (
-        <ResponsiveContainer width="100%" height={300}>
+        <ResponsiveContainer width="90%" height={250}>
           <BarChart data={data} margin={{ top: 50 }}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="date" />
             <YAxis allowDecimals={false} />
             <Tooltip />
-            <Bar dataKey="count" fill="#2563eb" barSize={75} />
+            <Bar dataKey="count" fill="#cc0000" barSize={75} />
           </BarChart>
         </ResponsiveContainer>
       )}

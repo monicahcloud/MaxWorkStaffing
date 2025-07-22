@@ -51,11 +51,7 @@ export const linkGroups: LinkGroup[] = [
         href: "/jobsearch",
         icon: <AppWindow className="w-4 h-4" />,
       },
-      {
-        label: "Job Tracker",
-        href: "/addJob",
-        icon: <Layers className="w-4 h-4" />,
-      },
+
       {
         label: "Pricing",
         href: "/billing",
@@ -71,6 +67,11 @@ export const linkGroups: LinkGroup[] = [
   {
     title: "Resources & Support",
     items: [
+      {
+        label: "Job Tracker",
+        href: "/addJob",
+        icon: <Layers className="w-4 h-4" />,
+      },
       {
         label: "Articles & Insights",
         href: "/blog",
@@ -121,7 +122,7 @@ export const GroupedSidebarLinks = ({ onLinkClick }: Props) => {
             ))}
           </ul>
           {groupIdx < linkGroups.length - 1 && (
-            <hr className="my-4 border-red-700" />
+            <hr className="my-4 border-red-600 border-2" />
           )}
         </div>
       ))}
