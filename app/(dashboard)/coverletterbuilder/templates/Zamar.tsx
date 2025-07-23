@@ -7,7 +7,6 @@ import Image from "next/image";
 import { Mail, MapPin, Phone } from "lucide-react";
 import { CoverLetterValues } from "@/lib/validation";
 import React from "react";
-
 interface Props {
   coverletterData: CoverLetterValues;
   className?: string;

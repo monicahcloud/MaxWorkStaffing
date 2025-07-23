@@ -234,6 +234,16 @@ export default function JobListingsView({ filters, initialJobs }: Props) {
                 {/* 🆕 */}
                 <p className="text-sm">{job.salaryDisplay}</p> {/* 🆕 */}
                 <p className="mt-1 text-xs text-gray-400">{job.posted}</p>
+                <Button
+                  asChild /* ⬅️  renders the child element itself   */
+                  className="bg-red-700 text-white">
+                  <a
+                    href={job.url} /* external URL from Adzuna */
+                    target="_blank"
+                    rel="noopener noreferrer">
+                    Apply
+                  </a>
+                </Button>
               </Card>
             ))
           )}

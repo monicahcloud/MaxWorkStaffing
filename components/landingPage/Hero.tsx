@@ -70,9 +70,9 @@ export function Hero() {
         </div>
         {/* Add this at the very bottom of your Hero component */}
       </div>{" "}
-      <div className="mt-20">
+      {/* <div className="mt-20">
         <HeroCarousel />
-      </div>
+      </div> */}
     </section>
   );
 }

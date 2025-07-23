@@ -39,7 +39,6 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useRouter } from "next/navigation";
-// import ShareResume from "@/components/ReactShareButton";
 import ShareButton from "@/app/share/ShareButton";
 import { hasProAccess, SubscriptionLevel } from "@/lib/subscription";
 import RedirectToBilling from "../billing/RedirectToBilling";
@@ -83,7 +82,7 @@ function ResumeItem({ resume, subscriptionLevel }: ResumeItemProps) {
               : wasUpdated
               ? "Updated"
               : "Created"}{" "}
-            on {formatDate(resume.updatedAt, "MMM d, yyyy h:mm a")}
+            on {formatDate(resume.updatedAt, "MMM d, yyyy")}
           </p>
         </div>
 

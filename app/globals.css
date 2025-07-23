@@ -141,23 +141,8 @@
     width: 794px !important;
     padding: 0;
   }
-
-  #coverletterPreviewContent {
-    transform: none !important;
-    zoom: 1 !important;
-    width: 794px !important;
-    padding: 0;
-  }
 }
 
-@media print {
-  #coverletterPreviewContent {
-    transform: none !important;
-    zoom: 1 !important;
-    width: 794px !important;
-    padding: 5;
-  }
-}
 #resumePreviewContent {
   font-family: Inter;
 }
@@ -211,9 +196,6 @@ html {
     #resumePreviewContent {
       width: 210mm !important;
     }
-    #coverletterPreviewContent {
-      width: 210mm !important;
-    }
   }
 }
 @media print {
@@ -234,12 +216,7 @@ html {
     padding: 0 !important;
     background: white !important;
   }
-  #coverletterPreviewContent {
-    transform: none !important;
-    width: 794px !important;
-    margin: 0 auto !important;
-    padding: 0 !important;
-  }
+
   * {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
@@ -265,18 +242,42 @@ html {
     }
   }
 }
+
+.print-container {
+  transform: none !important;
+  zoom: 100% !important;
+  overflow: visible !important;
+}
 @media print {
+  body {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  #resumePreviewContent,
   #coverletterPreviewContent {
+    zoom: 1 !important;
     transform: none !important;
     width: 794px !important;
     height: auto !important;
-    zoom: 100% !important;
+    margin: 0 auto !important;
+    background: white !important;
     overflow: visible !important;
   }
 
-  .print-container {
-    transform: none !important;
-    zoom: 100% !important;
-    overflow: visible !important;
+  .no-print {
+    display: none !important;
   }
+}
+
+@page {
+  size: A4 portrait;
+  margin: 0;
+}
+
+body {
+  -webkit-print-color-adjust: exact !important;
+  print-color-adjust: exact !important;
 }

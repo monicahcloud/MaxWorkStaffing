@@ -53,7 +53,7 @@ export default function CoverLetterItem({ coverletter }: CoverLetterProps) {
 
   return (
     <div className="group relative border rounded-lg hover:border-border transition-colors p-3 bg-secondary space-y-3">
-      <div className="space-y-3 text-left">
+      <div className="space-y-1 text-left">
         <div>
           <p className="font-semibold line-clamp-1 cursor-default">
             {coverletter.companyName || "Untitled"}
@@ -63,7 +63,7 @@ export default function CoverLetterItem({ coverletter }: CoverLetterProps) {
             {formatDate(coverletter.updatedAt, "MMM d, yyyy ")}
           </p>
         </div>
-        <div ref={contentRef}>
+        <div>
           <Link
             href={`/coverletterbuilder/editor?coverLetterId=${coverletter.id}`}
             className="relative inline-block w-full">
