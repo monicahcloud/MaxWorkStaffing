@@ -13,20 +13,90 @@ const faqData = [
       {
         question: "How do I create a resume?",
         answer:
-          "Navigate to the 'Resume Builder' tab and follow the step-by-step prompts. Your progress is saved automatically.",
+          "Navigate to the 'Resumes' tab and follow the step-by-step prompts. Your progress is saved automatically.",
       },
       {
         question: "Can I upload an existing resume?",
         answer:
-          "This feature is coming soon. You will be able to upload a PDF or Word document in the Resumes section.",
+          "Yes. In the Resumes section, click 'Upload Resume' to import and edit your PDF or Word document.",
       },
       {
         question: "How can I download or print my resume?",
         answer:
-          "Click the three-dot menu on your resume card and select 'Print' or 'Download'.",
+          "Click the three-dot menu on your resume card and select 'Print' or 'Download'. These features require a subscription.",
       },
     ],
   },
+  {
+    id: "coverletter",
+    title: "Cover Letter Builder",
+    icon: "✉️",
+    items: [
+      {
+        question: "How do I write a cover letter?",
+        answer:
+          "Open the Cover Letter Builder and complete the guided steps. You can edit freely or use our AI generator.",
+      },
+      {
+        question: "Can AI help me write my letter?",
+        answer:
+          "Yes! Input your job title, experience, and achievements, then click 'Generate from AI' to get started.",
+      },
+      {
+        question: "Can I print or download my cover letter?",
+        answer:
+          "Yes, but these features require a Pro subscription. Use the options under the three-dot menu.",
+      },
+    ],
+  },
+  {
+    id: "jobsearch",
+    title: "Job Search",
+    icon: "🔍",
+    items: [
+      {
+        question: "How do I search for jobs?",
+        answer:
+          "Go to the Job Search page, enter a keyword (e.g. 'Designer') and choose a location or category. Click 'Search' to browse available listings.",
+      },
+      {
+        question: "Where do the job listings come from?",
+        answer:
+          "We use trusted third-party job APIs to pull live listings across multiple industries and locations.",
+      },
+      {
+        question: "Can I filter jobs by location or category?",
+        answer:
+          "Yes. Use the dropdown filters to narrow your results by city, state, or job category.",
+      },
+      {
+        question: "What does the 'New' label on jobs mean?",
+        answer:
+          "Jobs marked as 'New' have been added within the last 24–48 hours — giving you an edge in applying early.",
+      },
+      {
+        question: "Can I apply directly through this site?",
+        answer:
+          "Clicking 'Apply' will take you to the original job listing site where you can complete your application.",
+      },
+      {
+        question: "Are these jobs remote or in-person?",
+        answer:
+          "Each job listing includes details about the work type — remote, hybrid, or on-site — in the description.",
+      },
+      {
+        question: "I’m not seeing jobs in my field. What should I do?",
+        answer:
+          "Try adjusting your keywords or location. You can also explore the 'Categories' tab to find related roles.",
+      },
+      {
+        question: "Can I get alerts for new jobs?",
+        answer:
+          "Job alerts are coming soon! In the meantime, check back regularly as listings are updated frequently.",
+      },
+    ],
+  },
+
   {
     id: "tracker",
     title: "Application Tracker",
@@ -35,12 +105,7 @@ const faqData = [
       {
         question: "How do I track my job applications?",
         answer:
-          "Use the 'Add Job' button to manually enter applications, then view them all in the 'All Jobs' section.",
-      },
-      {
-        question: "What does the Stats link mean?",
-        answer:
-          "The Stats section provides a visual overview of your job search progress with real-time data.",
+          "Use the 'Job Tracker' link in the sidebar to manually enter applications you've applied to.",
       },
     ],
   },
@@ -72,9 +137,14 @@ const faqData = [
           "Try refreshing the page or clearing your browser cache. Contact support if it persists.",
       },
       {
+        question: "My edits didn’t save. How do I fix this?",
+        answer:
+          "Make sure you're connected to the internet. Edits are auto-saved — but you can refresh to check for updates.",
+      },
+      {
         question: "I didn’t get confirmation after submitting a form.",
         answer:
-          "Check your spam folder. If not found, please reach out via the contact form.",
+          "Please check your spam or promotions folder. If not found, reach out to us directly via the contact form.",
       },
     ],
   },
@@ -84,13 +154,18 @@ const faqData = [
     icon: "📬",
     items: [
       {
-        question: "How long does it take to receive a response?",
-        answer: "We typically respond within 24–48 business hours.",
+        question: "Is this site mobile-friendly?",
+        answer:
+          "Yes! The platform is optimized for phones and tablets — including mobile previews and editing support.",
       },
       {
-        question: "Can I get help improving my resume?",
+        question: "Can I get help improving my resume or cover letter?",
         answer:
-          "Yes! Mention it in your support request and we’ll be happy to help.",
+          "Absolutely. If you're stuck or need feedback, contact support and we’ll guide you through improvements.",
+      },
+      {
+        question: "How long does it take to receive a response?",
+        answer: "We aim to respond within 24–48 business hours.",
       },
     ],
   },

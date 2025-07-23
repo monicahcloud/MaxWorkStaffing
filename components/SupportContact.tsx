@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import Logo from "../assets/logo.png";
 
-function SupportContact() {
+export default function SupportContact() {
   const form = useRef<HTMLFormElement>(null);
   const [loading, setLoading] = useState(false);
 
@@ -22,64 +22,78 @@ function SupportContact() {
 
     emailjs
       .sendForm(
-        "service_jcfd75n", // Replace with your EmailJS Service ID
-        "template_kx67uss", // Replace with your Template ID
+        "service_jcfd75n",
+        "template_kx67uss",
         form.current,
-        "XnLTFneXRVkwkphGD" // Replace with your Public Key
+        "XnLTFneXRVkwkphGD"
       )
-      .then(
-        () => {
-          toast.success("Message sent! We'll get back to you shortly.");
-          form.current?.reset();
-        },
-        (error) => {
-          toast.error("Something went wrong. Please try again.");
-          console.error("EmailJS error:", error);
-        }
-      )
+      .then(() => {
+        toast.success("✅ Message sent! We’ll get back to you shortly.");
+        form.current?.reset();
+      })
+      .catch((error) => {
+        toast.error("🚫 Oops! Something went wrong.");
+        console.error("EmailJS error:", error);
+      })
       .finally(() => setLoading(false));
   };
 
   return (
-    <div className="w-full max-w-5xl p-6 bg-gray-300-700 shadow rounded-2xl ">
-      <div className="max-w-3xl mx-auto p-6 bg-white shadow rounded-2xl my-10">
-        <Image
-          src={Logo}
-          alt="Logo"
-          priority
-          width={400}
-          height={400}
-          className="px-4 my-10 mx-auto"
-        />
+    <div className="w-full max-w-5xl px-4 py-10 mx-auto">
+      <div className="rounded-2xl shadow-2xl bg-gradient-to-br from-white to-gray-50 p-8 md:p-12">
+        <div className="flex flex-col items-center text-center">
+          <Image
+            src={Logo}
+            alt="VitaNova Logo"
+            width={175}
+            height={120}
+            className="mb-4"
+          />
+          <h1 className="text-3xl font-bold mb-2">We're here to help</h1>
+          <p className="text-muted-foreground max-w-md">
+            Have a question, suggestion, or issue? Drop us a message and our
+            team will get back to you as soon as possible.
+          </p>
+        </div>
 
-        <h2 className="text-2xl font-bold mb-4 text-center">
-          Need Help? Contact Support
-        </h2>
-
-        <form ref={form} onSubmit={handleSubmit} className="space-y-4">
-          <Input name="name" placeholder="Your Name" required />
-          <Input name="email" type="email" placeholder="Your Email" required />
+        <form
+          ref={form}
+          onSubmit={handleSubmit}
+          className="mt-8 space-y-4 max-w-xl mx-auto">
+          <Input
+            name="name"
+            placeholder="Full Name"
+            required
+            className="bg-white"
+          />
+          <Input
+            name="email"
+            type="email"
+            placeholder="Email Address"
+            required
+            className="bg-white"
+          />
           <Textarea
             name="message"
-            placeholder="Your Message"
+            placeholder="Type your message..."
             rows={5}
             required
+            className="bg-white"
           />
-          <Button type="submit" disabled={loading} className="w-full">
+          <Button
+            type="submit"
+            disabled={loading}
+            className="w-full transition-all">
             {loading ? "Sending..." : "Send Message"}
           </Button>
         </form>
 
         <div className="text-center mt-6">
-          <Link
-            href="/faq"
-            className="text-muted-foreground text-lg hover:underline">
-            Need more help? View our FAQs
+          <Link href="/faq" className="text-sm text-blue-600 hover:underline">
+            Still need help? Visit the FAQ →
           </Link>
         </div>
       </div>
     </div>
   );
 }
-
-export default SupportContact;
