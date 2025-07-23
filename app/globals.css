@@ -256,8 +256,7 @@ html {
     padding: 0 !important;
   }
 
-  #resumePreviewContent,
-  #coverletterPreviewContent {
+  #resumePreviewContent {
     zoom: 1 !important;
     transform: none !important;
     width: 794px !important;
@@ -266,9 +265,23 @@ html {
     background: white !important;
     overflow: visible !important;
   }
-
+  #coverletterPreviewContent {
+    zoom: 1 !important;
+    transform: none !important;
+    width: 794px !important;
+    height: auto !important;
+    margin: 0 auto !important;
+    background-color: black !important;
+    color: white !important;
+    overflow: visible !important;
+  }
   .no-print {
     display: none !important;
+  }
+  html,
+  body {
+    margin: 0 !important;
+    padding: 0 !important;
   }
 }
 

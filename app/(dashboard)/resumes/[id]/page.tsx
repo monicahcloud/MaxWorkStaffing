@@ -23,7 +23,7 @@ export default async function ResumePublicPage({
             Resume Preview
           </h1>
           <p className="mt-2 text-gray-600">
-            Here’s a live preview of the resume. You can import or edit it.
+            Here’s a live preview of the resume. 
           </p>
         </div>
 

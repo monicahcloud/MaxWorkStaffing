@@ -7,6 +7,7 @@ import { CoverLetterValues } from "@/lib/validation";
 import useDimensions from "@/hooks/useDimensions";
 import fallbackImage from "../../../../assets/jobseeker.jpg";
 import { BorderStyles } from "../../editor/BorderStyleButton";
+import { Globe, Mail } from "lucide-react";
 
 interface CoverLetterPreviewProps {
   coverletterData: CoverLetterValues;
@@ -25,22 +26,24 @@ export function ShabachTemplate({
   return (
     <div
       className={cn(
-        " aspect-[210/297] bg-black text-white h-fit w-full",
+        " aspect-[210/297] bg-black text-white print:bg-black print:text-white h-fit w-full",
         className
       )}
       ref={containerRef}>
       <div
-        className={cn("m-10", !width && "invisible")}
+        className={cn("space-y-6 p-6 origin-top-left", !width && "invisible")}
         style={{
           zoom: (1 / 794) * width,
         }}
         ref={contentRef}
         id="coverletterPreviewContent">
-        <MemoizedHeaderSection coverletterData={coverletterData} />
-        <MemoizedUserPhoto coverletterData={coverletterData} />
-        <MemoizedRecipientSection coverletterData={coverletterData} />
-        <MemoizedBodySection coverletterData={coverletterData} />
-        <MemoizedSignatureSection coverletterData={coverletterData} />
+        <div>
+          <MemoizedHeaderSection coverletterData={coverletterData} />
+          <MemoizedUserPhoto coverletterData={coverletterData} />
+          <MemoizedRecipientSection coverletterData={coverletterData} />
+          <MemoizedBodySection coverletterData={coverletterData} />
+          <MemoizedSignatureSection coverletterData={coverletterData} />
+        </div>
       </div>
     </div>
   );
@@ -53,14 +56,10 @@ function HeaderSection({
 }: {
   coverletterData: CoverLetterValues;
 }) {
-  const themeColor =
-    !coverletterData.themeColor || coverletterData.themeColor === "#000000"
-      ? "white"
-      : coverletterData.themeColor;
   return (
     <div className="flex w-[100%] space-y-6  justify-between font-lora">
       {/* Name Block */}
-      <div style={{ color: themeColor }}>
+      <div style={{ color: coverletterData.themeColor }}>
         <h1 className="text-6xl font-lora leading-none tracking-wider uppercase">
           {coverletterData.firstName || ""}
         </h1>
@@ -71,10 +70,14 @@ function HeaderSection({
       </div>
       {/* Contact Block */}
       <div
-        className="text-lg text-right space-y-1 pr-5"
-        style={{ color: themeColor }}>
-        <p>📧 {coverletterData.userEmail || ""}</p>
-        <p>🌐 {coverletterData.website || ""}</p>
+        className="text-lg text-right space-y-1 pr-8"
+        style={{ color: coverletterData.themeColor }}>
+        <p className="flex gap-2">
+          <Mail /> {coverletterData.userEmail || ""}
+        </p>
+        <p className="flex gap-2">
+          <Globe /> {coverletterData.website || ""}
+        </p>
       </div>
     </div>
   );
@@ -131,7 +134,7 @@ function RecipientSection({
   coverletterData: CoverLetterValues;
 }) {
   return (
-    <div className=" text-xl -mt-40 font-lora">
+    <div className=" text-lg -mt-50 font-lora">
       <p className=" mb-5 ">
         {new Date().toLocaleDateString("en-US", {
           year: "numeric",
@@ -160,7 +163,8 @@ function BodySection({
           ? `Dear ${coverletterData.recipientName},`
           : "To Whom It May Concern,"}
       </p>
-      {coverletterData.body ? (
+      <p>{coverletterData.body}</p>
+      {/* {coverletterData.body ? (
         <div dangerouslySetInnerHTML={{ __html: coverletterData.body }} />
       ) : (
         <p>
@@ -172,7 +176,7 @@ function BodySection({
           aspernatur eveniet praesentium voluptas molestias in cupiditate dicta
           optio ex, voluptatem tenetur itaque eligendi ut!
         </p>
-      )}
+      )} */}
     </div>
   );
 }
@@ -191,14 +195,14 @@ function SignatureSection({
   const displayName =
     (coverletterData.firstName || "") + " " + (coverletterData.lastName || "");
   return (
-    <div className="mt-4 text-xl font-lora ">
+    <div className="mt-4 text-lg font-lora ">
       <p>Best Regards,</p>
       {signatureUrl ? (
-        <div className="w-[250px] pt-2">
+        <div className="w-[500px] -ml-6">
           <Image
             src={signatureUrl}
             alt="Signature"
-            width={200}
+            width={275}
             height={100}
             className="object-contain"
           />

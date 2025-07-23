@@ -101,6 +101,7 @@ function CoverLetterEditor({ coverletterToEdit }: CoverLetterEditorProps) {
         showSmCoverLetterPreview={showSmCoverLetterPreview}
         setShowSmCoverLetterPreview={setShowSmCoverLetterPreview}
         isSaving={isSaving}
+        coverletter={coverletterToEdit}
       />
     </div>
   );
