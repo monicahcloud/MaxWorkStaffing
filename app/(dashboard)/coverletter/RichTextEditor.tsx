@@ -132,7 +132,27 @@ export default function RichTextEditor({
       )}
 
       <EditorContent editor={editor} />
-
+      <div className="flex items-center gap-2 justify-end">
+        <Button
+          variant="outline"
+          type="button"
+          size="sm"
+          disabled={loading || isGenerating || !jobTitleInput.trim()}
+          onClick={handleGenerateAI}
+          className="border-primary text-primary flex gap-2 whitespace-nowrap">
+          {isGenerating ? (
+            <>
+              <LoaderCircle className="animate-spin w-4 h-4" />
+              Generating...
+            </>
+          ) : (
+            <>
+              <Brain className="h-4 w-4" />
+              Generate from AI
+            </>
+          )}
+        </Button>
+      </div>
       {/* AI Inputs + Button */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
         <Input
@@ -160,28 +180,6 @@ export default function RichTextEditor({
           onChange={(e) => setToolsInput(e.target.value)}
           className="w-full md:col-span-2"
         />
-      </div>
-
-      <div className="flex items-center gap-2 justify-end">
-        <Button
-          variant="outline"
-          type="button"
-          size="sm"
-          disabled={loading || isGenerating || !jobTitleInput.trim()}
-          onClick={handleGenerateAI}
-          className="border-primary text-primary flex gap-2 whitespace-nowrap">
-          {isGenerating ? (
-            <>
-              <LoaderCircle className="animate-spin w-4 h-4" />
-              Generating...
-            </>
-          ) : (
-            <>
-              <Brain className="h-4 w-4" />
-              Generate from AI
-            </>
-          )}
-        </Button>
       </div>
     </div>
   );

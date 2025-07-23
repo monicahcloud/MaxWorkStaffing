@@ -163,20 +163,12 @@ function BodySection({
           ? `Dear ${coverletterData.recipientName},`
           : "To Whom It May Concern,"}
       </p>
-      <p>{coverletterData.body}</p>
-      {/* {coverletterData.body ? (
+
+      {coverletterData.body ? (
         <div dangerouslySetInnerHTML={{ __html: coverletterData.body }} />
       ) : (
-        <p>
-          Lorem, ipsum dolor sit amet consectetur adipisicing elit. Aperiam quo
-          alias adipisci iure, dignissimos sunt pariatur ratione, perspiciatis
-          error reprehenderit sequi tempore harum facere assumenda qui. Sit
-          placeat natus a? Lorem ipsum dolor sit amet consectetur adipisicing
-          elit. Aut officiis vitae, expedita quae necessitatibus omnis
-          aspernatur eveniet praesentium voluptas molestias in cupiditate dicta
-          optio ex, voluptatem tenetur itaque eligendi ut!
-        </p>
-      )} */}
+        <p>A cover letter allows you to professionally introduce yourself...</p>
+      )}
     </div>
   );
 }

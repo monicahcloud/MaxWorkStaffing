@@ -1,34 +1,31 @@
-import {
-  LinkedinShareButton,
-  EmailShareButton,
-  WhatsappShareButton,
-  EmailIcon,
-  WhatsappIcon,
-  LinkedinIcon,
-} from "react-share";
+// import {
+//   EmailShareButton,
+//   EmailIcon,
 
-const ShareResume = ({ resumeUrl }: { resumeUrl: string }) => {
-  const shareTitle = "Check out my resume!";
-  const shareSummary = "Here is my latest resume – take a look!";
+// } from "react-share";
 
-  return (
-    <div className="flex gap-2">
-      <LinkedinShareButton url={resumeUrl} summary={shareSummary}>
-        <LinkedinIcon size={32} round={true} />
-      </LinkedinShareButton>
+// const ShareResume = ({ resumeUrl }: { resumeUrl: string }) => {
+//   const shareTitle = "Check out my resume!";
+//   const shareSummary = "Here is my latest resume – take a look!";
 
-      <WhatsappShareButton url={resumeUrl} title={shareTitle}>
-        <WhatsappIcon size={32} round={true} />
-      </WhatsappShareButton>
+//   return (
+//     <div className="flex gap-2">
+//       {/* <LinkedinShareButton url={resumeUrl} summary={shareSummary}>
+//         <LinkedinIcon size={32} round={true} />
+//       </LinkedinShareButton>
 
-      <EmailShareButton
-        url={resumeUrl}
-        subject={shareTitle}
-        body={shareSummary}>
-        <EmailIcon size={32} round={true} />
-      </EmailShareButton>
-    </div>
-  );
-};
+//       <WhatsappShareButton url={resumeUrl} title={shareTitle}>
+//         <WhatsappIcon size={32} round={true} />
+//       </WhatsappShareButton> */}
 
-export default ShareResume;
+//       <EmailShareButton
+//         url={resumeUrl}
+//         subject={shareTitle}
+//         body={shareSummary}>
+//         <EmailIcon size={32} round={true} />
+//       </EmailShareButton>
+//     </div>
+//   );
+// };
+
+// export default ShareResume;

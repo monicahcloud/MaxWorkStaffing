@@ -222,32 +222,25 @@ function Main({ coverletterData }: CoverLetterPreviewProps) {
           </h1>
         </div>
         {/* Body */}
-        <div className="font-lora text-md">
+        <div className="font-lora text-lg">
           {" "}
           {body ? (
             <div dangerouslySetInnerHTML={{ __html: body }} />
           ) : (
             <p>
-              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Aperiam
-              quo alias adipisci iure, dignissimos sunt pariatur ratione,
-              perspiciatis error reprehenderit sequi tempore harum facere
-              assumenda qui. Sit placeat natus a? Lorem ipsum dolor sit amet
-              consectetur adipisicing elit. Aut officiis vitae, expedita quae
-              necessitatibus omnis aspernatur eveniet praesentium voluptas
-              molestias in cupiditate dicta optio ex, voluptatem tenetur itaque
-              eligendi ut!
+              A cover letter allows you to professionally introduce yourself...
             </p>
           )}
         </div>
         {/* Closing and  Signature */}
-        <div className="mt-4 text-xl font-lora ">
+        <div className="mt-4 text-lg font-lora ">
           <p> Regards,</p>
           {signatureUrl ? (
             <div className="w-[250px] pt-5">
               <Image
                 src={signatureUrl}
                 alt="Signature"
-                width={150}
+                width={270}
                 height={100}
                 className="object-contain"
               />

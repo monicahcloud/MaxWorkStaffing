@@ -1,14 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import {
-  LinkedinShareButton,
-  EmailShareButton,
-  WhatsappShareButton,
-  EmailIcon,
-  WhatsappIcon,
-  LinkedinIcon,
-} from "react-share";
+import { EmailShareButton, EmailIcon } from "react-share";
 import { Button } from "@/components/ui/button"; // Shadcn UI
 import { Share } from "lucide-react"; // Icon library
 
@@ -69,16 +62,16 @@ export default function ShareButton({ type, id }: ShareButtonProps) {
           disabled={loading}
           variant="outline"
           className="w-full text-sm sm:text-base md:text-base lg:text-lg px-2 py-2">
-          {loading ? "Generating..." : " Share Resume Link"}
+          {loading ? "Generating..." : " Share"}
         </Button>
       ) : (
         <div className="flex flex-wrap gap-3 items-center justify-center max-w-full">
-          <LinkedinShareButton url={shareUrl} summary={shareSummary}>
+          {/* <LinkedinShareButton url={shareUrl} summary={shareSummary}>
             <LinkedinIcon size={32} round />
           </LinkedinShareButton>
           <WhatsappShareButton url={shareUrl} title={shareTitle}>
             <WhatsappIcon size={32} round />
-          </WhatsappShareButton>
+          </WhatsappShareButton> */}
           <EmailShareButton
             url={shareUrl}
             subject={shareTitle}

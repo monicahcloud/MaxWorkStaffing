@@ -39,8 +39,7 @@ function CoverLetterEditor({ coverletterToEdit }: CoverLetterEditorProps) {
 
   const { isSaving, hasUnsavedChanges } =
     useAutoSaveCoverLetter(coverLetterData);
-  useUnloadWarning(hasUnsavedChanges);
-
+  useUnloadWarning(hasUnsavedChanges && !isSaving);
   const currentStep = searchParams.get("step") || allSteps[0].key;
 
   function setStep(key: string) {
