@@ -41,11 +41,12 @@ export default async function ViewCoverLetterPage({
           </Link>
         </div>
 
-        {/* Resume Preview */}
+        {/*  Preview */}
         <div className="flex justify-center">
           <div className="scale-[0.55] origin-top shadow-xl border border-gray-300 rounded-xl bg-white">
             <CoverLetterPreview
               coverLetterData={mapToCoverLetterValues(coverletter)}
+              className="rounded-xl"
             />
           </div>
         </div>
