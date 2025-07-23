@@ -35,14 +35,18 @@ import { useReactToPrint } from "react-to-print";
 import { useRouter } from "next/navigation";
 import { deleteCoverLetter } from "../coverletterbuilder/editor/actions";
 import ShareButton from "@/app/share/ShareButton";
-import { SubscriptionLevel } from "@/lib/subscription";
+import { hasProAccess, SubscriptionLevel } from "@/lib/subscription";
+import RedirectToBilling from "../billing/RedirectToBilling";
 
 interface CoverLetterProps {
   coverletter: CoverLetterServerData;
   subscriptionLevel: SubscriptionLevel;
 }
 
-export default function CoverLetterItem({ coverletter }: CoverLetterProps) {
+export default function CoverLetterItem({
+  coverletter,
+  subscriptionLevel,
+}: CoverLetterProps) {
   const contentRef = useRef<HTMLDivElement>(null);
 
   const reactToPrintFn = useReactToPrint({
@@ -81,6 +85,7 @@ export default function CoverLetterItem({ coverletter }: CoverLetterProps) {
         coverletter={coverletter}
         onPrintClick={() => reactToPrintFn?.()}
         contentRef={contentRef}
+        subscriptionLevel={subscriptionLevel}
       />
     </div>
   );
@@ -89,11 +94,20 @@ interface MoreMenuProps {
   coverletter: CoverLetterServerData;
   onPrintClick: () => void;
   contentRef: React.RefObject<HTMLDivElement | null>;
+  subscriptionLevel: SubscriptionLevel;
 }
 
-function MoreMenu({ coverletter, onPrintClick }: MoreMenuProps) {
+function MoreMenu({
+  coverletter,
+  onPrintClick,
+  subscriptionLevel,
+}: MoreMenuProps) {
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const [showRedirect, setShowRedirect] = useState(false);
   const router = useRouter();
+  const canAccessPremium = hasProAccess(subscriptionLevel);
+
+  if (showRedirect && !canAccessPremium) return <RedirectToBilling />;
 
   function handleEdit() {
     router.push(`/coverletterbuilder/editor?coverLetterId=${coverletter.id}`);
@@ -129,11 +143,16 @@ function MoreMenu({ coverletter, onPrintClick }: MoreMenuProps) {
             </DropdownMenuItem>
             <DropdownMenuItem
               className="flex items-center gap-2"
-              onClick={onPrintClick}>
+              onClick={() =>
+                canAccessPremium ? onPrintClick() : setShowRedirect(true)
+              }>
               <Printer className="size-4" />
               Print
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => onPrintClick()}>
+            <DropdownMenuItem
+              onClick={() =>
+                canAccessPremium ? onPrintClick() : setShowRedirect(true)
+              }>
               <Download className="size-4" />
               Download
             </DropdownMenuItem>
@@ -147,7 +166,17 @@ function MoreMenu({ coverletter, onPrintClick }: MoreMenuProps) {
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-      <ShareButton type="coverletter" id={coverletter.id} />
+
+      {canAccessPremium ? (
+        <ShareButton type="coverletter" id={coverletter.id} />
+      ) : (
+        <Button
+          variant="outline"
+          className="w-full justify-center text-left text-sm"
+          onClick={() => setShowRedirect(true)}>
+          Share Resume
+        </Button>
+      )}
 
       <DeleteConfirmationDialog
         coverletterId={coverletter.id}
