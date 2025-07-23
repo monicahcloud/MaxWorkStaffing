@@ -16,7 +16,7 @@ type PlaybookDownloadProps = {
 };
 
 const InterviewPlaybookDownload = ({
-  filePath = "/The_Ultimate_Interview_Guide.pdf",
+  filePath = "/TheUltimateInterviewPlaybookforSuccess.pdf",
   fileName = "The_Ultimate_Interview_Guide.pdf",
   heading = "The Interview Playbook Every Jobseeker Needs",
   subheading = "Your ultimate guide to mastering every stage of the interview process—from preparation to follow-up.",
