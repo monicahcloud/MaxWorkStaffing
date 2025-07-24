@@ -310,15 +310,21 @@ export async function POST(req: NextRequest) {
           : standardId;
 
       /* If neither env var is set, pass undefined so Affinda auto-detects */
+      console.log("🧭 Template selected:", resumeTemplate);
+      console.log("🆔 Using documentTypeId:", documentTypeId);
       const affindaParsed = await parseResumeWithAffinda(file, documentTypeId);
+      console.log("✅ Using Affinda to parse the resume.");
       console.log("📦 Affinda parsed:", JSON.stringify(affindaParsed, null, 2));
 
       const mappedTemplate =
         resumeTemplate === "federal resume" ? "federal" : "standard";
       mappedValues = mapAffindaToResumeValues(affindaParsed, mappedTemplate);
-    } catch (affindaErr) {
-      /* 8. Fallback to OpenAI if Affinda fails ----------------------------- */
-      console.error("❌ Affinda failed:", affindaErr);
+    } catch (affindaErr: any) {
+      console.error(
+        "❌ Affinda failed:",
+        affindaErr?.response?.data || affindaErr
+      );
+      console.log("⚙️ Falling back to OpenAI to parse the resume.");
       parserUsed = "OpenAI";
       mappedValues = await parseResumeWithAI(parsedText);
     }

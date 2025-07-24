@@ -57,8 +57,9 @@ export async function parseResumeWithAffinda(
 
   // Step 2: Poll until status is "ready"
   let parsedData;
+  let responseData: any; // 👈 Fix here
   let attempts = 0;
-  const maxAttempts = 15;
+  const maxAttempts = 20;
   const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
   while (attempts < maxAttempts) {
@@ -73,31 +74,38 @@ export async function parseResumeWithAffinda(
       }
     );
 
-    const responseData = docResponse.data;
+    responseData = docResponse.data;
     const isReady = responseData?.meta?.ready === true;
     const hasFailed = responseData?.meta?.failed === true;
 
     console.log("📡 Affinda meta:", responseData.meta);
 
     if (hasFailed) {
-      console.error("❌ Affinda failed to parse the document.");
+      console.error(
+        "❌ Affinda failed:",
+        JSON.stringify(responseData.meta, null, 2)
+      );
       throw new Error("Affinda failed to parse the document.");
     }
 
     if (isReady) {
-      parsedData = responseData.data;
+      parsedData = docResponse.data.data; // ✅ FIX HERE
       console.log("✅ Affinda parsing complete.");
+      console.dir(parsedData, { depth: null });
       break;
     }
+    console.log(
+      "🧾 Full Affinda document response:",
+      JSON.stringify(docResponse.data, null, 2)
+    );
 
-    attempts++;
-    await delay(2000);
+    if (!parsedData) {
+      console.error("⏰ Affinda parsing timed out.");
+      throw new Error("Affinda parsing timed out.");
+    }
+
+    return parsedData; // ✅ make sure this is here
   }
-
-  if (!parsedData) {
-    console.error("⏰ Affinda parsing timed out.");
-    throw new Error("Affinda parsing timed out.");
-  }
-
-  return parsedData;
+  attempts++;
+  await delay(3000); // wait 3s
 }

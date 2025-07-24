@@ -116,11 +116,20 @@ export function mapAffindaToResumeValues(
   parsed: any,
   template: "federal" | "standard"
 ): ParsedResumeData {
+  if (!parsed || typeof parsed !== "object") {
+    throw new Error("Invalid or missing Affinda parsed data.");
+  }
+
   const data = parsed;
 
   /* ------------ PERSONAL ------------------------------------------------ */
-  const nameObj = data.candidateName?.[0] ?? {};
-  const phoneObj = data.phoneNumber?.[0] ?? {};
+  const nameObj = Array.isArray(data.candidateName)
+    ? data.candidateName[0] ?? {}
+    : {};
+
+  const phoneObj = Array.isArray(data.phoneNumber)
+    ? data.phoneNumber[0] ?? {}
+    : {};
 
   const personalInfo = {
     firstName: nameObj.firstName ?? "",
