@@ -14,13 +14,13 @@ export const metadata = {
     description:
       "Everything you need to organize your job search and stay on track. Resumes, applications, interviews — managed in one place.",
     url: "https://www.maxresumebuilder.com/home",
-    images: [{ url: "/og/dashboard.png", width: 1200, height: 630 }],
+    images: [{ url: "/og/og-image.png", width: 1200, height: 630 }],
     siteName: "Max ResumeBuilder",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Job Search Dashboard",
+    title: "Max ResumeBuilder",
     description: "Your all-in-one control center for landing your next job.",
     images: ["/og/dashboard.png"],
   },

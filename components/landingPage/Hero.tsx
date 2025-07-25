@@ -6,7 +6,7 @@ import { Bot, PencilLine, Mail, BarChart2, Mic, Briefcase } from "lucide-react";
 import Image from "next/image";
 import logo from "../../assets/logo.png";
 import dashboardMockup from "../../assets/LandingImg.jpg"; // Place your generated mockup here
-import { HeroCarousel } from "../HeroCarousel";
+// import { HeroCarousel } from "../HeroCarousel";
 
 export function Hero() {
   return (
@@ -19,7 +19,7 @@ export function Hero() {
             alt="MaxWork logo"
             className="mb-4 mx-auto lg:mx-0"
           />
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-tight">
+          <h1 className="text-4xl text-black sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-tight">
             Land Your Next Job Faster
           </h1>
           <p className="mt-4 text-lg sm:text-xl text-gray-600 max-w-xl mx-auto lg:mx-0">
