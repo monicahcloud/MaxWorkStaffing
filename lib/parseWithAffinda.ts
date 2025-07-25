@@ -1,28 +1,3 @@
-// // lib/affinda/parseWithAffinda.ts
-// import axios from "axios";
-
-// export async function parseResumeWithAffinda(file: File) {
-//   const formData = new FormData();
-//   formData.append("file", file);
-
-//   const response = await axios.post(
-//     "https://api.affinda.com/v2/resumes",
-//     formData,
-//     {
-//       headers: {
-//         Authorization: `Bearer ${process.env.AFFINDA_API_KEY}`,
-//         "Content-Type": "multipart/form-data",
-//       },
-//     }
-//   );
-
-//   const { data } = response;
-//   const parsedData = data.data;
-
-//   if (!parsedData) throw new Error("No parsed data returned by Affinda");
-
-//   return parsedData;
-// }
 // lib/affinda/parseWithAffinda.ts
 import axios from "axios";
 
@@ -49,15 +24,13 @@ export async function parseResumeWithAffinda(
   const documentId = uploadResponse.data.identifier;
   if (!documentId) {
     console.error("❌ No document identifier returned from Affinda.");
-    throw new Error("No document identifier returned from Affinda");
+    throw new Error("No document identifier returned from Affinda.");
   }
 
   console.log(`📄 Affinda document uploaded. ID: ${documentId}`);
-  console.log("Affinda key:", process.env.AFFINDA_API_KEY?.slice(0, 10));
+  console.log("🔑 Affinda key:", process.env.AFFINDA_API_KEY?.slice(0, 10));
 
   // Step 2: Poll until status is "ready"
-  let parsedData;
-  let responseData: any; // 👈 Fix here
   let attempts = 0;
   const maxAttempts = 20;
   const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
@@ -74,7 +47,7 @@ export async function parseResumeWithAffinda(
       }
     );
 
-    responseData = docResponse.data;
+    const responseData = docResponse.data;
     const isReady = responseData?.meta?.ready === true;
     const hasFailed = responseData?.meta?.failed === true;
 
@@ -89,23 +62,37 @@ export async function parseResumeWithAffinda(
     }
 
     if (isReady) {
-      parsedData = docResponse.data.data; // ✅ FIX HERE
+      const parsedData = responseData.data;
+      if (!parsedData || typeof parsedData !== "object") {
+        console.error("⚠️ Affinda returned 'ready' but no data.");
+        throw new Error("Affinda returned no parsed data.");
+      }
+
       console.log("✅ Affinda parsing complete.");
+      console.log(
+        "📦 Affinda raw response:",
+        JSON.stringify(responseData, null, 2)
+      );
+      console.log(
+        "📦 Affinda raw response:",
+        JSON.stringify(responseData, null, 2)
+      );
+
       console.dir(parsedData, { depth: null });
-      break;
+
+      return parsedData; // ✅ Proper placement inside loop
     }
+
+    // optional: log full document body for debugging
     console.log(
-      "🧾 Full Affinda document response:",
-      JSON.stringify(docResponse.data, null, 2)
+      "🧾 Full Affinda response snapshot:",
+      JSON.stringify(responseData, null, 2)
     );
 
-    if (!parsedData) {
-      console.error("⏰ Affinda parsing timed out.");
-      throw new Error("Affinda parsing timed out.");
-    }
-
-    return parsedData; // ✅ make sure this is here
+    attempts++;
+    await delay(3000); // Wait 3s before retrying
   }
-  attempts++;
-  await delay(3000); // wait 3s
+
+  console.error("⏰ Affinda polling timed out after max attempts.");
+  throw new Error("Affinda parsing timed out.");
 }

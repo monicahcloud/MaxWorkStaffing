@@ -33,7 +33,7 @@ export default function SignUpPage() {
       {/* Back to site */}
       <div className="mt-6 text-sm text-gray-500">
         <Link href="/" className="hover:underline text-red-500">
-          ← Back to MaxWork overview
+          ← Back to MaxResumeBuilder overview
         </Link>
       </div>
     </main>
