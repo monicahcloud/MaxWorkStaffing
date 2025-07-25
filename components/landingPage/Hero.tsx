@@ -23,11 +23,12 @@ export function Hero() {
             Land Your Next Job Faster
           </h1>
           <p className="mt-4 text-lg sm:text-xl text-gray-600 max-w-xl mx-auto lg:mx-0">
-            All-in-one career toolkit — create standout resumes and cover
-            letters, track applications, and prepare for interviews.
+            AI-powered tools to build resumes, write cover letters, search and
+            track jobs, prep for interviews, and access career resources — all
+            in one place.
           </p>
 
-          <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm sm:text-base text-gray-700">
+          <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm sm:text-base text-gray-700">
             {[
               { icon: Bot, text: "Generate resumes with A.I. assistance" },
               { icon: PencilLine, text: "Build tailored cover letters" },
