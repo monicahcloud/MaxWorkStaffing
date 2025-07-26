@@ -10,10 +10,9 @@ export default function Page() {
       <h1 className="text-3xl font-bold mb-6">Terms of Service</h1>
 
       <p className="mb-4">
-        These Terms of Service (&quot;Terms&quot;) govern your use of the
-        MaxWork Staffing client platform (&quot;Platform&quot;), including the
-        AI-powered resume builder, and subscription services offered through our
-        Premium and Premium Plus plans.
+        These Terms of Service ("Terms") govern your use of the MaxResumeBuilder
+        platform ("Platform"), including the AI-powered resume builder, job
+        tools, and access plans offered through our site.
       </p>
 
       <h2 className="text-2xl font-semibold mt-8 mb-2">
@@ -24,58 +23,70 @@ export default function Page() {
         Terms. If you do not agree, you may not use the Platform.
       </p>
 
-      <h2 className="text-2xl font-semibold mt-8 mb-2">2. Subscriptions</h2>
-      <p className="mb-2">MaxWork offers two paid subscription tiers:</p>
+      <h2 className="text-2xl font-semibold mt-8 mb-2">2. Access Plans</h2>
+      <p className="mb-2">
+        MaxResumeBuilder offers the following paid access options:
+      </p>
       <ul className="list-disc list-inside mb-4">
         <li>
-          <strong>Premium:</strong> Includes access to AI tools and up to 3
-          resumes.
+          <strong>7-Day Access:</strong> One-time payment that grants full
+          access for 7 days. Includes resume and cover letter tools, job
+          tracking, job search, AI assistance, and 1 PDF upload. Cannot be
+          repurchased after use.
         </li>
         <li>
-          <strong>Premium Plus:</strong> Includes all Premium features plus
-          unlimited resumes and additional design customizations.
+          <strong>Monthly Plan:</strong> 30-day access to all premium tools and
+          features. Includes up to 3 PDF resume uploads.
+        </li>
+        <li>
+          <strong>Quarterly Plan:</strong> 90-day access at a discounted rate.
+          Includes all resume-building and job search features, plus up to 5 PDF
+          uploads.
         </li>
       </ul>
       <p className="mb-4">
-        Subscription fees are billed monthly. You may cancel at any time, but no
-        refunds will be provided for partial billing periods.
+        All plans are non-renewing and non-refundable once purchased. Access
+        expires at the end of the selected period.
       </p>
 
       <h2 className="text-2xl font-semibold mt-8 mb-2">3. AI Resume Builder</h2>
       <p className="mb-4">
-        The Platform uses AI to assist with resume creation. By using this
-        feature, you understand that outputs may vary and should be reviewed for
-        accuracy and appropriateness before submission to potential employers.
+        The Platform uses artificial intelligence to assist with resume and
+        cover letter creation. While the AI is designed to provide helpful
+        suggestions, you are responsible for reviewing and editing all content
+        before submitting it to potential employers.
       </p>
 
       <h2 className="text-2xl font-semibold mt-8 mb-2">
         4. User Responsibilities
       </h2>
       <p className="mb-4">
-        You are responsible for all content you upload or generate on the
-        Platform. You agree not to use the Platform for any unlawful or harmful
-        purpose.
+        You are responsible for the content you upload, edit, or generate using
+        the Platform. You agree not to use the Platform for any unlawful,
+        harmful, or misleading purposes.
       </p>
 
       <h2 className="text-2xl font-semibold mt-8 mb-2">5. Termination</h2>
       <p className="mb-4">
         We reserve the right to suspend or terminate your access to the Platform
-        at any time for violations of these Terms.
+        at our discretion if you violate these Terms or misuse the tools and
+        services provided.
       </p>
 
       <h2 className="text-2xl font-semibold mt-8 mb-2">6. Modifications</h2>
       <p className="mb-4">
-        We may update these Terms from time to time. Changes will be posted on
-        this page and will become effective immediately upon posting.
+        We may revise these Terms periodically. Updates will be posted on this
+        page and will become effective immediately upon publication. Continued
+        use of the Platform constitutes acceptance of the updated Terms.
       </p>
 
       <h2 className="text-2xl font-semibold mt-8 mb-2">7. Contact Us</h2>
       <p>
         If you have any questions about these Terms, please contact us at{" "}
         <a
-          href="mailto:support@maxworkcoaching.com"
+          href="mailto: monicahcloud@vitanovadesigns.cloud"
           className="text-blue-600 underline">
-          support@maxworkcoaching.com
+          monicahcloud@vitanovadesigns.cloud
         </a>
         .
       </p>

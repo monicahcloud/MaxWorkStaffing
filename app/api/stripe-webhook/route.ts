@@ -35,7 +35,9 @@ export async function POST(req: NextRequest) {
     // Handle event based on type
     switch (event.type) {
       case "checkout.session.completed":
-        await handleSessionCompleted(event.data.object); // New session completed
+        await handleSessionCompleted(
+          event.data.object as Stripe.Checkout.Session
+        ); // New session completed
         break;
       case "customer.subscription.created":
       case "customer.subscription.updated":
@@ -70,11 +72,23 @@ async function handleSessionCompleted(session: Stripe.Checkout.Session) {
   const client = await clerkClient(); // Clerk client instance
 
   // ✅ Save customer ID to Clerk
-  await client.users.updateUserMetadata(userId, {
-    privateMetadata: {
-      stripeCustomerId: session.customer as string,
-    },
-  });
+  // await client.users.updateUserMetadata(userId, {
+  //   privateMetadata: {
+  //     stripeCustomerId: session.customer as string,
+  //   },
+  // });
+  if (
+    session.mode === "payment" &&
+    session.metadata?.plan === "7Day" &&
+    session.metadata.userId
+  ) {
+    await client.users.updateUserMetadata(session.metadata.userId, {
+      privateMetadata: {
+        hasUsed7DayAccess: true,
+      },
+    });
+    console.log("✅ Marked user as having used 7-Day Access");
+  }
 
   // ✅ Process subscription using the ID from session
   if (session.subscription) {

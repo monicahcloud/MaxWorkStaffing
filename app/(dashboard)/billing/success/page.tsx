@@ -26,14 +26,14 @@ export default async function SuccessPage() {
     : null;
 
   const planName =
-    plan === "trial"
-      ? "Trial"
+    plan === "7Day"
+      ? "7Day"
       : priceInfo
       ? (priceInfo.product as Stripe.Product).name
-      : "Monthly"; // Fallback
+      : "Free"; // Fallback
 
   const renewalText =
-    subscription && plan !== "trial"
+    subscription && plan !== "7Day"
       ? subscription.stripeCancelAtPeriodEnd
         ? ` — Cancels on ${format(
             new Date(subscription.stripeCurrentPeriodEnd!),

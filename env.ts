@@ -27,9 +27,9 @@ export const env = createEnv({
     AFFINDA_DOCUMENT_TYPE_ID: z.string().min(1),
     PIKR_CLIENT_ID: z.string().min(1),
     PIKR_CLIENT_AUTH_KEY: z.string().min(1),
-    STRIPE_PRICE_ID_TRIAL: z.string().min(1),
-    STRIPE_PRICE_ID_ANNUAL: z.string().min(1),
     STRIPE_PRICE_ID_MONTHLY: z.string().min(1),
+    STRIPE_PRICE_7_DAY_ACCESS: z.string().min(1),
+    STRIPE_PRICE_ID_QUARTERLY: z.string().min(1),
   },
   client: {
     NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string().min(1),

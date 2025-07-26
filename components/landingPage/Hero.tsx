@@ -18,6 +18,7 @@ export function Hero() {
             src={logo}
             alt="MaxWork logo"
             className="mb-4 mx-auto lg:mx-0"
+            priority
           />
           <h1 className="text-4xl text-black sm:text-5xl md:text-6xl font-extrabold tracking-tight leading-tight">
             Land Your Next Job Faster

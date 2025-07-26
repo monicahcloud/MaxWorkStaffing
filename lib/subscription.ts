@@ -1,7 +1,7 @@
 import { cache } from "react";
 import prisma from "./prisma";
 
-export type SubscriptionLevel = "free" | "14Day" | "annual" | "trial";
+export type SubscriptionLevel = "free" | "7Day" | "monthly" | "quarterly";
 
 export const getUserSubscriptionLevel = cache(
   async (userId: string): Promise<SubscriptionLevel> => {
@@ -27,21 +27,23 @@ export const getUserSubscriptionLevel = cache(
     );
     console.log("📦 stripePriceId:", subscription.stripePriceId);
     console.log(
-      "📦 Expected STRIPE_PRICE_ID_ANNUAL:",
-      process.env.STRIPE_PRICE_ID_ANNUAL
+      "📦 Expected STRIPE_PRICE_ID_QUARTERLY:",
+      process.env.STRIPE_PRICE_ID_QUARTERLY
     );
 
-    if (subscription.stripePriceId === process.env.STRIPE_PRICE_ID_ANNUAL) {
-      return "annual";
+    if (subscription.stripePriceId === process.env.STRIPE_PRICE_ID_QUARTERLY) {
+      return "quarterly";
     }
 
     // Add any other plan logic here
-    if (subscription.stripePriceId === process.env.STRIPE_PRICE_ID_TRIAL) {
-      return "trial";
+    if (subscription.stripePriceId === process.env.STRIPE_PRICE_ID_MONTHLY) {
+      return "monthly";
     }
 
-    if (subscription.stripePriceId === process.env.STRIPE_PRICE_ID_14_DAY) {
-      return "14Day";
+    if (
+      subscription.stripePriceId === process.env.STRIPE_PRICE_ID_7_DAY_ACCESS
+    ) {
+      return "7Day";
     }
 
     console.warn(
@@ -53,5 +55,5 @@ export const getUserSubscriptionLevel = cache(
 
 // Add this to centralize access check logic
 export function hasProAccess(level: SubscriptionLevel): boolean {
-  return level === "annual" || level === "14Day" || level === "trial";
+  return level === "quarterly" || level === "7Day" || level === "monthly";
 }

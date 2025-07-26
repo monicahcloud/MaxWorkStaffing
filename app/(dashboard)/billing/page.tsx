@@ -39,8 +39,8 @@ export default async function BillingPage() {
       );
 
       planName =
-        plan === "trial"
-          ? "Trial"
+        plan === "7Day"
+          ? "7Day"
           : (priceInfo.product as Stripe.Product)?.name ?? "Monthly";
 
       if (subscription.stripeCurrentPeriodEnd) {

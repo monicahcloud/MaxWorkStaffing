@@ -11,7 +11,7 @@ export default function PremiumModal() {
   const { open, setOpen } = usePremiumModal();
   const [loading, setLoading] = useState(false);
 
-  async function handlePremiumClick(plan: "14Day" | "annual") {
+  async function handlePremiumClick(plan: "7Day" | "monthly" | "quarterly") {
     try {
       setLoading(true);
 
@@ -40,83 +40,118 @@ export default function PremiumModal() {
       <DialogContent className="w-full max-w-[90vw] sm:p-12 p-6">
         <div className="mx-auto w-full max-w-[1200px]">
           <DialogHeader className="text-center">
-            <DialogTitle className="text-2xl sm:text-2xl font-bold text-gray-900 mb-6">
+            <DialogTitle className="text-2xl font-bold text-gray-900 mb-6">
               Get Closer to Your Next Opportunity—Faster
             </DialogTitle>
           </DialogHeader>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Trial Plan */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* 7-Day Access Plan */}
             <div className="border border-gray-200 rounded-xl p-6 shadow-md relative bg-white">
               <span className="absolute top-[-12px] left-1/2 -translate-x-1/2 bg-red-500 text-white px-3 py-1 text-xs font-semibold rounded-full shadow text-center mb-2">
                 MOST POPULAR
               </span>
               <h3 className="text-center text-xl font-bold text-red-600 mb-2">
-                14-Day Access
+                7-Day Access
               </h3>
               <p className="text-center text-3xl font-bold text-gray-900 mb-4">
                 $2.95
               </p>
-              <ul className="space-y-2 text-sm text-gray-700">
-                <li className="flex items-center gap-2">
-                  <Check className="w-5 h-5 text-red-500" />
-                  Unlimited edits, downloads & emails
+              <ul className="text-sm text-gray-700 list-disc pl-5 space-y-2">
+                <li>
+                  Build and export <strong>3 custom AI-powered resumes</strong>
                 </li>
-                <li className="flex items-center gap-2">
-                  <Check className="w-5 h-5 text-red-500" />
-                  Create & customize unlimited resumes
+                <li>
+                  Create and download{" "}
+                  <strong>3 personalized cover letters</strong>
                 </li>
-                <li className="flex items-center gap-2">
-                  <Check className="w-5 h-5 text-red-500" />
-                  After 14 days, auto-renews at $23.95 billed every 4 weeks
+                <li>
+                  <strong>Unlimited access</strong> to all resume-building tools
                 </li>
-                <li className="flex items-center gap-2">
-                  <Check className="w-5 h-5 text-red-500" />
-                  Money-Back Guarantee
+                <li>
+                  <strong>Track unlimited jobs</strong> with our application
+                  tracker
+                </li>
+                <li>
+                  <strong>Search jobs</strong> across industries with smart
+                  filters
+                </li>
+                <li>
+                  <strong>Upload 1 PDF resumes</strong> for parsing and editing
                 </li>
               </ul>
+
               <Button
                 className="w-full mt-6 bg-gradient-to-r from-red-600 to-red-400 text-white font-bold text-lg"
-                onClick={() => handlePremiumClick("14Day")}
+                onClick={() => handlePremiumClick("7Day")}
                 disabled={loading}>
-                Get Started
+                Start 7-Day Access
               </Button>
             </div>
 
-            {/* Annual Plan */}
+            {/* Monthly Plan */}
             <div className="border border-gray-200 rounded-xl p-6 shadow-md bg-white">
               <h3 className="text-center text-xl font-bold text-red-600 mb-2">
-                Annual Access
+                Monthly Subscription
               </h3>
               <p className="text-center text-3xl font-bold text-gray-900 mb-2">
-                $7.95<span className="text-sm font-medium">/month</span>
+                $23.95<span className="text-sm font-medium">/month</span>
               </p>
               <p className="text-center text-xs text-gray-500 mb-4">
-                Billed yearly at $95.40 (save 69%)
+                Billed monthly, cancel anytime
+              </p>
+              <ul className="text-sm text-gray-700 list-disc pl-5 space-y-2">
+                <li>
+                  <strong>Unlimited access</strong> to all resume and cover
+                  letter tools
+                </li>
+                <li>
+                  <strong>Upload up to 5 PDF resumes</strong> for parsing and
+                  editing
+                </li>
+                <li>Includes job tracking, downloads, and smart suggestions</li>
+                <li>Cancel anytime — no contracts, no pressure</li>
+              </ul>
+
+              <Button
+                className="w-full mt-6 bg-gradient-to-r from-red-600 to-red-400 text-white font-bold text-lg"
+                onClick={() => handlePremiumClick("monthly")}
+                disabled={loading}>
+                Subscribe Monthly
+              </Button>
+            </div>
+
+            {/* Quarterly Plan */}
+            <div className="border border-gray-200 rounded-xl p-6 shadow-md bg-white">
+              <h3 className="text-center text-xl font-bold text-red-600 mb-2">
+                Quarterly Access
+              </h3>
+              <p className="text-center text-3xl font-bold text-gray-900 mb-2">
+                $59.95<span className="text-sm font-medium">/3 months</span>
+              </p>
+              <p className="text-center text-xs text-gray-500 mb-4">
+                Billed quarterly — save 17%
               </p>
               <ul className="space-y-2 text-sm text-gray-700">
                 <li className="flex items-center gap-2">
                   <Check className="w-5 h-5 text-red-500" />
-                  Billed annually
+                  Full access to all resume and job tools for 3 months
                 </li>
                 <li className="flex items-center gap-2">
                   <Check className="w-5 h-5 text-red-500" />
-                  Pay $95.40 up-front and save 69%
+                  Save 17% compared to monthly billing
                 </li>
                 <li className="flex items-center gap-2">
                   <Check className="w-5 h-5 text-red-500" />
-                  Automatically renews each year, cancel anytime
-                </li>
-                <li className="flex items-center gap-2">
-                  <Check className="w-5 h-5 text-red-500" />
-                  Pay once, use all year long
+                  Upload up to 5 PDFs + unlimited downloads and edits
                 </li>
               </ul>
+
               <Button
                 className="w-full mt-6 bg-gradient-to-r from-red-600 to-red-400 text-white font-bold text-lg"
-                onClick={() => handlePremiumClick("annual")}
+                onClick={() => handlePremiumClick("quarterly")}
                 disabled={loading}>
-                Annual Plan
+                Quarterly Plan
               </Button>
             </div>
           </div>
