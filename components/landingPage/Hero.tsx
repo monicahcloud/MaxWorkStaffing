@@ -59,7 +59,7 @@ export function Hero() {
           <div className="rounded-2xl overflow-hidden shadow-2xl border border-gray-200 bg-white">
             <Image
               src={dashboardMockup}
-              alt="Dashboard Mockup"
+              alt="Hero Image"
               className="w-full h-auto"
               priority
             />

@@ -5,10 +5,10 @@ export function canCreateResume(
   currentResumeCount: number
 ) {
   const maxResumeMap: Record<SubscriptionLevel, number> = {
-    trial: Infinity,
-    annual: Infinity,
-    free: 0,
-    "14Day": Infinity,
+    "7Day": 3,
+    quarterly: Infinity,
+    free: 1,
+    monthly: Infinity,
   };
 
   const maxResumes = maxResumeMap[subscriptionLevel];
@@ -16,14 +16,30 @@ export function canCreateResume(
   return currentResumeCount < maxResumes;
 }
 
+export function canCreateLetter(
+  subscriptionLevel: SubscriptionLevel,
+  currentLetterCount: number
+) {
+  const maxLetterMap: Record<SubscriptionLevel, number> = {
+    free: 1,
+    quarterly: Infinity,
+    monthly: Infinity,
+    "7Day": 3,
+  };
+
+  const maxLetters = maxLetterMap[subscriptionLevel];
+
+  return currentLetterCount < maxLetters;
+}
+
 export function canUseAITools(subscriptionLevel: SubscriptionLevel) {
-  return subscriptionLevel == "trial" || "annual" || "monthly";
+  return subscriptionLevel == "free" || "7Day" || "quarterly" || "monthly";
 }
 
 export function canUseCustomizations(subscriptionLevel: SubscriptionLevel) {
-  return subscriptionLevel === "trial" || "annual" || "monthly";
+  return subscriptionLevel === "free" || "7Day" || "quarterly" || "monthly";
 }
 
 export function canUseResume(subscriptionLevel: SubscriptionLevel) {
-  return subscriptionLevel === "trial" || "annual" || "monthly";
+  return subscriptionLevel === "free" || "7Day" || "quarterly" || "monthly";
 }

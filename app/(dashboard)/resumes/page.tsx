@@ -9,6 +9,7 @@ import ResumeItem from "./ResumeItem";
 import CreateResumeButton from "./CreateReumeButton";
 import { getUserSubscriptionLevel } from "@/lib/subscription";
 import UploadResumeButton from "./UploadResumeButton";
+import { canCreateResume } from "@/lib/permissions";
 
 export const metadata = {
   title: "My Resume",
@@ -61,7 +62,10 @@ async function Page() {
       <div className="p-10 md:px-20 lg:px-32">
         <div className="w-full flex justify-center">
           <div className="flex items-center gap-4">
-            <CreateResumeButton />
+            <CreateResumeButton
+              canCreate={canCreateResume(subscriptionLevel, totalCount)}
+            />
+            ,
             <UploadResumeButton />
           </div>
         </div>

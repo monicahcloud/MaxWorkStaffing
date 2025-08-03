@@ -37,15 +37,15 @@ export default function PremiumModal() {
 
   return (
     <Dialog open={open} onOpenChange={(state) => !loading && setOpen(state)}>
-      <DialogContent className="w-full max-w-[90vw] sm:p-12 p-6">
-        <div className="mx-auto w-full max-w-[1200px]">
-          <DialogHeader className="text-center">
-            <DialogTitle className="text-2xl font-bold text-gray-900 mb-6">
+      <DialogContent className="!max-w-none w-full sm:w-[95vw] lg:w-[90vw] xl:w-[1280px] sm:rounded-2xl rounded-lg p-0 overflow-hidden">
+        <div className="w-full px-6 py-10 sm:px-10">
+          <DialogHeader className="text-center mb-10">
+            <DialogTitle className="text-2xl font-bold text-gray-900 text-center">
               Get Closer to Your Next Opportunity—Faster
             </DialogTitle>
           </DialogHeader>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-full">
             {/* 7-Day Access Plan */}
             <div className="border border-gray-200 rounded-xl p-6 shadow-md relative bg-white">
               <span className="absolute top-[-12px] left-1/2 -translate-x-1/2 bg-red-500 text-white px-3 py-1 text-xs font-semibold rounded-full shadow text-center mb-2">
@@ -127,7 +127,7 @@ export default function PremiumModal() {
                 Quarterly Access
               </h3>
               <p className="text-center text-3xl font-bold text-gray-900 mb-2">
-                $59.95<span className="text-sm font-medium">/3 months</span>
+                $49.95<span className="text-sm font-medium">/3 months</span>
               </p>
               <p className="text-center text-xs text-gray-500 mb-4">
                 Billed quarterly — save 17%

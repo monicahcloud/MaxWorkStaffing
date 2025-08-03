@@ -1,7 +1,7 @@
 "use client";
 
 import { Card } from "@/components/ui/card";
-import { File, FileSearch, FileText, NotebookPen } from "lucide-react";
+import { FileSearch, FileText, NotebookPen } from "lucide-react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 
@@ -14,7 +14,7 @@ const toolCards = [
   {
     icon: <NotebookPen className="text-blue-600 w-6 h-6" />,
     title: "Create A Cover Letter",
-    linkHref: "coverletter",
+    linkHref: "coverletterbuilder",
   },
   {
     icon: <FileSearch className="text-blue-600 w-6 h-6" />,
