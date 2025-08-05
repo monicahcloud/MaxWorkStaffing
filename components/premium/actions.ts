@@ -10,51 +10,41 @@ export async function createCheckoutSession(
   plan: "7Day" | "monthly" | "quarterly"
 ) {
   const user = await currentUser();
+  if (!user) throw new Error("Unauthorized");
 
-  if (!user) {
-    throw new Error("Unauthorized");
-  }
   const isSubscription = plan !== "7Day";
 
   const session = await stripe.checkout.sessions.create({
     mode: isSubscription ? "subscription" : "payment",
     line_items: [{ price: priceId, quantity: 1 }],
-
-    // Redirect URLs after successful or canceled checkout
     success_url: `${env.NEXT_PUBLIC_BASE_URL}/billing/success`,
     cancel_url: `${env.NEXT_PUBLIC_BASE_URL}/billing`,
     customer_email: user.emailAddresses[0].emailAddress,
-    subscription_data: {
-      metadata: {
-        userId: user.id,
-        plan,
-      },
-
-      ...(isSubscription && {
-        subscription_data: {
-          metadata: {
-            userId: user.id,
-          },
-        },
-      }),
+    metadata: {
+      userId: user.id,
+      plan,
     },
-    // Display custom text about terms of service during checkout
+    ...(isSubscription && {
+      subscription_data: {
+        metadata: {
+          userId: user.id,
+        },
+      },
+    }),
     custom_text: {
       terms_of_service_acceptance: {
         message: `I have read MaxResumeBuilder's [terms of services](${env.NEXT_PUBLIC_BASE_URL}/tos) and agree to them.`,
       },
     },
-    // Require the user to accept terms of service before subscribing
     consent_collection: {
       terms_of_service: "required",
     },
   });
-  // If Stripe doesn’t return a valid URL, throw an error
+
   if (!session.url) {
     throw new Error("Failed to create checkout session.");
   }
 
-  // Return the Checkout URL so the frontend can redirect the user
   return session.url;
 }
 
