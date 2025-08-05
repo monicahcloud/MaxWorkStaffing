@@ -77,6 +77,7 @@ async function handleSessionCompleted(session: Stripe.Checkout.Session) {
       stripeCustomerId: session.customer as string,
     },
   });
+  // ✅ 7-Day access logic
   if (
     session.mode === "payment" &&
     session.metadata?.plan === "7Day" &&
