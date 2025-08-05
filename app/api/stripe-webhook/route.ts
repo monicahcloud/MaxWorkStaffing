@@ -72,11 +72,11 @@ async function handleSessionCompleted(session: Stripe.Checkout.Session) {
   const client = await clerkClient(); // Clerk client instance
 
   // ✅ Save customer ID to Clerk
-  // await client.users.updateUserMetadata(userId, {
-  //   privateMetadata: {
-  //     stripeCustomerId: session.customer as string,
-  //   },
-  // });
+  await client.users.updateUserMetadata(userId, {
+    privateMetadata: {
+      stripeCustomerId: session.customer as string,
+    },
+  });
   if (
     session.mode === "payment" &&
     session.metadata?.plan === "7Day" &&
