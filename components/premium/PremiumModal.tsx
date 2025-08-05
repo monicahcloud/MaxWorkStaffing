@@ -55,28 +55,34 @@ export default function PremiumModal() {
                 7-Day Access
               </h3>
               <p className="text-center text-3xl font-bold text-gray-900 mb-4">
-                $2.95
+                $5.95
               </p>
-              <ul className="text-sm text-gray-700 list-disc pl-5 space-y-2">
+              <ul className="text-sm text-gray-700 pl-5 space-y-2">
                 <li>
+                  <Check className="w-5 h-5 text-red-500" />
                   Build and export <strong>3 custom AI-powered resumes</strong>
                 </li>
                 <li>
+                  <Check className="w-5 h-5 text-red-500" />
                   Create and download{" "}
                   <strong>3 personalized cover letters</strong>
                 </li>
                 <li>
+                  <Check className="w-5 h-5 text-red-500" />
                   <strong>Unlimited access</strong> to all resume-building tools
                 </li>
                 <li>
+                  <Check className="w-5 h-5 text-red-500" />
                   <strong>Track unlimited jobs</strong> with our application
                   tracker
                 </li>
                 <li>
+                  <Check className="w-5 h-5 text-red-500" />
                   <strong>Search jobs</strong> across industries with smart
                   filters
                 </li>
                 <li>
+                  <Check className="w-5 h-5 text-red-500" />
                   <strong>Upload 1 PDF resumes</strong> for parsing and editing
                 </li>
               </ul>
@@ -100,17 +106,26 @@ export default function PremiumModal() {
               <p className="text-center text-xs text-gray-500 mb-4">
                 Billed monthly, cancel anytime
               </p>
-              <ul className="text-sm text-gray-700 list-disc pl-5 space-y-2">
+              <ul className="text-sm text-gray-700  pl-5 space-y-2">
                 <li>
+                  <Check className="w-5 h-5 text-red-500" />
                   <strong>Unlimited access</strong> to all resume and cover
                   letter tools
                 </li>
                 <li>
+                  <Check className="w-5 h-5 text-red-500" />
                   <strong>Upload up to 5 PDF resumes</strong> for parsing and
                   editing
                 </li>
-                <li>Includes job tracking, downloads, and smart suggestions</li>
-                <li>Cancel anytime — no contracts, no pressure</li>
+                <li>
+                  <Check className="w-5 h-5 text-red-500" />
+                  Includes job tracking, downloads, and smart suggestions
+                </li>
+                <li>
+                  <Check className="w-5 h-5 text-red-500" />
+                  <strong>Search jobs</strong> across industries with smart
+                  filters
+                </li>
               </ul>
 
               <Button
@@ -144,6 +159,10 @@ export default function PremiumModal() {
                 <li className="flex items-center gap-2">
                   <Check className="w-5 h-5 text-red-500" />
                   Upload up to 5 PDFs + unlimited downloads and edits
+                </li>
+                <li>
+                  <strong>Search jobs</strong> across industries with smart
+                  filters
                 </li>
               </ul>
 

@@ -11,7 +11,7 @@ import BillingPlans from "./BillingPlans";
 import { getUserSubscriptionLevel } from "@/lib/subscription";
 import ManageSubscriptionButton from "./ManageSubscriptionButton";
 import Link from "next/link";
-
+import { clerkClient } from "@clerk/clerk-sdk-node";
 export const metadata: Metadata = {
   title: "All Subscription Features",
 };
@@ -19,6 +19,11 @@ export const metadata: Metadata = {
 export default async function BillingPage() {
   const { userId } = await auth();
   if (!userId) return null;
+
+  const user = await clerkClient.users.getUser(userId); // ✅ CORRECT
+
+  const hasUsed7DayAccess =
+    (user.privateMetadata?.hasUsed7DayAccess as boolean) ?? false;
 
   const subscription = await prisma.userSubscription.findUnique({
     where: { userId },
@@ -80,7 +85,10 @@ export default async function BillingPage() {
         </Link>
       </div>
 
-      <BillingPlans subscription={subscription} />
+      <BillingPlans
+        subscription={subscription}
+        hasUsed7DayAccess={hasUsed7DayAccess}
+      />
     </main>
   );
 }

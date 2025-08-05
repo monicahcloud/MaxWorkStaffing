@@ -1,8 +1,9 @@
 "use server";
-import { metadata } from "@/app/layout";
+
 import { env } from "@/env";
 import stripe from "@/lib/stripe";
 import { currentUser } from "@clerk/nextjs/server";
+
 // This function creates a Stripe Checkout Session for a subscription
 export async function createCheckoutSession(priceId: string) {
   const user = await currentUser();
@@ -18,7 +19,7 @@ export async function createCheckoutSession(priceId: string) {
     success_url: `${env.NEXT_PUBLIC_BASE_URL}/billing/success`,
     cancel_url: `${env.NEXT_PUBLIC_BASE_URL}/billing`,
     customer_email: user.emailAddresses[0].emailAddress,
-    subscritption_data: {
+    subscription_data: {
       metadata: {
         userId: user.id,
       },

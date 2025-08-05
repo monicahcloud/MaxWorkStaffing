@@ -69,9 +69,13 @@ type SubscriptionType = {
 
 type Props = {
   subscription?: SubscriptionType;
+  hasUsed7DayAccess?: boolean;
 };
 
-export default function BillingPlans({ subscription }: Props) {
+export default function BillingPlans({
+  subscription,
+  hasUsed7DayAccess,
+}: Props) {
   const [loading, setLoading] = useState(false);
   let planName = "No Active Plan";
   let renewalText = "";
@@ -130,47 +134,49 @@ export default function BillingPlans({ subscription }: Props) {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* 7-Day Plan */}
-          <div className="border border-gray-300 rounded-lg p-4 shadow-md relative bg-white">
-            <div className="absolute top-[-10px] left-1/2 -translate-x-1/2 bg-red-500 text-white px-3 py-1 text-xs font-semibold rounded-full">
-              MOST POPULAR
-            </div>
-            <h3 className="text-2xl font-semibold text-center text-gray-700 mb-1 mt-4">
-              7–Day Plan
-            </h3>
-            <p className="text-center text-2xl font-bold text-gray-900 mb-4">
-              $2.95
-            </p>
-            <ul className="text-sm text-gray-700 list-disc pl-5 space-y-2">
-              <li>
-                Build and export <strong>3 custom AI-powered resumes</strong>
-              </li>
-              <li>
-                Create and download{" "}
-                <strong>3 personalized cover letters</strong>
-              </li>
-              <li>
-                <strong>Unlimited access</strong> to all resume-building tools
-              </li>
-              <li>
-                <strong>Track unlimited jobs</strong> with our application
-                tracker
-              </li>
-              <li>
-                <strong>Search jobs</strong> across industries with smart
-                filters
-              </li>
-              <li>
-                <strong>Upload 1 PDF resumes</strong> for parsing and editing
-              </li>
-            </ul>
+          {!hasUsed7DayAccess && (
+            <div className="border border-gray-300 rounded-lg p-4 shadow-md relative bg-white">
+              <div className="absolute top-[-10px] left-1/2 -translate-x-1/2 bg-red-500 text-white px-3 py-1 text-xs font-semibold rounded-full">
+                MOST POPULAR
+              </div>
+              <h3 className="text-2xl font-semibold text-center text-gray-700 mb-1 mt-4">
+                7–Day Plan
+              </h3>
+              <p className="text-center text-2xl font-bold text-gray-900 mb-4">
+                $5.95
+              </p>
+              <ul className="text-sm text-gray-700 list-disc pl-5 space-y-2">
+                <li>
+                  Build and export <strong>3 custom AI-powered resumes</strong>
+                </li>
+                <li>
+                  Create and download{" "}
+                  <strong>3 personalized cover letters</strong>
+                </li>
+                <li>
+                  <strong>Unlimited access</strong> to all resume-building tools
+                </li>
+                <li>
+                  <strong>Track unlimited jobs</strong> with our application
+                  tracker
+                </li>
+                <li>
+                  <strong>Search jobs</strong> across industries with smart
+                  filters
+                </li>
+                <li>
+                  <strong>Upload 1 PDF resumes</strong> for parsing and editing
+                </li>
+              </ul>
 
-            <Button
-              className="w-full mt-6 bg-gradient-to-r from-red-600 to-red-400 text-white font-bold text-lg"
-              onClick={() => handlePremiumClick("7Day")}
-              disabled={loading}>
-              Start 7-Day Access
-            </Button>
-          </div>
+              <Button
+                className="w-full mt-6 bg-gradient-to-r from-red-600 to-red-400 text-white font-bold text-lg"
+                onClick={() => handlePremiumClick("7Day")}
+                disabled={loading}>
+                Start 7-Day Access
+              </Button>
+            </div>
+          )}
 
           {/* Monthly Plan */}
           <div className="border border-gray-300 rounded-lg p-4 shadow-md bg-white">
