@@ -55,36 +55,42 @@ export default function PremiumModal() {
                 7-Day Access
               </h3>
               <p className="text-center text-3xl font-bold text-gray-900 mb-4">
-                $5.95
+                $5.95<span className="text-sm font-medium"> (one-time)</span>
               </p>
-              <ul className="text-sm text-gray-700 pl-5 space-y-2">
-                <li>
+              <ul className="text-sm text-gray-700 ">
+                <li className="flex items-center gap-2">
                   <Check className="w-5 h-5 text-red-500" />
-                  Build and export <strong>3 custom AI-powered resumes</strong>
+                  <span>
+                    <strong>Build & download 3 resumes</strong> using AI tools
+                  </span>
                 </li>
-                <li>
+                <li className="flex items-center gap-2">
                   <Check className="w-5 h-5 text-red-500" />
-                  Create and download{" "}
-                  <strong>3 personalized cover letters</strong>
+                  <span>
+                    <strong>Create 3 custom cover letters</strong> instantly
+                  </span>
                 </li>
-                <li>
+                <li className="flex items-center gap-2">
                   <Check className="w-5 h-5 text-red-500" />
-                  <strong>Unlimited access</strong> to all resume-building tools
+                  <span>
+                    <strong>7 days unlimited access</strong> to all features
+                  </span>
                 </li>
-                <li>
+                <li className="flex items-center gap-2">
                   <Check className="w-5 h-5 text-red-500" />
-                  <strong>Track unlimited jobs</strong> with our application
-                  tracker
+                  <span>Track unlimited jobs with our smart dashboard</span>
                 </li>
-                <li>
+                <li className="flex items-center gap-2">
                   <Check className="w-5 h-5 text-red-500" />
-                  <strong>Search jobs</strong> across industries with smart
-                  filters
+                  <span>Search job listings with intelligent filters</span>
                 </li>
-                <li>
+                {/* <li className="flex items-center gap-2">
                   <Check className="w-5 h-5 text-red-500" />
-                  <strong>Upload 1 PDF resumes</strong> for parsing and editing
-                </li>
+                  <span>
+                    <strong>Upload 1 PDF resumes</strong> for parsing and
+                    editing
+                  </span>
+                </li> */}
               </ul>
 
               <Button
@@ -93,6 +99,9 @@ export default function PremiumModal() {
                 disabled={loading}>
                 Start 7-Day Access
               </Button>
+              <p className="text-xs text-center text-gray-500 mt-2">
+                Just $5.95 — the perfect short-term option
+              </p>
             </div>
 
             {/* Monthly Plan */}
@@ -107,24 +116,30 @@ export default function PremiumModal() {
                 Billed monthly, cancel anytime
               </p>
               <ul className="text-sm text-gray-700  pl-5 space-y-2">
-                <li>
+                <li className="flex items-center gap-2">
                   <Check className="w-5 h-5 text-red-500" />
-                  <strong>Unlimited access</strong> to all resume and cover
-                  letter tools
+                  <span>
+                    <strong>Unlimited access</strong> to all tools for 30 days
+                  </span>
                 </li>
-                <li>
+                {/* <li className="flex items-center gap-2">
                   <Check className="w-5 h-5 text-red-500" />
-                  <strong>Upload up to 5 PDF resumes</strong> for parsing and
-                  editing
+                  <span>
+                    <strong>Upload up to 5 PDF resumes</strong> for parsing and
+                    editing
+                  </span>
+                </li> */}
+                <li className="flex items-center gap-2">
+                  <Check className="w-5 h-5 text-red-500" />
+                  <span>Download unlimited resumes and cover letters</span>
                 </li>
-                <li>
+                <li className="flex items-center gap-2">
                   <Check className="w-5 h-5 text-red-500" />
-                  Includes job tracking, downloads, and smart suggestions
-                </li>
-                <li>
-                  <Check className="w-5 h-5 text-red-500" />
-                  <strong>Search jobs</strong> across industries with smart
-                  filters
+                  <span>
+                    {" "}
+                    <strong>Search jobs</strong> across industries with smart
+                    filters
+                  </span>
                 </li>
               </ul>
 
@@ -134,6 +149,9 @@ export default function PremiumModal() {
                 disabled={loading}>
                 Subscribe Monthly
               </Button>
+              <p className="text-xs text-center text-gray-500 mt-2">
+                Same as 4 weekly passes — but no interruptions.
+              </p>
             </div>
 
             {/* Quarterly Plan */}
@@ -142,27 +160,38 @@ export default function PremiumModal() {
                 Quarterly Access
               </h3>
               <p className="text-center text-3xl font-bold text-gray-900 mb-2">
-                $49.95<span className="text-sm font-medium">/3 months</span>
+                $16.65<span className="text-sm font-medium">/month</span>
               </p>
               <p className="text-center text-xs text-gray-500 mb-4">
-                Billed quarterly — save 17%
+                Billed $49.95 every 3 months — save over 30%
               </p>
               <ul className="space-y-2 text-sm text-gray-700">
                 <li className="flex items-center gap-2">
                   <Check className="w-5 h-5 text-red-500" />
-                  Full access to all resume and job tools for 3 months
+                  <span>
+                    <strong>Full access for 3 months</strong> — uninterrupted
+                  </span>
                 </li>
                 <li className="flex items-center gap-2">
                   <Check className="w-5 h-5 text-red-500" />
-                  Save 17% compared to monthly billing
+                  <span>
+                    <span>
+                      <strong>Just $16.65/month</strong> — billed as $49.95
+                      quarterly
+                    </span>
+                  </span>
                 </li>
                 <li className="flex items-center gap-2">
                   <Check className="w-5 h-5 text-red-500" />
-                  Upload up to 5 PDFs + unlimited downloads and edits
+                  <span>
+                    <strong>Save 30%+</strong> vs monthly subscription
+                  </span>
                 </li>
-                <li>
-                  <strong>Search jobs</strong> across industries with smart
-                  filters
+                <li className="flex items-center gap-2">
+                  <Check className="w-5 h-5 text-red-500" />
+                  <span>
+                    Full access to job search, tracker, and smart resume tools
+                  </span>
                 </li>
               </ul>
 
@@ -172,6 +201,9 @@ export default function PremiumModal() {
                 disabled={loading}>
                 Quarterly Plan
               </Button>
+              <p className="text-xs text-center text-gray-500 mt-2">
+                Best value — billed $49.95 every 3 months.
+              </p>
             </div>
           </div>
         </div>

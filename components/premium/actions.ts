@@ -5,16 +5,21 @@ import stripe from "@/lib/stripe";
 import { currentUser } from "@clerk/nextjs/server";
 
 // This function creates a Stripe Checkout Session for a subscription
-export async function createCheckoutSession(priceId: string) {
+export async function createCheckoutSession(
+  priceId: string,
+  plan: "7Day" | "monthly" | "quarterly"
+) {
   const user = await currentUser();
 
   if (!user) {
     throw new Error("Unauthorized");
   }
+  const isSubscription = plan !== "7Day";
 
   const session = await stripe.checkout.sessions.create({
+    mode: isSubscription ? "subscription" : "payment",
     line_items: [{ price: priceId, quantity: 1 }],
-    mode: "subscription",
+
     // Redirect URLs after successful or canceled checkout
     success_url: `${env.NEXT_PUBLIC_BASE_URL}/billing/success`,
     cancel_url: `${env.NEXT_PUBLIC_BASE_URL}/billing`,
@@ -22,7 +27,16 @@ export async function createCheckoutSession(priceId: string) {
     subscription_data: {
       metadata: {
         userId: user.id,
+        plan,
       },
+
+      ...(isSubscription && {
+        subscription_data: {
+          metadata: {
+            userId: user.id,
+          },
+        },
+      }),
     },
     // Display custom text about terms of service during checkout
     custom_text: {

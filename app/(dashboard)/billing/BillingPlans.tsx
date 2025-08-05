@@ -82,14 +82,14 @@ export default function BillingPlans({
 
   if (subscription?.stripePriceId) {
     const { stripePriceId } = subscription;
-    if (stripePriceId === process.env.STRIPE_PRICE_ID_ANNUAL) {
-      planName = "Annual Plan";
+    if (stripePriceId === process.env.STRIPE_PRICE_ID_QUARTERLY) {
+      planName = "Quarterly Plan";
     } else if (stripePriceId === process.env.STRIPE_PRICE_ID_MONTHLY) {
       planName = "Monthly Plan";
-    } else if (stripePriceId === process.env.STRIPE_PRICE_ID_QUARTERLY) {
-      planName = "Quarterly Plan";
-    } else {
+    } else if (stripePriceId === process.env.STRIPE_PRICE_7_DAY_ACCESS) {
       planName = "7-Day Access";
+    } else {
+      planName = "Free";
     }
 
     if (subscription.stripeCurrentPeriodEnd instanceof Date) {

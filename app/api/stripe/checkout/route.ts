@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import stripe from "@/lib/stripe";
+// import stripe from "@/lib/stripe";
 import { currentUser } from "@clerk/nextjs/server";
 import { env } from "@/env";
+import { createCheckoutSession } from "@/components/premium/actions";
 
 export async function POST(req: NextRequest) {
   const user = await currentUser();
@@ -12,7 +13,6 @@ export async function POST(req: NextRequest) {
   const { plan } = await req.json();
 
   let priceId: string | undefined;
-  let mode: "payment" | "subscription";
 
   if (plan === "7Day") {
     if (user.privateMetadata.hasUsed7DayAccess) {
@@ -22,13 +22,13 @@ export async function POST(req: NextRequest) {
       );
     }
     priceId = env.STRIPE_PRICE_7_DAY_ACCESS;
-    mode = "payment";
+    // mode = "payment";
   } else if (plan === "monthly") {
     priceId = env.STRIPE_PRICE_ID_MONTHLY;
-    mode = "subscription";
+    // mode = "subscription";
   } else if (plan === "quarterly") {
     priceId = env.STRIPE_PRICE_ID_QUARTERLY;
-    mode = "subscription";
+    // mode = "subscription";
   } else {
     return NextResponse.json(
       { error: "Invalid plan selected" },
@@ -36,28 +36,29 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const stripeCustomerId = user.privateMetadata.stripeCustomerId as
-    | string
-    | undefined;
+  // const stripeCustomerId = user.privateMetadata.stripeCustomerId as
+  //   | string
+  //   | undefined;
 
-  const session = await stripe.checkout.sessions.create({
-    mode,
-    line_items: [{ price: priceId, quantity: 1 }],
-    customer: stripeCustomerId,
-    customer_email: stripeCustomerId
-      ? undefined
-      : user.emailAddresses[0].emailAddress,
-    success_url: `${env.NEXT_PUBLIC_BASE_URL}/billing/success`,
-    cancel_url: `${env.NEXT_PUBLIC_BASE_URL}/billing`,
-    metadata: { userId: user.id, plan },
-    ...(mode === "subscription"
-      ? {
-          subscription_data: {
-            metadata: { userId: user.id },
-          },
-        }
-      : {}),
-  });
+  // const session = await stripe.checkout.sessions.create({
+  //   mode,
+  //   line_items: [{ price: priceId, quantity: 1 }],
+  //   customer: stripeCustomerId,
+  //   customer_email: stripeCustomerId
+  //     ? undefined
+  //     : user.emailAddresses[0].emailAddress,
+  //   success_url: `${env.NEXT_PUBLIC_BASE_URL}/billing/success`,
+  //   cancel_url: `${env.NEXT_PUBLIC_BASE_URL}/billing`,
+  //   metadata: { userId: user.id, plan },
+  //   ...(mode === "subscription"
+  //     ? {
+  //         subscription_data: {
+  //           metadata: { userId: user.id },
+  //         },
+  //       }
+  //     : {}),
+  // });
+  const url = await createCheckoutSession(priceId, plan); // Add plan to metadata
 
-  return NextResponse.json({ url: session.url });
+  return NextResponse.json({ url });
 }
