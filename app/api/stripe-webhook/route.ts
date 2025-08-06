@@ -114,6 +114,7 @@ async function handleSubscriptionCreatedOrUpdated(subscriptionId: string) {
 
   const clerkId = subscription.metadata?.userId;
   if (!clerkId) {
+    console.warn("⚠️ Metadata userId missing. Looking up by customer ID…");
     throw new Error("Missing Clerk ID in metadata.");
   }
 
@@ -128,7 +129,7 @@ async function handleSubscriptionCreatedOrUpdated(subscriptionId: string) {
     subscription.status === "past_due"
   ) {
     await prisma.userSubscription.upsert({
-      where: { clerkId: subscription.metadata.userId }, // Clerk ID is in metadata
+      where: { clerkId: subscription.metadata?.userId }, // Clerk ID is in metadata
       create: {
         clerkId: subscription.metadata.userId,
         userId: subscription.metadata.userId,
