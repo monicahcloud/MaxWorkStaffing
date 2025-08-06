@@ -36,7 +36,8 @@ import { useRouter } from "next/navigation";
 import { deleteCoverLetter } from "../coverletterbuilder/editor/actions";
 import ShareButton from "@/app/share/ShareButton";
 import { hasProAccess, SubscriptionLevel } from "@/lib/subscription";
-import RedirectToBilling from "../billing/RedirectToBilling";
+import usePremiumModal from "@/hooks/usePremiumModal";
+// import RedirectToBilling from "../billing/RedirectToBilling";
 
 interface CoverLetterProps {
   coverletter: CoverLetterServerData;
@@ -103,11 +104,11 @@ function MoreMenu({
   subscriptionLevel,
 }: MoreMenuProps) {
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
-  const [showRedirect, setShowRedirect] = useState(false);
+  // const [showRedirect, setShowRedirect] = useState(false);
   const router = useRouter();
   const canAccessPremium = hasProAccess(subscriptionLevel);
-
-  if (showRedirect && !canAccessPremium) return <RedirectToBilling />;
+  const { setOpen } = usePremiumModal();
+  // if (showRedirect && !canAccessPremium) return <RedirectToBilling />;
 
   function handleEdit() {
     router.push(`/coverletterbuilder/editor?coverLetterId=${coverletter.id}`);
@@ -115,7 +116,13 @@ function MoreMenu({
   function handleView() {
     router.push(`/coverletter/preview/${coverletter.id}`);
   }
-
+  function handlePremiumAction(callback: () => void) {
+    if (canAccessPremium) {
+      callback();
+    } else {
+      setOpen(true); // 👈 opens the modal instead of redirecting
+    }
+  }
   return (
     <>
       <DropdownMenu>
@@ -143,16 +150,12 @@ function MoreMenu({
             </DropdownMenuItem>
             <DropdownMenuItem
               className="flex items-center gap-2"
-              onClick={() =>
-                canAccessPremium ? onPrintClick() : setShowRedirect(true)
-              }>
+              onClick={() => handlePremiumAction(() => onPrintClick())}>
               <Printer className="size-4" />
               Print
             </DropdownMenuItem>
             <DropdownMenuItem
-              onClick={() =>
-                canAccessPremium ? onPrintClick() : setShowRedirect(true)
-              }>
+              onClick={() => handlePremiumAction(() => onPrintClick())}>
               <Download className="size-4" />
               Download
             </DropdownMenuItem>
@@ -173,7 +176,7 @@ function MoreMenu({
         <Button
           variant="outline"
           className="w-full justify-center text-left text-sm"
-          onClick={() => setShowRedirect(true)}>
+          onClick={() => handlePremiumAction(() => onPrintClick())}>
           Share Resume
         </Button>
       )}

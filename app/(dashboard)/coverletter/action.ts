@@ -5,6 +5,8 @@ import { coverLetterSchema, CoverLetterValues } from "@/lib/validation";
 import prisma from "@/lib/prisma";
 import { del, put } from "@vercel/blob";
 import path from "path";
+import { getUserSubscriptionLevel } from "@/lib/subscription";
+import { canCreateResume } from "@/lib/permissions";
 
 export async function saveCoverLetter(values: CoverLetterValues) {
   const { id } = values;
@@ -15,7 +17,18 @@ export async function saveCoverLetter(values: CoverLetterValues) {
   if (!userId) {
     throw new Error("User not authenticated");
   }
-  // TODO: Check subscription trial end
+   const subscriptionLevel = await getUserSubscriptionLevel(userId);
+
+   if (!id) {
+     const coverLetterCount = await prisma.coverLetter.count({
+       where: { userId },
+     });
+     if (!canCreateResume(subscriptionLevel, coverLetterCount)) {
+       throw new Error(
+         "Maximum coverLetter count reached for this subscription level"
+       );
+     }
+   }
 
   const existingCoverLetter = id
     ? await prisma.coverLetter.findUnique({ where: { id, userId } })

@@ -47,6 +47,7 @@ export default function PremiumModal() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-full">
             {/* 7-Day Access Plan */}
+            {/* {!hasUsed7DayAccess && ( */}
             <div className="border border-gray-200 rounded-xl p-6 shadow-md relative bg-white">
               <span className="absolute top-[-12px] left-1/2 -translate-x-1/2 bg-red-500 text-white px-3 py-1 text-xs font-semibold rounded-full shadow text-center mb-2">
                 MOST POPULAR
@@ -103,7 +104,7 @@ export default function PremiumModal() {
                 Just $5.95 — the perfect short-term option
               </p>
             </div>
-
+            {/* )} */}
             {/* Monthly Plan */}
             <div className="border border-gray-200 rounded-xl p-6 shadow-md bg-white">
               <h3 className="text-center text-xl font-bold text-red-600 mb-2">

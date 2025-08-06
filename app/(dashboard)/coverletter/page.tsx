@@ -43,7 +43,7 @@ async function CoverLetterRoute() {
 
   return (
     <main>
-      <SectionTitle text="my Cover Letters" subtext={`Total: ${totalCount}`} />
+      <SectionTitle text="My Cover Letters" subtext={`Total: ${totalCount}`} />
       <div className="p-10 md:px-20 lg:px-32">
         <div className="w-full flex justify-center">
           <div className="flex items-center gap-4">
@@ -57,7 +57,7 @@ async function CoverLetterRoute() {
             <CoverLetterItem
               key={letter.id}
               coverletter={letter}
-              subscriptionLevel={"free"}
+              subscriptionLevel={subscriptionLevel}
             />
           ))}
         </div>

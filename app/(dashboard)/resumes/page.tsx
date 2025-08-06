@@ -65,7 +65,6 @@ async function Page() {
             <CreateResumeButton
               canCreate={canCreateResume(subscriptionLevel, totalCount)}
             />
-            ,
             <UploadResumeButton />
           </div>
         </div>

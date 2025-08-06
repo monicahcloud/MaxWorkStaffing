@@ -64,6 +64,7 @@ export async function POST(req: NextRequest) {
 
 // Handles when a checkout session is completed
 async function handleSessionCompleted(session: Stripe.Checkout.Session) {
+  console.log("handleSessionCompleted");
   const userId = session.metadata?.userId; // Extract userId from session metadata
 
   if (!userId) {
@@ -108,6 +109,7 @@ async function handleSessionCompleted(session: Stripe.Checkout.Session) {
 
 // Handles creation or update of a subscription
 async function handleSubscriptionCreatedOrUpdated(subscriptionId: string) {
+  console.log("handleSubscriptionCreatedOrUpdated");
   const subscription = await stripe.subscriptions.retrieve(subscriptionId);
 
   const clerkId = subscription.metadata?.userId;
@@ -186,6 +188,7 @@ async function handleSubscriptionScheduleUpdated(
 
 // Handles subscription cancellation
 async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
+  console.log("handleSubscriptionDeleted");
   await prisma.userSubscription.deleteMany({
     where: {
       stripeCustomerId: subscription.customer as string,

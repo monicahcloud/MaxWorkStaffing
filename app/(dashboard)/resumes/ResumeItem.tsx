@@ -41,7 +41,9 @@ import {
 import { useRouter } from "next/navigation";
 import ShareButton from "@/app/share/ShareButton";
 import { hasProAccess, SubscriptionLevel } from "@/lib/subscription";
-import RedirectToBilling from "../billing/RedirectToBilling";
+// import RedirectToBilling from "../billing/RedirectToBilling";
+import usePremiumModal from "@/hooks/usePremiumModal";
+import { toast } from "sonner";
 
 interface ResumeItemProps {
   resume: ResumeServerData;
@@ -151,11 +153,11 @@ function MoreMenu({
   subscriptionLevel,
 }: MoreMenuProps) {
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
-  const [showRedirect, setShowRedirect] = useState(false);
+  // const [showRedirect, setShowRedirect] = useState(false);
   const router = useRouter();
   const canAccessPremium = hasProAccess(subscriptionLevel);
-
-  if (showRedirect && !canAccessPremium) return <RedirectToBilling />;
+  const { setOpen } = usePremiumModal();
+  // if (showRedirect && !canAccessPremium) return <RedirectToBilling />;
 
   function handleEdit() {
     router.push(`/editor?resumeId=${resume.id}`);
@@ -163,7 +165,13 @@ function MoreMenu({
   function handleView() {
     router.push(`/resumes/${resume.id}`);
   }
-
+  function handlePremiumAction(callback: () => void) {
+    if (canAccessPremium) {
+      callback();
+    } else {
+      setOpen(true); // 👈 opens the modal instead of redirecting
+    }
+  }
   return (
     <>
       <DropdownMenu>
@@ -188,27 +196,27 @@ function MoreMenu({
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() =>
-                  canAccessPremium
-                    ? window.open(resume.uploadedFileUrl!, "_blank")
-                    : setShowRedirect(true)
+                  handlePremiumAction(() =>
+                    window.open(resume.uploadedFileUrl!, "_blank")
+                  )
                 }>
                 <Eye className="size-4" />
                 View
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() =>
-                  canAccessPremium
-                    ? window.open(resume.uploadedFileUrl!, "_blank")
-                    : setShowRedirect(true)
+                  handlePremiumAction(() =>
+                    window.open(resume.uploadedFileUrl!, "_blank")
+                  )
                 }>
                 <Printer className="size-4" />
                 Print
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() =>
-                  canAccessPremium
-                    ? window.open(resume.uploadedFileUrl!, "_blank")
-                    : setShowRedirect(true)
+                  handlePremiumAction(() =>
+                    window.open(resume.uploadedFileUrl!, "_blank")
+                  )
                 }>
                 <Download className="size-4" />
                 Download
@@ -231,16 +239,12 @@ function MoreMenu({
                 View
               </DropdownMenuItem>
               <DropdownMenuItem
-                onClick={() =>
-                  canAccessPremium ? onPrintClick() : setShowRedirect(true)
-                }>
+                onClick={() => handlePremiumAction(() => onPrintClick())}>
                 <Printer className="size-4" />
                 Print
               </DropdownMenuItem>
               <DropdownMenuItem
-                onClick={() =>
-                  canAccessPremium ? onPrintClick() : setShowRedirect(true)
-                }>
+                onClick={() => handlePremiumAction(() => onPrintClick())}>
                 <Download className="size-4" />
                 Download
               </DropdownMenuItem>
@@ -263,7 +267,7 @@ function MoreMenu({
           <Button
             variant="outline"
             className="w-full justify-center text-left text-sm"
-            onClick={() => setShowRedirect(true)}>
+            onClick={() => handlePremiumAction(() => onPrintClick())}>
             Share Resume
           </Button>
         ))}
@@ -296,6 +300,7 @@ function DeleteConfirmationDialog({
         .then(() => onOpenChange(false))
         .catch((error) => {
           console.error(error);
+          toast.error("Something went wrong. Please try again.");
         });
     });
   }
@@ -304,7 +309,7 @@ function DeleteConfirmationDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Delete resume?</DialogTitle>
+          <DialogTitle>Delete Resume?</DialogTitle>
           <DialogDescription>
             This will permanently delete this resume. This action cannot be
             undone.

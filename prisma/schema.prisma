@@ -125,8 +125,8 @@ model UserSubscription {
   stripeCurrentPeriodEnd  DateTime?
   stripeCancelAtPeriodEnd Boolean  @default(false)
 
-  stripePlanName          String?  // <-- add this
-  stripeInterval          String?  // <-- and this
+  stripePlanName          String?  
+  stripeInterval          String?  
 
   createdAt               DateTime @default(now())
   updatedAt               DateTime @updatedAt

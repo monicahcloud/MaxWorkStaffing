@@ -10,6 +10,7 @@ import {
   Briefcase,
   // DollarSign,
   Globe2,
+  Check,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
@@ -135,38 +136,50 @@ export default function BillingPlans({
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* 7-Day Plan */}
           {!hasUsed7DayAccess && (
-            <div className="border border-gray-300 rounded-lg p-4 shadow-md relative bg-white">
+            <div className="border border-gray-200 rounded-lg p-4 shadow-md relative bg-white">
               <div className="absolute top-[-10px] left-1/2 -translate-x-1/2 bg-red-500 text-white px-3 py-1 text-xs font-semibold rounded-full">
                 MOST POPULAR
               </div>
-              <h3 className="text-2xl font-semibold text-center text-gray-700 mb-1 mt-4">
-                7–Day Plan
+              <h3 className="text-center text-xl font-bold text-red-600 m-2 ">
+                7–Day Access
               </h3>
-              <p className="text-center text-2xl font-bold text-gray-900 mb-4">
-                $5.95
+              <p className="text-center text-3xl font-bold text-gray-900 mb-4">
+                $5.95<span className="text-sm font-medium"> (one-time)</span>
               </p>
-              <ul className="text-sm text-gray-700 list-disc pl-5 space-y-2">
-                <li>
-                  Build and export <strong>3 custom AI-powered resumes</strong>
+              <ul className="text-sm text-gray-700 ">
+                <li className="flex items-center gap-2">
+                  <Check className="w-5 h-5 text-red-500" />
+                  <span>
+                    <strong>Build & download 3 resumes</strong> using AI tools
+                  </span>
                 </li>
-                <li>
-                  Create and download{" "}
-                  <strong>3 personalized cover letters</strong>
+                <li className="flex items-center gap-2">
+                  <Check className="w-5 h-5 text-red-500" />
+                  <span>
+                    <strong>Create 3 custom cover letters</strong> instantly
+                  </span>
                 </li>
-                <li>
-                  <strong>Unlimited access</strong> to all resume-building tools
+                <li className="flex items-center gap-2">
+                  <Check className="w-5 h-5 text-red-500" />
+                  <span>
+                    <strong>7 days unlimited access</strong> to all features
+                  </span>
                 </li>
-                <li>
-                  <strong>Track unlimited jobs</strong> with our application
-                  tracker
+                <li className="flex items-center gap-2">
+                  <Check className="w-5 h-5 text-red-500" />
+                  <span>Track unlimited jobs with our smart dashboard</span>
                 </li>
-                <li>
-                  <strong>Search jobs</strong> across industries with smart
-                  filters
+                <li className="flex items-center gap-2">
+                  <Check className="w-5 h-5 text-red-500" />
+                  <span>Search job listings with intelligent filters</span>
                 </li>
-                <li>
-                  <strong>Upload 1 PDF resumes</strong> for parsing and editing
-                </li>
+                {/* <li className="flex items-center gap-2">
+                  <Check className="w-5 h-5 text-red-500" />
+                  <span>
+                    <strong>Upload 1 PDF resumes</strong> for parsing and
+                    editing
+                  </span>
+                </li> */}
               </ul>
 
               <Button
@@ -175,28 +188,42 @@ export default function BillingPlans({
                 disabled={loading}>
                 Start 7-Day Access
               </Button>
+              <p className="text-xs text-center text-gray-500 mt-2">
+                Just $5.95 — the perfect short-term option
+              </p>
             </div>
           )}
 
           {/* Monthly Plan */}
           <div className="border border-gray-300 rounded-lg p-4 shadow-md bg-white">
-            <h3 className="text-2xl font-semibold text-center text-gray-700 mb-1">
+            <h3 className="text-center text-xl font-bold text-red-600 mb-2">
               Monthly Plan
             </h3>
-            <p className="text-center text-2xl font-bold text-gray-900 mb-4">
-              $23.95 <span className="text-sm">/mo</span>
+            <p className="text-center text-3xl font-bold text-gray-900 mb-2">
+              $23.95<span className="text-sm font-medium">/month</span>
             </p>
-            <ul className="text-sm text-gray-700 list-disc pl-5 space-y-2">
-              <li>
-                <strong>Unlimited access</strong> to all resume and cover letter
-                tools
+            <p className="text-center text-xs text-gray-500 mb-4">
+              Billed monthly, cancel anytime
+            </p>
+            <ul className="text-sm text-gray-700  pl-5 space-y-2">
+              <li className="flex items-center gap-2">
+                <Check className="w-5 h-5 text-red-500" />
+                <span>
+                  <strong>Unlimited access</strong> to all tools for 30 days
+                </span>
               </li>
-              <li>
-                <strong>Upload up to 5 PDF resumes</strong> for parsing and
-                editing
+              <li className="flex items-center gap-2">
+                <Check className="w-5 h-5 text-red-500" />
+                <span>Download unlimited resumes and cover letters</span>
               </li>
-              <li>Includes job tracking, downloads, and smart suggestions</li>
-              <li>Cancel anytime — no contracts, no pressure</li>
+              <li className="flex items-center gap-2">
+                <Check className="w-5 h-5 text-red-500" />
+                <span>
+                  {" "}
+                  <strong>Search jobs</strong> across industries with smart
+                  filters
+                </span>
+              </li>
             </ul>
 
             <Button
@@ -205,27 +232,60 @@ export default function BillingPlans({
               disabled={loading}>
               Subscribe Monthly
             </Button>
+            <p className="text-xs text-center text-gray-500 mt-2">
+              Same as 4 weekly passes — but no interruptions.
+            </p>
           </div>
 
           {/* Quarterly Plan */}
           <div className="border border-gray-300 rounded-lg p-4 shadow-md bg-white">
-            <h3 className="text-2xl font-semibold text-center text-gray-700 mb-1">
-              Quarterly Plan
+            <h3 className="text-center text-xl font-bold text-red-600 mb-2">
+              Quarterly Access
             </h3>
-            <p className="text-center text-2xl font-bold text-gray-900 mb-4">
-              $16.65 <span className="text-sm">/mo</span>
+            <p className="text-center text-3xl font-bold text-gray-900 mb-2">
+              $16.65<span className="text-sm font-medium">/month</span>
             </p>
-            <ul className="text-sm text-gray-700 list-disc pl-5 space-y-2">
-              <li>Save 17% over monthly billing</li>
-              <li>Full access to all tools and downloads</li>
-              <li>Renews @ $49.95 every 3 months unless canceled</li>
+            <p className="text-center text-xs text-gray-500 mb-4">
+              Billed $49.95 every 3 months — save over 30%
+            </p>
+            <ul className="space-y-2 text-sm text-gray-700">
+              <li className="flex items-center gap-2">
+                <Check className="w-5 h-5 text-red-500" />
+                <span>
+                  <strong>Full access for 3 months</strong> — uninterrupted
+                </span>
+              </li>
+              <li className="flex items-center gap-2">
+                <Check className="w-5 h-5 text-red-500" />
+                <span>
+                  <span>
+                    <strong>Just $16.65/month</strong> — billed as $49.95
+                    quarterly
+                  </span>
+                </span>
+              </li>
+              <li className="flex items-center gap-2">
+                <Check className="w-5 h-5 text-red-500" />
+                <span>
+                  <strong>Save 30%+</strong> vs monthly subscription
+                </span>
+              </li>
+              <li className="flex items-center gap-2">
+                <Check className="w-5 h-5 text-red-500" />
+                <span>
+                  Full access to job search, tracker, and smart resume tools
+                </span>
+              </li>
             </ul>
             <Button
               className="w-full mt-6 bg-gradient-to-r from-red-600 to-red-400 text-white font-bold text-lg"
               onClick={() => handlePremiumClick("quarterly")}
               disabled={loading}>
-              Choose Quarterly
+              Quarterly Plan
             </Button>
+            <p className="text-xs text-center text-gray-500 mt-2">
+              Best value — billed $49.95 every 3 months.
+            </p>
           </div>
         </div>
       </div>
