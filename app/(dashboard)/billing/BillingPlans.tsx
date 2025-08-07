@@ -143,8 +143,11 @@ export default function BillingPlans({
               <h3 className="text-center text-xl font-bold text-red-600 m-2 ">
                 7–Day Access
               </h3>
-              <p className="text-center text-3xl font-bold text-gray-900 mb-4">
-                $5.95<span className="text-sm font-medium"> (one-time)</span>
+              <p className="text-center text-3xl font-bold text-gray-900 mb-2">
+                $2.95<span className="text-sm font-medium"> (one-time)</span>
+              </p>
+              <p className="text-center text-xs text-gray-500 mb-4">
+                Try it out with no commitment.
               </p>
               <ul className="text-sm text-gray-700 ">
                 <li className="flex items-center gap-2">
@@ -189,7 +192,7 @@ export default function BillingPlans({
                 Start 7-Day Access
               </Button>
               <p className="text-xs text-center text-gray-500 mt-2">
-                Just $5.95 — the perfect short-term option
+                Just $2.95 — the perfect short-term option
               </p>
             </div>
           )}
@@ -200,7 +203,7 @@ export default function BillingPlans({
               Monthly Plan
             </h3>
             <p className="text-center text-3xl font-bold text-gray-900 mb-2">
-              $23.95<span className="text-sm font-medium">/month</span>
+              $19.99<span className="text-sm font-medium">/month</span>
             </p>
             <p className="text-center text-xs text-gray-500 mb-4">
               Billed monthly, cancel anytime
@@ -243,10 +246,10 @@ export default function BillingPlans({
               Quarterly Access
             </h3>
             <p className="text-center text-3xl font-bold text-gray-900 mb-2">
-              $16.65<span className="text-sm font-medium">/month</span>
+              $11.65<span className="text-sm font-medium">/month</span>
             </p>
             <p className="text-center text-xs text-gray-500 mb-4">
-              Billed $49.95 every 3 months — save over 30%
+              Billed $34.95 every 3 months — save over 40%
             </p>
             <ul className="space-y-2 text-sm text-gray-700">
               <li className="flex items-center gap-2">
@@ -259,7 +262,7 @@ export default function BillingPlans({
                 <Check className="w-5 h-5 text-red-500" />
                 <span>
                   <span>
-                    <strong>Just $16.65/month</strong> — billed as $49.95
+                    <strong>Just $11.65/month</strong> — billed as $34.95
                     quarterly
                   </span>
                 </span>
@@ -267,7 +270,7 @@ export default function BillingPlans({
               <li className="flex items-center gap-2">
                 <Check className="w-5 h-5 text-red-500" />
                 <span>
-                  <strong>Save 30%+</strong> vs monthly subscription
+                  <strong>Save 40%+</strong> vs monthly subscription
                 </span>
               </li>
               <li className="flex items-center gap-2">
@@ -284,12 +287,17 @@ export default function BillingPlans({
               Quarterly Plan
             </Button>
             <p className="text-xs text-center text-gray-500 mt-2">
-              Best value — billed $49.95 every 3 months.
+              Best value — billed $34.95 every 3 months.
             </p>
           </div>
         </div>
       </div>
-
+      <div className="items-center justify-center flex mt-4">
+        <h3 className="font-bold ">
+          “No hidden fees. Cancel anytime. Risk-free — full refund in first 3
+          days if you’re not satisfied.”
+        </h3>
+      </div>
       <div className="mt-14 max-w-6xl mx-auto">
         <Card className="rounded-xl shadow-lg border border-gray-300">
           <CardTitle className="text-center text-2xl font-bold text-blue-900 p-2 border-b border-gray-200">

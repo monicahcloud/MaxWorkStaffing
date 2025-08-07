@@ -128,11 +128,46 @@ async function handleSubscriptionCreatedOrUpdated(subscriptionId: string) {
     subscription.status === "trialing" ||
     subscription.status === "past_due"
   ) {
+    console.log("💾 Creating subscription with:", {
+      userId: user.id,
+      clerkId: user.clerkId,
+      stripeSubscriptionId: subscription.id,
+    });
+
+    // await prisma.userSubscription.upsert({
+    //   where: { clerkId: subscription.metadata?.userId }, // Clerk ID is in metadata
+    //   create: {
+    //     clerkId: subscription.metadata.userId,
+    //     userId: user.id,
+    //     stripeCustomerId: subscription.customer as string,
+    //     stripeSubscriptionId: subscription.id,
+    //     stripePriceId: subscription.items.data[0].price.id,
+    //     stripeCurrentPeriodEnd: new Date(
+    //       subscription.current_period_end * 1000
+    //     ),
+    //     stripeCancelAtPeriodEnd: subscription.cancel_at_period_end,
+
+    //     stripePlanName: subscription.items.data[0].price.nickname ?? "", // or use product.name via Stripe API if not set
+    //     stripeInterval:
+    //       subscription.items.data[0].price.recurring?.interval ?? "",
+    //   },
+    //   update: {
+    //     stripePriceId: subscription.items.data[0].price.id,
+    //     stripeCurrentPeriodEnd: new Date(
+    //       subscription.current_period_end * 1000
+    //     ),
+    //     stripeCancelAtPeriodEnd: subscription.cancel_at_period_end,
+
+    //     stripePlanName: subscription.items.data[0].price.nickname ?? "",
+    //     stripeInterval:
+    //       subscription.items.data[0].price.recurring?.interval ?? "",
+    //   },
+    // });
     await prisma.userSubscription.upsert({
-      where: { clerkId: subscription.metadata?.userId }, // Clerk ID is in metadata
+      where: { clerkId },
       create: {
-        clerkId: subscription.metadata.userId,
-        userId: subscription.metadata.userId,
+        clerkId,
+        userId: user.id, // ✅ Use DB user ID here
         stripeCustomerId: subscription.customer as string,
         stripeSubscriptionId: subscription.id,
         stripePriceId: subscription.items.data[0].price.id,
@@ -140,8 +175,7 @@ async function handleSubscriptionCreatedOrUpdated(subscriptionId: string) {
           subscription.current_period_end * 1000
         ),
         stripeCancelAtPeriodEnd: subscription.cancel_at_period_end,
-
-        stripePlanName: subscription.items.data[0].price.nickname ?? "", // or use product.name via Stripe API if not set
+        stripePlanName: subscription.items.data[0].price.nickname ?? "",
         stripeInterval:
           subscription.items.data[0].price.recurring?.interval ?? "",
       },
@@ -151,7 +185,6 @@ async function handleSubscriptionCreatedOrUpdated(subscriptionId: string) {
           subscription.current_period_end * 1000
         ),
         stripeCancelAtPeriodEnd: subscription.cancel_at_period_end,
-
         stripePlanName: subscription.items.data[0].price.nickname ?? "",
         stripeInterval:
           subscription.items.data[0].price.recurring?.interval ?? "",
