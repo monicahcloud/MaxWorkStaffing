@@ -2,7 +2,7 @@
 
 import { env } from "@/env";
 import stripe from "@/lib/stripe";
-import { currentUser } from "@clerk/nextjs/server";
+import { clerkClient, currentUser } from "@clerk/nextjs/server";
 
 // This function creates a Stripe Checkout Session for a subscription
 export async function createCheckoutSession(
@@ -13,10 +13,26 @@ export async function createCheckoutSession(
   if (!user) throw new Error("Unauthorized");
 
   const isSubscription = plan !== "7Day";
-  const stripeCustomerId = user.privateMetadata?.stripeCustomerId as
+  let stripeCustomerId = user.privateMetadata?.stripeCustomerId as
     | string
     | undefined;
+  if (!stripeCustomerId) {
+    const customer = await stripe.customers.create({
+      email: user.emailAddresses[0].emailAddress,
+      metadata: {
+        userId: user.id,
+      },
+    });
 
+    stripeCustomerId = customer.id;
+    // Save it to Clerk
+    const client = await clerkClient();
+    await client.users.updateUserMetadata(user.id, {
+      privateMetadata: {
+        stripeCustomerId,
+      },
+    });
+  }
   const session = await stripe.checkout.sessions.create({
     mode: isSubscription ? "subscription" : "payment",
     line_items: [{ price: priceId, quantity: 1 }],
