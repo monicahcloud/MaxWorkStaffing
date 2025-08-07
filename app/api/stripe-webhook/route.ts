@@ -5,10 +5,10 @@ import { clerkClient } from "@clerk/nextjs/server";
 import { NextRequest } from "next/server";
 import Stripe from "stripe";
 
-export async function GET() {
-  console.log("✅ Stripe webhook GET hit");
-  return new Response("Webhook is connected", { status: 200 });
-}
+// export async function GET() {
+//   console.log("✅ Stripe webhook GET hit");
+//   return new Response("Webhook is connected", { status: 200 });
+// }
 
 export async function POST(req: NextRequest) {
   console.log("📩 Incoming stripe webhook");
@@ -35,6 +35,7 @@ export async function POST(req: NextRequest) {
     // Handle event based on type
     switch (event.type) {
       case "checkout.session.completed":
+        console.log("🎯 Event is checkout.session.completed");
         await handleSessionCompleted(
           event.data.object as Stripe.Checkout.Session
         ); // New session completed
@@ -43,10 +44,10 @@ export async function POST(req: NextRequest) {
       case "customer.subscription.updated":
         await handleSubscriptionCreatedOrUpdated(event.data.object.id); // Subscription created or updated
         break;
-      case "subscription_schedule.updated":
-      case "subscription_schedule.released":
-        await handleSubscriptionScheduleUpdated(event.data.object);
-        break;
+      // case "subscription_schedule.updated":
+      // case "subscription_schedule.released":
+      //   await handleSubscriptionScheduleUpdated(event.data.object);
+      //   break;
       case "customer.subscription.deleted":
         await handleSubscriptionDeleted(event.data.object); // Subscription deleted
         break;
@@ -105,6 +106,7 @@ async function handleSessionCompleted(session: Stripe.Checkout.Session) {
 
   console.log("📦 Subscription ID:", session.subscription);
   console.log("🧠 Clerk User ID:", userId);
+  console.log("💬 userId in session.metadata:", session.metadata?.userId);
 }
 
 // Handles creation or update of a subscription
@@ -198,27 +200,27 @@ async function handleSubscriptionCreatedOrUpdated(subscriptionId: string) {
     });
   }
 }
-async function handleSubscriptionScheduleUpdated(
-  schedule: Stripe.SubscriptionSchedule
-) {
-  const subscription = schedule.subscription;
+// async function handleSubscriptionScheduleUpdated(
+//   schedule: Stripe.SubscriptionSchedule
+// ) {
+//   const subscription = schedule.subscription;
 
-  if (!subscription) return;
+//   if (!subscription) return;
 
-  const subscriptionId =
-    typeof subscription === "string" ? subscription : subscription.id;
+//   const subscriptionId =
+//     typeof subscription === "string" ? subscription : subscription.id;
 
-  const activeSubscription = await stripe.subscriptions.retrieve(
-    subscriptionId
-  );
-  const clerkId = activeSubscription.metadata?.userId;
+//   const activeSubscription = await stripe.subscriptions.retrieve(
+//     subscriptionId
+//   );
+//   const clerkId = activeSubscription.metadata?.userId;
 
-  if (!clerkId) {
-    throw new Error("Missing Clerk ID from subscription schedule.");
-  }
+//   if (!clerkId) {
+//     throw new Error("Missing Clerk ID from subscription schedule.");
+//   }
 
-  await handleSubscriptionCreatedOrUpdated(subscriptionId); // re-use your logic
-}
+//   await handleSubscriptionCreatedOrUpdated(subscriptionId); // re-use your logic
+// }
 
 // Handles subscription cancellation
 async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
