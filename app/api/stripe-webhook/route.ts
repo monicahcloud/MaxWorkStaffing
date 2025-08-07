@@ -5,10 +5,10 @@ import { clerkClient } from "@clerk/nextjs/server";
 import { NextRequest } from "next/server";
 import Stripe from "stripe";
 
-// export async function GET() {
-//   console.log("✅ Stripe webhook GET hit");
-//   return new Response("Webhook is connected", { status: 200 });
-// }
+export async function GET() {
+  console.log("✅ Stripe webhook GET hit");
+  return new Response("Webhook is connected", { status: 200 });
+}
 
 export async function POST(req: NextRequest) {
   console.log("📩 Incoming stripe webhook");
@@ -166,9 +166,9 @@ async function handleSubscriptionCreatedOrUpdated(subscriptionId: string) {
     //   },
     // });
     await prisma.userSubscription.upsert({
-      where: { clerkId },
+      where: { clerkId: subscription.metadata?.userId },
       create: {
-        clerkId,
+        clerkId: subscription.metadata.userId,
         userId: user.id, // ✅ Use DB user ID here
         stripeCustomerId: subscription.customer as string,
         stripeSubscriptionId: subscription.id,
