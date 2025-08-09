@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import React, { useState } from "react";
@@ -111,16 +112,39 @@ export default function BillingPlans({
         body: JSON.stringify({ plan }),
       });
 
-      const data = await res.json();
+      //     const data = await res.json();
 
-      if (res.ok && data.url) {
+      //     if (res.ok && data.url) {
+      //       window.location.href = data.url;
+      //     } else {
+      //       toast.error(data.error || "Something went wrong.");
+      //     }
+      //   } catch (err) {
+      //     toast.error("Checkout failed.");
+      //     console.error(err);
+      //   } finally {
+      //     setLoading(false);
+      //   }
+      // }
+      const raw = await res.text(); // <-- read as text first
+      let data: any = null;
+      try {
+        data = raw ? JSON.parse(raw) : null;
+      } catch {}
+
+      if (!res.ok) {
+        toast.error(data?.error || `Checkout failed (${res.status}).`);
+        return;
+      }
+
+      if (data?.url) {
         window.location.href = data.url;
       } else {
-        toast.error(data.error || "Something went wrong.");
+        toast.error("No checkout URL returned.");
       }
     } catch (err) {
-      toast.error("Checkout failed.");
       console.error(err);
+      toast.error("Checkout failed.");
     } finally {
       setLoading(false);
     }

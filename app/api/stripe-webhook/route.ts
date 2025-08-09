@@ -36,6 +36,8 @@ export async function POST(req: NextRequest) {
     switch (event.type) {
       case "checkout.session.completed":
         console.log("🎯 Event is checkout.session.completed");
+        const session = event.data.object as Stripe.Checkout.Session;
+        console.log("🎯 Session metadata:", session.metadata);
         await handleSessionCompleted(
           event.data.object as Stripe.Checkout.Session
         ); // New session completed
@@ -71,10 +73,9 @@ async function handleSessionCompleted(session: Stripe.Checkout.Session) {
   if (!userId) {
     throw new Error("User ID is missing in stripe session metadata");
   }
-  const client = await clerkClient(); // Clerk client instance
 
   // ✅ Save customer ID to Clerk
-  await client.users.updateUserMetadata(userId, {
+  (await clerkClient()).users.updateUserMetadata(userId, {
     privateMetadata: {
       stripeCustomerId: session.customer as string,
     },
@@ -85,7 +86,7 @@ async function handleSessionCompleted(session: Stripe.Checkout.Session) {
     session.metadata?.plan === "7Day" &&
     session.metadata.userId
   ) {
-    await client.users.updateUserMetadata(session.metadata.userId, {
+    (await clerkClient()).users.updateUserMetadata(session.metadata.userId, {
       privateMetadata: {
         hasUsed7DayAccess: true,
       },
@@ -169,7 +170,7 @@ async function handleSubscriptionCreatedOrUpdated(subscriptionId: string) {
       where: { clerkId: subscription.metadata?.userId },
       create: {
         clerkId: subscription.metadata.userId,
-        userId: user.id, // ✅ Use DB user ID here
+        userId: user.id,
         stripeCustomerId: subscription.customer as string,
         stripeSubscriptionId: subscription.id,
         stripePriceId: subscription.items.data[0].price.id,
@@ -180,6 +181,7 @@ async function handleSubscriptionCreatedOrUpdated(subscriptionId: string) {
         stripePlanName: subscription.items.data[0].price.nickname ?? "",
         stripeInterval:
           subscription.items.data[0].price.recurring?.interval ?? "",
+        status: subscription.status,
       },
       update: {
         stripePriceId: subscription.items.data[0].price.id,
@@ -190,6 +192,7 @@ async function handleSubscriptionCreatedOrUpdated(subscriptionId: string) {
         stripePlanName: subscription.items.data[0].price.nickname ?? "",
         stripeInterval:
           subscription.items.data[0].price.recurring?.interval ?? "",
+        status: subscription.status,
       },
     });
   } else {
@@ -200,27 +203,6 @@ async function handleSubscriptionCreatedOrUpdated(subscriptionId: string) {
     });
   }
 }
-// async function handleSubscriptionScheduleUpdated(
-//   schedule: Stripe.SubscriptionSchedule
-// ) {
-//   const subscription = schedule.subscription;
-
-//   if (!subscription) return;
-
-//   const subscriptionId =
-//     typeof subscription === "string" ? subscription : subscription.id;
-
-//   const activeSubscription = await stripe.subscriptions.retrieve(
-//     subscriptionId
-//   );
-//   const clerkId = activeSubscription.metadata?.userId;
-
-//   if (!clerkId) {
-//     throw new Error("Missing Clerk ID from subscription schedule.");
-//   }
-
-//   await handleSubscriptionCreatedOrUpdated(subscriptionId); // re-use your logic
-// }
 
 // Handles subscription cancellation
 async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
