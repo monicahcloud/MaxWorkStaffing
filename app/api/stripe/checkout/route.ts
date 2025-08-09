@@ -56,30 +56,3 @@ export async function POST(req: NextRequest) {
     );
   }
 }
-
-// const stripeCustomerId = user.privateMetadata.stripeCustomerId as
-//   | string
-//   | undefined;
-
-// const session = await stripe.checkout.sessions.create({
-//   mode,
-//   line_items: [{ price: priceId, quantity: 1 }],
-//   customer: stripeCustomerId,
-//   customer_email: stripeCustomerId
-//     ? undefined
-//     : user.emailAddresses[0].emailAddress,
-//   success_url: `${env.NEXT_PUBLIC_BASE_URL}/billing/success`,
-//   cancel_url: `${env.NEXT_PUBLIC_BASE_URL}/billing`,
-//   metadata: { userId: user.id, plan },
-//   ...(mode === "subscription"
-//     ? {
-//         subscription_data: {
-//           metadata: { userId: user.id },
-//         },
-//       }
-//     : {}),
-// });
-//   const url = await createCheckoutSession(priceId, plan); // Add plan to metadata
-
-//   return NextResponse.json({ url });
-// }

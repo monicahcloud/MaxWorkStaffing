@@ -32,5 +32,5 @@ export default clerkMiddleware(async (auth, req) => {
 });
 
 export const config = {
-  matcher: ["/((?!_next|.*\\..*).*)"], // Apply middleware to all routes except static files
+  matcher: ["/((?!_next|.*\\..*|api/stripe-webhook).*)"], // Apply middleware to all routes except static files
 };

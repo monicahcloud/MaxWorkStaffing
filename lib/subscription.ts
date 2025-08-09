@@ -4,12 +4,12 @@ import prisma from "./prisma";
 export type SubscriptionLevel = "free" | "7Day" | "monthly" | "quarterly";
 
 export const getUserSubscriptionLevel = cache(
-  async (clerkId: string): Promise<SubscriptionLevel> => {
+  async (userId: string): Promise<SubscriptionLevel> => {
     const subscription = await prisma.userSubscription.findUnique({
-      where: { clerkId },
+      where: { userId },
     });
 
-    console.log("🔍 Subscription record for user clekrId:", clerkId);
+    console.log("🔍 Subscription record for user:", userId);
     console.log("➡️ subscription:", subscription);
     console.log("DB stripePriceId:", subscription?.stripePriceId);
 
@@ -27,6 +27,10 @@ export const getUserSubscriptionLevel = cache(
       subscription.stripeCurrentPeriodEnd
     );
     console.log("📦 stripePriceId:", subscription.stripePriceId);
+    console.log(
+      "📦 Expected STRIPE_PRICE_ID_QUARTERLY:",
+      process.env.STRIPE_PRICE_ID_QUARTERLY
+    );
 
     if (subscription.stripePriceId === process.env.STRIPE_PRICE_ID_QUARTERLY) {
       return "quarterly";
@@ -37,9 +41,7 @@ export const getUserSubscriptionLevel = cache(
       return "monthly";
     }
 
-    if (
-      subscription.stripePriceId === process.env.STRIPE_PRICE_ID_7_DAY_ACCESS
-    ) {
+    if (subscription.stripePriceId === process.env.STRIPE_PRICE_7_DAY_ACCESS) {
       return "7Day";
     }
 

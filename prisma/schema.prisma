@@ -10,6 +10,7 @@ datasource db {
 model User {
   id              String      @id @default(cuid()) // internal DB ID
   clerkId         String      @unique // Clerk-provided user ID
+  stripeCustomerId String? @unique
   email           String      @unique
   firstName       String?
   lastName        String?

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { env } from "@/env"; //
 import prisma from "@/lib/prisma"; //
 import stripe from "@/lib/stripe"; //
@@ -60,18 +61,23 @@ export async function POST(req: NextRequest) {
     return new Response("Internal server error", { status: 500 });
   }
 }
-
+async function getDbUserOrNull(clerkId: string) {
+  return prisma.user.findUnique({ where: { clerkId } });
+}
 // Handles when a checkout session is completed
 async function handleSessionCompleted(session: Stripe.Checkout.Session) {
-  console.log("handleSessionCompleted");
-  const userId = session.metadata?.userId; // Extract userId from session metadata
+  const clerkId = session.metadata?.userId; // Extract userId from session metadata
 
-  if (!userId) {
+  if (!clerkId) {
     throw new Error("User ID is missing in stripe session metadata");
   }
-
+  const dbUser = await getDbUserOrNull(clerkId);
+  if (!dbUser) {
+    console.warn("⚠️ DB user not found – ignoring session", { clerkId });
+    return;
+  }
   // ✅ Save customer ID to Clerk
-  (await clerkClient()).users.updateUserMetadata(userId, {
+  (await clerkClient()).users.updateUserMetadata(clerkId, {
     privateMetadata: {
       stripeCustomerId: session.customer as string,
     },
@@ -82,9 +88,42 @@ async function handleSessionCompleted(session: Stripe.Checkout.Session) {
     session.metadata?.plan === "7Day" &&
     session.metadata.userId
   ) {
+    // Compute 7-day expiration
+    const expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+
+    const sevenDayPriceId = process.env.STRIPE_PRICE_7_DAY_ACCESS ?? null;
+
+    // Upsert the user's "subscription" record for 7-day access
+    await prisma.userSubscription.upsert({
+      // You marked clerkId as @unique in your schema; using it is fine here
+      where: { clerkId },
+      create: {
+        clerkId,
+        userId: dbUser.id,
+        stripeCustomerId: session.customer as string,
+        stripeSubscriptionId: null, // one-time purchase, not a sub
+        stripePriceId: sevenDayPriceId,
+        stripeCurrentPeriodEnd: expires, // when access ends
+        stripeCancelAtPeriodEnd: true, // semantic for one-time
+        stripePlanName: "7-Day Access",
+        stripeInterval: "one_time",
+        status: "active",
+      },
+      update: {
+        stripeCustomerId: (session.customer as string) ?? null,
+        stripePriceId: sevenDayPriceId,
+        stripeCurrentPeriodEnd: expires,
+        stripeCancelAtPeriodEnd: true,
+        stripePlanName: "7-Day Access",
+        stripeInterval: "one_time",
+        status: "active",
+      },
+    });
+
     (await clerkClient()).users.updateUserMetadata(session.metadata.userId, {
       privateMetadata: {
         hasUsed7DayAccess: true,
+        stripeCustomerId: (session.customer as string) ?? undefined,
       },
     });
     console.log("✅ Marked user as having used 7-Day Access");
@@ -97,18 +136,17 @@ async function handleSessionCompleted(session: Stripe.Checkout.Session) {
     console.warn("No subscription found in session");
   }
 
-  if (!userId) {
+  if (!clerkId) {
     throw new Error("User ID is missing in stripe session metadata");
   }
 
   console.log("📦 Subscription ID:", session.subscription);
-  console.log("🧠 Clerk User ID:", userId);
+  console.log("🧠 Clerk User ID:", clerkId);
   console.log("💬 userId in session.metadata:", session.metadata?.userId);
 }
 
 // Handles creation or update of a subscription
 async function handleSubscriptionCreatedOrUpdated(subscriptionId: string) {
-  console.log("handleSubscriptionCreatedOrUpdated");
   const subscription = await stripe.subscriptions.retrieve(subscriptionId);
 
   const clerkId = subscription.metadata?.userId;
@@ -116,6 +154,26 @@ async function handleSubscriptionCreatedOrUpdated(subscriptionId: string) {
     console.warn("⚠️ Metadata userId missing. Looking up by customer ID…");
     throw new Error("Missing Clerk ID in metadata.");
   }
+  const dbUser = await getDbUserOrNull(clerkId);
+  if (!dbUser) {
+    console.warn("⚠️ DB user not found – ignoring subscription", {
+      clerkId,
+      subscriptionId,
+    });
+    return;
+  }
+  // optional: keep customer id on User in sync
+  if (subscription.customer) {
+    await prisma.user.update({
+      where: { id: dbUser.id },
+      data: { stripeCustomerId: subscription.customer as string },
+    });
+  }
+
+  const item = subscription.items.data[0];
+  const price = item?.price;
+  const product = price?.product as Stripe.Product | null;
+  const planName = price?.nickname ?? product?.name ?? null;
 
   const user = await prisma.user.findUnique({ where: { clerkId } });
   if (!user) {
@@ -133,39 +191,10 @@ async function handleSubscriptionCreatedOrUpdated(subscriptionId: string) {
       stripeSubscriptionId: subscription.id,
     });
 
-    // await prisma.userSubscription.upsert({
-    //   where: { clerkId: subscription.metadata?.userId }, // Clerk ID is in metadata
-    //   create: {
-    //     clerkId: subscription.metadata.userId,
-    //     userId: user.id,
-    //     stripeCustomerId: subscription.customer as string,
-    //     stripeSubscriptionId: subscription.id,
-    //     stripePriceId: subscription.items.data[0].price.id,
-    //     stripeCurrentPeriodEnd: new Date(
-    //       subscription.current_period_end * 1000
-    //     ),
-    //     stripeCancelAtPeriodEnd: subscription.cancel_at_period_end,
-
-    //     stripePlanName: subscription.items.data[0].price.nickname ?? "", // or use product.name via Stripe API if not set
-    //     stripeInterval:
-    //       subscription.items.data[0].price.recurring?.interval ?? "",
-    //   },
-    //   update: {
-    //     stripePriceId: subscription.items.data[0].price.id,
-    //     stripeCurrentPeriodEnd: new Date(
-    //       subscription.current_period_end * 1000
-    //     ),
-    //     stripeCancelAtPeriodEnd: subscription.cancel_at_period_end,
-
-    //     stripePlanName: subscription.items.data[0].price.nickname ?? "",
-    //     stripeInterval:
-    //       subscription.items.data[0].price.recurring?.interval ?? "",
-    //   },
-    // });
     await prisma.userSubscription.upsert({
-      where: { clerkId: subscription.metadata?.userId },
+      where: { stripeSubscriptionId: subscription.id },
       create: {
-        clerkId: subscription.metadata.userId,
+        clerkId,
         userId: user.id,
         stripeCustomerId: subscription.customer as string,
         stripeSubscriptionId: subscription.id,
@@ -174,7 +203,7 @@ async function handleSubscriptionCreatedOrUpdated(subscriptionId: string) {
           subscription.current_period_end * 1000
         ),
         stripeCancelAtPeriodEnd: subscription.cancel_at_period_end,
-        stripePlanName: subscription.items.data[0].price.nickname ?? "",
+        stripePlanName: subscription.items.data[0].price.nickname ?? planName,
         stripeInterval:
           subscription.items.data[0].price.recurring?.interval ?? "",
         status: subscription.status,
@@ -185,7 +214,7 @@ async function handleSubscriptionCreatedOrUpdated(subscriptionId: string) {
           subscription.current_period_end * 1000
         ),
         stripeCancelAtPeriodEnd: subscription.cancel_at_period_end,
-        stripePlanName: subscription.items.data[0].price.nickname ?? "",
+        stripePlanName: subscription.items.data[0].price.nickname ?? planName,
         stripeInterval:
           subscription.items.data[0].price.recurring?.interval ?? "",
         status: subscription.status,
