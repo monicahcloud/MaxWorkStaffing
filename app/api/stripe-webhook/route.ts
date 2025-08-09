@@ -46,10 +46,6 @@ export async function POST(req: NextRequest) {
       case "customer.subscription.updated":
         await handleSubscriptionCreatedOrUpdated(event.data.object.id); // Subscription created or updated
         break;
-      // case "subscription_schedule.updated":
-      // case "subscription_schedule.released":
-      //   await handleSubscriptionScheduleUpdated(event.data.object);
-      //   break;
       case "customer.subscription.deleted":
         await handleSubscriptionDeleted(event.data.object); // Subscription deleted
         break;
