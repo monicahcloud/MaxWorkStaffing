@@ -78,37 +78,34 @@ export default function BillingPlans({
 }: Props) {
   const [loading, setLoading] = useState(false);
 
-  // ---- derive current plan & renewal text ----
-  let planName = "No Active Plan";
-  let renewalText = "";
-
-  // Parse end date & active window
+  // ----- derive "active window" -----
   const end = subscription?.stripeCurrentPeriodEnd
     ? new Date(subscription.stripeCurrentPeriodEnd as any)
     : null;
   const isActive = !!end && !isNaN(end.getTime()) && end.getTime() > Date.now();
 
+  // ----- detect plan (mirror SuccessPage semantics) -----
   const id = subscription?.stripePriceId ?? "";
   const isSevenDay =
     !!subscription &&
     (id === priceIds.sevenDay ||
       subscription.stripeInterval === "one_time" ||
       (subscription.stripePlanName ?? "").toLowerCase().includes("7-day"));
-  const hasActiveSubscription =
-    isActive &&
-    (id === priceIds.monthly || id === priceIds.quarterly || isSevenDay);
+
+  let planName = "Free";
+  let renewalText = "";
 
   if (subscription && isActive) {
     if (isSevenDay) {
       planName = "7-Day Access";
       renewalText = `Ends on ${end!.toLocaleDateString()}`;
-    } else if (id === priceIds.quarterly) {
-      planName = "Quarterly Plan";
+    } else if (id === priceIds.monthly) {
+      planName = "Monthly Plan";
       renewalText = subscription.stripeCancelAtPeriodEnd
         ? `Cancels on ${end!.toLocaleDateString()}`
         : `Renews on ${end!.toLocaleDateString()}`;
-    } else if (id === priceIds.monthly) {
-      planName = "Monthly Plan";
+    } else if (id === priceIds.quarterly) {
+      planName = "Quarterly Plan";
       renewalText = subscription.stripeCancelAtPeriodEnd
         ? `Cancels on ${end!.toLocaleDateString()}`
         : `Renews on ${end!.toLocaleDateString()}`;
@@ -118,12 +115,9 @@ export default function BillingPlans({
         ? `Cancels on ${end!.toLocaleDateString()}`
         : `Renews on ${end!.toLocaleDateString()}`;
     }
-  } else {
-    planName = "Free";
-    renewalText = "";
   }
 
-  // ----- disable logic for current subscription plan -----
+  // ----- disable re-purchase for current sub (monthly/quarterly) unless cancel_at_period_end -----
   const disableMonthly =
     isActive &&
     id === priceIds.monthly &&
@@ -133,17 +127,21 @@ export default function BillingPlans({
     id === priceIds.quarterly &&
     !subscription?.stripeCancelAtPeriodEnd;
 
-  // ----- UI for 7-day card -----
+  // show portal manage button only for an active subscription (not 7-day)
+  const hasActiveSubscription =
+    isActive &&
+    !isSevenDay &&
+    (id === priceIds.monthly || id === priceIds.quarterly);
+
+  // ----- 7-day card visibility -----
   const canShow7Day = !hasUsed7DayAccess;
   const sevenDayDisabled = !!hasUsed7DayAccess;
 
   async function handlePremiumClick(plan: "7Day" | "monthly" | "quarterly") {
-    // One-time guard
     if (plan === "7Day" && hasUsed7DayAccess) {
       toast.error("7-Day access can only be purchased once.");
       return;
     }
-    // Prevent re-buying same active plan unless canceled at period end
     if (
       (plan === "monthly" && disableMonthly) ||
       (plan === "quarterly" && disableQuarterly)
@@ -172,7 +170,6 @@ export default function BillingPlans({
         toast.error(data?.error || `Checkout failed (${res.status}).`);
         return;
       }
-
       if (data?.url) {
         window.location.href = data.url;
       } else {
@@ -188,16 +185,19 @@ export default function BillingPlans({
 
   return (
     <>
-      <div className="mt-10 max-w-6xl mx-auto space-y-6">
-        <h2 className="text-center text-2xl font-medium text-gray-800 mb-5">
+      <div className="mt-10 max-w-6xl mx-auto space-y-4">
+        <h2 className="text-center text-2xl font-medium text-gray-800">
           Current Plan: {planName} {renewalText && `— ${renewalText}`}
         </h2>
+
         {hasActiveSubscription && (
           <div className="flex justify-center">
             <ManageSubscriptionButton />
           </div>
         )}
+      </div>
 
+      <div className="max-w-6xl mx-auto space-y-6 mt-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* 7-Day Plan */}
           {canShow7Day && (
@@ -205,7 +205,7 @@ export default function BillingPlans({
               <div className="absolute top-[-10px] left-1/2 -translate-x-1/2 bg-red-500 text-white px-3 py-1 text-xs font-semibold rounded-full">
                 MOST POPULAR
               </div>
-              <h3 className="text-center text-xl font-bold text-red-600 m-2 ">
+              <h3 className="text-center text-xl font-bold text-red-600 m-2">
                 7–Day Access
               </h3>
               <p className="text-center text-3xl font-bold text-gray-900 mb-2">
@@ -258,9 +258,9 @@ export default function BillingPlans({
           {/* Monthly Plan */}
           <div
             className={`border border-gray-300 rounded-lg p-4 shadow-md bg-white relative ${
-              disableMonthly ? "opacity-60" : ""
+              isActive && id === priceIds.monthly ? "opacity-60" : ""
             }`}>
-            {disableMonthly && (
+            {isActive && id === priceIds.monthly && (
               <div className="absolute -top-2 left-1/2 -translate-x-1/2 bg-gray-400 text-white px-3 py-1 text-xs font-semibold rounded-full">
                 CURRENT PLAN
               </div>
@@ -297,14 +297,25 @@ export default function BillingPlans({
             <Button
               className="w-full mt-6 bg-gradient-to-r from-red-600 to-red-400 text-white font-bold text-lg"
               onClick={() => handlePremiumClick("monthly")}
-              disabled={loading || disableMonthly}>
-              {disableMonthly ? "Current Plan" : "Subscribe Monthly"}
+              disabled={
+                loading ||
+                (isActive &&
+                  id === priceIds.monthly &&
+                  !subscription?.stripeCancelAtPeriodEnd)
+              }>
+              {isActive &&
+              id === priceIds.monthly &&
+              !subscription?.stripeCancelAtPeriodEnd
+                ? "Current Plan"
+                : "Subscribe Monthly"}
             </Button>
-            {disableMonthly && (
+
+            {isActive && id === priceIds.monthly && (
               <div className="mt-3 flex justify-center">
                 <ManageSubscriptionButton />
               </div>
             )}
+
             <p className="text-xs text-center text-gray-500 mt-2">
               Same as 4 weekly passes — but no interruptions.
             </p>
@@ -313,9 +324,9 @@ export default function BillingPlans({
           {/* Quarterly Plan */}
           <div
             className={`border border-gray-300 rounded-lg p-4 shadow-md bg-white relative ${
-              disableQuarterly ? "opacity-60" : ""
+              isActive && id === priceIds.quarterly ? "opacity-60" : ""
             }`}>
-            {disableQuarterly && (
+            {isActive && id === priceIds.quarterly && (
               <div className="absolute -top-2 left-1/2 -translate-x-1/2 bg-gray-400 text-white px-3 py-1 text-xs font-semibold rounded-full">
                 CURRENT PLAN
               </div>
@@ -356,18 +367,29 @@ export default function BillingPlans({
                 </span>
               </li>
             </ul>
+
             <Button
               className="w-full mt-6 bg-gradient-to-r from-red-600 to-red-400 text-white font-bold text-lg"
               onClick={() => handlePremiumClick("quarterly")}
-              disabled={loading || disableQuarterly}>
-              {disableQuarterly ? "Current Plan" : "Quarterly Plan"}
+              disabled={
+                loading ||
+                (isActive &&
+                  id === priceIds.quarterly &&
+                  !subscription?.stripeCancelAtPeriodEnd)
+              }>
+              {isActive &&
+              id === priceIds.quarterly &&
+              !subscription?.stripeCancelAtPeriodEnd
+                ? "Current Plan"
+                : "Quarterly Plan"}
             </Button>
-            {/* Quarterly card footer */}
-            {disableQuarterly && (
+
+            {isActive && id === priceIds.quarterly && (
               <div className="mt-3 flex justify-center">
                 <ManageSubscriptionButton />
               </div>
             )}
+
             <p className="text-xs text-center text-gray-500 mt-2">
               Best value — billed $34.95 every 3 months.
             </p>

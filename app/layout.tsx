@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     siteName: "Max ResumeBuilder",
     images: [
       {
-        url: "/og-image.png",
+        url: "/og/og-image.png",
         width: 1200,
         height: 630,
         alt: "Max ResumeBuilder preview image",
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     title: "Max ResumeBuilder",
     description:
       "Your AI-powered job search assistant. Resumes, cover letters, and tracking made easy.",
-    images: ["/og-image.png"],
+    images: ["/og/og-image.png"],
     creator: "@vitanovadesigns", // update to your brand
   },
 };
