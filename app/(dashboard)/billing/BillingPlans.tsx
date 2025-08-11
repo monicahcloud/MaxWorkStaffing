@@ -78,13 +78,13 @@ export default function BillingPlans({
 }: Props) {
   const [loading, setLoading] = useState(false);
 
-  // ----- derive "active window" -----
+  // active window
   const end = subscription?.stripeCurrentPeriodEnd
     ? new Date(subscription.stripeCurrentPeriodEnd as any)
     : null;
   const isActive = !!end && !isNaN(end.getTime()) && end.getTime() > Date.now();
 
-  // ----- detect plan (mirror SuccessPage semantics) -----
+  // plan detection (same as SuccessPage)
   const id = subscription?.stripePriceId ?? "";
   const isSevenDay =
     !!subscription &&
@@ -94,7 +94,6 @@ export default function BillingPlans({
 
   let planName = "Free";
   let renewalText = "";
-
   if (subscription && isActive) {
     if (isSevenDay) {
       planName = "7-Day Access";
@@ -117,7 +116,7 @@ export default function BillingPlans({
     }
   }
 
-  // ----- disable re-purchase for current sub (monthly/quarterly) unless cancel_at_period_end -----
+  // disable current sub (monthly/quarterly) unless cancel_at_period_end
   const disableMonthly =
     isActive &&
     id === priceIds.monthly &&
@@ -127,13 +126,13 @@ export default function BillingPlans({
     id === priceIds.quarterly &&
     !subscription?.stripeCancelAtPeriodEnd;
 
-  // show portal manage button only for an active subscription (not 7-day)
+  // show portal manage button only for active monthly/quarterly
   const hasActiveSubscription =
     isActive &&
     !isSevenDay &&
     (id === priceIds.monthly || id === priceIds.quarterly);
 
-  // ----- 7-day card visibility -----
+  // 7-day visibility
   const canShow7Day = !hasUsed7DayAccess;
   const sevenDayDisabled = !!hasUsed7DayAccess;
 
@@ -170,11 +169,8 @@ export default function BillingPlans({
         toast.error(data?.error || `Checkout failed (${res.status}).`);
         return;
       }
-      if (data?.url) {
-        window.location.href = data.url;
-      } else {
-        toast.error("No checkout URL returned.");
-      }
+      if (data?.url) window.location.href = data.url;
+      else toast.error("No checkout URL returned.");
     } catch (err) {
       console.error(err);
       toast.error("Checkout failed.");
@@ -274,6 +270,7 @@ export default function BillingPlans({
             <p className="text-center text-xs text-gray-500 mb-4">
               Billed monthly, cancel anytime
             </p>
+
             <ul className="text-sm text-gray-700  pl-5 space-y-2">
               <li className="flex items-center gap-2">
                 <Check className="w-5 h-5 text-red-500" />
@@ -315,10 +312,6 @@ export default function BillingPlans({
                 <ManageSubscriptionButton />
               </div>
             )}
-
-            <p className="text-xs text-center text-gray-500 mt-2">
-              Same as 4 weekly passes — but no interruptions.
-            </p>
           </div>
 
           {/* Quarterly Plan */}
@@ -340,6 +333,7 @@ export default function BillingPlans({
             <p className="text-center text-xs text-gray-500 mb-4">
               Billed $34.95 every 3 months — save over 40%
             </p>
+
             <ul className="space-y-2 text-sm text-gray-700">
               <li className="flex items-center gap-2">
                 <Check className="w-5 h-5 text-red-500" />
@@ -389,10 +383,6 @@ export default function BillingPlans({
                 <ManageSubscriptionButton />
               </div>
             )}
-
-            <p className="text-xs text-center text-gray-500 mt-2">
-              Best value — billed $34.95 every 3 months.
-            </p>
           </div>
         </div>
       </div>
