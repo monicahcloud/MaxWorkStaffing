@@ -9,7 +9,6 @@ import {
   Target,
   Pencil,
   Briefcase,
-  // DollarSign,
   Globe2,
   Check,
 } from "lucide-react";
@@ -49,12 +48,6 @@ const features = [
     text: "Search for jobs",
     subtext: "Find listings from reliable sources tailored to your interests",
   },
-  // {
-  //   icon: <DollarSign className="w-6 h-6 text-primary" />,
-  //   text: "Money-Back Guarantee:",
-  //   subtext:
-  //     "Not satisfied in the first 14 days? We'll issue a full refund—no hassle",
-  // },
   {
     icon: <Briefcase className="w-6 h-6 text-primary" />,
     text: "Career Tools and Resources:",
@@ -64,46 +57,66 @@ const features = [
 ];
 
 type SubscriptionType = {
-  stripeCurrentPeriodEnd: Date | null;
+  stripeCurrentPeriodEnd: Date | string | null;
   stripeCancelAtPeriodEnd: boolean;
   stripePriceId: string | null;
+  stripeInterval?: string | null;
+  stripePlanName?: string | null;
 } | null;
 
 type Props = {
   subscription?: SubscriptionType;
   hasUsed7DayAccess?: boolean;
+  priceIds: { monthly: string; quarterly: string; sevenDay: string };
 };
 
 export default function BillingPlans({
   subscription,
   hasUsed7DayAccess,
+  priceIds,
 }: Props) {
   const [loading, setLoading] = useState(false);
+
+  // ---- derive current plan & renewal text ----
   let planName = "No Active Plan";
   let renewalText = "";
 
-  if (subscription?.stripePriceId) {
-    const { stripePriceId } = subscription;
-    if (stripePriceId === process.env.STRIPE_PRICE_ID_QUARTERLY) {
-      planName = "Quarterly Plan";
-    } else if (stripePriceId === process.env.STRIPE_PRICE_ID_MONTHLY) {
-      planName = "Monthly Plan";
-    } else if (stripePriceId === process.env.STRIPE_PRICE_7_DAY_ACCESS) {
+  if (subscription) {
+    const id = subscription.stripePriceId ?? "";
+
+    if (id === priceIds.quarterly) planName = "Quarterly Plan";
+    else if (id === priceIds.monthly) planName = "Monthly Plan";
+    else if (
+      id === priceIds.sevenDay ||
+      subscription.stripeInterval === "one_time" ||
+      subscription.stripePlanName?.toLowerCase().includes("7-day")
+    ) {
       planName = "7-Day Access";
     } else {
       planName = "Free";
     }
 
-    if (subscription.stripeCurrentPeriodEnd instanceof Date) {
-      const formattedDate =
-        subscription.stripeCurrentPeriodEnd.toLocaleDateString();
-      renewalText = subscription.stripeCancelAtPeriodEnd
-        ? `— Cancels on ${formattedDate}`
-        : `— Renews on ${formattedDate}`;
+    if (subscription.stripeCurrentPeriodEnd) {
+      const end = new Date(subscription.stripeCurrentPeriodEnd as any);
+      if (!isNaN(end.getTime())) {
+        renewalText = subscription.stripeCancelAtPeriodEnd
+          ? `— Cancels on ${end.toLocaleDateString()}`
+          : `— Renews on ${end.toLocaleDateString()}`;
+      }
     }
   }
 
+  // ----- UI for 7-day card -----
+  const canShow7Day = !hasUsed7DayAccess;
+  const sevenDayDisabled = !!hasUsed7DayAccess;
+
   async function handlePremiumClick(plan: "7Day" | "monthly" | "quarterly") {
+    // extra safety on client
+    if (plan === "7Day" && hasUsed7DayAccess) {
+      toast.error("7-Day access can only be purchased once.");
+      return;
+    }
+
     try {
       setLoading(true);
       const res = await fetch("/api/stripe/checkout", {
@@ -112,25 +125,13 @@ export default function BillingPlans({
         body: JSON.stringify({ plan }),
       });
 
-      //     const data = await res.json();
-
-      //     if (res.ok && data.url) {
-      //       window.location.href = data.url;
-      //     } else {
-      //       toast.error(data.error || "Something went wrong.");
-      //     }
-      //   } catch (err) {
-      //     toast.error("Checkout failed.");
-      //     console.error(err);
-      //   } finally {
-      //     setLoading(false);
-      //   }
-      // }
-      const raw = await res.text(); // <-- read as text first
+      const raw = await res.text();
       let data: any = null;
       try {
         data = raw ? JSON.parse(raw) : null;
-      } catch {}
+      } catch {
+        /* ignore JSON parse errors */
+      }
 
       if (!res.ok) {
         toast.error(data?.error || `Checkout failed (${res.status}).`);
@@ -159,7 +160,7 @@ export default function BillingPlans({
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* 7-Day Plan */}
-          {!hasUsed7DayAccess && (
+          {canShow7Day && (
             <div className="border border-gray-200 rounded-lg p-4 shadow-md relative bg-white">
               <div className="absolute top-[-10px] left-1/2 -translate-x-1/2 bg-red-500 text-white px-3 py-1 text-xs font-semibold rounded-full">
                 MOST POPULAR
@@ -200,19 +201,12 @@ export default function BillingPlans({
                   <Check className="w-5 h-5 text-red-500" />
                   <span>Search job listings with intelligent filters</span>
                 </li>
-                {/* <li className="flex items-center gap-2">
-                  <Check className="w-5 h-5 text-red-500" />
-                  <span>
-                    <strong>Upload 1 PDF resumes</strong> for parsing and
-                    editing
-                  </span>
-                </li> */}
               </ul>
 
               <Button
                 className="w-full mt-6 bg-gradient-to-r from-red-600 to-red-400 text-white font-bold text-lg"
                 onClick={() => handlePremiumClick("7Day")}
-                disabled={loading}>
+                disabled={loading || sevenDayDisabled}>
                 Start 7-Day Access
               </Button>
               <p className="text-xs text-center text-gray-500 mt-2">
@@ -246,7 +240,6 @@ export default function BillingPlans({
               <li className="flex items-center gap-2">
                 <Check className="w-5 h-5 text-red-500" />
                 <span>
-                  {" "}
                   <strong>Search jobs</strong> across industries with smart
                   filters
                 </span>
@@ -285,10 +278,8 @@ export default function BillingPlans({
               <li className="flex items-center gap-2">
                 <Check className="w-5 h-5 text-red-500" />
                 <span>
-                  <span>
-                    <strong>Just $11.65/month</strong> — billed as $34.95
-                    quarterly
-                  </span>
+                  <strong>Just $11.65/month</strong> — billed as $34.95
+                  quarterly
                 </span>
               </li>
               <li className="flex items-center gap-2">
@@ -316,18 +307,19 @@ export default function BillingPlans({
           </div>
         </div>
       </div>
+
       <div className="items-center justify-center flex mt-4">
-        <h3 className="font-bold ">
+        <h3 className="font-bold">
           “No hidden fees. Cancel anytime. Risk-free — full refund in first 3
           days if you’re not satisfied.”
         </h3>
       </div>
+
       <div className="mt-14 max-w-6xl mx-auto">
         <Card className="rounded-xl shadow-lg border border-gray-300">
           <CardTitle className="text-center text-2xl font-bold text-blue-900 p-2 border-b border-gray-200">
             Subscription Package Features
           </CardTitle>
-
           <CardContent className="p-2 sm:p-8">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-6 gap-x-10 text-blue-900">
               {features.map((item, index) => (

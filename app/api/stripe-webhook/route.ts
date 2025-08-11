@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { env } from "@/env"; //
 import prisma from "@/lib/prisma"; //
 import stripe from "@/lib/stripe"; //
@@ -88,11 +87,16 @@ async function handleSessionCompleted(session: Stripe.Checkout.Session) {
     session.metadata?.plan === "7Day" &&
     session.metadata.userId
   ) {
+    const sess = await stripe.checkout.sessions.retrieve(session.id, {
+      expand: ["line_items.data.price"],
+    });
     // Compute 7-day expiration
+
+    const linePriceId = sess.line_items?.data?.[0]?.price?.id ?? null;
+    const sevenDayPriceId =
+      linePriceId ?? process.env.STRIPE_PRICE_7_DAY_ACCESS ?? null;
+    // const sevenDayPriceId = process.env.STRIPE_PRICE_7_DAY_ACCESS ?? null;
     const expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-
-    const sevenDayPriceId = process.env.STRIPE_PRICE_7_DAY_ACCESS ?? null;
-
     // Upsert the user's "subscription" record for 7-day access
     await prisma.userSubscription.upsert({
       // You marked clerkId as @unique in your schema; using it is fine here

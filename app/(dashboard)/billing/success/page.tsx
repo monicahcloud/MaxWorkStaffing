@@ -17,33 +17,42 @@ export default async function SuccessPage() {
     where: { userId },
   });
 
+  // Derive the plan using your existing helper (make sure you removed cache() in that helper)
   const plan = await getUserSubscriptionLevel(userId);
 
-  const priceInfo = subscription?.stripePriceId
-    ? await stripe.prices.retrieve(subscription.stripePriceId, {
+  // Only fetch Stripe product name for non-7Day subscriptions
+  let priceInfo: Stripe.Price | null = null;
+  if (subscription?.stripePriceId && plan !== "7Day") {
+    try {
+      priceInfo = await stripe.prices.retrieve(subscription.stripePriceId, {
         expand: ["product"],
-      })
-    : null;
+      });
+    } catch (e) {
+      console.error("Failed to retrieve Stripe price:", e);
+    }
+  }
 
   const planName =
     plan === "7Day"
-      ? "7Day"
+      ? "7-Day Access"
       : priceInfo
       ? (priceInfo.product as Stripe.Product).name
-      : "Free"; // Fallback
+      : "Free";
 
-  const renewalText =
-    subscription && plan !== "7Day"
-      ? subscription.stripeCancelAtPeriodEnd
-        ? ` — Cancels on ${format(
-            new Date(subscription.stripeCurrentPeriodEnd!),
-            "MMM dd, yyyy"
-          )}`
-        : ` — Renews on ${format(
-            new Date(subscription.stripeCurrentPeriodEnd!),
-            "MMM dd, yyyy"
-          )}`
-      : "";
+  let renewalText = "";
+  if (subscription?.stripeCurrentPeriodEnd) {
+    const ends = new Date(subscription.stripeCurrentPeriodEnd);
+    if (!isNaN(ends.getTime())) {
+      if (plan === "7Day") {
+        // One-time pass: show end date instead of renew/cancel
+        renewalText = ` — Ends on ${format(ends, "MMM dd, yyyy")}`;
+      } else {
+        renewalText = subscription.stripeCancelAtPeriodEnd
+          ? ` — Cancels on ${format(ends, "MMM dd, yyyy")}`
+          : ` — Renews on ${format(ends, "MMM dd, yyyy")}`;
+      }
+    }
+  }
 
   return (
     <main className="min-h-screen flex flex-col justify-center items-center px-4 py-12 bg-gradient-to-br from-green-50 to-white text-center space-y-8">

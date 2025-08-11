@@ -19,6 +19,7 @@ export async function createCheckoutSession(
   if (!stripeCustomerId) {
     const customer = await stripe.customers.create({
       email: user.emailAddresses[0].emailAddress,
+      name: `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim(),
       metadata: {
         userId: user.id,
       },

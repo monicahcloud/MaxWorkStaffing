@@ -1,56 +1,52 @@
-import { cache } from "react";
 import prisma from "./prisma";
 
 export type SubscriptionLevel = "free" | "7Day" | "monthly" | "quarterly";
 
-export const getUserSubscriptionLevel = cache(
-  async (userId: string): Promise<SubscriptionLevel> => {
-    const subscription = await prisma.userSubscription.findUnique({
-      where: { userId },
-    });
+export async function getUserSubscriptionLevel(
+  userId: string
+): Promise<SubscriptionLevel> {
+  const subscription = await prisma.userSubscription.findUnique({
+    where: { userId },
+  });
 
-    console.log("🔍 Subscription record for user:", userId);
-    console.log("➡️ subscription:", subscription);
-    console.log("DB stripePriceId:", subscription?.stripePriceId);
-
-    if (
-      !subscription ||
-      !subscription.stripeCurrentPeriodEnd ||
-      subscription.stripeCurrentPeriodEnd < new Date()
-    ) {
-      console.log("❌ No active subscription — returning 'free'");
-      return "free";
-    }
-
-    console.log(
-      "✅ stripeCurrentPeriodEnd:",
-      subscription.stripeCurrentPeriodEnd
-    );
-    console.log("📦 stripePriceId:", subscription.stripePriceId);
-    console.log(
-      "📦 Expected STRIPE_PRICE_ID_QUARTERLY:",
-      process.env.STRIPE_PRICE_ID_QUARTERLY
-    );
-
-    if (subscription.stripePriceId === process.env.STRIPE_PRICE_ID_QUARTERLY) {
-      return "quarterly";
-    }
-
-    // Add any other plan logic here
-    if (subscription.stripePriceId === process.env.STRIPE_PRICE_ID_MONTHLY) {
-      return "monthly";
-    }
-
-    if (subscription.stripePriceId === process.env.STRIPE_PRICE_7_DAY_ACCESS) {
-      return "7Day";
-    }
-
-    console.warn(
-      `⚠️ Unknown stripePriceId for user ${userId}: ${subscription.stripePriceId}`
-    );
+  if (
+    !subscription ||
+    !subscription.stripeCurrentPeriodEnd ||
+    subscription.stripeCurrentPeriodEnd < new Date()
+  ) {
+    console.log("❌ No active subscription — returning 'free'");
     return "free";
   }
-);
+
+  // Recognize 7-Day by interval/plan name OR price id
+  const planNameLc = subscription.stripePlanName?.toLowerCase() ?? "";
+  const isSevenDayByName = /7[\s\-]?day/.test(planNameLc);
+  if (subscription.stripeInterval === "one_time" || isSevenDayByName) {
+    return "7Day";
+  }
+
+  // --- Price ID-based detection ---
+  const id = subscription.stripePriceId ?? "";
+
+  if (id && id === process.env.STRIPE_PRICE_ID_QUARTERLY) {
+    return "quarterly";
+  }
+  if (id && id === process.env.STRIPE_PRICE_ID_MONTHLY) {
+    return "monthly";
+  }
+  if (id && id === process.env.STRIPE_PRICE_7_DAY_ACCESS) {
+    return "7Day";
+  }
+
+  // --- Fallbacks when priceId/envs are missing ---
+  if (planNameLc.includes("quarter")) return "quarterly";
+  if (planNameLc.includes("month")) return "monthly";
+
+  console.warn(
+    `⚠️ Unknown stripePriceId for user ${userId}: ${subscription.stripePriceId} (planName="${subscription.stripePlanName}", interval="${subscription.stripeInterval}")`
+  );
+  return "free";
+}
 
 // Add this to centralize access check logic
 export function hasProAccess(level: SubscriptionLevel): boolean {
