@@ -143,10 +143,6 @@ async function handleSessionCompleted(session: Stripe.Checkout.Session) {
   if (!clerkId) {
     throw new Error("User ID is missing in stripe session metadata");
   }
-
-  console.log("📦 Subscription ID:", session.subscription);
-  console.log("🧠 Clerk User ID:", clerkId);
-  console.log("💬 userId in session.metadata:", session.metadata?.userId);
 }
 
 // Handles creation or update of a subscription

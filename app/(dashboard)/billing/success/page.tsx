@@ -10,15 +10,26 @@ import ManageSubscriptionButton from "../ManageSubscriptionButton";
 import Stripe from "stripe";
 
 export default async function SuccessPage() {
-  const { userId } = await auth();
-  if (!userId) return null;
+  const { userId: clerkId } = await auth();
+  if (!clerkId) return null;
 
-  const subscription = await prisma.userSubscription.findUnique({
-    where: { userId },
+  // Resolve DB user
+  const dbUser = await prisma.user.findUnique({ where: { clerkId } });
+
+  // Grab the subscription row by either key
+  const subscription = await prisma.userSubscription.findFirst({
+    where: {
+      OR: [
+        { clerkId },
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        ...(dbUser?.id ? ([{ userId: dbUser.id }] as any) : []),
+      ],
+    },
+    orderBy: { updatedAt: "desc" },
   });
 
   // Derive the plan using your existing helper (make sure you removed cache() in that helper)
-  const plan = await getUserSubscriptionLevel(userId);
+  const plan = await getUserSubscriptionLevel(clerkId);
 
   // Only fetch Stripe product name for non-7Day subscriptions
   let priceInfo: Stripe.Price | null = null;

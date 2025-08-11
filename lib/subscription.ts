@@ -5,16 +5,23 @@ export type SubscriptionLevel = "free" | "7Day" | "monthly" | "quarterly";
 export async function getUserSubscriptionLevel(
   userId: string
 ): Promise<SubscriptionLevel> {
-  const subscription = await prisma.userSubscription.findUnique({
-    where: { userId },
+  // Try to find a subscription by either DB userId or Clerk ID
+  const subscription = await prisma.userSubscription.findFirst({
+    where: {
+      OR: [
+        { userId }, // if caller passed DB userId
+        { clerkId: userId }, // if caller passed Clerk ID
+      ],
+    },
+    orderBy: { updatedAt: "desc" },
   });
 
+  const now = new Date();
   if (
     !subscription ||
     !subscription.stripeCurrentPeriodEnd ||
-    subscription.stripeCurrentPeriodEnd < new Date()
+    subscription.stripeCurrentPeriodEnd.getTime() <= now.getTime()
   ) {
-    console.log("❌ No active subscription — returning 'free'");
     return "free";
   }
 
