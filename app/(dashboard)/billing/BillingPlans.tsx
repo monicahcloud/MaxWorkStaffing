@@ -15,6 +15,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
+import ManageSubscriptionButton from "./ManageSubscriptionButton";
 
 const features = [
   {
@@ -81,39 +82,75 @@ export default function BillingPlans({
   let planName = "No Active Plan";
   let renewalText = "";
 
-  if (subscription) {
-    const id = subscription.stripePriceId ?? "";
+  // Parse end date & active window
+  const end = subscription?.stripeCurrentPeriodEnd
+    ? new Date(subscription.stripeCurrentPeriodEnd as any)
+    : null;
+  const isActive = !!end && !isNaN(end.getTime()) && end.getTime() > Date.now();
 
-    if (id === priceIds.quarterly) planName = "Quarterly Plan";
-    else if (id === priceIds.monthly) planName = "Monthly Plan";
-    else if (
-      id === priceIds.sevenDay ||
+  const id = subscription?.stripePriceId ?? "";
+  const isSevenDay =
+    !!subscription &&
+    (id === priceIds.sevenDay ||
       subscription.stripeInterval === "one_time" ||
-      subscription.stripePlanName?.toLowerCase().includes("7-day")
-    ) {
-      planName = "7-Day Access";
-    } else {
-      planName = "Free";
-    }
+      (subscription.stripePlanName ?? "").toLowerCase().includes("7-day"));
+  const hasActiveSubscription =
+    isActive &&
+    (id === priceIds.monthly || id === priceIds.quarterly || isSevenDay);
 
-    if (subscription.stripeCurrentPeriodEnd) {
-      const end = new Date(subscription.stripeCurrentPeriodEnd as any);
-      if (!isNaN(end.getTime())) {
-        renewalText = subscription.stripeCancelAtPeriodEnd
-          ? `— Cancels on ${end.toLocaleDateString()}`
-          : `— Renews on ${end.toLocaleDateString()}`;
-      }
+  if (subscription && isActive) {
+    if (isSevenDay) {
+      planName = "7-Day Access";
+      renewalText = `Ends on ${end!.toLocaleDateString()}`;
+    } else if (id === priceIds.quarterly) {
+      planName = "Quarterly Plan";
+      renewalText = subscription.stripeCancelAtPeriodEnd
+        ? `Cancels on ${end!.toLocaleDateString()}`
+        : `Renews on ${end!.toLocaleDateString()}`;
+    } else if (id === priceIds.monthly) {
+      planName = "Monthly Plan";
+      renewalText = subscription.stripeCancelAtPeriodEnd
+        ? `Cancels on ${end!.toLocaleDateString()}`
+        : `Renews on ${end!.toLocaleDateString()}`;
+    } else {
+      planName = "Active Plan";
+      renewalText = subscription.stripeCancelAtPeriodEnd
+        ? `Cancels on ${end!.toLocaleDateString()}`
+        : `Renews on ${end!.toLocaleDateString()}`;
     }
+  } else {
+    planName = "Free";
+    renewalText = "";
   }
+
+  // ----- disable logic for current subscription plan -----
+  const disableMonthly =
+    isActive &&
+    id === priceIds.monthly &&
+    !subscription?.stripeCancelAtPeriodEnd;
+  const disableQuarterly =
+    isActive &&
+    id === priceIds.quarterly &&
+    !subscription?.stripeCancelAtPeriodEnd;
 
   // ----- UI for 7-day card -----
   const canShow7Day = !hasUsed7DayAccess;
   const sevenDayDisabled = !!hasUsed7DayAccess;
 
   async function handlePremiumClick(plan: "7Day" | "monthly" | "quarterly") {
-    // extra safety on client
+    // One-time guard
     if (plan === "7Day" && hasUsed7DayAccess) {
       toast.error("7-Day access can only be purchased once.");
+      return;
+    }
+    // Prevent re-buying same active plan unless canceled at period end
+    if (
+      (plan === "monthly" && disableMonthly) ||
+      (plan === "quarterly" && disableQuarterly)
+    ) {
+      toast.error(
+        "You're already on this plan. You can cancel in the portal and repurchase after."
+      );
       return;
     }
 
@@ -129,9 +166,7 @@ export default function BillingPlans({
       let data: any = null;
       try {
         data = raw ? JSON.parse(raw) : null;
-      } catch {
-        /* ignore JSON parse errors */
-      }
+      } catch {}
 
       if (!res.ok) {
         toast.error(data?.error || `Checkout failed (${res.status}).`);
@@ -157,6 +192,11 @@ export default function BillingPlans({
         <h2 className="text-center text-2xl font-medium text-gray-800 mb-5">
           Current Plan: {planName} {renewalText && `— ${renewalText}`}
         </h2>
+        {hasActiveSubscription && (
+          <div className="flex justify-center">
+            <ManageSubscriptionButton />
+          </div>
+        )}
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* 7-Day Plan */}
@@ -216,7 +256,15 @@ export default function BillingPlans({
           )}
 
           {/* Monthly Plan */}
-          <div className="border border-gray-300 rounded-lg p-4 shadow-md bg-white">
+          <div
+            className={`border border-gray-300 rounded-lg p-4 shadow-md bg-white relative ${
+              disableMonthly ? "opacity-60" : ""
+            }`}>
+            {disableMonthly && (
+              <div className="absolute -top-2 left-1/2 -translate-x-1/2 bg-gray-400 text-white px-3 py-1 text-xs font-semibold rounded-full">
+                CURRENT PLAN
+              </div>
+            )}
             <h3 className="text-center text-xl font-bold text-red-600 mb-2">
               Monthly Plan
             </h3>
@@ -249,16 +297,29 @@ export default function BillingPlans({
             <Button
               className="w-full mt-6 bg-gradient-to-r from-red-600 to-red-400 text-white font-bold text-lg"
               onClick={() => handlePremiumClick("monthly")}
-              disabled={loading}>
-              Subscribe Monthly
+              disabled={loading || disableMonthly}>
+              {disableMonthly ? "Current Plan" : "Subscribe Monthly"}
             </Button>
+            {disableMonthly && (
+              <div className="mt-3 flex justify-center">
+                <ManageSubscriptionButton />
+              </div>
+            )}
             <p className="text-xs text-center text-gray-500 mt-2">
               Same as 4 weekly passes — but no interruptions.
             </p>
           </div>
 
           {/* Quarterly Plan */}
-          <div className="border border-gray-300 rounded-lg p-4 shadow-md bg-white">
+          <div
+            className={`border border-gray-300 rounded-lg p-4 shadow-md bg-white relative ${
+              disableQuarterly ? "opacity-60" : ""
+            }`}>
+            {disableQuarterly && (
+              <div className="absolute -top-2 left-1/2 -translate-x-1/2 bg-gray-400 text-white px-3 py-1 text-xs font-semibold rounded-full">
+                CURRENT PLAN
+              </div>
+            )}
             <h3 className="text-center text-xl font-bold text-red-600 mb-2">
               Quarterly Access
             </h3>
@@ -298,9 +359,15 @@ export default function BillingPlans({
             <Button
               className="w-full mt-6 bg-gradient-to-r from-red-600 to-red-400 text-white font-bold text-lg"
               onClick={() => handlePremiumClick("quarterly")}
-              disabled={loading}>
-              Quarterly Plan
+              disabled={loading || disableQuarterly}>
+              {disableQuarterly ? "Current Plan" : "Quarterly Plan"}
             </Button>
+            {/* Quarterly card footer */}
+            {disableQuarterly && (
+              <div className="mt-3 flex justify-center">
+                <ManageSubscriptionButton />
+              </div>
+            )}
             <p className="text-xs text-center text-gray-500 mt-2">
               Best value — billed $34.95 every 3 months.
             </p>
