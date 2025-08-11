@@ -1,94 +1,57 @@
-// FILE: app/(dashboard)/billing/page.tsx
-import React from "react";
-import { Metadata } from "next";
-import { auth } from "@clerk/nextjs/server";
-import { format } from "date-fns";
+// app/(dashboard)/billing/page.tsx
+export const dynamic = "force-dynamic"; // or: export const revalidate = 0
+
+import { auth, clerkClient } from "@clerk/nextjs/server";
 import prisma from "@/lib/prisma";
-import stripe from "@/lib/stripe";
-import Stripe from "stripe";
-import SectionTitle from "@/components/SectionTitle";
+import { env } from "@/env";
 import BillingPlans from "./BillingPlans";
-import { getUserSubscriptionLevel } from "@/lib/subscription";
-import ManageSubscriptionButton from "./ManageSubscriptionButton";
-import Link from "next/link";
-import { clerkClient } from "@clerk/clerk-sdk-node";
-export const metadata: Metadata = {
-  title: "All Subscription Features",
-};
 
 export default async function BillingPage() {
-  const { userId } = await auth();
-  if (!userId) return null;
+  const { userId: clerkId } = await auth();
+  if (!clerkId) return null;
 
-  const user = await clerkClient.users.getUser(userId); // ✅ CORRECT
+  const dbUser = await prisma.user.findUnique({ where: { clerkId } });
 
-  const hasUsed7DayAccess =
-    (user.privateMetadata?.hasUsed7DayAccess as boolean) ?? false;
-
-  const subscription = await prisma.userSubscription.findUnique({
-    where: { userId },
+  const subscription = await prisma.userSubscription.findFirst({
+    where: {
+      OR: [{ clerkId }, ...(dbUser?.id ? [{ userId: dbUser.id }] : [])],
+    },
+    orderBy: { updatedAt: "desc" },
+    select: {
+      stripeCurrentPeriodEnd: true,
+      stripeCancelAtPeriodEnd: true,
+      stripePriceId: true,
+      stripeInterval: true,
+      stripePlanName: true,
+    },
   });
 
-  const plan = await getUserSubscriptionLevel(userId);
+  // Optional: see what we're sending
+  console.log("BillingPage subscription:", subscription);
 
-  let planName = "No Active Plan";
-  let renewalText = "";
+  const user = await (await clerkClient()).users.getUser(clerkId);
+  const hasUsed7DayAccess = user.privateMetadata?.hasUsed7DayAccess === true;
 
-  if (subscription?.stripePriceId) {
-    try {
-      const priceInfo = await stripe.prices.retrieve(
-        subscription.stripePriceId,
-        {
-          expand: ["product"],
-        }
-      );
+  const priceIds = {
+    monthly: env.STRIPE_PRICE_ID_MONTHLY!,
+    quarterly: env.STRIPE_PRICE_ID_QUARTERLY!,
+    sevenDay: env.STRIPE_PRICE_7_DAY_ACCESS!,
+  };
 
-      planName =
-        plan === "7Day"
-          ? "7Day"
-          : (priceInfo.product as Stripe.Product)?.name ?? "Monthly";
-
-      if (subscription.stripeCurrentPeriodEnd) {
-        const formattedDate = format(
-          new Date(subscription.stripeCurrentPeriodEnd),
-          "MMM dd, yyyy"
-        );
-        renewalText = subscription.stripeCancelAtPeriodEnd
-          ? ` — Cancels on ${formattedDate}`
-          : ` — Renews on ${formattedDate}`;
+  // Make Date serializable for the client component
+  const subForClient = subscription
+    ? {
+        ...subscription,
+        stripeCurrentPeriodEnd:
+          subscription.stripeCurrentPeriodEnd?.toISOString() ?? null,
       }
-    } catch (err) {
-      console.error("Failed to fetch Stripe price info:", err);
-    }
-  }
+    : null;
 
   return (
-    <main className="px-4 sm:px-6 lg:px-8 py-10">
-      <SectionTitle
-        text="Explore Your Benefits"
-        subtext={
-          subscription?.stripePriceId && subscription.stripeCurrentPeriodEnd
-            ? `Current Plan: ${planName} ${renewalText}`
-            : "No active plan"
-        }
-      />
-
-      {subscription?.stripePriceId && subscription.stripeCurrentPeriodEnd && (
-        <div className="flex justify-center my-4">
-          <ManageSubscriptionButton />
-        </div>
-      )}
-
-      <div className="text-start mt-8">
-        <Link href="/home" className="text-blue-600 hover:underline text-lg">
-          ← Back to Dashboard
-        </Link>
-      </div>
-
-      <BillingPlans
-        subscription={subscription}
-        hasUsed7DayAccess={hasUsed7DayAccess}
-      />
-    </main>
+    <BillingPlans
+      subscription={subForClient}
+      hasUsed7DayAccess={hasUsed7DayAccess}
+      priceIds={priceIds}
+    />
   );
 }
