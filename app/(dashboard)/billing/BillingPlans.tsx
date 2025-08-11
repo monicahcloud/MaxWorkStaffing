@@ -127,10 +127,9 @@ export default function BillingPlans({
     !subscription?.stripeCancelAtPeriodEnd;
 
   // show portal manage button only for active monthly/quarterly
-  // const hasActiveSubscription =
-  //   isActive &&
-  //   !isSevenDay &&
-  //   (id === priceIds.monthly || id === priceIds.quarterly);
+  const hasActiveSubscription =
+    isActive &&
+    (id === priceIds.monthly || id === priceIds.quarterly || isSevenDay);
 
   // 7-day visibility
   const canShow7Day = !hasUsed7DayAccess;
@@ -186,11 +185,11 @@ export default function BillingPlans({
           Current Plan: {planName} {renewalText && `— ${renewalText}`}
         </h2>
 
-        {/* {hasActiveSubscription && (
+        {hasActiveSubscription && (
           <div className="flex justify-center">
             <ManageSubscriptionButton />
           </div>
-        )} */}
+        )}
       </div>
 
       <div className="max-w-6xl mx-auto space-y-6 mt-6">
@@ -306,12 +305,12 @@ export default function BillingPlans({
                 ? "Current Plan"
                 : "Subscribe Monthly"}
             </Button>
+            {isActive && id === priceIds.monthly && (
+              <div className="mt-3 flex justify-center">
+                <ManageSubscriptionButton />
+              </div>
+            )}
           </div>
-          {isActive && id === priceIds.monthly && (
-            <div className="mt-3 flex justify-center">
-              <ManageSubscriptionButton />
-            </div>
-          )}
 
           {/* Quarterly Plan */}
           <div
@@ -376,12 +375,12 @@ export default function BillingPlans({
                 ? "Current Plan"
                 : "Quarterly Plan"}
             </Button>
+            {isActive && id === priceIds.quarterly && (
+              <div className="mt-3 flex justify-center">
+                <ManageSubscriptionButton />
+              </div>
+            )}
           </div>
-          {isActive && id === priceIds.quarterly && (
-            <div className="mt-3 flex justify-center">
-              <ManageSubscriptionButton />
-            </div>
-          )}
         </div>
       </div>
 
