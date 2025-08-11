@@ -7,6 +7,7 @@ export const metadata = {
   title: "Career & Resume Tips Blog",
   description:
     "Expert advice on resumes, interviews, cover letters, and career growth. Updated weekly with actionable content.",
+  alternates: { canonical: "/blog" },
   openGraph: {
     title: "Max ResumeBuilder Blog",
     description:

@@ -8,7 +8,28 @@ import JobSearchWrapper from "../jobsearch/JobSearchWrapper";
 import { BlogPostGrid } from "@/components/BlogPost";
 import { generateBlogPostsIfNeeded } from "./action";
 import { tagToImageMap } from "@/utils/constants";
-
+export const metadata = {
+  title: "Max ResumeBuilder User Portal",
+  description:
+    "Easily build a professional, recruiter-approved resume with AI-powered guidance. Start from scratch or upload your current resume to enhance it.",
+  robots: { index: false, follow: true },
+  openGraph: {
+    title: "My Resume | Max ResumeBuilder",
+    description:
+      "Build a job-winning resume in minutes. ATS-friendly, customizable templates designed to get you hired.",
+    url: "https://www.maxresumebuilder.com/coverletter",
+    images: [{ url: "/og/og-coverletter.png", width: 1200, height: 630 }],
+    siteName: "Max ResumeBuilder",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Build Your Cover Letter with AI",
+    description:
+      "Fast, flexible, and proven to impress recruiters. Create a cover letter that gets results.",
+    images: ["/og/og-coverletter.png"],
+  },
+};
 export default async function HomePageWrapper() {
   await generateBlogPostsIfNeeded();
   const getImageByTag = (tag: string | null) =>
@@ -27,7 +48,7 @@ export default async function HomePageWrapper() {
       tag: post.tag ?? undefined,
       slug: post.slug!, // non-null assertion since filtered
     }));
-  
+
   return (
     <>
       <ClientHome />

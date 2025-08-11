@@ -20,7 +20,7 @@ export const metadata = {
     description:
       "Build a job-winning resume in minutes. ATS-friendly, customizable templates designed to get you hired.",
     url: "https://www.maxresumebuilder.com/resumebuilder",
-    images: [{ url: "/og/resume-builder.png", width: 1200, height: 630 }],
+    images: [{ url: "/og/og-resumebuilder.png", width: 1200, height: 630 }],
     siteName: "Max ResumeBuilder",
     type: "website",
   },
@@ -29,7 +29,7 @@ export const metadata = {
     title: "Build Your Resume with AI",
     description:
       "Fast, flexible, and proven to impress recruiters. Create a resume that gets results.",
-    images: ["/og/resume-builder.png"],
+    images: ["/og/og-resumebuilder.png"],
   },
 };
 

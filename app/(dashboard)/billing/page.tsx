@@ -9,13 +9,13 @@ import stripe from "@/lib/stripe";
 import Stripe from "stripe";
 import SectionTitle from "@/components/SectionTitle";
 import BillingPlans from "./BillingPlans";
-import ManageSubscriptionButton from "./ManageSubscriptionButton";
 import Link from "next/link";
 import { env } from "@/env";
 import { format } from "date-fns";
 
 export const metadata: Metadata = {
   title: "All Subscription Features",
+  robots: { index: false, follow: true },
 };
 
 export default async function BillingPage() {
@@ -104,11 +104,11 @@ export default async function BillingPage() {
   }
 
   // Only show Manage button for true subscriptions (not 7-Day)
-  const showManage =
-    subscription &&
-    isActive &&
-    !isSevenDay &&
-    (id === priceIds.monthly || id === priceIds.quarterly);
+  // const showManage =
+  //   subscription &&
+  //   isActive &&
+  //   !isSevenDay &&
+  //   (id === priceIds.monthly || id === priceIds.quarterly);
 
   // Serialize date for the client component
   const subForClient = subscription
@@ -131,11 +131,11 @@ export default async function BillingPage() {
         }
       />
 
-      {showManage && (
+      {/* {showManage && (
         <div className="flex justify-center my-4">
           <ManageSubscriptionButton />
         </div>
-      )}
+      )} */}
 
       <div className="text-start mt-8">
         <Link href="/home" className="text-blue-600 hover:underline text-lg">

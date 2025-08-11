@@ -9,6 +9,7 @@ export const metadata = {
   title: "Your Dashboard",
   description:
     "Track your job applications, manage your resumes, and access interview tools — all in one place.",
+  robots: { index: false, follow: true },
   openGraph: {
     title: "Job Dashboard | Max ResumeBuilder",
     description:

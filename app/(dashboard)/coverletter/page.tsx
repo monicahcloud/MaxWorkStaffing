@@ -1,7 +1,6 @@
 export const dynamic = "force-dynamic";
 
 import React from "react";
-import { Metadata } from "next";
 import SectionTitle from "@/components/SectionTitle";
 import CreateLetterButton from "./CreateletterButton";
 import { auth } from "@clerk/nextjs/server";
@@ -11,8 +10,27 @@ import { coverLetterInclude } from "@/lib/types";
 import { canCreateResume } from "@/lib/permissions";
 import { getUserSubscriptionLevel } from "@/lib/subscription";
 
-export const metadata: Metadata = {
-  title: "Cover Letters",
+export const metadata = {
+  title: "My Resume",
+  description:
+    "Easily build a professional, recruiter-approved resume with AI-powered guidance. Start from scratch or upload your current resume to enhance it.",
+  openGraph: {
+    title: "My Resume | Max ResumeBuilder",
+    description:
+      "Build a job-winning resume in minutes. ATS-friendly, customizable templates designed to get you hired.",
+    url: "https://www.maxresumebuilder.com/coverletter",
+    images: [{ url: "/og/og-coverletter.png", width: 1200, height: 630 }],
+    siteName: "Max ResumeBuilder",
+    type: "website",
+    robots: { index: false, follow: true },
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Build Your Cover Letter with AI",
+    description:
+      "Fast, flexible, and proven to impress recruiters. Create a cover letter that gets results.",
+    images: ["/og/og-coverletter.png"],
+  },
 };
 async function CoverLetterRoute() {
   const session = auth();

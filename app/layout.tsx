@@ -6,6 +6,9 @@ import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import Providers from "./providers";
 import { Toaster } from "@/components/ui/sonner";
+import { env } from "@/env";
+
+const base = new URL(env.NEXT_PUBLIC_BASE_URL);
 
 const inter = Inter({
   subsets: ["latin"],
@@ -13,15 +16,19 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: {
     template: "%s - Max ResumeBuilder",
-    default: "Max ResumeBuilder",
+    default: "Max ResumeBuilder Build a Job-Winning Resume Fast",
   },
   description:
-    "Max ResumeBuilder is your AI-powered job search companion — create polished resumes and cover letters, build a professional profile, and find and track job opportunities in one place.",
+    "Build ATS-friendly resumes and cover letters in minutes. Track job applications and search jobs with smart tools.",
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
+    type: "website",
     title: "Max ResumeBuilder",
     description:
       "Create polished resumes and cover letters with AI. Track job applications, build a professional profile — all in one place.",
-    url: "https://www.maxresumebuilder.com",
+    url: base,
     siteName: "Max ResumeBuilder",
     images: [
       {
@@ -32,7 +39,6 @@ export const metadata: Metadata = {
       },
     ],
     locale: "en_US",
-    type: "website",
   },
   twitter: {
     card: "summary_large_image",
@@ -41,6 +47,10 @@ export const metadata: Metadata = {
       "Your AI-powered job search assistant. Resumes, cover letters, and tracking made easy.",
     images: ["/og/og-image.png"],
     creator: "@vitanovadesigns", // update to your brand
+  },
+  robots: {
+    index: true,
+    follow: true,
   },
 };
 
