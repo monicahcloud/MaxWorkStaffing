@@ -98,7 +98,7 @@ export default function UploadResumeButton() {
     // the Editor to fetch the NEWLY created rows from the DB immediately.
     setTimeout(() => {
       window.location.href = `/editor?resumeId=${newResumeId}`;
-    }, 800);
+    }, 1500);
   };
   return (
     <div className="flex flex-col items-center gap-4">

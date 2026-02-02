@@ -185,44 +185,52 @@ export async function parseResumeWithAI(
 export async function saveParsedResumeData(resumeId: string, parsedData: any) {
   if (!resumeId) throw new Error("Missing resumeId");
 
-  // Log the data one more time to see EXACTLY what OpenAI sent
-  console.log("AI DATA TO SAVE:", JSON.stringify(parsedData, null, 2));
+  // Log the raw AI output in Vercel logs to see what's actually coming back
+  console.log("RAW AI DATA:", JSON.stringify(parsedData, null, 2));
 
-  // Defensive extraction: AI sometimes changes casing
-  const personal = parsedData.personalInfo || parsedData.personal_info || {};
-  const work = parsedData.workExperience || parsedData.work_experience || [];
+  // AGGRESSIVE MAPPING: AI often uses underscores or different names
+  const p = parsedData.personalInfo || parsedData.personal_info || {};
+  const work =
+    parsedData.workExperience ||
+    parsedData.work_experience ||
+    parsedData.experience ||
+    [];
   const edu = parsedData.education || [];
-  const skills = parsedData.skills || parsedData.techSkills || [];
-  const summary = parsedData.summary || "";
+  const skills =
+    parsedData.skills ||
+    parsedData.techSkills ||
+    parsedData.technical_skills ||
+    [];
 
   return await prisma.$transaction(
     async (tx) => {
-      // 1. Wipe existing
+      // Clear old data
       await tx.techSkill.deleteMany({ where: { resumeId } });
       await tx.education.deleteMany({ where: { resumeId } });
       await tx.workExperience.deleteMany({ where: { resumeId } });
 
-      // 2. Update with the mapped data
+      // Nested update for speed and atomicity
       return await tx.resume.update({
         where: { id: resumeId },
         data: {
-          firstName: personal.firstName || personal.first_name || "",
-          lastName: personal.lastName || personal.last_name || "",
-          jobTitle: personal.jobTitle || personal.job_title || "",
-          email: personal.email || "",
-          phone: personal.phone || "",
-          address: personal.address || "",
-          summary: summary,
-          // Nested creates for the lists
+          firstName: p.firstName || p.first_name || "",
+          lastName: p.lastName || p.last_name || "",
+          jobTitle: p.jobTitle || p.job_title || "",
+          email: p.email || "",
+          phone: p.phone || "",
+          address: p.address || "",
+          summary: parsedData.summary || "",
           techSkills: {
-            create: skills.map((s: any) => ({
-              name: typeof s === "string" ? s : s.name || "",
-            })),
+            create: skills
+              .map((s: any) => ({
+                name: typeof s === "string" ? s : s.name || s.skill || "",
+              }))
+              .filter((s: any) => s.name !== ""), // Prevent blank skills
           },
           education: {
             create: edu.map((e: any) => ({
               degree: e.degree || "",
-              school: e.school || "",
+              school: e.school || e.university || "",
               location: e.location || "",
               startDate: safeDate(e.startDate || e.start_date),
               endDate: safeDate(e.endDate || e.end_date),
@@ -230,15 +238,15 @@ export async function saveParsedResumeData(resumeId: string, parsedData: any) {
             })),
           },
           workExperience: {
-            create: work.map((job: any) => ({
-              position: job.position || job.jobTitle || job.job_title || "",
-              company: job.company || "",
-              location: job.location || "",
-              startDate: safeDate(job.startDate || job.start_date),
-              endDate: safeDate(job.endDate || job.end_date),
-              description: job.description || "",
-              duties: job.duties || "",
-              responsibilities: job.responsibilities || "",
+            create: work.map((j: any) => ({
+              position: j.position || j.jobTitle || j.job_title || "",
+              company: j.company || j.organization || "",
+              location: j.location || "",
+              startDate: safeDate(j.startDate || j.start_date),
+              endDate: safeDate(j.endDate || j.end_date),
+              description: j.description || "",
+              duties: j.duties || "",
+              responsibilities: j.responsibilities || "",
             })),
           },
         },
