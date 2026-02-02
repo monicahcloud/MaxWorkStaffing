@@ -1,0 +1,274 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id              String      @id @default(cuid()) // internal DB ID
+  clerkId         String      @unique // Clerk-provided user ID
+  stripeCustomerId String? @unique
+  email           String      @unique
+  firstName       String?
+  lastName        String?
+  imageUrl        String?
+  isFirstTimeUser Boolean     @default(true)
+  resumes         Resume[]
+  jobs            Job[]
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  interviews      Interview[]
+  savedJob        SavedJob[]
+  feedback        Feedback[]
+   coverletter    CoverLetter[]
+ userSubscription UserSubscription[]
+  @@index([clerkId])
+ 
+}
+
+model Resume {
+  id              String           @id @default(cuid())
+  clerkId         String
+  userId          String
+  resumeType      String?
+  resumeTitle     String?
+  parsed            Boolean?     @default(false)
+  parsedWith      String?  //  "OpenAI" | null
+  description     String?
+  shareToken String?  @unique @default(cuid())
+  photoUrl        String?
+  themeColor      String           @default("#000000")
+  themeId         String?
+  borderStyle     String           @default("squircle")
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  firstName       String?
+  lastName        String?
+  jobTitle        String?
+  address         String?
+  phone           String?
+  email           String?
+  userEmail       String?
+  userName        String?
+  website         String?
+  linkedin        String?
+  gitHub          String?
+  summary         String?
+  techSkills      TechSkill[]
+  workExperience  WorkExperience[]
+  education       Education[]
+  skills          String[]
+  interest        String[]
+  uploadedFileUrl String?
+  isUploaded      Boolean          @default(false)
+  user            User             @relation(fields: [clerkId], references: [clerkId])
+  jobs            Job[]
+rawTextContent   String?
+showPhoto Boolean @default(true)
+content   Json?
+  @@index([clerkId])
+}
+
+model WorkExperience {
+  id               String    @id @default(cuid())
+  position         String?
+  company          String?
+  startDate        DateTime?
+  endDate          DateTime?
+  location         String?
+  duties           String?
+  responsibilities String?
+  accomplishments  String?
+  clearance        String?
+  grade            String?
+  status           String?
+  time             String?
+  hours            String?
+  description      String?
+  resumeId         String
+  resume           Resume    @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+}
+
+model TechSkill {
+  id        String   @id @default(uuid())
+  resumeId  String
+  name      String?
+  rating    Int?
+  resume    Resume   @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Education {
+  id          String    @id @default(cuid())
+  degree      String?
+  school      String?
+  startDate   DateTime?
+  endDate     DateTime?
+  location    String?
+  description String?
+  resumeId    String
+  resume      Resume    @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model UserSubscription {
+  id                      String   @id @default(cuid())
+  userId                  String   @unique
+  clerkId                 String   @unique
+  stripeCustomerId        String?  @unique
+  stripeSubscriptionId    String?  @unique
+  stripePriceId           String?
+  stripeCurrentPeriodEnd  DateTime?
+  stripeCancelAtPeriodEnd Boolean  @default(false)
+
+  stripePlanName          String?  
+  stripeInterval          String?  
+status                    String?
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+
+  user                    User     @relation(fields: [clerkId], references: [clerkId])
+
+  @@map("user_subscriptions")
+  // @@unique([clerkId]) // to allow upsert by clerkId
+}
+
+
+model Job {
+  id           String    @id @default(uuid())
+  clerkId      String
+  userId       String
+  resumeId     String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  position     String
+  company      String
+  location     String
+  mode         Mode
+  status       String
+  salary       String?
+  postedAt     DateTime?
+  description  String?
+  requirements String[]
+  category     String?
+  url          String?
+dateApplied DateTime? // <- Add this line if not present
+
+  user     User       @relation(fields: [clerkId], references: [clerkId])
+  resume   Resume?    @relation(fields: [resumeId], references: [id])
+  savedJob SavedJob[]
+
+  @@index([clerkId])
+  @@index([resumeId])
+}
+
+enum Mode {
+  FULLTIME
+  PARTTIME
+  INTERNSHIP
+  CONTRACT
+  APPRENTICESHIP
+  SEASONAL
+}
+
+model SavedJob {
+  id        String   @id @default(uuid())
+  jobId     String
+  userId    String
+  createdAt DateTime @default(now())
+
+  job  Job  @relation(fields: [jobId], references: [id])
+  user User @relation(fields: [userId], references: [id])
+}
+
+model Interview {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  role       String
+  type       String
+  level      String
+  techstack  String[] // PostgreSQL must support array type
+  questions  String[] // You can also store as JSON if needed
+  coverImage String
+  finalized  Boolean
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  feedback Feedback[]
+}
+
+model Feedback {
+  id                  String   @id @default(cuid())
+  clerkId             String
+  userId              String
+  interviewId         String
+  totalScore          Int
+  categoryScores      Json // structured scoring per category
+  strengths           String[] // or Json if needed
+  areasForImprovement String[] // or Json if needed
+  finalAssessment     String
+  createdAt           DateTime @default(now())
+
+  // Relations
+  interview Interview @relation(fields: [interviewId], references: [id])
+  user      User      @relation(fields: [userId], references: [id])
+
+  @@index([interviewId])
+  @@index([userId])
+}
+
+model CoverLetter {
+  id              String   @id @default(cuid())
+  userId          String
+  clerkId         String
+  template        String?
+   themeColor      String?   
+   themeId         String?
+  borderStyle     String ?   @default("squircle")
+  showPhoto      Boolean  @default(true)
+body            String?
+firstName       String?
+shareToken String?  @unique @default(cuid())
+  lastName        String?
+  userEmail           String?
+  userPhone           String?
+  userAddress     String?
+  userPhotoUrl    String?
+  website         String?
+  linkedin        String? 
+  gitHub          String?   
+  jobTitle        String?
+  companyName     String?
+  companyAddress  String?
+  companyPhone   String?
+  companyEmail    String?
+  recipientName   String?
+  signatureUrl    String?
+  signatureColor String?
+
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  user User @relation(fields: [clerkId], references: [clerkId])
+  
+  @@index([clerkId])
+}
+
+model BlogPost {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  imageUrl    String
+  tag         String?
+  content     String?  // 👈 optional for now
+  slug        String?  @unique  // 👈 optional for now
+  createdAt   DateTime @default(now())
+}

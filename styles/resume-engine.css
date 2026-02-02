@@ -1,0 +1,85 @@
+/* resume-engine.css */
+
+.resume-paper {
+  display: grid;
+  gap: var(--section-gap, 1.5rem);
+  font-family: var(--font-body);
+  background: white;
+  min-height: 1123px; /* A4 Height */
+  width: 794px; /* A4 Width */
+  box-sizing: border-box;
+}
+
+/* --- GRID LAYOUTS (Fixed Widths for Stability) --- */
+
+/* Sidebar Left: Locked sidebar at 260px */
+.resume-paper[data-layout="sidebar-left"] {
+  grid-template-areas:
+    "header header"
+    "sidebar main";
+  grid-template-columns: 260px 1fr;
+}
+
+/* Modern Split: Sidebar 280px, starts from the top */
+.resume-paper[data-layout="modern-split"] {
+  grid-template-areas:
+    "sidebar header"
+    "sidebar main";
+  grid-template-columns: 280px 1fr;
+  gap: 0;
+}
+
+/* Sidebar Right: Locked sidebar at 260px */
+.resume-paper[data-layout="sidebar-right"] {
+  grid-template-areas:
+    "header header"
+    "main sidebar";
+  grid-template-columns: 1fr 260px;
+}
+
+/* Top Header / Federal: Single Column */
+.resume-paper[data-layout="top-header"],
+.resume-paper[data-category="federal"] {
+  display: flex !important;
+  flex-direction: column;
+}
+
+/* --- AREA STYLING --- */
+
+.resume-header {
+  grid-area: header;
+  padding-bottom: 1rem;
+}
+
+.resume-sidebar {
+  grid-area: sidebar;
+  padding: 1.5rem;
+  background-color: var(--secondary);
+  height: 100%;
+}
+
+.resume-main {
+  grid-area: main;
+  padding: 1.5rem;
+}
+
+/* --- ARCHETYPE CLEANUP --- */
+
+/* Federal: High Density */
+.resume-paper[data-category="federal"] h2 {
+  border-bottom: 2px solid var(--primary);
+  text-transform: uppercase;
+  font-size: 13px;
+  margin-top: 1rem;
+  padding-bottom: 2px;
+}
+
+/* Functional: Contrast Sidebar */
+.resume-paper[data-category="functional"] .resume-sidebar {
+  color: white; /* Contrast text against primary/secondary colors */
+}
+
+/* Combination: Split Border */
+.resume-paper[data-category="combination"] .resume-main {
+  border-left: 1px solid #e2e8f0;
+}
