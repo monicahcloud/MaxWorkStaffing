@@ -1,0 +1,14 @@
+{
+  "functions": {
+    "app/api/parse-resume/route.ts": {
+      "maxDuration": 300,
+      "memory": 1024
+    },
+    "app/api/ai/generate-blog-post/route.ts": {
+      "maxDuration": 300
+    },
+    "app/api/vapi/generate/route.ts": {
+      "maxDuration": 300
+    }
+  }
+}

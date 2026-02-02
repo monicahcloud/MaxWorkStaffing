@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/*api/upload-resume/route.ts*/
 import { NextRequest, NextResponse } from "next/server";
 import pdf from "pdf-parse";
 import mammoth from "mammoth";
@@ -8,6 +10,9 @@ import {
 import prisma from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
 
+// 1. Force Node.js runtime for PDF/Docx processing
+export const runtime = "nodejs";
+
 export async function POST(req: NextRequest) {
   try {
     const { userId } = await auth();
@@ -16,17 +21,24 @@ export async function POST(req: NextRequest) {
 
     const formData = await req.formData();
     const file = formData.get("file") as File;
-    const isFederal = formData.get("isFederal") === "true"; // Captured from UI toggle
+    const isFederal = formData.get("isFederal") === "true";
 
     if (!file)
       return NextResponse.json({ error: "No file provided" }, { status: 400 });
 
+    // 2. Fix Buffer Deprecation: Use Buffer.from()
     const buffer = Buffer.from(await file.arrayBuffer());
     let rawText = "";
 
-    // 1. Handle File Formats
     if (file.type === "application/pdf") {
-      const pdfData = await pdf(buffer);
+      // 3. Optimize PDF parsing to be faster and skip image rendering
+      const pdfData = await pdf(buffer, {
+        pagerender: (pageData: any) => {
+          return pageData.getTextContent().then((textContent: any) => {
+            return textContent.items.map((item: any) => item.str).join(" ");
+          });
+        },
+      });
       rawText = pdfData.text;
     } else if (
       file.name.endsWith(".docx") ||
@@ -37,14 +49,13 @@ export async function POST(req: NextRequest) {
     } else {
       return NextResponse.json(
         { error: "Please upload PDF or DOCX" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
-    // 2. Parse with AI first to get the Job Title for the DB
+    // 4. AI and DB operations follow...
     const parsedJson = await parseResumeWithAI(rawText, isFederal);
 
-    // 3. Create Resume with Automatic Template Selection
     const newResume = await prisma.resume.create({
       data: {
         clerkId: userId,
@@ -52,7 +63,6 @@ export async function POST(req: NextRequest) {
         resumeTitle: file.name.replace(/\.[^/.]+$/, ""),
         rawTextContent: rawText,
         parsedWith: "OpenAI",
-        // AUTO-TEMPLATE SELECTION
         themeId: isFederal ? "federal" : "modern",
         jobTitle: parsedJson.personalInfo?.jobTitle || "",
         firstName: parsedJson.personalInfo?.firstName || "",
@@ -60,7 +70,6 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    // 4. Save structured related data (Work, Edu, Skills)
     await saveParsedResumeData(newResume.id, parsedJson);
 
     return NextResponse.json({
@@ -72,7 +81,7 @@ export async function POST(req: NextRequest) {
     console.error("Upload Error:", error);
     return NextResponse.json(
       { error: "Failed to process document" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
