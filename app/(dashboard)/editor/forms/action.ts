@@ -32,7 +32,13 @@ function cleanJsonString(jsonStr: string): string {
  * Validates dates to prevent Prisma crashes on "Present" or "Current" strings
  */
 function safeDate(value: any): Date | undefined {
-  if (!value) return undefined;
+  if (
+    !value ||
+    value.toLowerCase().includes("present") ||
+    value.toLowerCase().includes("current")
+  ) {
+    return undefined; // Prisma treats undefined as NULL for DateTime fields
+  }
   const date = new Date(value);
   return isNaN(date.getTime()) ? undefined : date;
 }
@@ -179,66 +185,60 @@ export async function parseResumeWithAI(
 export async function saveParsedResumeData(resumeId: string, parsedData: any) {
   if (!resumeId) throw new Error("Missing resumeId");
 
-  const {
-    personalInfo = {},
-    summary = "",
-    skills = [],
-    education = [],
-    workExperience = [],
-    interest = [],
-  } = parsedData;
+  // Log the data one more time to see EXACTLY what OpenAI sent
+  console.log("AI DATA TO SAVE:", JSON.stringify(parsedData, null, 2));
+
+  // Defensive extraction: AI sometimes changes casing
+  const personal = parsedData.personalInfo || parsedData.personal_info || {};
+  const work = parsedData.workExperience || parsedData.work_experience || [];
+  const edu = parsedData.education || [];
+  const skills = parsedData.skills || parsedData.techSkills || [];
+  const summary = parsedData.summary || "";
 
   return await prisma.$transaction(
     async (tx) => {
-      // Clean up old relations first
+      // 1. Wipe existing
       await tx.techSkill.deleteMany({ where: { resumeId } });
       await tx.education.deleteMany({ where: { resumeId } });
       await tx.workExperience.deleteMany({ where: { resumeId } });
 
-      // Nested update: Faster and more reliable in serverless
+      // 2. Update with the mapped data
       return await tx.resume.update({
         where: { id: resumeId },
         data: {
-          firstName: personalInfo.firstName || "",
-          lastName: personalInfo.lastName || "",
-          jobTitle: personalInfo.jobTitle || "",
-          email: personalInfo.email || "",
-          phone: personalInfo.phone || "",
-          address: personalInfo.address || "",
-          website: personalInfo.website || "",
-          linkedin: personalInfo.linkedin || "",
-          gitHub: personalInfo.gitHub || "",
-          summary,
-          interest,
-          parsed: true,
-          techSkills: { create: skills.map((name: string) => ({ name })) },
+          firstName: personal.firstName || personal.first_name || "",
+          lastName: personal.lastName || personal.last_name || "",
+          jobTitle: personal.jobTitle || personal.job_title || "",
+          email: personal.email || "",
+          phone: personal.phone || "",
+          address: personal.address || "",
+          summary: summary,
+          // Nested creates for the lists
+          techSkills: {
+            create: skills.map((s: any) => ({
+              name: typeof s === "string" ? s : s.name || "",
+            })),
+          },
           education: {
-            create: education.map((edu: any) => ({
-              degree:
-                typeof edu.degree === "string"
-                  ? edu.degree
-                  : edu.degree?.education || "",
-              school: edu.school || "",
-              location: edu.location || "",
-              startDate: safeDate(edu.startDate),
-              endDate: safeDate(edu.endDate),
-              description: edu.description || "",
+            create: edu.map((e: any) => ({
+              degree: e.degree || "",
+              school: e.school || "",
+              location: e.location || "",
+              startDate: safeDate(e.startDate || e.start_date),
+              endDate: safeDate(e.endDate || e.end_date),
+              description: e.description || "",
             })),
           },
           workExperience: {
-            create: workExperience.map((job: any) => ({
-              position: job.position || "",
+            create: work.map((job: any) => ({
+              position: job.position || job.jobTitle || job.job_title || "",
               company: job.company || "",
               location: job.location || "",
-              startDate: safeDate(job.startDate),
-              endDate: safeDate(job.endDate),
+              startDate: safeDate(job.startDate || job.start_date),
+              endDate: safeDate(job.endDate || job.end_date),
               description: job.description || "",
-              status: job.status || "",
-              clearance: job.clearance || "",
               duties: job.duties || "",
               responsibilities: job.responsibilities || "",
-              grade: job.grade || "",
-              hours: job.hours || "",
             })),
           },
         },

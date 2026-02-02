@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useRef, useState } from "react";
@@ -6,14 +7,14 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { UploadCloud, ShieldCheck, Loader2 } from "lucide-react"; // Added Loader2
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+//import { useRouter } from "next/navigation";
 import { ParsingPreviewModal } from "@/components/ParsingPreviewModal";
 import { cn } from "@/lib/utils";
 import confetti from "canvas-confetti";
 
 export default function UploadResumeButton() {
   const inputRef = useRef<HTMLInputElement>(null);
-  const router = useRouter();
+  //const router = useRouter();
 
   const [isUploading, setIsUploading] = useState(false);
   const [isRedirecting, setIsRedirecting] = useState(false);
@@ -56,43 +57,48 @@ export default function UploadResumeButton() {
     }
   };
   const handleConfirm = () => {
+    if (!newResumeId) {
+      toast.error("Resume ID missing. Please try again.");
+      return;
+    }
+
     setIsRedirecting(true);
 
-    // Trigger Success Celebration
-    const duration = 3 * 1000;
+    // 1. Trigger Celebration (Confetti)
+    const duration = 3000;
     const animationEnd = Date.now() + duration;
-    const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
 
-    const randomInRange = (min: number, max: number) =>
-      Math.random() * (max - min) + min;
-
-    const interval: any = setInterval(function () {
+    const frame = () => {
       const timeLeft = animationEnd - Date.now();
-
-      if (timeLeft <= 0) {
-        return clearInterval(interval);
-      }
+      if (timeLeft <= 0) return;
 
       const particleCount = 50 * (timeLeft / duration);
 
-      // Since particles fall down, start a bit higher than random
       confetti({
-        ...defaults,
         particleCount,
-        origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
-        colors: ["#2563eb", "#3b82f6", "#60a5fa"], // Professional Blue palette
-      });
-      confetti({
-        ...defaults,
-        particleCount,
-        origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
+        spread: 70,
+        origin: { x: 0.2, y: 0.6 },
         colors: ["#2563eb", "#3b82f6", "#60a5fa"],
       });
-    }, 250);
+      confetti({
+        particleCount,
+        spread: 70,
+        origin: { x: 0.8, y: 0.6 },
+        colors: ["#2563eb", "#3b82f6", "#60a5fa"],
+      });
 
-    if (newResumeId) {
-      router.push(`/editor?resumeId=${newResumeId}`);
-    }
+      requestAnimationFrame(frame);
+    };
+
+    frame();
+
+    // 2. Redirect Logic
+    // We use window.location.href instead of router.push for the INITIAL load
+    // after a heavy AI parse. This clears the Next.js cache and forces
+    // the Editor to fetch the NEWLY created rows from the DB immediately.
+    setTimeout(() => {
+      window.location.href = `/editor?resumeId=${newResumeId}`;
+    }, 800);
   };
   return (
     <div className="flex flex-col items-center gap-4">
@@ -102,12 +108,12 @@ export default function UploadResumeButton() {
           "flex items-center gap-3 px-4 py-2 rounded-full border transition-all duration-300",
           isFederal
             ? "bg-blue-50 border-blue-200"
-            : "bg-slate-50 border-slate-200"
+            : "bg-slate-50 border-slate-200",
         )}>
         <ShieldCheck
           className={cn(
             "size-4",
-            isFederal ? "text-blue-600" : "text-slate-400"
+            isFederal ? "text-blue-600" : "text-slate-400",
           )}
         />
         <Label
@@ -157,11 +163,11 @@ export default function UploadResumeButton() {
         isOpen={showModal}
         data={parsedData}
         isRedirecting={isRedirecting}
-        onConfirm={() => {
-          setIsRedirecting(true);
-          router.push(`/editor?resumeId=${newResumeId}`);
+        onConfirm={handleConfirm} // 👈 Wire it up here!
+        onCancel={() => {
+          setShowModal(false);
+          setNewResumeId(null); // Optional: clear ID if they cancel
         }}
-        onCancel={() => setShowModal(false)}
       />
     </div>
   );
