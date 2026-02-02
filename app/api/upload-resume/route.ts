@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/*api/upload-resume/route.ts*/
 import { NextRequest, NextResponse } from "next/server";
-import pdf from "pdf-parse";
+import { extractText } from "unpdf"; // Modern, fast, no Buffer warnings
 import mammoth from "mammoth";
 import {
   parseResumeWithAI,
@@ -10,7 +9,7 @@ import {
 import prisma from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
 
-// 1. Force Node.js runtime for PDF/Docx processing
+// Force Node.js runtime for document processing
 export const runtime = "nodejs";
 
 export async function POST(req: NextRequest) {
@@ -26,36 +25,42 @@ export async function POST(req: NextRequest) {
     if (!file)
       return NextResponse.json({ error: "No file provided" }, { status: 400 });
 
-    // 2. Fix Buffer Deprecation: Use Buffer.from()
-    const buffer = Buffer.from(await file.arrayBuffer());
+    // Read file once into an ArrayBuffer
+    const arrayBuffer = await file.arrayBuffer();
     let rawText = "";
 
+    // --- 1. EXTRACT TEXT ---
     if (file.type === "application/pdf") {
-      // 3. Optimize PDF parsing to be faster and skip image rendering
-      const pdfData = await pdf(buffer, {
-        pagerender: (pageData: any) => {
-          return pageData.getTextContent().then((textContent: any) => {
-            return textContent.items.map((item: any) => item.str).join(" ");
-          });
-        },
-      });
-      rawText = pdfData.text;
+      // unpdf is modern and avoids the deprecated Buffer() warning
+      const { text } = await extractText(arrayBuffer);
+      rawText = Array.isArray(text) ? text.join("\n") : text;
     } else if (
       file.name.endsWith(".docx") ||
       file.type.includes("wordprocessingml")
     ) {
+      // Mammoth needs a Buffer
+      const buffer = Buffer.from(arrayBuffer);
       const result = await mammoth.extractRawText({ buffer });
       rawText = result.value;
     } else {
       return NextResponse.json(
-        { error: "Please upload PDF or DOCX" },
+        { error: "Please upload a PDF or DOCX file" },
         { status: 400 },
       );
     }
 
-    // 4. AI and DB operations follow...
-    const parsedJson = await parseResumeWithAI(rawText, isFederal);
+    if (!rawText.trim()) {
+      throw new Error("Could not extract any text from this document.");
+    }
 
+    // --- 2. AI PARSING ---
+    // Limit string length to protect against OpenAI token limits/timeouts
+    const parsedJson = await parseResumeWithAI(
+      rawText.substring(0, 15000),
+      isFederal,
+    );
+
+    // --- 3. DATABASE OPERATIONS ---
     const newResume = await prisma.resume.create({
       data: {
         clerkId: userId,
@@ -70,17 +75,17 @@ export async function POST(req: NextRequest) {
       },
     });
 
+    // Save related tables (Work, Edu, Skills) via the refactored transaction
     await saveParsedResumeData(newResume.id, parsedJson);
 
     return NextResponse.json({
       success: true,
       resumeId: newResume.id,
-      parsedJson,
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Upload Error:", error);
     return NextResponse.json(
-      { error: "Failed to process document" },
+      { error: error.message || "Failed to process document" },
       { status: 500 },
     );
   }

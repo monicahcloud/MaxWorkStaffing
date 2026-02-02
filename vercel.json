@@ -1,5 +1,9 @@
 {
   "functions": {
+    "app/api/upload-resume/route.ts": {
+      "maxDuration": 300,
+      "memory": 1024
+    },
     "app/api/parse-resume/route.ts": {
       "maxDuration": 300,
       "memory": 1024
