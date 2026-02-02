@@ -63,7 +63,7 @@ export default function ResumeTemplateCard({
   return (
     <Card
       onClick={handleNavigation}
-      className="group cursor-pointer rounded-[2rem] border-slate-100 overflow-hidden hover:border-red-600 hover:shadow-2xl transition-all duration-500 bg-white">
+      className="group cursor-pointer rounded-4xl border-slate-100 overflow-hidden hover:border-red-600 hover:shadow-2xl transition-all duration-500 bg-white">
       <CardContent className="p-0">
         <div className="h-80 bg-slate-100 flex items-center justify-center p-0 overflow-hidden relative group border-b">
           <div onClick={(e) => e.stopPropagation()}>

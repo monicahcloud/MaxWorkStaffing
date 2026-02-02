@@ -76,7 +76,7 @@ function WorkExperienceForm({ resumeData, setResumeData }: EditorFormProps) {
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
-    })
+    }),
   );
 
   function handleDragEnd(event: DragEndEvent) {
@@ -190,7 +190,7 @@ function WorkExperienceItem({
         "space-y-5 border rounded-3xl bg-white p-6 transition-all duration-200",
         isDragging
           ? "shadow-2xl z-50 cursor-grabbing border-blue-200 scale-105"
-          : "shadow-sm border-slate-100"
+          : "shadow-sm border-slate-100",
       )}>
       <div className="flex justify-between items-center border-b border-slate-50 pb-3">
         <div className="flex items-center gap-2">
@@ -369,7 +369,7 @@ function WorkExperienceItem({
                     onWorkExperienceGenerated={(exp) =>
                       form.setValue(
                         `workExperiences.${index}.description`,
-                        exp.description
+                        exp.description,
                       )
                     }
                   />
@@ -427,7 +427,7 @@ function WorkExperienceItem({
                     onResponsibilitiesGenerated={(resp) =>
                       form.setValue(
                         `workExperiences.${index}.responsibilities`,
-                        resp
+                        resp,
                       )
                     }
                   />

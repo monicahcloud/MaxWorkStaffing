@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import { renderToString } from "react-dom/server";
 import ResumePreview from "@/components/ResumePreview";
@@ -8,6 +9,6 @@ export function getResumeHtml(resumeData: any) {
   return renderToString(
     <div style={{ width: "210mm" }}>
       <ResumePreview resumeData={resumeValues} />
-    </div>
+    </div>,
   );
 }

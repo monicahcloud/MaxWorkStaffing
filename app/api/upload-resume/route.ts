@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextRequest, NextResponse } from "next/server";
-import { extractText } from "unpdf"; // Modern, fast, no Buffer warnings
+import { extractText } from "unpdf";
 import mammoth from "mammoth";
 import {
   parseResumeWithAI,
@@ -9,10 +9,12 @@ import {
 import prisma from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
 
-// Force Node.js runtime for document processing
 export const runtime = "nodejs";
 
 export async function POST(req: NextRequest) {
+  let parsedJson: any = null;
+  let newResumeId: string | null = null;
+
   try {
     const { userId } = await auth();
     if (!userId)
@@ -25,42 +27,34 @@ export async function POST(req: NextRequest) {
     if (!file)
       return NextResponse.json({ error: "No file provided" }, { status: 400 });
 
-    // Read file once into an ArrayBuffer
     const arrayBuffer = await file.arrayBuffer();
     let rawText = "";
 
-    // --- 1. EXTRACT TEXT ---
+    // --- 1. EXTRACT TEXT (PDF vs DOCX) ---
     if (file.type === "application/pdf") {
-      // unpdf is modern and avoids the deprecated Buffer() warning
       const { text } = await extractText(arrayBuffer);
       rawText = Array.isArray(text) ? text.join("\n") : text;
     } else if (
       file.name.endsWith(".docx") ||
       file.type.includes("wordprocessingml")
     ) {
-      // Mammoth needs a Buffer
+      // Mammoth requires a Buffer
       const buffer = Buffer.from(arrayBuffer);
       const result = await mammoth.extractRawText({ buffer });
       rawText = result.value;
     } else {
       return NextResponse.json(
-        { error: "Please upload a PDF or DOCX file" },
+        { error: "Unsupported format" },
         { status: 400 },
       );
     }
 
-    if (!rawText.trim()) {
-      throw new Error("Could not extract any text from this document.");
-    }
+    if (!rawText.trim()) throw new Error("Could not extract text.");
 
-    // --- 2. AI PARSING ---
-    // Limit string length to protect against OpenAI token limits/timeouts
-    const parsedJson = await parseResumeWithAI(
-      rawText.substring(0, 15000),
-      isFederal,
-    );
+    // --- 2. AI PARSING (Strict Schema) ---
+    parsedJson = await parseResumeWithAI(rawText, isFederal);
 
-    // --- 3. DATABASE OPERATIONS ---
+    // --- 3. DB OPERATIONS ---
     const newResume = await prisma.resume.create({
       data: {
         clerkId: userId,
@@ -69,24 +63,32 @@ export async function POST(req: NextRequest) {
         rawTextContent: rawText,
         parsedWith: "OpenAI",
         themeId: isFederal ? "federal" : "modern",
-        jobTitle: parsedJson.personalInfo?.jobTitle || "",
-        firstName: parsedJson.personalInfo?.firstName || "",
-        lastName: parsedJson.personalInfo?.lastName || "",
+        firstName: parsedJson.personalInfo.firstName,
+        lastName: parsedJson.personalInfo.lastName,
+        jobTitle: parsedJson.personalInfo.jobTitle,
       },
     });
 
-    // Save related tables (Work, Edu, Skills) via the refactored transaction
+    newResumeId = newResume.id;
     await saveParsedResumeData(newResume.id, parsedJson);
 
     return NextResponse.json({
       success: true,
       resumeId: newResume.id,
+      parsedJson,
     });
   } catch (error: any) {
-    console.error("Upload Error:", error);
-    return NextResponse.json(
-      { error: error.message || "Failed to process document" },
-      { status: 500 },
-    );
+    console.error("Upload Error:", error.message);
+
+    // Recovery: Open modal even if DB failed
+    if (parsedJson) {
+      return NextResponse.json({
+        success: true,
+        resumeId: newResumeId,
+        parsedJson,
+      });
+    }
+
+    return NextResponse.json({ error: "Processing failed" }, { status: 500 });
   }
 }

@@ -44,13 +44,14 @@ function ResumeEditor({ resumeToEdit }: ResumeEditorProps) {
       description: "",
       resumeType: resumeTypeFromURL,
       themeId: themeIdFromURL || "chronological-master", // Default to gallery selection
+      showPhoto: true,
     };
   });
 
   // 3. Memoize Steps
   const steps = useMemo(
     () => getSteps(resumeData.resumeType),
-    [resumeData.resumeType]
+    [resumeData.resumeType],
   );
   const validStepKeys = useMemo(() => steps.map((s) => s.key), [steps]);
   const themeCategory = useMemo(() => {
@@ -137,7 +138,7 @@ function ResumeEditor({ resumeToEdit }: ResumeEditorProps) {
       window.history.pushState(null, "", `?${newParams.toString()}`);
       setCurrentStep(key);
     },
-    [searchParams]
+    [searchParams],
   );
 
   // 7. Auto-save & Unload Warning
@@ -145,7 +146,7 @@ function ResumeEditor({ resumeToEdit }: ResumeEditorProps) {
   useUnloadWarning(hasUnsavedChanges && !isSaving);
 
   const FormComponent = steps.find(
-    (step) => step.key === currentStep
+    (step) => step.key === currentStep,
   )?.component;
 
   return (
@@ -204,7 +205,7 @@ function ResumeEditor({ resumeToEdit }: ResumeEditorProps) {
           <div
             className={cn(
               "p-6 space-y-6 overflow-y-auto w-full md:w-1/2 custom-scrollbar",
-              showSmResumePreview && "hidden md:block"
+              showSmResumePreview && "hidden md:block",
             )}>
             <Breadcrumbs
               currentStep={currentStep}
@@ -225,7 +226,7 @@ function ResumeEditor({ resumeToEdit }: ResumeEditorProps) {
           <div
             className={cn(
               "md:w-1/2 border-l bg-slate-100/50 relative",
-              !showSmResumePreview && "hidden md:block"
+              !showSmResumePreview && "hidden md:block",
             )}>
             {isParsing ? (
               <div className="p-12">

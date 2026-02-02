@@ -165,18 +165,110 @@ export async function parseResumeWithAI(
   rawText: string,
   isFederal: boolean = false,
 ) {
-  const prompt = `Extract all data from this ${isFederal ? "Federal" : "Corporate"} resume into JSON.`;
-
   const completion = await openai.chat.completions.create({
     model: "gpt-4o-mini",
     messages: [
       {
         role: "system",
-        content: "You are a JSON-only parser. Never summarize.",
+        content: `You are a strict JSON resume parser for ${isFederal ? "Federal" : "Corporate"} roles. 
+        Extract data precisely into the schema. For Federal roles, specifically identify "Key Accomplishments" 
+        or "Achievements" and map them to the 'accomplishments' field as a single detailed string.`,
       },
-      { role: "user", content: prompt + `\n\nText:\n${rawText}` },
+      {
+        role: "user",
+        content: `Extract from this text:\n\n${rawText.substring(0, 15000)}`,
+      },
     ],
-    response_format: { type: "json_object" },
+    response_format: {
+      type: "json_schema",
+      json_schema: {
+        name: "resume_schema",
+        strict: true,
+        schema: {
+          type: "object",
+          properties: {
+            personalInfo: {
+              type: "object",
+              properties: {
+                firstName: { type: "string" },
+                lastName: { type: "string" },
+                jobTitle: { type: "string" },
+                email: { type: "string" },
+                phone: { type: "string" },
+                address: { type: "string" },
+              },
+              required: [
+                "firstName",
+                "lastName",
+                "jobTitle",
+                "email",
+                "phone",
+                "address",
+              ],
+            },
+            summary: { type: "string" },
+            skills: { type: "array", items: { type: "string" } },
+            workExperience: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  position: { type: "string" },
+                  company: { type: "string" },
+                  location: { type: "string" },
+                  startDate: { type: "string" },
+                  endDate: { type: "string" },
+                  responsibilities: { type: "string" }, // Flattened to string for Prisma
+                  accomplishments: { type: "string" },
+                  grade: { type: "string" }, // Federal Specific
+                  clearance: { type: "string" }, // Federal Specific
+                  hours: { type: "string" }, // Federal Specific
+                },
+                required: [
+                  "position",
+                  "company",
+                  "location",
+                  "startDate",
+                  "endDate",
+                  "responsibilities",
+                  "accomplishments",
+                  "grade",
+                  "clearance",
+                  "hours",
+                ],
+              },
+            },
+            education: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  degree: { type: "string" },
+                  school: { type: "string" },
+                  location: { type: "string" },
+                  startDate: { type: "string" },
+                  endDate: { type: "string" },
+                },
+                required: [
+                  "degree",
+                  "school",
+                  "location",
+                  "startDate",
+                  "endDate",
+                ],
+              },
+            },
+          },
+          required: [
+            "personalInfo",
+            "summary",
+            "skills",
+            "workExperience",
+            "education",
+          ],
+        },
+      },
+    },
   });
 
   return JSON.parse(completion.choices[0].message.content || "{}");
@@ -185,68 +277,66 @@ export async function parseResumeWithAI(
 export async function saveParsedResumeData(resumeId: string, parsedData: any) {
   if (!resumeId) throw new Error("Missing resumeId");
 
-  // Log the raw AI output in Vercel logs to see what's actually coming back
-  console.log("RAW AI DATA:", JSON.stringify(parsedData, null, 2));
+  // 1. Map Keys based on the log we just saw
+  const contact = parsedData.contact || {};
+  const profSummary = parsedData.professional_summary || {};
+  const work = parsedData.work_experience || [];
+  const edu = profSummary.education || parsedData.education || [];
+  const skills = parsedData.skills || [];
+  const interests = parsedData.interests || [];
 
-  // AGGRESSIVE MAPPING: AI often uses underscores or different names
-  const p = parsedData.personalInfo || parsedData.personal_info || {};
-  const work =
-    parsedData.workExperience ||
-    parsedData.work_experience ||
-    parsedData.experience ||
-    [];
-  const edu = parsedData.education || [];
-  const skills =
-    parsedData.skills ||
-    parsedData.techSkills ||
-    parsedData.technical_skills ||
-    [];
+  // Helper to turn AI arrays into strings for the DB
+  const flatten = (val: any) =>
+    Array.isArray(val) ? val.join("\n") : val || "";
 
   return await prisma.$transaction(
     async (tx) => {
-      // Clear old data
       await tx.techSkill.deleteMany({ where: { resumeId } });
       await tx.education.deleteMany({ where: { resumeId } });
       await tx.workExperience.deleteMany({ where: { resumeId } });
 
-      // Nested update for speed and atomicity
       return await tx.resume.update({
         where: { id: resumeId },
         data: {
-          firstName: p.firstName || p.first_name || "",
-          lastName: p.lastName || p.last_name || "",
-          jobTitle: p.jobTitle || p.job_title || "",
-          email: p.email || "",
-          phone: p.phone || "",
-          address: p.address || "",
-          summary: parsedData.summary || "",
+          // Map "contact" name to first/last
+          firstName: contact.name?.split(" ")[0] || "",
+          lastName: contact.name?.split(" ").slice(1).join(" ") || "",
+          jobTitle: contact.title || "",
+          email: contact.email || "",
+          phone: contact.phone || "",
+          address: contact.address || "",
+          summary: profSummary.summary || "",
+          interest: interests,
+          parsed: true,
           techSkills: {
-            create: skills
-              .map((s: any) => ({
-                name: typeof s === "string" ? s : s.name || s.skill || "",
-              }))
-              .filter((s: any) => s.name !== ""), // Prevent blank skills
+            create: skills.map((s: string) => ({ name: s })),
           },
           education: {
             create: edu.map((e: any) => ({
               degree: e.degree || "",
-              school: e.school || e.university || "",
+              school: e.institution || e.school || "",
               location: e.location || "",
-              startDate: safeDate(e.startDate || e.start_date),
-              endDate: safeDate(e.endDate || e.end_date),
-              description: e.description || "",
+              // AI returned "07/1998 - 12/2002", we need to split it
+              startDate: safeDate(e.dates?.split("-")[0]),
+              endDate: safeDate(e.dates?.split("-")[1]),
+              description: e.field || "",
             })),
           },
           workExperience: {
             create: work.map((j: any) => ({
-              position: j.position || j.jobTitle || j.job_title || "",
-              company: j.company || j.organization || "",
+              position: j.title || "",
+              company: j.company || "",
               location: j.location || "",
-              startDate: safeDate(j.startDate || j.start_date),
-              endDate: safeDate(j.endDate || j.end_date),
-              description: j.description || "",
-              duties: j.duties || "",
-              responsibilities: j.responsibilities || "",
+              startDate: safeDate(j.dates?.split("-")[0]),
+              endDate: safeDate(j.dates?.split("-")[1]),
+              // FIX: Flatten the array of responsibilities into a single string
+              responsibilities: flatten(j.responsibilities),
+              accomplishments: flatten(j.accomplishments || j.achievements),
+              description: flatten(j.responsibilities),
+              duties: "",
+              grade: j.grade || "",
+              clearance: j.clearance || "",
+              hours: j.hours || "",
             })),
           },
         },
