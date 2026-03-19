@@ -381,5 +381,14 @@ export async function analyzeContent(
 }
 
 export async function generateDuties(input: any): Promise<string> {
-  return "• Example duty\n• Example responsibility\n• Replace with AI-generated content";
+  return (
+    "• Example duty\n• Example responsibility\n• Replace with AI-generated content" +
+    input
+  );
+}
+export async function generateResponsibilities(input: any): Promise<string> {
+  return (
+    "• Example accomplishment\n• Example achievement\n• Replace with AI-generated content" +
+    input
+  );
 }
