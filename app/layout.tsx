@@ -15,44 +15,64 @@ const inter = Inter({
   subsets: ["latin"],
 });
 export const metadata: Metadata = {
+  metadataBase: base,
   title: {
-    template: "%s - Max ResumeBuilder",
-    default: "Max ResumeBuilder Build a Job-Winning Resume Fast",
+    template: "%s - CareerOS",
+    default: "CareerOS - The Operating System for Your Next Career",
   },
   description:
-    "Build ATS-friendly resumes and cover letters in minutes. Track job applications and search jobs with smart tools.",
+    "CareerOS helps you build resumes and cover letters, track applications, prepare for interviews, and manage your next career move in one place.",
   alternates: {
     canonical: "/",
   },
+  applicationName: "CareerOS",
+  authors: [{ name: "VitaNova Designs" }],
   openGraph: {
     type: "website",
-    title: "Max ResumeBuilder",
+    title: "CareerOS",
     description:
-      "Create polished resumes and cover letters with AI. Track job applications, build a professional profile — all in one place.",
+      "The Operating System for Your Next Career. Build. Apply. Interview. Get Hired.",
     url: base,
-    siteName: "Max ResumeBuilder",
+    siteName: "CareerOS",
     images: [
       {
         url: "/og/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Max ResumeBuilder preview image",
+        alt: "CareerOS preview image",
       },
     ],
     locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Max ResumeBuilder",
+    title: "CareerOS",
     description:
-      "Your AI-powered job search assistant. Resumes, cover letters, and tracking made easy.",
+      "The Operating System for Your Next Career. Build. Apply. Interview. Get Hired.",
     images: ["/og/og-image.png"],
-    creator: "@vitanovadesigns", // update to your brand
+    creator: "@vitanovadesigns",
   },
   robots: {
     index: true,
     follow: true,
   },
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/apple-touch-icon.png",
+  },
+  keywords: [
+    "CareerOS",
+    "resume builder",
+    "cover letter builder",
+    "job application tracker",
+    "interview preparation",
+    "career tools",
+    "job search tools",
+    "AI resume builder",
+    "professional profile",
+    "career management",
+  ],
 };
 
 export default function RootLayout({
@@ -70,7 +90,7 @@ export default function RootLayout({
           <meta name="author" content="VitaNova Designs" />
           <meta
             name="keywords"
-            content="resume builder, cover letter, job search, AI resumes, professional profile, job tracker, job applications, career tools, resume templates, cover letter templates, job search tools"
+            content="resume builder, cover letter, job search, AI resumes, professional profile, job tracker, job applications, career tools, resume templates, cover letter templates, job search tools, career management, job search assistant"
           />
           <link rel="icon" href="/favicon.ico" />
           <link rel="canonical" href="https://www.maxresumebuilder.com" />

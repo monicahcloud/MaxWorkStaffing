@@ -17,14 +17,24 @@ const isPublicRoute = createRouteMatcher([
   "/api/user(.*)",
   "/verify",
   "/share/(.*)",
+  "/blog/(.*)",
 ]);
-
+const isProtectedRoute = createRouteMatcher([
+  "/resumebuilder(.*)",
+  "/jobsearch(.*)",
+  "/jobs(.*)",
+  "/mockinterview(.*)",
+  "/blog(.*)",
+  "/home(.*)",
+]);
 export default clerkMiddleware(async (auth, req) => {
   const { userId } = await auth(); // Get the user ID from Clerk
   console.log(
-    `Middleware triggered: ${req.url} | UserID: ${userId || "Guest"}`
+    `Middleware triggered: ${req.url} | UserID: ${userId || "Guest"}`,
   );
-
+  if (isProtectedRoute(req)) {
+    await auth.protect();
+  }
   if (!isPublicRoute(req)) {
     await auth.protect();
   }

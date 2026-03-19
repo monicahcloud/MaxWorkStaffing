@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import Logo from "../../assets/logo.png";
-import { RainbowButton } from "./RainbowButton";
+import { PrimaryButton } from "./PrimaryButton";
 
 export function NavBar() {
   return (
@@ -21,7 +21,7 @@ export function NavBar() {
         </Link>
 
         <Link href="/sign-in">
-          <RainbowButton>Login</RainbowButton>
+          <PrimaryButton>Login</PrimaryButton>
         </Link>
       </div>
     </nav>

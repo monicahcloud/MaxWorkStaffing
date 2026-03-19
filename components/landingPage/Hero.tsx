@@ -1,81 +1,66 @@
-"use client";
-
-import Link from "next/link";
-import { RainbowButton } from "./RainbowButton";
-import { CheckCircle2 } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
+
+import { PrimaryButton } from "./PrimaryButton";
+import { OutlineButton } from "./OutlineButton";
+import { SectionGridBackground } from "./SectionGridBackground";
+
 import logo from "../../assets/logo.png";
 import dashboardMockup from "../../assets/LandingImg.jpg";
 
 export function Hero() {
   return (
-    <section className="relative w-full pt-16 lg:pt-32 px-6 overflow-hidden bg-white">
-      {/* Background Grid - Clean & Professional */}
-      <div
-        className="absolute inset-0 z-0 opacity-[0.03] pointer-events-none"
-        style={{
-          backgroundImage: `linear-gradient(#000 1px, transparent 1px), linear-gradient(90deg, #000 1px, transparent 1px)`,
-          backgroundSize: "40px 40px",
-        }}
-      />
+    <section className="relative overflow-hidden bg-white px-6 pb-20 pt-16 lg:pb-28 lg:pt-24">
+      <SectionGridBackground opacity="0.03" />
 
-      <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-12 lg:gap-20 relative z-10">
-        {/* Left Column */}
-        <div className="w-full lg:w-1/2 space-y-8 animate-reveal">
+      <div className="relative z-10 mx-auto max-w-7xl">
+        <div className="flex flex-col items-center text-center">
           <Image
             src={logo}
-            alt="MaxWork"
+            alt="CareerOS"
             width={180}
-            height={45}
-            className="mb-6 mx-auto lg:mx-0"
+            height={44}
             priority
+            className="mb-8 h-auto w-auto"
           />
 
-          <h1 className="text-6xl lg:text-8xl font-black text-black tracking-tighter leading-[0.9] text-center lg:text-left">
-            LAND YOUR <br />
-            <span className="text-red-600">DREAM ROLE.</span>
-          </h1>
-
-          <p className="text-xl text-gray-600 leading-relaxed max-w-xl mx-auto lg:mx-0 text-center lg:text-left font-medium">
-            The AI-powered command center for your career. Engineer high-impact
-            resumes, track applications, and master interviews in one place.
+          <p className="mb-4 text-sm font-bold uppercase tracking-[0.24em] text-red-600">
+            The Operating System for Your Next Career
           </p>
 
-          <div className="flex flex-wrap justify-center lg:justify-start gap-6">
-            {["Resume Engine", "App Tracker", "Interview AI"].map((text) => (
-              <div
-                key={text}
-                className="flex items-center gap-2 text-black font-bold">
-                <CheckCircle2 className="w-5 h-5 text-red-600" />
-                <span className="text-xs uppercase tracking-widest">
-                  {text}
-                </span>
-              </div>
-            ))}
-          </div>
+          <h1 className="max-w-5xl text-5xl font-black tracking-tighter text-black sm:text-6xl lg:text-8xl">
+            Build. Apply. <span className="text-red-600">Get Hired.</span>
+          </h1>
 
-          <div className="flex justify-center lg:justify-start pt-4">
-            <Link href="/sign-up">
-              <RainbowButton className="h-14 px-12 text-lg font-bold">
-                Get Started — Free
-              </RainbowButton>
-            </Link>
+          <p className="mt-6 max-w-3xl text-lg leading-relaxed text-gray-600 sm:text-xl">
+            CareerOS gives you one place to build resumes and cover letters,
+            track jobs and applications, prepare for interviews, and grow
+            through career content every step of the way.
+          </p>
+
+          <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row">
+            <PrimaryButton asChild className="h-14 px-10 text-base font-bold">
+              <Link href="/sign-up">Get Started Free</Link>
+            </PrimaryButton>
+
+            <OutlineButton href="#how-it-works">See How It Works</OutlineButton>
           </div>
         </div>
 
-        {/* Right Column */}
-        <div className="w-full lg:w-1/2 relative group">
-          <div className="relative z-10 p-2 bg-white rounded-[2.5rem] shadow-[0_40px_100px_-20px_rgba(0,0,0,0.15)] border border-gray-100 overflow-hidden">
+        <div className="relative mx-auto mt-14 max-w-6xl">
+          <div className="relative z-10 overflow-hidden rounded-4xl border border-gray-200 bg-white p-2 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.18)] lg:rounded-[2.5rem]">
             <Image
               src={dashboardMockup}
-              alt="Dashboard Preview"
-              className="w-full h-auto rounded-[2rem] border border-gray-200"
+              alt="CareerOS dashboard preview"
               priority
+              className="h-auto w-full rounded-3xl border border-gray-200 lg:rounded-4xl"
             />
           </div>
 
-          {/* Subtle Red Halo */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-red-500/5 rounded-full blur-[120px] -z-10" />
+          <div
+            aria-hidden="true"
+            className="absolute left-1/2 top-1/2 -z-10 h-[120%] w-[120%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-red-500/10 blur-[120px]"
+          />
         </div>
       </div>
     </section>

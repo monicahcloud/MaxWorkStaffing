@@ -1,4 +1,5 @@
 // app/(dashboard)/Dashboardlayout.tsx
+import type { Metadata } from "next";
 import { PropsWithChildren } from "react";
 import { redirect } from "next/navigation";
 import { auth } from "@clerk/nextjs/server";
@@ -9,24 +10,25 @@ import {
 import { getUserMetadata, markUserAsReturning } from "@/lib/user";
 import prisma from "@/lib/prisma";
 import DashboardLayoutClient from "./DashboardLayoutClient";
-export const metadata = {
-  title: "Your Dashboard",
+
+export const metadata: Metadata = {
+  title: "Dashboard",
   description:
-    "Track your job applications, manage your resumes, and access interview tools — all in one place.",
+    "Manage your career in one place — build resumes, track applications, prepare for interviews, and move closer to your next offer.",
   robots: { index: false, follow: true },
   openGraph: {
-    title: "Job Dashboard | Max ResumeBuilder",
+    title: "Dashboard | CareerOS",
     description:
-      "Everything you need to organize your job search and stay on track. Resumes, applications, interviews — managed in one place.",
+      "The Operating System for Your Next Career. Build. Apply. Interview. Get Hired.",
     url: "https://www.maxresumebuilder.com/home",
     images: [{ url: "/og/og-image.png", width: 1200, height: 630 }],
-    siteName: "Max ResumeBuilder",
+    siteName: "CareerOS",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Max ResumeBuilder",
-    description: "Your all-in-one control center for landing your next job.",
+    title: "Dashboard | CareerOS",
+    description: "Build. Apply. Interview. Get Hired.",
     images: ["/og/dashboard.png"],
   },
 };

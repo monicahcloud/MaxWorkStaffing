@@ -2,38 +2,56 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { useUser } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 import dog404 from "../assets/dog404.svg";
 
 export default function NotFoundPage() {
+  const { isSignedIn, isLoaded } = useUser();
+
+  // Prevent flicker while Clerk loads
+  if (!isLoaded) return null;
+
+  const redirectHref = isSignedIn ? "/" : "/";
+
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-muted px-6 text-center">
-      {/* 🖼 Top Image */}
+    <div className="flex min-h-screen flex-col items-center justify-center bg-muted px-6 text-center">
+      {/* Image */}
       <Image
-        src={dog404} // Update this path to your image location
-        alt="404 Not Found"
+        src={dog404}
+        alt="Page not found illustration"
         width={200}
         height={200}
         className="mb-6"
         priority
       />
 
-      <h1 className="text-4xl font-bold text-destructive mb-2">
+      {/* Heading */}
+      <h1 className="mb-2 text-4xl font-black uppercase tracking-tight text-red-600">
         Page Not Found
       </h1>
-      <p className="text-muted-foreground mb-4">
-        The page you’re looking for doesn’t exist. It might have been moved or
-        deleted.
+
+      {/* Description */}
+      <p className="mb-4 max-w-md text-muted-foreground">
+        The page you’re looking for doesn’t exist or may have been moved.
       </p>
-      <p className="text-sm text-muted-foreground mb-6">
+
+      {/* Support (mailto) */}
+      <p className="mb-6 text-sm text-muted-foreground">
         Try refreshing the page or{" "}
-        <Link href="/support" className="underline text-primary">
-          contact customer support
-        </Link>{" "}
+        <a
+          href="mailto:support@careeros.app"
+          className="font-bold text-red-600 underline hover:text-black">
+          contact support
+        </a>{" "}
         if the problem continues.
       </p>
+
+      {/* Dynamic Button */}
       <Button asChild>
-        <Link href="/home">Go Back</Link>
+        <Link href={redirectHref}>
+          {isSignedIn ? "Go to Dashboard" : "Back to Home"}
+        </Link>
       </Button>
     </div>
   );

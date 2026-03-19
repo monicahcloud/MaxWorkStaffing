@@ -376,7 +376,7 @@ function WorkExperienceItem({
                 </div>
               </div>
               <FormControl>
-                <Textarea {...field} className="min-h-[140px] rounded-xl" />
+                <Textarea {...field} className="min-h-35 rounded-xl" />
               </FormControl>
               <FormMessage />
             </FormItem>

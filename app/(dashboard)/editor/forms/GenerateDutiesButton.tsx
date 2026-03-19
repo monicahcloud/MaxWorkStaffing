@@ -3,12 +3,12 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import { WandSparkles } from "lucide-react";
-import { generateDuties } from "./action";
 import usePremiumModal from "@/hooks/usePremiumModal";
 // import { ResumeValues } from "@/lib/validation";
 import { useSubscriptionLevel } from "../../SubscriptionLevelProvider";
 import LoadingButton from "@/components/LoadingButton";
 import { canUseAITools } from "@/lib/permissions";
+import { generateDuties } from "./action";
 
 interface GenerateDutiesButtonProps {
   jobTitle: string;

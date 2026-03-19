@@ -16,6 +16,11 @@ import {
 } from "@/lib/validation";
 import { auth } from "@clerk/nextjs/server";
 
+// type GenerateDutiesInput = {
+//   jobTitle?: string;
+//   company?: string;
+//   description?: string;
+// };
 // --- UTILS ---
 
 /**
@@ -66,7 +71,7 @@ export async function generateSummary(
     generateSummarySchema.parse(input) as any;
 
   const systemMessage = `Write a concise resume summary. ${getArchetypeInstructions(category)}`;
-  const userMessage = `Title: ${jobTitle}. Exp: ${workExperiences?.map((e: any) => e.position).join(", ")}. Skills: ${skills?.join(", ")}`;
+  const userMessage = `Title: ${jobTitle}. Exp: ${workExperiences?.map((e: any) => e.position).join(", ")}. Skills: ${skills?.join(", ")}. TechSkills: ${techSkills?.map((s: any) => s.name).join(", ")}`;
 
   const completion = await openai.chat.completions.create({
     model: "gpt-4o-mini",
@@ -78,6 +83,11 @@ export async function generateSummary(
 
   return completion.choices[0].message.content?.trim() || "";
 }
+
+// export async function generateDuties(
+//   input: GenerateDutiesInput,
+// ): Promise<string | null> {
+//   return null;
 
 export async function generateSkills(
   input: GenerateSkillsInput,
@@ -368,4 +378,8 @@ export async function analyzeContent(
   });
 
   return completion.choices[0].message.content?.trim() || "Excellent!";
+}
+
+export async function generateDuties(input: any): Promise<string> {
+  return "• Example duty\n• Example responsibility\n• Replace with AI-generated content";
 }
