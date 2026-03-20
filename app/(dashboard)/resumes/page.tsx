@@ -31,12 +31,12 @@ export default async function Page() {
   ]);
 
   return (
-    <main className="max-w-none p-6 md:p-12 lg:p-16">
+    <main className="max-w-none p-6 md:p-8">
       <header className="flex flex-col lg:flex-row justify-between items-center lg:items-end gap-12 border-b border-slate-100 pb-12">
         <div className="space-y-4 text-center lg:text-left">
           <SectionTitle
             text="Resume Suite"
-            subtext={`Managing ${totalCount} intelligent profiles`}
+            subtext={`Managing ${totalCount} intelligent resumes`}
           />
         </div>
 
@@ -53,7 +53,7 @@ export default async function Page() {
         {resumes.length === 0 ? (
           <div className="w-full py-20 text-center border-2 border-dashed border-slate-200 rounded-[4rem] bg-slate-50/30">
             <p className="text-slate-400 font-black uppercase tracking-[0.3em] text-sm mb-10">
-              System Empty: No Resumes Detected
+              No Resumes Detected
             </p>
             <div className="flex flex-col items-center gap-4">
               <CreateResumeButton canCreate={true} />
@@ -79,9 +79,9 @@ function ResumeCard({ resume }: { resume: any }) {
   const resumeData = mapToResumeValues(resume);
 
   return (
-    <div className="group bg-white border border-slate-200 rounded-4xl p-6 transition-all hover:shadow-xl hover:-translate-y-1 relative">
+    <div className="group relative bg-white border border-slate-200 rounded-4xl p-6 transition-all hover:shadow-xl hover:-translate-y-1">
       {/* --- DELETE / MORE ACTIONS --- */}
-      <div className="absolute top-4 right-4 z-30">
+      <div className="absolute -top-2 -right-2 z-50">
         <ResumeCardActions
           resumeId={resume.id}
           resumeTitle={resume.resumeTitle}

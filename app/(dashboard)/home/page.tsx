@@ -40,7 +40,7 @@ export default async function HomePageWrapper() {
       {/* 1. Hero / Progress Section */}
       <ClientHome />
 
-      <main className="p-4 md:p-8 max-w-[1600px] mx-auto space-y-16">
+      <main className="p-4 md:p-8 max-w-400 mx-auto space-y-16">
         {/* 2. Resume Tools Section */}
         <section className="space-y-6">
           <div className="flex items-center gap-3">
@@ -87,7 +87,7 @@ export default async function HomePageWrapper() {
           <BlogPostGrid posts={posts} />
 
           {posts.length === 0 && (
-            <div className="py-20 text-center border-2 border-dashed border-slate-100 rounded-[2rem]">
+            <div className="py-20 text-center border-2 border-dashed border-slate-100 rounded-4xl">
               <p className="text-slate-400 font-bold uppercase tracking-widest text-xs">
                 Analyzing market trends... check back soon.
               </p>

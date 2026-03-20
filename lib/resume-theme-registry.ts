@@ -1,5 +1,3 @@
-// lib/resume-theme-registry.ts
-
 /* ---------- 1. TYPES ---------- */
 export type ResumeLayout =
   | "top-header"
@@ -8,7 +6,6 @@ export type ResumeLayout =
   | "minimal"
   | "modern-split";
 
-// The four core resume archetypes
 export type ResumeCategory =
   | "chronological"
   | "functional"
@@ -19,14 +16,14 @@ export interface ResumeThemeToken {
   id: string;
   name: string;
   layout: ResumeLayout;
-  paletteId: string;
-  fontId: string;
+  paletteId: keyof typeof ColorPalettes;
+  fontId: keyof typeof FontPairs;
   spacing: "compact" | "normal" | "relaxed";
   category: ResumeCategory;
   defaultColor: string;
 }
 
-/* ---------- 2. INGREDIENTS (The Library) ---------- */
+/* ---------- 2. INGREDIENTS ---------- */
 
 export const SPACING_OPTIONS: ("compact" | "normal" | "relaxed")[] = [
   "compact",
@@ -227,103 +224,166 @@ export const ColorPalettes = {
     secondary: "#1F2937",
     accent: "#D4AF37",
   },
-};
+} as const;
 
 export const FontPairs = {
   professional: { heading: "Inter", body: "Roboto" },
   traditional: { heading: "Playfair Display", body: "Source Sans Pro" },
   technical: { heading: "JetBrains Mono", body: "Inter" },
   modern: { heading: "Montserrat", body: "Open Sans" },
-};
+} as const;
 
-/* ---------- 3. THE REGISTRY GENERATOR ---------- */
+/* ---------- 3. CURATED REGISTRY (15 THEMES) ---------- */
 
-const generateRegistry = (): ResumeThemeToken[] => {
-  const registry: ResumeThemeToken[] = [];
-
-  // Define Archetype mapping to ensure "beautiful and different" defaults
-  const archetypes: {
-    category: ResumeCategory;
-    layout: ResumeLayout;
-    palette: string;
-  }[] = [
-    {
-      category: "chronological",
-      layout: "top-header",
-      palette: "classic-business",
-    },
-    {
-      category: "functional",
-      layout: "sidebar-left",
-      palette: "creative-rose",
-    },
-    { category: "federal", layout: "top-header", palette: "government-slate" },
-    { category: "combination", layout: "modern-split", palette: "modern-tech" },
-  ];
-
-  const paletteKeys = Object.keys(
-    ColorPalettes
-  ) as (keyof typeof ColorPalettes)[];
-  const fontKeys = Object.keys(FontPairs) as (keyof typeof FontPairs)[];
-
-  // 1. Generate core Archetypes first to ensure they appear first in the list
-  archetypes.forEach((art) => {
-    registry.push({
-      id: `${art.category}-master`.toLowerCase(),
-      name: `${
-        art.category.charAt(0).toUpperCase() + art.category.slice(1)
-      } Template`,
-      category: art.category,
-      layout: art.layout,
-      paletteId: art.palette,
-      fontId: "professional",
-      spacing: art.category === "federal" ? "compact" : "normal",
-      defaultColor: "#0f172a",
-    });
-  });
-
-  // 2. Generate the rest of the combinations for variety
-  const layouts: ResumeLayout[] = [
-    "top-header",
-    "sidebar-left",
-    "sidebar-right",
-    "minimal",
-    "modern-split",
-  ];
-
-  layouts.forEach((layout) => {
-    paletteKeys.forEach((paletteId) => {
-      fontKeys.forEach((fontId) => {
-        const id = `${layout}-${paletteId}-${fontId}`.toLowerCase();
-
-        // Skip if already added as an archetype
-        if (registry.find((r) => r.id === id)) return;
-
-        // Categorize based on layout
-        let category: ResumeCategory = "chronological";
-        if (layout === "sidebar-left") category = "functional";
-        if (layout === "modern-split") category = "combination";
-        if (paletteId === "government-slate") category = "federal";
-
-        const palette = ColorPalettes[paletteId as keyof typeof ColorPalettes];
-        registry.push({
-          id,
-          name: `${ColorPalettes[paletteId].label} (${layout.replace(
-            "-",
-            " "
-          )})`,
-          layout,
-          paletteId,
-          fontId,
-          spacing: layout === "top-header" ? "compact" : "normal",
-          category,
-          defaultColor: palette.primary,
-        });
-      });
-    });
-  });
-
-  return registry;
-};
-
-export const THEME_REGISTRY = generateRegistry();
+export const THEME_REGISTRY: ResumeThemeToken[] = [
+  {
+    id: "chronological-classic",
+    name: "Chronological Classic",
+    category: "chronological",
+    layout: "top-header",
+    paletteId: "classic-business",
+    fontId: "traditional",
+    spacing: "normal",
+    defaultColor: ColorPalettes["classic-business"].primary,
+  },
+  {
+    id: "executive-navy",
+    name: "Executive Navy",
+    category: "chronological",
+    layout: "top-header",
+    paletteId: "executive-navy",
+    fontId: "professional",
+    spacing: "normal",
+    defaultColor: ColorPalettes["executive-navy"].primary,
+  },
+  {
+    id: "professional-charcoal",
+    name: "Professional Charcoal",
+    category: "chronological",
+    layout: "minimal",
+    paletteId: "professional-charcoal",
+    fontId: "professional",
+    spacing: "normal",
+    defaultColor: ColorPalettes["professional-charcoal"].primary,
+  },
+  {
+    id: "modern-tech-split",
+    name: "Modern Tech",
+    category: "combination",
+    layout: "modern-split",
+    paletteId: "modern-tech",
+    fontId: "modern",
+    spacing: "normal",
+    defaultColor: ColorPalettes["modern-tech"].primary,
+  },
+  {
+    id: "combination-pro",
+    name: "Combination Pro",
+    category: "combination",
+    layout: "modern-split",
+    paletteId: "combination-pro",
+    fontId: "professional",
+    spacing: "normal",
+    defaultColor: ColorPalettes["combination-pro"].primary,
+  },
+  {
+    id: "functional-creative",
+    name: "Functional Creative",
+    category: "functional",
+    layout: "sidebar-left",
+    paletteId: "functional-creative",
+    fontId: "modern",
+    spacing: "normal",
+    defaultColor: ColorPalettes["functional-creative"].primary,
+  },
+  {
+    id: "creative-rose",
+    name: "Creative Rose",
+    category: "functional",
+    layout: "sidebar-left",
+    paletteId: "creative-rose",
+    fontId: "modern",
+    spacing: "relaxed",
+    defaultColor: ColorPalettes["creative-rose"].primary,
+  },
+  {
+    id: "marketing-purple",
+    name: "Marketing Purple",
+    category: "functional",
+    layout: "sidebar-right",
+    paletteId: "marketing-purple",
+    fontId: "modern",
+    spacing: "normal",
+    defaultColor: ColorPalettes["marketing-purple"].primary,
+  },
+  {
+    id: "federal-standard",
+    name: "Federal Standard",
+    category: "federal",
+    layout: "top-header",
+    paletteId: "federal-standard",
+    fontId: "professional",
+    spacing: "compact",
+    defaultColor: ColorPalettes["federal-standard"].primary,
+  },
+  {
+    id: "government-slate",
+    name: "Government Slate",
+    category: "federal",
+    layout: "minimal",
+    paletteId: "government-slate",
+    fontId: "professional",
+    spacing: "compact",
+    defaultColor: ColorPalettes["government-slate"].primary,
+  },
+  {
+    id: "legal-burgundy",
+    name: "Legal Burgundy",
+    category: "chronological",
+    layout: "top-header",
+    paletteId: "legal-burgundy",
+    fontId: "traditional",
+    spacing: "normal",
+    defaultColor: ColorPalettes["legal-burgundy"].primary,
+  },
+  {
+    id: "finance-emerald",
+    name: "Finance Emerald",
+    category: "chronological",
+    layout: "minimal",
+    paletteId: "finance-emerald",
+    fontId: "professional",
+    spacing: "normal",
+    defaultColor: ColorPalettes["finance-emerald"].primary,
+  },
+  {
+    id: "engineering-steel",
+    name: "Engineering Steel",
+    category: "combination",
+    layout: "sidebar-right",
+    paletteId: "engineering-steel",
+    fontId: "technical",
+    spacing: "normal",
+    defaultColor: ColorPalettes["engineering-steel"].primary,
+  },
+  {
+    id: "data-graphite",
+    name: "Data Graphite",
+    category: "combination",
+    layout: "modern-split",
+    paletteId: "data-graphite",
+    fontId: "technical",
+    spacing: "compact",
+    defaultColor: ColorPalettes["data-graphite"].primary,
+  },
+  {
+    id: "early-career-blue",
+    name: "Early Career Blue",
+    category: "chronological",
+    layout: "top-header",
+    paletteId: "early-career-blue",
+    fontId: "modern",
+    spacing: "normal",
+    defaultColor: ColorPalettes["early-career-blue"].primary,
+  },
+];

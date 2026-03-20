@@ -16,8 +16,8 @@ export default function SignUpPage() {
   return (
     <main className="grid min-h-screen grid-cols-1 bg-white lg:grid-cols-2">
       <section className="relative hidden overflow-hidden bg-black text-white lg:flex">
-        <div className="absolute bottom-[-120px] left-[-120px] h-80 w-80 rounded-full bg-red-600/20 blur-[120px]" />
-        <div className="absolute right-[-100px] top-[-100px] h-72 w-72 rounded-full bg-red-700/10 blur-[100px]" />
+        <div className="absolute -bottom-30 -left-30 h-80 w-80 rounded-full bg-red-600/20 blur-[120px]" />
+        <div className="absolute -right-25 -top-25 h-72 w-72 rounded-full bg-red-700/10 blur-[100px]" />
 
         <div className="relative z-10 flex w-full flex-col justify-between p-12 xl:p-16">
           <Link

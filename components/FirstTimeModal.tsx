@@ -56,7 +56,7 @@ export default function FirstTimeModal({
   return (
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogTitle className="hidden" />
-      <DialogContent className="max-w-2xl p-0 overflow-hidden rounded-[2rem] border-none bg-white shadow-2xl">
+      <DialogContent className="max-w-2xl p-0 overflow-hidden rounded-4xl border-none bg-white shadow-2xl">
         {/* Top Header - Pure Black */}
         <div className="bg-black p-8 flex flex-col items-center relative overflow-hidden">
           <div className="absolute top-0 right-0 w-32 h-32 bg-red-600/20 blur-3xl rounded-full" />

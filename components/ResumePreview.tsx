@@ -58,7 +58,7 @@ function PersonalInfoHeader({ data }: SectionProps) {
           "relative shrink-0 overflow-hidden transition-all duration-500 ease-in-out",
           photoSrc && showPhoto
             ? "size-24 opacity-100 mr-0"
-            : "size-0 opacity-0 -mr-6"
+            : "size-0 opacity-0 -mr-6",
         )}>
         {photoSrc && (
           <div
@@ -118,7 +118,7 @@ function WorkExperienceSection({ data }: SectionProps) {
   const theme = THEME_REGISTRY.find((t) => t.id === data.themeId);
   const isFederal = theme?.category === "federal";
   const experiences = data.workExperiences?.filter(
-    (exp) => exp.position || exp.company
+    (exp) => exp.position || exp.company,
   );
 
   if (!experiences?.length) return null;
@@ -242,7 +242,9 @@ function TechnicalSkillsSection({ data }: SectionProps) {
                   key={star}
                   className={cn(
                     "size-1 rounded-full",
-                    star <= (skill.rating || 0) ? "bg-blue-500" : "bg-slate-200"
+                    star <= (skill.rating || 0)
+                      ? "bg-blue-500"
+                      : "bg-slate-200",
                   )}
                 />
               ))}
@@ -283,7 +285,7 @@ export default function ResumePreview({
     () =>
       THEME_REGISTRY.find((t) => t.id === resumeData.themeId) ||
       THEME_REGISTRY[0],
-    [resumeData.themeId]
+    [resumeData.themeId],
   );
 
   const palette = ColorPalettes[theme.paletteId as keyof typeof ColorPalettes];
@@ -299,7 +301,7 @@ export default function ResumePreview({
         "relative w-full bg-white transition-all overflow-hidden",
         // Removed shadow-lg and aspect ratio to let it spread naturally
         "min-h-[297mm]",
-        theme.spacing === "compact" ? "leading-tight" : "leading-normal"
+        theme.spacing === "compact" ? "leading-tight" : "leading-normal",
       )}
       style={
         {
@@ -319,7 +321,7 @@ export default function ResumePreview({
         <div
           className={cn(
             "grid gap-8",
-            isSidebarLayout ? "grid-cols-[1fr_2.5fr]" : "grid-cols-1"
+            isSidebarLayout ? "grid-cols-[1fr_2.5fr]" : "grid-cols-1",
           )}>
           {/* Sidebar Area */}
           {isSidebarLayout && (

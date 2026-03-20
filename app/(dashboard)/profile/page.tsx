@@ -1,6 +1,4 @@
 import React from "react";
-import comingSoon from "../../../assets/comingsoon.jpg";
-import Image from "next/image";
 import { Metadata } from "next";
 import SectionTitle from "@/components/SectionTitle";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";

@@ -1,15 +1,15 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { MoreHorizontal, Trash2, Loader2 } from "lucide-react";
+import { Trash2, Loader2 } from "lucide-react";
 import { deleteResume } from "./action";
 import { toast } from "sonner";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+// import {
+//   DropdownMenu,
+//   DropdownMenuContent,
+//   DropdownMenuItem,
+//   DropdownMenuTrigger,
+// } from "@/components/ui/dropdown-menu";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -36,7 +36,7 @@ export default function ResumeCardActions({
       try {
         await deleteResume(resumeId);
         toast.success("Document deleted permanently");
-      } catch (error) {
+      } catch {
         toast.error("Could not delete resume");
       }
     });

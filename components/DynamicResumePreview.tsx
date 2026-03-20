@@ -22,6 +22,7 @@ interface DynamicResumePreviewProps {
   theme: ResumeThemeToken;
   className?: string;
   contentRef?: React.Ref<HTMLDivElement>;
+  disableAutoScale?: boolean;
 }
 
 export default function DynamicResumePreview({
@@ -54,15 +55,15 @@ export default function DynamicResumePreview({
       theme.spacing === "compact"
         ? "1.25rem"
         : theme.spacing === "relaxed"
-        ? "3rem"
-        : "2rem",
+          ? "3rem"
+          : "2rem",
 
     "--line-height":
       theme.spacing === "compact"
         ? "1.15"
         : theme.spacing === "relaxed"
-        ? "1.6"
-        : "1.4",
+          ? "1.6"
+          : "1.4",
 
     "--section-gap": theme.spacing === "compact" ? "0.75rem" : "1.5rem",
 
@@ -75,14 +76,14 @@ export default function DynamicResumePreview({
     <div
       className={cn(
         "bg-white text-black h-fit w-full aspect-[210/297] shadow-lg overflow-hidden",
-        className
+        className,
       )}
       ref={containerRef}>
       <div
         style={styleVars}
         className={cn(
           "resume-paper origin-top-left transition-all duration-500",
-          !width && "invisible"
+          !width && "invisible",
         )}
         // These data attributes trigger the specific CSS archetypes you wrote
         data-layout={theme.layout}

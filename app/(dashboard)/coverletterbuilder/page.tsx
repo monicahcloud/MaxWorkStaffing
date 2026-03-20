@@ -1,17 +1,23 @@
-import React from "react";
+"use client";
+
 import TemplateSelectionPage from "./templates/page";
 import SectionTitle from "@/components/SectionTitle";
+import { COVER_LETTER_THEME_REGISTRY } from "@/lib/cover-letter-theme-registry";
 
 const page = () => {
   return (
     <>
       <SectionTitle
         text="choose a Cover Letter Template"
-        subtext="  Fill out the form and watch your preview update in real time."
+        subtext=" Choose a professional template to begin."
       />
-      <div className="max-w-7xl mx-auto flex flex-wrap">
-        <TemplateSelectionPage />
-      </div>
+      <main className=" ">
+        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3">
+          {COVER_LETTER_THEME_REGISTRY.map((theme) => (
+            <TemplateSelectionPage key={theme.id} theme={theme} />
+          ))}
+        </div>
+      </main>
     </>
   );
 };

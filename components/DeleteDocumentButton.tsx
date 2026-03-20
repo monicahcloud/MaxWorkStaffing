@@ -33,7 +33,7 @@ export default function DeleteDocumentButton({
       try {
         await onDelete(id);
         toast.success("Deleted permanently");
-      } catch (error) {
+      } catch {
         toast.error("Deletion failed");
       }
     });

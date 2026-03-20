@@ -54,7 +54,7 @@ export function DashboardLinks({ userStats }: DashboardLinksProps) {
         <h2 className="text-[16px] font-black text-slate-900 uppercase tracking-tight leading-tight">
           {user?.firstName || user?.username || "User"}
         </h2>
-        <p className="text-[11px] text-slate-400 font-bold lowercase truncate max-w-[180px]">
+        <p className="text-[11px] text-slate-400 font-bold lowercase truncate max-w-45">
           {user?.primaryEmailAddress?.emailAddress}
         </p>
       </div>

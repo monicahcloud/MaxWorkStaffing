@@ -55,21 +55,6 @@ export const linkGroups: LinkGroup[] = [
         icon: <AppWindow className="w-4 h-4" />,
       },
       {
-        label: "Pricing",
-        href: "/billing",
-        icon: <CreditCard className="w-4 h-4" />,
-      },
-      {
-        label: "FAQs",
-        href: "/faq",
-        icon: <MessageCircleQuestion className="w-4 h-4" />,
-      },
-    ],
-  },
-  {
-    title: "Resources & Support",
-    items: [
-      {
         label: "Job Tracker",
         href: "/addJob",
         icon: <Layers className="w-4 h-4" />,
@@ -79,6 +64,11 @@ export const linkGroups: LinkGroup[] = [
         href: "/mockinterview",
         icon: <MessageSquare className="w-4 h-4" />,
       },
+    ],
+  },
+  {
+    title: "Resources & Support",
+    items: [
       {
         label: "Articles & Insights",
         href: "/blog",
@@ -93,6 +83,16 @@ export const linkGroups: LinkGroup[] = [
         label: "Support",
         href: "/support",
         icon: <CircleHelp className="w-4 h-4" />,
+      },
+      {
+        label: "Pricing",
+        href: "/billing",
+        icon: <CreditCard className="w-4 h-4" />,
+      },
+      {
+        label: "FAQs",
+        href: "/faq",
+        icon: <MessageCircleQuestion className="w-4 h-4" />,
       },
     ],
   },
@@ -150,19 +150,18 @@ export const GroupedSidebarLinks = ({ onLinkClick, userStats }: Props) => {
             )}
           </div>
         ))}
+        {/* --- USAGE TRACKER AT THE BOTTOM --- */}
+        {userStats && (
+          <div className="mt-8 pt-6 border-t border-slate-100 px-1">
+            <GlobalUsageTracker
+              level={userStats.level}
+              interviewCount={userStats.interviewCount}
+              resumeCount={userStats.resumeCount}
+              letterCount={userStats.letterCount}
+            />
+          </div>
+        )}{" "}
       </div>
-
-      {/* --- USAGE TRACKER AT THE BOTTOM --- */}
-      {userStats && (
-        <div className="mt-8 pt-6 border-t border-slate-100 px-1">
-          <GlobalUsageTracker
-            level={userStats.level}
-            interviewCount={userStats.interviewCount}
-            resumeCount={userStats.resumeCount}
-            letterCount={userStats.letterCount}
-          />
-        </div>
-      )}
     </div>
   );
 };

@@ -1,113 +1,101 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useRouter } from "next/navigation";
 import { Card, CardContent } from "@/components/ui/card";
-import { ResumeThemeToken, ColorPalettes } from "@/lib/resume-theme-registry";
-import { ArrowRight, Layout } from "lucide-react";
-import ThemeThumbnail from "@/components/ThemeThumbnail";
-import ThemeLivePreview from "@/components/ThemeLivePreview";
+import { ResumeThemeToken } from "@/lib/resume-theme-registry";
+import DynamicResumePreview from "@/components/DynamicResumePreview";
+
+const MOCK_RESUME_DATA = {
+  firstName: "Alex",
+  lastName: "Rivera",
+  jobTitle: "Senior Operations Director",
+  email: "a.rivera@example.com",
+  phone: "555-0199",
+  address: "Chicago, IL",
+  summary:
+    "Accomplished leader with 15 years of experience specializing in organizational efficiency and large-scale project management.",
+  workExperiences: [
+    {
+      position: "Lead Architect",
+      company: "Tech Global",
+      startDate: "2020-01-01",
+      description:
+        "Directed the architectural vision for high-traffic platforms serving millions of users.",
+    },
+    {
+      position: "Regional Director",
+      company: "Global Logistics Corp",
+      startDate: "2018-06-01",
+      description:
+        "Optimized supply chain routes resulting in a 20% reduction in annual overhead.",
+    },
+  ],
+  education: [
+    {
+      school: "Northwestern University",
+      degree: "M.S. Management",
+    },
+  ],
+  skills: ["Strategic Planning", "P&L Management", "Team Leadership"],
+};
+
+interface ResumeTemplateCardProps {
+  theme: ResumeThemeToken;
+  resumeId?: string;
+}
 
 export default function ResumeTemplateCard({
   theme,
   resumeId,
-}: {
-  theme: ResumeThemeToken;
-  resumeId?: string;
-}) {
+}: ResumeTemplateCardProps) {
   const router = useRouter();
 
-  const palette =
-    ColorPalettes[theme.paletteId as keyof typeof ColorPalettes] ||
-    ColorPalettes["classic-business"];
-
-  // --- Logic to determine Industry Tag from Description ---
-  const getIndustryTag = (desc: string) => {
-    const d = desc.toLowerCase();
-    if (d.includes("finance") || d.includes("law") || d.includes("legal"))
-      return "Corporate";
-    if (
-      d.includes("tech") ||
-      d.includes("engineering") ||
-      d.includes("startup")
-    )
-      return "Technology";
-    if (d.includes("healthcare") || d.includes("medical")) return "Healthcare";
-    if (
-      d.includes("creative") ||
-      d.includes("marketing") ||
-      d.includes("design")
-    )
-      return "Creative";
-    if (d.includes("government") || d.includes("federal")) return "Government";
-    return "Professional";
-  };
-
-  const industryTag = getIndustryTag(palette.description);
-
-  const handleNavigation = (e: React.MouseEvent) => {
-    if (
-      (e.target as HTMLElement)
-        .closest("button")
-        ?.innerText.includes("Live Preview")
-    ) {
+  const handleSelect = () => {
+    if (resumeId) {
+      router.push(`/editor?resumeId=${resumeId}`);
       return;
     }
 
-    if (resumeId) {
-      router.push(`/editor?resumeId=${resumeId}`);
-    } else {
-      router.push(`/editor?themeId=${theme.id}`);
-    }
+    router.push(`/editor?themeId=${theme.id}`);
   };
 
   return (
-    <Card
-      onClick={handleNavigation}
-      className="group cursor-pointer rounded-4xl border-slate-100 overflow-hidden hover:border-red-600 hover:shadow-2xl transition-all duration-500 bg-white">
-      <CardContent className="p-0">
-        <div className="h-80 bg-slate-100 flex items-center justify-center p-0 overflow-hidden relative group border-b">
-          <div onClick={(e) => e.stopPropagation()}>
-            <ThemeLivePreview theme={theme} />
+    <button
+      type="button"
+      onClick={handleSelect}
+      className="group text-left outline-none transition-transform hover:-translate-y-2">
+      <Card className="overflow-hidden border-2 border-slate-200 bg-white shadow-md transition-all group-hover:border-red-500 group-hover:shadow-2xl">
+        <CardContent className="relative p-0">
+          <div className="pointer-events-none relative aspect-[4/5] w-full origin-top overflow-hidden bg-slate-50">
+            <div className="absolute top-1/2 left-1/2 w-[180%] -translate-x-1/2 -translate-y-1/2 origin-center scale-[0.4] sm:scale-[0.5] lg:scale-[0.45]">
+              <DynamicResumePreview
+                resumeData={MOCK_RESUME_DATA as any}
+                theme={theme}
+                className="shadow-none"
+                disableAutoScale
+              />
+            </div>
           </div>
 
-          {/* CHANGED: Badge now shows industryTag instead of theme.category */}
-          <div className="absolute top-4 left-4 z-20">
-            <span className="bg-black/90 backdrop-blur-md text-white text-[8px] font-black uppercase tracking-[0.2em] px-3 py-1.5 rounded-full">
-              {industryTag}
-            </span>
-          </div>
+          <div className="relative z-10 border-t bg-white p-5">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="font-black uppercase tracking-tighter text-slate-900">
+                  {theme.name}
+                </h3>
+                <p className="mt-1 text-[10px] font-bold uppercase tracking-widest text-slate-400">
+                  {theme.category}
+                </p>
+              </div>
 
-          <div className="w-full h-full pointer-events-none transition-transform duration-700 group-hover:scale-105">
-            <ThemeThumbnail theme={theme} />
+              <div className="flex size-8 items-center justify-center rounded-full border border-slate-100 bg-slate-50 transition-colors group-hover:bg-red-600">
+                <div className="size-2 rounded-full bg-slate-300 group-hover:bg-white" />
+              </div>
+            </div>
           </div>
-        </div>
-
-        <div className="p-6 space-y-4">
-          <div className="flex justify-between items-start">
-            <h3 className="font-black text-black uppercase tracking-tighter text-sm">
-              {theme.name}
-            </h3>
-            <div
-              className="size-3 rounded-full shadow-sm"
-              style={{ backgroundColor: palette.primary }}
-            />
-          </div>
-
-          <p className="text-[10px] text-slate-500 leading-relaxed italic line-clamp-2">
-            {palette.description}
-          </p>
-
-          <div className="flex items-center gap-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-            <Layout className="size-3" />
-            {theme.layout.replace("-", " ")}
-          </div>
-
-          <div className="w-full py-3 bg-black text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-xl flex items-center justify-center gap-2 group-hover:bg-red-600 transition-colors">
-            INITIALIZE DESIGN
-            <ArrowRight className="size-3" />
-          </div>
-        </div>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+    </button>
   );
 }

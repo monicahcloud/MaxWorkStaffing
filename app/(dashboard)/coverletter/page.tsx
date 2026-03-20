@@ -15,7 +15,7 @@ import DeleteDocumentButton from "@/components/DeleteDocumentButton";
 import { deleteCoverLetter } from "./actions";
 
 export const metadata = {
-  title: "My Resume",
+  title: "My Cover Letters | Max ResumeBuilder",
   description:
     "Easily build a professional, recruiter-approved resume with AI-powered guidance. Start from scratch or upload your current resume to enhance it.",
   openGraph: {
@@ -63,7 +63,7 @@ async function CoverLetterRoute() {
   ]);
 
   return (
-    <main className="max-w-none p-6 md:p-12 lg:p-16">
+    <main className="max-w-none p-6 md:p-8">
       <header className="flex flex-col lg:flex-row justify-between items-center lg:items-end gap-12 border-b border-slate-100 pb-12">
         <div className="space-y-4 text-center lg:text-left">
           <SectionTitle
@@ -80,10 +80,9 @@ async function CoverLetterRoute() {
 
       <div className="mt-12">
         {coverletter.length === 0 ? (
-          /* EMPTY STATE */
           <div className="w-full py-20 text-center border-2 border-dashed border-slate-200 rounded-[4rem] bg-slate-50/30">
             <p className="text-slate-400 font-black uppercase tracking-[0.3em] text-sm mb-10">
-              System Empty: No Letters Detected
+              No Letters Detected
             </p>
             <CreateLetterButton canCreate={true} />
           </div>
@@ -101,7 +100,6 @@ async function CoverLetterRoute() {
 }
 
 function CoverLetterCard({ coverletter }: { coverletter: any }) {
-  // Convert DB data to the standard coverletterValues format
   const coverletterData = mapToCoverLetterValues(coverletter);
 
   return (
@@ -123,14 +121,9 @@ function CoverLetterCard({ coverletter }: { coverletter: any }) {
         {/* Real Content Preview */}
         <div className="absolute inset-0 pointer-events-none select-none transition-transform duration-500 ">
           <div className="origin-top-left scale-[0.45] w-198.5">
-            <CoverLetterPreview
-              coverLetterData={coverletterData}
-              // Note: contentRef is not needed for a static thumbnail
-            />
+            <CoverLetterPreview coverLetterData={coverletterData} />
           </div>
         </div>
-
-        {/* Subtle Gradient Overlay to make the card look more like a thumbnail */}
         <div className="absolute inset-0 bg-linear-to-b from-transparent via-transparent to-slate-900/5 z-10" />
       </div>
 
