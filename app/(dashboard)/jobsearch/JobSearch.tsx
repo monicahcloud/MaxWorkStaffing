@@ -71,11 +71,11 @@ export default function JobSearch() {
   };
 
   const labelToSlug: Record<string, string> = Object.fromEntries(
-    cats.map((c) => [c.label, c.slug])
+    cats.map((c) => [c.label, c.slug]),
   );
 
   return (
-    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
+    <div className="mx-auto px-4 sm:px-6 lg:px-8 py-6">
       <SectionTitle
         text="Find Your Perfect Job"
         subtext="Search thousands of open positions across the U.S."

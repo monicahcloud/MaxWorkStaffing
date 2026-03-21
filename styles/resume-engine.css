@@ -2,84 +2,226 @@
 
 .resume-paper {
   display: grid;
-  gap: var(--section-gap, 1.5rem);
+  gap: 0;
   font-family: var(--font-body);
   background: white;
-  min-height: 1123px; /* A4 Height */
-  width: 794px; /* A4 Width */
+  min-height: 500px;
+  width: 794px;
   box-sizing: border-box;
+  line-height: var(--line-height, 1.4);
+  color: #0f172a;
 }
 
-/* --- GRID LAYOUTS (Fixed Widths for Stability) --- */
+/* ---------- BASE AREAS ---------- */
 
-/* Sidebar Left: Locked sidebar at 260px */
+.resume-header {
+  grid-area: header;
+  min-width: 0;
+  padding: var(--resume-padding);
+}
+
+.resume-sidebar {
+  grid-area: sidebar;
+  min-width: 0;
+  padding: var(--resume-padding);
+}
+
+.resume-main {
+  grid-area: main;
+  padding: var(--resume-padding);
+}
+
+/* ---------- TOP HEADER ---------- */
+
+.resume-paper[data-layout="top-header"] {
+  grid-template-areas:
+    "header"
+    "main";
+  grid-template-columns: 1fr;
+}
+
+.resume-paper[data-layout="top-header"] .resume-header {
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.resume-paper[data-layout="top-header"] .resume-main {
+  padding-top: 0.35rem;
+}
+
+/* ---------- SIDEBAR LEFT ---------- */
+
 .resume-paper[data-layout="sidebar-left"] {
   grid-template-areas:
-    "header header"
+    "sidebar header"
     "sidebar main";
-  grid-template-columns: 260px 1fr;
+  grid-template-columns: 240px 1fr;
 }
 
-/* Modern Split: Sidebar 280px, starts from the top */
+.resume-paper[data-layout="sidebar-left"] .resume-sidebar {
+  background: color-mix(in srgb, var(--primary) 8%, white);
+  border-right: 1px solid #e2e8f0;
+}
+
+.resume-paper[data-layout="sidebar-left"] .resume-sidebar,
+.resume-paper[data-layout="sidebar-right"] .resume-sidebar {
+  padding-top: 3rem;
+}
+
+.resume-paper[data-layout="sidebar-left"] .resume-header,
+.resume-paper[data-layout="sidebar-right"] .resume-header {
+  padding-top: 3rem;
+  padding-bottom: 0.15rem;
+}
+
+.resume-paper[data-layout="sidebar-left"] .resume-main,
+.resume-paper[data-layout="sidebar-right"] .resume-main {
+  padding-top: 2rem;
+}
+
+/* ---------- SIDEBAR RIGHT ---------- */
+
+.resume-paper[data-layout="sidebar-right"] {
+  grid-template-areas:
+    "header sidebar"
+    "main sidebar";
+  grid-template-columns: 1fr 240px;
+}
+
+.resume-paper[data-layout="sidebar-right"] .resume-sidebar {
+  background: #f8fafc;
+  border-left: 1px solid #e2e8f0;
+}
+
+.resume-paper[data-layout="sidebar-right"] .resume-header {
+  padding-bottom: 0.15rem;
+}
+
+/* ---------- MINIMAL ---------- */
+
+.resume-paper[data-layout="minimal"] {
+  grid-template-areas:
+    "header"
+    "main";
+  grid-template-columns: 1fr;
+}
+
+.resume-paper[data-layout="minimal"] .resume-header {
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.resume-paper[data-layout="minimal"] .resume-sidebar {
+  display: none;
+}
+
+.resume-paper[data-layout="minimal"] .resume-main {
+  padding-top: 0.15rem;
+}
+
+/* ---------- MODERN SPLIT ---------- */
+
 .resume-paper[data-layout="modern-split"] {
   grid-template-areas:
     "sidebar header"
     "sidebar main";
-  grid-template-columns: 280px 1fr;
+  grid-template-columns: 225px 1fr;
   gap: 0;
 }
 
-/* Sidebar Right: Locked sidebar at 260px */
-.resume-paper[data-layout="sidebar-right"] {
-  grid-template-areas:
-    "header header"
-    "main sidebar";
-  grid-template-columns: 1fr 260px;
+.resume-paper[data-layout="modern-split"] .resume-sidebar {
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--primary) 8%, white) 0%,
+    #f8fafc 100%
+  );
+  border-right: 1px solid #e2e8f0;
 }
 
-/* Top Header / Federal: Single Column */
-.resume-paper[data-layout="top-header"],
+.resume-paper[data-layout="modern-split"] .resume-header {
+  padding-bottom: 0.35rem;
+}
+
+.resume-paper[data-layout="modern-split"] .resume-main {
+  padding-top: 0.35rem;
+}
+
+/* ---------- CATEGORY OVERRIDES ---------- */
+
 .resume-paper[data-category="federal"] {
   display: flex !important;
   flex-direction: column;
 }
 
-/* --- AREA STYLING --- */
-
-.resume-header {
-  grid-area: header;
-  padding-bottom: 1rem;
+.resume-paper[data-category="federal"] .resume-header {
+  border-bottom: 1px solid #cbd5e1;
+  padding-bottom: 0.5rem;
 }
 
-.resume-sidebar {
-  grid-area: sidebar;
-  padding: 1.5rem;
-  background-color: var(--secondary);
-  height: 100%;
+.resume-paper[data-category="federal"] .resume-sidebar {
+  display: none;
 }
 
-.resume-main {
-  grid-area: main;
-  padding: 1.5rem;
+.resume-paper[data-category="federal"] .resume-main {
+  padding-top: 0.75rem;
 }
 
-/* --- ARCHETYPE CLEANUP --- */
-
-/* Federal: High Density */
 .resume-paper[data-category="federal"] h2 {
   border-bottom: 2px solid var(--primary);
   text-transform: uppercase;
-  font-size: 13px;
+  font-size: 12px;
+  letter-spacing: 0.16em;
   margin-top: 1rem;
   padding-bottom: 2px;
 }
 
-/* Functional: Contrast Sidebar */
-.resume-paper[data-category="functional"] .resume-sidebar {
-  color: white; /* Contrast text against primary/secondary colors */
+.resume-paper[data-category="functional"][data-layout="sidebar-left"]
+  .resume-sidebar,
+.resume-paper[data-category="functional"][data-layout="sidebar-right"]
+  .resume-sidebar {
+  background: color-mix(in srgb, var(--primary) 10%, white);
 }
 
-/* Combination: Split Border */
 .resume-paper[data-category="combination"] .resume-main {
-  border-left: 1px solid #e2e8f0;
+  border-left: none;
+}
+
+/* ---------- SPACING MODES ---------- */
+
+.resume-paper[data-spacing="compact"] {
+  --section-gap: 0.75rem;
+  --resume-padding: 0.35rem;
+  --line-height: 1.2;
+}
+
+.resume-paper[data-spacing="normal"] {
+  --section-gap: 0.25rem;
+  --resume-padding: 0.35rem;
+  --line-height: 1.38;
+}
+
+.resume-paper[data-spacing="relaxed"] {
+  --section-gap: 0.75rem;
+  --resume-padding: 0.35rem;
+  --line-height: 1.5;
+}
+
+/* ---------- SECTION FLOW ---------- */
+
+.resume-main > * + * {
+  margin-top: var(--section-gap, 1.25rem);
+}
+
+.resume-sidebar > * + * {
+  margin-top: 1rem;
+}
+
+/* ---------- PRINT SAFETY ---------- */
+
+.resume-paper .experience-item,
+.resume-paper section,
+.resume-paper aside,
+.resume-paper main {
+  break-inside: avoid;
+  page-break-inside: avoid;
 }

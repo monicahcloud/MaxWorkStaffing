@@ -9,7 +9,8 @@ import { Toaster } from "@/components/ui/sonner";
 import { env } from "@/env";
 import "../styles/resume-engine.css";
 
-const base = new URL(env.NEXT_PUBLIC_BASE_URL);
+const baseUrl = env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+const base = new URL(baseUrl);
 
 const inter = Inter({
   subsets: ["latin"],

@@ -7,7 +7,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { queryClient } from "@/lib/react-query-client";
 import { NextStep, NextStepProvider } from "nextstepjs";
 import steps from "@/components/tourGuide/tour";
-import { UserProgressProvider } from "@/components/UserProgressContext"; // ← Add this line
+import { UserProgressProvider } from "@/components/UserProgressContext";
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (
@@ -19,7 +19,6 @@ export default function Providers({ children }: { children: React.ReactNode }) {
       <QueryClientProvider client={queryClient}>
         <UserProgressProvider>
           {" "}
-          {/* ← Wrap here */}
           <NextStepProvider>
             <NextStep steps={steps}>{children}</NextStep>
           </NextStepProvider>

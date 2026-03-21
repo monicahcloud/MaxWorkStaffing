@@ -17,6 +17,7 @@ import SkeletonForm from "./forms/SkeletonForm";
 import ThemePicker from "@/components/editor/ThemePicker";
 import { THEME_REGISTRY } from "@/lib/resume-theme-registry";
 import StrengthMeter from "@/components/editor/StrengthMeter";
+import { getValidResumeTheme } from "@/lib/get-valid-resume-theme";
 
 interface ResumeEditorProps {
   resumeToEdit: ResumeServerData | null;
@@ -37,16 +38,39 @@ function ResumeEditor({ resumeToEdit }: ResumeEditorProps) {
   // 2. Initialize State with Theme Awareness
   const [resumeData, setResumeData] = useState<ResumeValues>(() => {
     if (resumeToEdit) {
-      return mapToResumeValues(resumeToEdit);
+      const mapped = mapToResumeValues(resumeToEdit);
+      const validTheme = getValidResumeTheme(mapped.themeId);
+
+      return {
+        ...mapped,
+        themeId: validTheme.id,
+      };
     }
+
+    const validTheme = getValidResumeTheme(themeIdFromURL);
+
     return {
       resumeTitle: "",
       description: "",
       resumeType: resumeTypeFromURL,
-      themeId: themeIdFromURL || "chronological-master", // Default to gallery selection
+      themeId: validTheme.id,
       showPhoto: true,
     };
   });
+
+  useEffect(() => {
+    if (!themeIdFromURL) return;
+
+    const validTheme = getValidResumeTheme(themeIdFromURL);
+
+    setResumeData((prev) => {
+      if (prev.themeId === validTheme.id) return prev;
+      return {
+        ...prev,
+        themeId: validTheme.id,
+      };
+    });
+  }, [themeIdFromURL]);
 
   // 3. Memoize Steps
   const steps = useMemo(
@@ -54,36 +78,40 @@ function ResumeEditor({ resumeToEdit }: ResumeEditorProps) {
     [resumeData.resumeType],
   );
   const validStepKeys = useMemo(() => steps.map((s) => s.key), [steps]);
-  const themeCategory = useMemo(() => {
-    const theme = THEME_REGISTRY.find((t) => t.id === resumeData.themeId);
-    return theme?.category || "chronological";
+  const activeTheme = useMemo(() => {
+    return getValidResumeTheme(resumeData.themeId);
   }, [resumeData.themeId]);
+  // const themeCategory = activeTheme.category;
 
   const [currentStep, setCurrentStep] = useState(steps[0]?.key || "");
 
   // 4. AI Design Intelligence: Auto-suggest theme based on Job Title
   useEffect(() => {
-    // Only suggest if:
-    // - User is NOT currently editing an existing resume with a set theme
-    // - The current theme is still the default and a job title exists
-    const isDefaultTheme =
-      resumeData.themeId?.includes("-master") || !resumeData.themeId;
+    const currentTheme = getValidResumeTheme(resumeData.themeId);
+    const isUsingInitialTheme = !resumeToEdit?.themeId;
 
-    if (isDefaultTheme && resumeData.jobTitle && !resumeToEdit?.themeId) {
-      const title = resumeData.jobTitle.toLowerCase();
-      let suggestedTheme = resumeData.themeId;
+    if (!isUsingInitialTheme || !resumeData.jobTitle) return;
 
-      if (title.includes("tech") || title.includes("engineer")) {
-        suggestedTheme = "combination-modern-tech-professional";
-      } else if (title.includes("gov") || title.includes("federal")) {
-        suggestedTheme = "federal-government-slate-professional";
-      }
+    const title = resumeData.jobTitle.toLowerCase();
+    let suggestedThemeId = currentTheme.id;
 
-      if (suggestedTheme !== resumeData.themeId) {
-        setResumeData((prev) => ({ ...prev, themeId: suggestedTheme }));
-      }
+    if (title.includes("tech") || title.includes("engineer")) {
+      suggestedThemeId = "engineering-steel";
+    } else if (title.includes("gov") || title.includes("federal")) {
+      suggestedThemeId = "government-slate";
+    } else if (title.includes("data") || title.includes("analyst")) {
+      suggestedThemeId = "data-graphite";
+    } else if (title.includes("marketing") || title.includes("brand")) {
+      suggestedThemeId = "marketing-purple";
     }
-  }, [resumeData.jobTitle, resumeData.themeId, resumeToEdit]);
+
+    if (suggestedThemeId !== resumeData.themeId) {
+      setResumeData((prev) => ({
+        ...prev,
+        themeId: suggestedThemeId,
+      }));
+    }
+  }, [resumeData.jobTitle, resumeData.themeId, resumeToEdit?.themeId]);
 
   // 5. Handle AI Parsing Logic
   useEffect(() => {
@@ -157,15 +185,21 @@ function ResumeEditor({ resumeToEdit }: ResumeEditorProps) {
           subtext="Your progress is saved automatically as you design your future."
         />
 
-        <div className="flex items-center gap-4 mt-4 w-full">
-          {/* The Interactive Design Pill - Fixed width (shrink-0) */}
-          <button
-            type="button"
+        <div className="mt-4 flex w-full items-center gap-4">
+          <div
+            role="button"
+            tabIndex={0}
             onClick={() =>
               document.getElementById("theme-picker-trigger")?.click()
             }
-            className="group flex items-center gap-3 bg-slate-50 hover:bg-blue-50 border border-slate-200 hover:border-blue-200 p-2 pr-4 rounded-2xl transition-all duration-300 text-left shadow-sm shrink-0">
-            <div className="bg-white p-2 rounded-xl shadow-sm group-hover:scale-110 transition-transform duration-300">
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                document.getElementById("theme-picker-trigger")?.click();
+              }
+            }}
+            className="group flex shrink-0 items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-2 pr-4 text-left shadow-sm transition-all duration-300 hover:border-blue-200 hover:bg-blue-50">
+            <div className="rounded-xl bg-white p-2 shadow-sm transition-transform duration-300 group-hover:scale-110">
               <ThemePicker
                 currentThemeId={resumeData.themeId}
                 onSelect={(id) =>
@@ -175,26 +209,21 @@ function ResumeEditor({ resumeToEdit }: ResumeEditorProps) {
             </div>
 
             <div className="flex flex-col">
-              <span className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 group-hover:text-blue-500 transition-colors">
+              <span className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 transition-colors group-hover:text-blue-500">
                 Design Template
               </span>
+
               <div className="flex items-center gap-2">
                 <span className="text-sm font-black uppercase tracking-tight text-slate-900">
-                  {THEME_REGISTRY.find((t) => t.id === resumeData.themeId)
-                    ?.name || "Select Theme"}
+                  {activeTheme.name}
                 </span>
-                <div className="size-1.5 rounded-full bg-blue-500 animate-pulse" />
+                <div className="size-1.5 animate-pulse rounded-full bg-blue-500" />
               </div>
             </div>
 
-            <span className="ml-4 text-[10px] font-bold text-blue-600 opacity-0 group-hover:opacity-100 transition-opacity">
+            <span className="ml-4 text-[10px] font-bold text-blue-600 opacity-0 transition-opacity group-hover:opacity-100">
               Edit
             </span>
-          </button>
-
-          {/* The Strength Meter - Spreading across (flex-1) */}
-          <div className="flex-1 min-w-0">
-            <StrengthMeter resumeData={resumeData} category={themeCategory} />
           </div>
         </div>
       </header>

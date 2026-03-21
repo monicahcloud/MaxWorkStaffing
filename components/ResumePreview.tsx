@@ -10,8 +10,9 @@ import {
 } from "@/lib/resume-theme-registry";
 import { formatDate } from "date-fns";
 import { cn } from "@/lib/utils";
-import { SkillsSection } from "./sections";
 import NextImage from "next/image";
+import SkillsSection from "./resume/sections/SkillsSection";
+import { getResumeVisualStyle } from "@/lib/get-resume-visual-style";
 
 interface SectionProps {
   data: ResumeValues;
@@ -287,7 +288,7 @@ export default function ResumePreview({
       THEME_REGISTRY[0],
     [resumeData.themeId],
   );
-
+  const visualStyle = getResumeVisualStyle(theme);
   const palette = ColorPalettes[theme.paletteId as keyof typeof ColorPalettes];
   const fonts = FontPairs[theme.fontId as keyof typeof FontPairs];
 
@@ -327,7 +328,11 @@ export default function ResumePreview({
           {isSidebarLayout && (
             <aside className="space-y-6">
               <TechnicalSkillsSection data={resumeData} />
-              <SkillsSection data={resumeData} />
+              <SkillsSection
+                data={resumeData}
+                theme={theme}
+                visualStyle={visualStyle}
+              />
               <EducationSection data={resumeData} />
               <InterestsSection data={resumeData} />
             </aside>

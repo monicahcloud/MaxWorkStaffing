@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import Image from "next/image";
 import { ResumeValues } from "@/lib/validation";
 import {
   ColorPalettes,
@@ -11,11 +12,14 @@ import { cn } from "@/lib/utils";
 import useDimensions from "@/hooks/useDimensions";
 import {
   EducationSection,
+  InterestsSection,
   PersonalInfoHeader,
   SkillsSection,
   SummarySection,
+  TechnicalSkillsSection,
   WorkExperienceSection,
-} from "./sections";
+} from "@/components/resume/sections";
+import { getResumeVisualStyle } from "@/lib/get-resume-visual-style";
 
 interface DynamicResumePreviewProps {
   resumeData: ResumeValues;
@@ -25,57 +29,135 @@ interface DynamicResumePreviewProps {
   disableAutoScale?: boolean;
 }
 
+function SidebarPhoto({ resumeData }: { resumeData?: ResumeValues }) {
+  const { photo, showPhoto } = resumeData;
+  const [photoSrc, setPhotoSrc] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!photo) {
+      setPhotoSrc(null);
+      return;
+    }
+
+    if (photo instanceof File) {
+      const objectUrl = URL.createObjectURL(photo);
+      setPhotoSrc(objectUrl);
+
+      return () => {
+        URL.revokeObjectURL(objectUrl);
+      };
+    }
+
+    setPhotoSrc(photo);
+  }, [photo]);
+
+  if (!resumeData) {
+    return <div className="mb-6 h-28 w-full" />;
+  }
+
+  const shouldShowPhoto = Boolean(showPhoto && photoSrc);
+  const fullName =
+    `${resumeData.firstName?.trim() || "Your"} ${resumeData.lastName?.trim() || "Name"}`.trim();
+  return (
+    <div className="mb-6 flex justify-center">
+      {shouldShowPhoto && photoSrc ? (
+        <div className="relative h-28 w-28 overflow-hidden rounded-full border border-slate-200 bg-slate-100 shadow-sm">
+          <Image
+            src={photoSrc}
+            alt={`${fullName} profile photo`}
+            fill
+            className="object-cover"
+            unoptimized
+          />
+        </div>
+      ) : (
+        <div className="h-28 w-full" />
+      )}
+    </div>
+  );
+}
+
 export default function DynamicResumePreview({
   resumeData,
   theme,
   className,
   contentRef,
+  disableAutoScale = false,
 }: DynamicResumePreviewProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { width } = useDimensions(containerRef as React.RefObject<HTMLElement>);
 
-  // 1. Safe lookup for palette and font data from your Registry
+  if (!resumeData || !theme) return null;
+
   const palette =
     ColorPalettes[theme.paletteId as keyof typeof ColorPalettes] ||
     ColorPalettes["classic-business"];
+
   const fonts =
     FontPairs[theme.fontId as keyof typeof FontPairs] ||
     FontPairs["professional"];
 
-  // 2. Map Registry tokens to CSS Variables
+  const visualStyle = getResumeVisualStyle(theme);
+  const scale = disableAutoScale ? 1 : width ? width / 794 : 1;
+
+  const isSidebarLayout =
+    theme.layout === "sidebar-left" || theme.layout === "sidebar-right";
+
+  const usesSidebar = isSidebarLayout || theme.layout === "modern-split";
+  const showPhotoInHeader = !isSidebarLayout;
+
   const styleVars = {
-    "--primary": palette.primary,
+    "--primary": resumeData.themeColor || palette.primary,
     "--secondary": palette.secondary,
     "--accent": palette.accent,
     "--font-heading": fonts.heading,
     "--font-body": fonts.body,
-
-    // Density & Spacing Logic
     "--resume-padding":
       theme.spacing === "compact"
         ? "1.25rem"
         : theme.spacing === "relaxed"
           ? "3rem"
           : "2rem",
-
     "--line-height":
       theme.spacing === "compact"
         ? "1.15"
         : theme.spacing === "relaxed"
           ? "1.6"
           : "1.4",
-
-    "--section-gap": theme.spacing === "compact" ? "0.75rem" : "1.5rem",
-
-    // Scale logic to maintain A4 proportions (794px width)
+    "--section-gap":
+      theme.category === "federal"
+        ? "0.5rem"
+        : theme.spacing === "compact"
+          ? "0.75rem"
+          : "1.25rem",
     width: "794px",
-    transform: `scale(${width / 794})`,
+    transform: `scale(${scale})`,
   } as React.CSSProperties;
+
+  const supportingSections = (
+    <>
+      <SkillsSection
+        data={resumeData}
+        theme={theme}
+        visualStyle={visualStyle}
+      />
+      <TechnicalSkillsSection
+        data={resumeData}
+        theme={theme}
+        visualStyle={visualStyle}
+      />
+      <InterestsSection
+        data={resumeData}
+        theme={theme}
+        visualStyle={visualStyle}
+      />
+    </>
+  );
 
   return (
     <div
       className={cn(
-        "bg-white text-black h-fit w-full aspect-[210/297] shadow-lg overflow-hidden",
+        "h-fit w-full aspect-[210/297] overflow-hidden bg-white text-black shadow-lg",
         className,
       )}
       ref={containerRef}>
@@ -83,40 +165,62 @@ export default function DynamicResumePreview({
         style={styleVars}
         className={cn(
           "resume-paper origin-top-left transition-all duration-500",
-          !width && "invisible",
+          !disableAutoScale && !width && "invisible",
         )}
-        // These data attributes trigger the specific CSS archetypes you wrote
         data-layout={theme.layout}
         data-category={theme.category}
         data-spacing={theme.spacing}
+        data-theme-id={theme.id}
         ref={contentRef}>
-        {/* --- Header Section --- */}
         <header className="resume-header">
-          <PersonalInfoHeader data={resumeData} />
+          <PersonalInfoHeader
+            data={resumeData}
+            theme={theme}
+            visualStyle={visualStyle}
+            showPhotoInHeader={showPhotoInHeader}
+          />
         </header>
 
-        {/* --- Sidebar (Moves via grid-area: sidebar) --- */}
         <aside className="resume-sidebar">
-          <SkillsSection data={resumeData} />
-          {/* Functional designs prioritize skills and often move education here */}
-          {theme.category === "functional" && (
+          {usesSidebar && isSidebarLayout && resumeData && (
+            <SidebarPhoto resumeData={resumeData} />
+          )}
+
+          {usesSidebar && theme.category === "functional" && (
             <div className="mt-6">
-              <EducationSection data={resumeData} />
+              <EducationSection
+                data={resumeData}
+                theme={theme}
+                visualStyle={visualStyle}
+              />
             </div>
           )}
+          {usesSidebar && supportingSections}
         </aside>
 
-        {/* --- Main Content (Moves via grid-area: main) --- */}
         <main className="resume-main">
-          <SummarySection data={resumeData} />
-          <WorkExperienceSection data={resumeData} />
+          <SummarySection
+            data={resumeData}
+            theme={theme}
+            visualStyle={visualStyle}
+          />
 
-          {/* Non-functional designs keep education in the main flow */}
+          <WorkExperienceSection
+            data={resumeData}
+            theme={theme}
+            visualStyle={visualStyle}
+          />
+
           {theme.category !== "functional" && (
             <div className="mt-4">
-              <EducationSection data={resumeData} />
+              <EducationSection
+                data={resumeData}
+                theme={theme}
+                visualStyle={visualStyle}
+              />
             </div>
           )}
+          {!usesSidebar && supportingSections}
         </main>
       </div>
     </div>
