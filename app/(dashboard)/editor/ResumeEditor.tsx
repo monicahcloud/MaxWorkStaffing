@@ -15,8 +15,6 @@ import { ResumeServerData } from "@/lib/types";
 import { parseResumeWithAI, saveParsedResumeData } from "./forms/action";
 import SkeletonForm from "./forms/SkeletonForm";
 import ThemePicker from "@/components/editor/ThemePicker";
-import { THEME_REGISTRY } from "@/lib/resume-theme-registry";
-import StrengthMeter from "@/components/editor/StrengthMeter";
 import { getValidResumeTheme } from "@/lib/get-valid-resume-theme";
 
 interface ResumeEditorProps {

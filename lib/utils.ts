@@ -33,11 +33,11 @@ export function fileReplacer(key: unknown, value: unknown) {
 export function mapToResumeValues(data: ResumeServerData): ResumeValues {
   return {
     id: data.id,
-    themeId: data.themeId ?? undefined,
+    themeId: data.themeId ?? "classical-professional",
     resumeTitle: data.resumeTitle ?? "",
     resumeType: data.resumeType ?? "",
     description: data.description ?? "",
-    photo: data.photoUrl ?? "",
+    photo: data.photoUrl ?? null,
     firstName: data.firstName ?? "",
     lastName: data.lastName ?? "",
     jobTitle: data.jobTitle ?? "",
@@ -50,34 +50,39 @@ export function mapToResumeValues(data: ResumeServerData): ResumeValues {
     showPhoto: data.showPhoto ?? true,
     shareToken: data.shareToken ?? "",
 
-    workExperiences: data.workExperience.map((exp) => ({
-      position: String(exp.position ?? ""),
-      company: String(exp.company ?? ""),
-      location: String(exp.location ?? ""),
-      startDate: exp.startDate?.toISOString().split("T")[0] ?? "",
-      endDate: exp.endDate?.toISOString().split("T")[0] ?? "",
-      description: String(exp.description ?? ""),
-      status: String(exp.status ?? ""),
-      clearance: String(exp.clearance ?? ""),
-      duties: String(exp.duties ?? ""),
-      accomplishments: String(exp.accomplishments ?? ""),
-      responsibilities: String(exp.responsibilities ?? ""),
-      grade: String(exp.grade ?? ""),
-      hours: String(exp.hours ?? ""),
-    })),
+    workExperiences:
+      data.workExperience.map((exp) => ({
+        position: String(exp.position ?? ""),
+        company: String(exp.company ?? ""),
+        location: String(exp.location ?? ""),
+        startDate: exp.startDate?.toISOString().split("T")[0] ?? "",
+        endDate: exp.endDate?.toISOString().split("T")[0] ?? "",
+        description: String(exp.description ?? ""),
+        status: String(exp.status ?? ""),
+        clearance: String(exp.clearance ?? ""),
+        duties: String(exp.duties ?? ""),
+        accomplishments: String(exp.accomplishments ?? ""),
+        responsibilities: String(exp.responsibilities ?? ""),
+        grade: String(exp.grade ?? ""),
+        hours: String(exp.hours ?? ""),
+      })) ?? [],
 
-    education: data.education.map((edu) => ({
-      degree: edu.degree ?? "",
-      school: edu.school ?? "",
-      location: edu.location ?? "",
-      startDate: edu.startDate ? edu.startDate.toISOString().split("T")[0] : "",
-      endDate: edu.endDate ? edu.endDate.toISOString().split("T")[0] : "",
-    })),
+    education:
+      data.education.map((edu) => ({
+        degree: edu.degree ?? "",
+        school: edu.school ?? "",
+        location: edu.location ?? "",
+        startDate: edu.startDate
+          ? edu.startDate.toISOString().split("T")[0]
+          : "",
+        endDate: edu.endDate ? edu.endDate.toISOString().split("T")[0] : "",
+      })) ?? [],
 
-    techSkills: data.techSkills.map((techSkill) => ({
-      name: techSkill.name ?? "",
-      rating: typeof techSkill.rating === "number" ? techSkill.rating : 1,
-    })),
+    techSkills:
+      data.techSkills.map((techSkill) => ({
+        name: techSkill.name ?? "",
+        rating: typeof techSkill.rating === "number" ? techSkill.rating : 1,
+      })) ?? [],
 
     skills: data.skills,
     interest: data.interest,
@@ -90,7 +95,7 @@ export function mapToResumeValues(data: ResumeServerData): ResumeValues {
 }
 
 export function mapToCoverLetterValues(
-  data: CoverLetterServerData
+  data: CoverLetterServerData,
 ): CoverLetterValues {
   return {
     id: data.id,
@@ -119,7 +124,7 @@ export function mapToCoverLetterValues(
 
 export function mapAffindaToResumeValues(
   parsed: any,
-  template: "federal" | "standard"
+  template: "federal" | "standard",
 ): ParsedResumeData {
   if (!parsed || typeof parsed !== "object") {
     throw new Error("Invalid or missing Affinda parsed data.");
@@ -129,11 +134,11 @@ export function mapAffindaToResumeValues(
 
   /* ------------ PERSONAL ------------------------------------------------ */
   const nameObj = Array.isArray(data.candidateName)
-    ? data.candidateName[0] ?? {}
+    ? (data.candidateName[0] ?? {})
     : {};
 
   const phoneObj = Array.isArray(data.phoneNumber)
-    ? data.phoneNumber[0] ?? {}
+    ? (data.phoneNumber[0] ?? {})
     : {};
 
   const personalInfo = {

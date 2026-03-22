@@ -1,360 +1,243 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useMemo, useRef } from "react";
+import Image from "next/image";
 import { ResumeValues } from "@/lib/validation";
 import {
   THEME_REGISTRY,
   ColorPalettes,
   FontPairs,
+  ResumeThemeToken,
 } from "@/lib/resume-theme-registry";
-import { formatDate } from "date-fns";
 import { cn } from "@/lib/utils";
-import NextImage from "next/image";
-import SkillsSection from "./resume/sections/SkillsSection";
 import { getResumeVisualStyle } from "@/lib/get-resume-visual-style";
+import useDimensions from "@/hooks/useDimensions";
+import {
+  EducationSection,
+  InterestsSection,
+  PersonalInfoHeader,
+  SkillsSection,
+  SummarySection,
+  TechnicalSkillsSection,
+  WorkExperienceSection,
+} from "@/components/resume/sections";
 
-interface SectionProps {
-  data: ResumeValues;
-}
+type ResumePreviewProps = {
+  resumeData: ResumeValues;
+  theme?: ResumeThemeToken;
+  className?: string;
+  contentRef?: React.Ref<HTMLDivElement>;
+  disableAutoScale?: boolean;
+  useAutoScale?: boolean;
+};
 
-/* ---------- SUB-COMPONENTS ---------- */
+function SidebarPhoto({ resumeData }: { resumeData: ResumeValues }) {
+  const [photoSrc, setPhotoSrc] = React.useState<string | null>(null);
 
-function PersonalInfoHeader({ data }: SectionProps) {
-  const {
-    photo,
-    firstName,
-    lastName,
-    jobTitle,
-    email,
-    phone,
-    address,
-    website,
-    linkedin,
-    gitHub,
-    showPhoto, // Ensure this is destructured from data
-  } = data;
+  const photo = resumeData.photo;
+  const showPhoto = resumeData.showPhoto;
 
-  const photoSrc = useMemo(() => {
-    if (!photo) return null;
-    if (photo instanceof File) return URL.createObjectURL(photo);
-    return photo;
+  React.useEffect(() => {
+    if (!photo) {
+      setPhotoSrc(null);
+      return;
+    }
+
+    if (photo instanceof File) {
+      const objectUrl = URL.createObjectURL(photo);
+      setPhotoSrc(objectUrl);
+
+      return () => {
+        URL.revokeObjectURL(objectUrl);
+      };
+    }
+
+    setPhotoSrc(photo);
   }, [photo]);
 
-  const formatHandle = (url?: string) => {
-    if (!url) return "";
-    return (
-      url
-        .replace(/^(https?:\/\/)?(www\.)?/, "")
-        .split("/")
-        .pop() || url
-    );
-  };
+  const shouldShowPhoto = Boolean(showPhoto && photoSrc);
+  const fullName =
+    `${resumeData.firstName?.trim() || "Your"} ${resumeData.lastName?.trim() || "Name"}`.trim();
 
   return (
-    <div className="flex items-start gap-6">
-      {/* 1. Corrected Photo Transition Wrapper */}
-      <div
-        className={cn(
-          "relative shrink-0 overflow-hidden transition-all duration-500 ease-in-out",
-          photoSrc && showPhoto
-            ? "size-24 opacity-100 mr-0"
-            : "size-0 opacity-0 -mr-6",
-        )}>
-        {photoSrc && (
-          <div
-            className="relative size-24 overflow-hidden rounded-2xl border-2 border-white shadow-md"
-            style={{ borderColor: "var(--primary)" }}>
-            <NextImage
-              src={photoSrc}
-              alt={`${firstName} ${lastName}`}
-              fill
-              className="object-cover"
-              unoptimized
-            />
-          </div>
-        )}
-      </div>
-
-      {/* 2. Text Content Area */}
-      <div className="flex-1 space-y-2">
-        <h1
-          className="text-4xl font-black uppercase tracking-tighter leading-none transition-colors duration-300"
-          style={{ color: "var(--primary)" }}>
-          {firstName} {lastName}
-        </h1>
-        <p className="text-xl font-bold uppercase tracking-widest text-slate-500">
-          {jobTitle}
-        </p>
-        <div className="flex flex-wrap gap-x-4 gap-y-1 text-[10px] font-bold uppercase text-slate-400">
-          {email && <span>{email}</span>}
-          {phone && <span>{phone}</span>}
-          {address && <span>{address}</span>}
-          {website && <span>{website}</span>}
-          {linkedin && <span>LI: {formatHandle(linkedin)}</span>}
-          {gitHub && <span>GH: {formatHandle(gitHub)}</span>}
+    <div className="mb-6 flex justify-center">
+      {shouldShowPhoto && photoSrc ? (
+        <div className="relative h-28 w-28 overflow-hidden rounded-full border border-slate-200 bg-slate-100 shadow-sm">
+          <Image
+            src={photoSrc}
+            alt={`${fullName} profile photo`}
+            fill
+            className="object-cover"
+            unoptimized
+          />
         </div>
-      </div>
+      ) : (
+        <div className="h-28 w-full" />
+      )}
     </div>
   );
 }
-
-function SummarySection({ data }: SectionProps) {
-  if (!data.summary) return null;
-  return (
-    <div className="space-y-2">
-      <h2
-        className="text-xs font-black uppercase tracking-[0.2em] border-b-2 pb-1"
-        style={{ borderBottomColor: "var(--primary)" }}>
-        Profile
-      </h2>
-      <p className="text-[10px] leading-relaxed whitespace-pre-line text-slate-700">
-        {data.summary}
-      </p>
-    </div>
-  );
-}
-
-function WorkExperienceSection({ data }: SectionProps) {
-  const theme = THEME_REGISTRY.find((t) => t.id === data.themeId);
-  const isFederal = theme?.category === "federal";
-  const experiences = data.workExperiences?.filter(
-    (exp) => exp.position || exp.company,
-  );
-
-  if (!experiences?.length) return null;
-
-  return (
-    <div className="space-y-4">
-      <h2
-        className="text-xs font-black uppercase tracking-[0.2em] border-b-2 pb-1"
-        style={{ borderBottomColor: "var(--primary)" }}>
-        Experience
-      </h2>
-      {experiences.map((exp, index) => (
-        <div key={index} className="resume-section space-y-1">
-          <div className="flex justify-between items-start">
-            <h3 className="font-bold text-[11px] text-slate-900">
-              {exp.position}
-            </h3>
-            <span className="text-[9px] font-bold text-slate-400 uppercase">
-              {exp.startDate
-                ? formatDate(new Date(exp.startDate), "MMM yyyy")
-                : ""}{" "}
-              -
-              {exp.endDate
-                ? formatDate(new Date(exp.endDate), "MMM yyyy")
-                : "Present"}
-            </span>
-          </div>
-          <p className="text-[10px] font-bold text-blue-600 uppercase">
-            {exp.company}
-          </p>
-
-          {isFederal && (
-            <div className="flex flex-wrap gap-x-3 text-[8px] font-black uppercase text-slate-500 bg-slate-50 p-1 rounded border border-slate-100">
-              {exp.grade && <span>Grade: {exp.grade}</span>}
-              {exp.hours && <span>Hrs: {exp.hours}/wk</span>}
-              {exp.status && <span>Series: {exp.status}</span>}
-              {exp.clearance && <span>Clearance: {exp.clearance}</span>}
-            </div>
-          )}
-
-          <div className="text-[10px] text-slate-600 whitespace-pre-line leading-normal">
-            {isFederal ? (
-              <div className="space-y-2 mt-1">
-                {exp.duties && (
-                  <div>
-                    <span className="font-bold text-slate-800 underline block mb-0.5">
-                      Duties:
-                    </span>
-                    <p>{exp.duties}</p>
-                  </div>
-                )}
-                {exp.responsibilities && (
-                  <div>
-                    <span className="font-bold text-slate-800 underline block mb-0.5">
-                      Responsibilities:
-                    </span>
-                    <p>{exp.responsibilities}</p>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <p className="mt-1">{exp.description}</p>
-            )}
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function EducationSection({ data }: SectionProps) {
-  const education = data.education?.filter((edu) => edu.school || edu.degree);
-  if (!education?.length) return null;
-
-  return (
-    <div className="space-y-3">
-      <h2
-        className="text-xs font-black uppercase tracking-[0.2em] border-b-2 pb-1"
-        style={{ borderBottomColor: "var(--primary)" }}>
-        Education
-      </h2>
-      {education.map((edu, index) => (
-        <div
-          key={index}
-          className="flex resume-section justify-between items-baseline">
-          <div>
-            <h3 className="text-[10px] font-bold text-slate-900 uppercase">
-              {edu.degree}
-            </h3>
-            <p className="text-[9px] font-medium text-slate-500">
-              {edu.school}
-            </p>
-          </div>
-          <span className="text-[9px] text-slate-400">
-            {edu.endDate ? formatDate(new Date(edu.endDate), "yyyy") : ""}
-          </span>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function TechnicalSkillsSection({ data }: SectionProps) {
-  if (!data.techSkills?.length) return null;
-  return (
-    <div className="space-y-2">
-      <h2
-        className="text-xs font-black uppercase tracking-[0.2em] border-b-2 pb-1"
-        style={{ borderBottomColor: "var(--primary)" }}>
-        Technical
-      </h2>
-      <div className="grid grid-cols-2 gap-2">
-        {data.techSkills.map((skill, i) => (
-          <div key={i} className="flex items-center justify-between group">
-            <span className="text-[9px] font-bold uppercase text-slate-600">
-              {skill.name}
-            </span>
-            <div className="flex gap-0.5">
-              {[1, 2, 3, 4, 5].map((star) => (
-                <div
-                  key={star}
-                  className={cn(
-                    "size-1 rounded-full",
-                    star <= (skill.rating || 0)
-                      ? "bg-blue-500"
-                      : "bg-slate-200",
-                  )}
-                />
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function InterestsSection({ data }: SectionProps) {
-  if (!data.interest?.length) return null;
-  return (
-    <div className="space-y-1">
-      <h2
-        className="text-xs font-black uppercase tracking-[0.2em] border-b-2 pb-1"
-        style={{ borderBottomColor: "var(--primary)" }}>
-        Interests
-      </h2>
-      <p className="text-[9px] text-slate-500 italic uppercase font-bold tracking-tighter">
-        {data.interest.join(" • ")}
-      </p>
-    </div>
-  );
-}
-
-/* ---------- MAIN EXPORT ---------- */
 
 export default function ResumePreview({
   resumeData,
+  theme: themeProp,
+  className,
   contentRef,
-}: {
-  resumeData: ResumeValues;
-  contentRef?: React.RefObject<HTMLDivElement | null>;
-}) {
+  disableAutoScale = true,
+  useAutoScale = false,
+}: ResumePreviewProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const { width } = useDimensions(containerRef as React.RefObject<HTMLElement>);
+
   const theme = useMemo(
     () =>
-      THEME_REGISTRY.find((t) => t.id === resumeData.themeId) ||
+      themeProp ??
+      THEME_REGISTRY.find((t) => t.id === resumeData.themeId) ??
       THEME_REGISTRY[0],
-    [resumeData.themeId],
+    [themeProp, resumeData.themeId],
   );
+
+  const palette =
+    ColorPalettes[theme.paletteId as keyof typeof ColorPalettes] ||
+    ColorPalettes["classic-business"];
+
+  const fonts =
+    FontPairs[theme.fontId as keyof typeof FontPairs] ||
+    FontPairs["professional"];
+
   const visualStyle = getResumeVisualStyle(theme);
-  const palette = ColorPalettes[theme.paletteId as keyof typeof ColorPalettes];
-  const fonts = FontPairs[theme.fontId as keyof typeof FontPairs];
+
+  const shouldScale = useAutoScale && !disableAutoScale;
+  const scale = shouldScale ? (width ? width / 794 : 1) : 1;
 
   const isSidebarLayout =
-    theme.layout.includes("sidebar") || theme.layout === "modern-split";
+    theme.layout === "sidebar-left" || theme.layout === "sidebar-right";
+
+  const usesSidebar = isSidebarLayout || theme.layout === "modern-split";
+  const showPhotoInHeader = !isSidebarLayout;
+
+  const styleVars = {
+    "--primary": resumeData.themeColor || palette.primary,
+    "--secondary": palette.secondary,
+    "--accent": palette.accent,
+    "--font-heading": fonts.heading,
+    "--font-body": fonts.body,
+    "--resume-padding":
+      theme.spacing === "compact"
+        ? "1.25rem"
+        : theme.spacing === "relaxed"
+          ? "3rem"
+          : "2rem",
+    "--line-height":
+      theme.spacing === "compact"
+        ? "1.15"
+        : theme.spacing === "relaxed"
+          ? "1.6"
+          : "1.4",
+    "--section-gap":
+      theme.category === "federal"
+        ? "0.5rem"
+        : theme.spacing === "compact"
+          ? "0.75rem"
+          : "1.25rem",
+    width: "794px",
+    transform: `scale(${scale})`,
+    fontFamily: fonts.body,
+  } as React.CSSProperties;
+
+  const supportingSections = (
+    <>
+      <SkillsSection
+        data={resumeData}
+        theme={theme}
+        visualStyle={visualStyle}
+      />
+      <TechnicalSkillsSection
+        data={resumeData}
+        theme={theme}
+        visualStyle={visualStyle}
+      />
+      <InterestsSection
+        data={resumeData}
+        theme={theme}
+        visualStyle={visualStyle}
+      />
+    </>
+  );
 
   return (
     <div
-      ref={contentRef as any}
+      ref={containerRef}
       className={cn(
-        "relative w-full bg-white transition-all overflow-hidden",
-        // Removed shadow-lg and aspect ratio to let it spread naturally
-        "min-h-[297mm]",
-        theme.spacing === "compact" ? "leading-tight" : "leading-normal",
-      )}
-      style={
-        {
-          fontFamily: fonts?.body || "sans-serif",
-          /* FIX: Priority order 
-           1. custom themeColor (from picker)
-           2. palette default primary
-           3. black fallback
-        */
-          "--primary": resumeData.themeColor || palette?.primary || "#000",
-        } as React.CSSProperties
-      }>
-      {/* --- RESUME CONTENT --- */}
-      <div className="p-12 space-y-8 print:p-0">
-        <PersonalInfoHeader data={resumeData} />
+        "w-full overflow-hidden bg-white text-black",
+        shouldScale && "aspect-[210/297]",
+        className,
+      )}>
+      <div
+        ref={contentRef}
+        style={styleVars}
+        data-layout={theme.layout}
+        data-category={theme.category}
+        data-spacing={theme.spacing}
+        data-theme-id={theme.id}
+        className={cn(
+          "resume-paper origin-top-left",
+          shouldScale && "transition-all duration-500",
+          shouldScale && !width && "invisible",
+        )}>
+        <header className="resume-header">
+          <PersonalInfoHeader
+            data={resumeData}
+            theme={theme}
+            visualStyle={visualStyle}
+            showPhotoInHeader={showPhotoInHeader}
+          />
+        </header>
 
-        <div
-          className={cn(
-            "grid gap-8",
-            isSidebarLayout ? "grid-cols-[1fr_2.5fr]" : "grid-cols-1",
-          )}>
-          {/* Sidebar Area */}
-          {isSidebarLayout && (
-            <aside className="space-y-6">
-              <TechnicalSkillsSection data={resumeData} />
-              <SkillsSection
+        <aside className="resume-sidebar">
+          {usesSidebar && isSidebarLayout && (
+            <SidebarPhoto resumeData={resumeData} />
+          )}
+
+          {usesSidebar && theme.category === "functional" && (
+            <div className="mt-6">
+              <EducationSection
                 data={resumeData}
                 theme={theme}
                 visualStyle={visualStyle}
               />
-              <EducationSection data={resumeData} />
-              <InterestsSection data={resumeData} />
-            </aside>
+            </div>
           )}
 
-          {/* Main Body Area */}
-          <main className="space-y-8">
-            <SummarySection data={resumeData} />
-            <WorkExperienceSection data={resumeData} />
+          {usesSidebar && supportingSections}
+        </aside>
 
-            {/* Layout-specific bottom sections */}
-            {!isSidebarLayout && (
-              <>
-                <div className="grid grid-cols-2 gap-8">
-                  <EducationSection data={resumeData} />
-                  <TechnicalSkillsSection data={resumeData} />
-                </div>
-                <InterestsSection data={resumeData} />
-              </>
-            )}
-          </main>
-        </div>
+        <main className="resume-main">
+          <SummarySection
+            data={resumeData}
+            theme={theme}
+            visualStyle={visualStyle}
+          />
+
+          <WorkExperienceSection
+            data={resumeData}
+            theme={theme}
+            visualStyle={visualStyle}
+          />
+
+          {theme.category !== "functional" && (
+            <div className="mt-4">
+              <EducationSection
+                data={resumeData}
+                theme={theme}
+                visualStyle={visualStyle}
+              />
+            </div>
+          )}
+
+          {!usesSidebar && supportingSections}
+        </main>
       </div>
     </div>
   );

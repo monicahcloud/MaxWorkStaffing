@@ -417,7 +417,7 @@ function WorkExperienceItem({
               <FormItem>
                 <div className="flex items-center justify-between mb-1">
                   <FormLabel className="text-[10px] font-bold uppercase text-blue-600">
-                    Responsibilities
+                    Achievement
                   </FormLabel>
                   <GenerateResponsibilitiesButton
                     category={category}

@@ -30,8 +30,11 @@ interface DynamicResumePreviewProps {
 }
 
 function SidebarPhoto({ resumeData }: { resumeData?: ResumeValues }) {
-  const { photo, showPhoto } = resumeData;
   const [photoSrc, setPhotoSrc] = useState<string | null>(null);
+
+  // ✅ derive safely without breaking hooks
+  const photo = resumeData?.photo;
+  const showPhoto = resumeData?.showPhoto;
 
   useEffect(() => {
     if (!photo) {
@@ -51,13 +54,16 @@ function SidebarPhoto({ resumeData }: { resumeData?: ResumeValues }) {
     setPhotoSrc(photo);
   }, [photo]);
 
+  // ✅ conditional render AFTER hooks
   if (!resumeData) {
     return <div className="mb-6 h-28 w-full" />;
   }
 
   const shouldShowPhoto = Boolean(showPhoto && photoSrc);
+
   const fullName =
     `${resumeData.firstName?.trim() || "Your"} ${resumeData.lastName?.trim() || "Name"}`.trim();
+
   return (
     <div className="mb-6 flex justify-center">
       {shouldShowPhoto && photoSrc ? (
@@ -107,7 +113,7 @@ export default function DynamicResumePreview({
   const showPhotoInHeader = !isSidebarLayout;
 
   const styleVars = {
-    "--primary": resumeData.themeColor || palette.primary,
+    "--primary": palette.primary,
     "--secondary": palette.secondary,
     "--accent": palette.accent,
     "--font-heading": fonts.heading,

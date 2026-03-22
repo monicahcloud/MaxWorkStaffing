@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import {
   Download,
@@ -13,8 +13,7 @@ import {
 import { ResumeServerData } from "@/lib/types";
 import { THEME_REGISTRY } from "@/lib/resume-theme-registry";
 import { mapToResumeValues } from "@/lib/utils";
-import { clsx } from "clsx"; // Ensure clsx is imported
-
+import { clsx } from "clsx";
 import ThemePicker from "@/components/editor/ThemePicker";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -33,7 +32,7 @@ export default function ResumePreviewView({
 }) {
   const [data, setData] = useState(resume);
   const userLevel = useSubscriptionLevel();
-
+  const previewData = useMemo(() => mapToResumeValues(data), [data]);
   const handleDownload = async () => {
     // --- THE GATEKEEPER START ---
     if (!canExportDocument(userLevel)) {
@@ -205,7 +204,7 @@ export default function ResumePreviewView({
                 "--primary": data.themeColor || "#000000",
               } as React.CSSProperties
             }>
-            <ResumePreview resumeData={mapToResumeValues(data)} />
+            <ResumePreview resumeData={previewData} />
           </div>
         </div>
 
@@ -218,7 +217,7 @@ export default function ResumePreviewView({
             <div className="space-y-4">
               <div className="flex flex-col gap-2">
                 <Label className="text-[11px] font-bold text-slate-700 uppercase">
-                  Design Archetype
+                  Change Resume Template
                 </Label>
                 <ThemePicker
                   currentThemeId={data.themeId ?? undefined}
@@ -233,7 +232,7 @@ export default function ResumePreviewView({
               </div>
               <div className="flex flex-col gap-2">
                 <Label className="text-[11px] font-bold text-slate-700 uppercase">
-                  Theme Color
+                  Change Theme Color
                 </Label>
                 <div className="flex items-center gap-3 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
                   <input
