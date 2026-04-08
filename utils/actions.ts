@@ -426,3 +426,83 @@ export async function getFeedbackByInterviewId(
     }[],
   };
 }
+
+export async function deleteFeedbackByInterviewId(params: {
+  interviewId: string;
+  clerkId: string;
+}) {
+  const { interviewId, clerkId } = params;
+
+  try {
+    const user = await getDbUserByClerkId(clerkId);
+
+    const feedback = await prisma.feedback.findFirst({
+      where: {
+        interviewId,
+        userId: user.id,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (!feedback) {
+      return { success: false, error: "Feedback not found." };
+    }
+
+    await prisma.feedback.delete({
+      where: {
+        id: feedback.id,
+      },
+    });
+
+    return { success: true };
+  } catch (error) {
+    console.error("Error deleting feedback:", error);
+    return { success: false, error: "Failed to delete feedback." };
+  }
+}
+export async function deleteInterviewById(params: {
+  interviewId: string;
+  clerkId: string;
+}) {
+  const { interviewId, clerkId } = params;
+
+  try {
+    const user = await getDbUserByClerkId(clerkId);
+
+    const interview = await prisma.interview.findFirst({
+      where: {
+        id: interviewId,
+        userId: user.id,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (!interview) {
+      return { success: false, error: "Interview not found." };
+    }
+
+    // Delete any feedback tied to this interview first
+    await prisma.feedback.deleteMany({
+      where: {
+        interviewId,
+        userId: user.id,
+      },
+    });
+
+    // Then delete the interview itself
+    await prisma.interview.delete({
+      where: {
+        id: interviewId,
+      },
+    });
+
+    return { success: true };
+  } catch (error) {
+    console.error("Error deleting interview:", error);
+    return { success: false, error: "Failed to delete interview." };
+  }
+}

@@ -9,7 +9,6 @@ import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { vapi } from "@/lib/vapi.sdk";
 import { Button } from "../ui/button";
-import { interviewer } from "@/utils/constants";
 import { createFeedback } from "@/utils/actions";
 
 enum CallStatus {
@@ -56,16 +55,15 @@ const Agent = ({
   const [liveTranscript, setLiveTranscript] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
-  // Refs to avoid stale values inside event listeners
+  // Keep fresh values available inside event listeners
   const messagesRef = useRef<SavedMessage[]>([]);
   const hasStartedCallRef = useRef(false);
 
-  // Keep transcript ref in sync
   useEffect(() => {
     messagesRef.current = messages;
   }, [messages]);
 
-  // Derived state flags
+  // Derived state for cleaner UI logic
   const isIdle = callStatus === CallStatus.INACTIVE;
   const isConnecting = callStatus === CallStatus.CONNECTING;
   const isActive = callStatus === CallStatus.ACTIVE;
@@ -83,7 +81,7 @@ const Agent = ({
         : "Ready";
 
   /**
-   * Register Vapi listeners once.
+   * Register VAPI listeners once.
    */
   useEffect(() => {
     const onCallStart = () => {
@@ -103,18 +101,16 @@ const Agent = ({
 
     const onMessage = (message: any) => {
       console.log("VAPI message:", message);
-      console.log("Transcript role:", message.role);
-      console.log("Transcript type:", message.transcriptType);
-      console.log("Transcript text:", message.transcript);
+
       if (message.type !== "transcript") return;
 
-      // Show partial transcript live while the current speaker is talking
+      // Show partial transcript live while current speaker is talking
       if (message.transcriptType === "partial") {
         setLiveTranscript(message.transcript || "");
         return;
       }
 
-      // Persist final transcript chunks
+      // Save final transcript chunks permanently
       if (message.transcriptType === "final") {
         const newMessage: SavedMessage = {
           role: message.role,
@@ -165,7 +161,7 @@ const Agent = ({
   }, []);
 
   /**
-   * Create feedback once a real interview has actually happened.
+   * Create feedback after a real interview has occurred.
    */
   const handleGenerateFeedback = async (transcriptMessages: SavedMessage[]) => {
     if (!interviewId || !clerkId) {
@@ -203,63 +199,34 @@ const Agent = ({
   };
 
   /**
-   * After the call ends, only generate feedback if:
-   * - the call truly started
-   * - feedback has not already been created
-   * - at least one real user response exists
+   * Once the call ends, only generate feedback if the user actually responded.
    */
   useEffect(() => {
     if (callStatus !== CallStatus.FINISHED) return;
     if (hasGeneratedFeedback) return;
     if (!hasStartedCallRef.current) return;
 
-    // const hasRealConversation = messages.some(
-    //   (msg) => msg.role === "user" && msg.content.trim().length > 0,
-    // );
     const hasRealConversation = messages.some(
-      (msg) => msg.content.trim().length > 0,
+      (msg) => msg.role === "user" && msg.content.trim().length > 0,
     );
 
-    // if (!hasRealConversation) {
-    //   console.warn(
-    //     "Call ended before any real interview response was captured.",
-    //   );
-    //   setErrorMessage(
-    //     "The interview ended before it could begin properly. Please try again.",
-    //   );
-    //   setCallStatus(CallStatus.INACTIVE);
-    //   return;
-    // }
     if (!hasRealConversation) {
       console.warn(
-        "No transcript captured yet. Waiting briefly before failing...",
+        "Call ended before any real interview response was captured.",
       );
-
-      setTimeout(() => {
-        const updatedMessages = messagesRef.current;
-        const hasLateTranscript = updatedMessages.some(
-          (msg) => msg.content.trim().length > 0,
-        );
-
-        if (!hasLateTranscript) {
-          setErrorMessage(
-            "The interview ended before it could begin properly. Please try again.",
-          );
-          setCallStatus(CallStatus.INACTIVE);
-        } else {
-          setHasGeneratedFeedback(true);
-          handleGenerateFeedback(updatedMessages);
-        }
-      }, 1500);
-
+      setErrorMessage(
+        "The interview ended before it could begin properly. Please try again.",
+      );
+      setCallStatus(CallStatus.INACTIVE);
       return;
     }
+
     setHasGeneratedFeedback(true);
     handleGenerateFeedback(messages);
   }, [callStatus, hasGeneratedFeedback, messages]);
 
   /**
-   * Start a fresh Vapi interview session.
+   * Start the live interview session with the VAPI assistant ID.
    */
   const handleCall = async () => {
     if (!clerkId) {
@@ -268,7 +235,6 @@ const Agent = ({
       return;
     }
 
-    // Reset state for a fresh session
     setMessages([]);
     setLiveTranscript("");
     setErrorMessage("");
@@ -305,7 +271,7 @@ const Agent = ({
   };
 
   /**
-   * Manually end the interview session.
+   * End the interview manually.
    */
   const handleDisconnect = () => {
     console.log("User clicked finish interview");
@@ -313,14 +279,13 @@ const Agent = ({
     vapi.stop();
   };
 
-  // Latest completed transcript message
   const latestMessage = messages[messages.length - 1]?.content;
 
   return (
     <div className="space-y-6">
-      {/* Main interview shell */}
+      {/* Main shell */}
       <div className="rounded-3xl border border-white/10 bg-gradient-to-b from-[#4B4D4F]/30 to-[#4B4D4F10] p-4 md:p-6">
-        {/* Top control and instruction area */}
+        {/* Session controls + instructions */}
         <div className="mb-5 rounded-3xl border border-white/10 bg-gradient-to-b from-[#171532] to-[#08090D] p-5 text-white">
           <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
             <div className="space-y-2">
@@ -388,14 +353,14 @@ const Agent = ({
             </div>
           </div>
 
-          {/* Quick usage instruction */}
+          {/* User help banner */}
           <div className="mt-4 rounded-2xl border border-cyan-500/20 bg-cyan-500/5 px-4 py-3 text-sm text-cyan-100">
             Wait for Thyri to finish speaking, then answer naturally. When you
             are done with the interview, click{" "}
             <span className="font-semibold">Finish and Generate Feedback</span>.
           </div>
 
-          {/* Error state */}
+          {/* Error banner */}
           {errorMessage && (
             <div className="mt-4 rounded-2xl border border-rose-500/20 bg-rose-500/10 px-4 py-3 text-sm text-rose-100">
               {errorMessage}
@@ -403,7 +368,7 @@ const Agent = ({
           )}
         </div>
 
-        {/* Interviewer and candidate cards */}
+        {/* Interviewer + candidate panels */}
         <div className="grid gap-4 md:grid-cols-2">
           <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-b from-[#171532] to-[#08090D] p-8 text-white">
             <div className="relative flex flex-col items-center text-center">

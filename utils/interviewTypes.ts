@@ -44,12 +44,12 @@ interface User {
 
 interface InterviewCardProps {
   id?: string;
-  industry?: string | null;
-  userId?: string;
   role: string;
   type: string;
   techstack: string[];
   createdAt?: string;
+  industry?: string | null;
+  clerkId?: string;
 }
 
 interface AgentProps {
