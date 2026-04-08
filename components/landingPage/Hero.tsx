@@ -4,8 +4,6 @@ import Link from "next/link";
 import { PrimaryButton } from "./PrimaryButton";
 import { OutlineButton } from "./OutlineButton";
 import { SectionGridBackground } from "./SectionGridBackground";
-
-import logo from "../../assets/logo.png";
 import dashboardMockup from "../../assets/LandingImg.jpg";
 
 export function Hero() {
@@ -16,7 +14,7 @@ export function Hero() {
       <div className="relative z-10 mx-auto max-w-7xl">
         <div className="flex flex-col items-center text-center">
           <Image
-            src={logo}
+            src="/public/CareerOSLogo.png"
             alt="CareerOS"
             width={180}
             height={44}

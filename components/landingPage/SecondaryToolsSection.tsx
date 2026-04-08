@@ -14,11 +14,14 @@ export function SecondaryToolsSection() {
               <div
                 key={feature.title}
                 className="space-y-4 p-4 text-center md:text-left">
-                <Icon className="mx-auto h-8 w-8 text-red-600 md:mx-0" />
+                {/* ICON + TITLE ROW */}
+                <div className="flex items-center justify-center gap-3 md:justify-start">
+                  <Icon className="h-8 w-8 text-red-600" />
 
-                <h4 className="text-xl font-black uppercase tracking-tight text-black">
-                  {feature.title}
-                </h4>
+                  <h4 className="text-xl font-black uppercase tracking-tight text-black">
+                    {feature.title}
+                  </h4>
+                </div>
 
                 <p className="font-medium leading-relaxed text-slate-500">
                   {feature.desc}

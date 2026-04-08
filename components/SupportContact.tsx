@@ -8,7 +8,6 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import Logo from "../assets/logo.png";
 
 export default function SupportContact() {
   const form = useRef<HTMLFormElement>(null);
@@ -25,7 +24,7 @@ export default function SupportContact() {
         "service_jcfd75n",
         "template_kx67uss",
         form.current,
-        "XnLTFneXRVkwkphGD"
+        "XnLTFneXRVkwkphGD",
       )
       .then(() => {
         toast.success("✅ Message sent! We’ll get back to you shortly.");
@@ -43,7 +42,7 @@ export default function SupportContact() {
       <div className="rounded-2xl shadow-2xl bg-gradient-to-br from-white to-gray-50 p-8 md:p-12">
         <div className="flex flex-col items-center text-center">
           <Image
-            src={Logo}
+            src="/CareerOSLogo.png"
             alt="VitaNova Logo"
             width={175}
             height={120}

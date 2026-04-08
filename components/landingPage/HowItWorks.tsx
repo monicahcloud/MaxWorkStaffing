@@ -86,21 +86,19 @@ export function HowItWorks() {
                   <div className="inline-flex rounded-2xl bg-red-50 p-3 text-red-600">
                     <Icon className="h-5 w-5" />
                   </div>
-
-                  <span className="text-xs font-black tracking-[0.2em] text-neutral-300">
+                  <h3 className="text-2xl font-black tracking-tight text-black">
+                    {step.title}
+                  </h3>
+                  {/* <span className="text-xs font-black tracking-[0.2em] text-neutral-300">
                     {step.number}
-                  </span>
+                  </span> */}
                 </div>
-
-                <h3 className="text-2xl font-black tracking-tight text-black">
-                  {step.title}
-                </h3>
 
                 <p className="mt-3 text-sm leading-7 text-neutral-600">
                   {step.description}
                 </p>
 
-                <div className="mt-6 h-1 w-12 rounded-full bg-red-600 transition-all duration-200 group-hover:w-20" />
+                {/* <div className="mt-6 h-1 w-12 rounded-full bg-red-600 transition-all duration-200 group-hover:w-20" /> */}
               </article>
             );
           })}

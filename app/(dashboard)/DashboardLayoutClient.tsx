@@ -4,8 +4,6 @@
 import { useState, PropsWithChildren } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import Logo from "../../assets/logo.png";
-// import ThemeToggle from "@/components/ThemeToggle";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -55,12 +53,12 @@ export default function DashboardLayoutClient({
               <div className="h-16 flex items-center border-b border-slate-100 px-6">
                 <Link href="/home">
                   <Image
-                    src={Logo}
+                    src="/CareerOSLogo.png"
                     alt="Logo"
                     priority
                     width={160}
                     height={40}
-                    className="brightness-0"
+                    className=""
                   />
                 </Link>
               </div>

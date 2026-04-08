@@ -37,7 +37,7 @@
 //     NEXT_PUBLIC_CLERK_SIGN_UP_URL: z.string().min(1),
 //     NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: z.string().min(1),
 //     NEXT_PUBLIC_BASE_URL: z.string().min(1).url(),
-//     NEXT_PUBLIC_VAPI_WEB_TOKEN: z.string().min(1),
+//     NEXT_PUBLIC_VAPI_WEB_API_KEY: z.string().min(1),
 //     NEXT_PUBLIC_VAPI_WORKFLOW_ID: z.string().min(1),
 //   },
 //   experimental__runtimeEnv: {
@@ -49,7 +49,7 @@
 //       process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
 
 //     NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
-//     NEXT_PUBLIC_VAPI_WEB_TOKEN: process.env.NEXT_PUBLIC_VAPI_WEB_TOKEN,
+//     NEXT_PUBLIC_VAPI_WEB_API_KEY: process.env.NEXT_PUBLIC_VAPI_WEB_API_KEY,
 //     NEXT_PUBLIC_VAPI_WORKFLOW_ID: process.env.NEXT_PUBLIC_VAPI_WORKFLOW_ID,
 //   },
 // });
@@ -92,7 +92,7 @@ export const env = createEnv({
     NEXT_PUBLIC_CLERK_SIGN_UP_URL: z.string().optional(),
     NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: z.string().optional(),
     NEXT_PUBLIC_BASE_URL: z.string().url().optional(),
-    NEXT_PUBLIC_VAPI_WEB_TOKEN: z.string().optional(),
+    NEXT_PUBLIC_VAPI_WEB_API_KEY: z.string().optional(),
     NEXT_PUBLIC_VAPI_WORKFLOW_ID: z.string().optional(),
   },
   experimental__runtimeEnv: {
@@ -103,7 +103,7 @@ export const env = createEnv({
     NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY:
       process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
     NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
-    NEXT_PUBLIC_VAPI_WEB_TOKEN: process.env.NEXT_PUBLIC_VAPI_WEB_TOKEN,
+    NEXT_PUBLIC_VAPI_WEB_API_KEY: process.env.NEXT_PUBLIC_VAPI_WEB_API_KEY,
     NEXT_PUBLIC_VAPI_WORKFLOW_ID: process.env.NEXT_PUBLIC_VAPI_WORKFLOW_ID,
   },
   // This is the magic line

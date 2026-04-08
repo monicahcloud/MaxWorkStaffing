@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import logo from "../../assets/logo.png";
 
 const footerLinks = [
   {
@@ -30,7 +29,12 @@ export function LandingFooter() {
     <footer className="border-t border-slate-100 bg-white py-16">
       <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-10 px-6 md:flex-row">
         <div className="flex flex-col items-center gap-4 md:items-start">
-          <Image src={logo} alt="CareerOS" width={160} height={40} />
+          <Image
+            src="/public/CareerOSLogo.png"
+            alt="CareerOS"
+            width={160}
+            height={40}
+          />
 
           <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">
             The Operating System for Your Next Career.

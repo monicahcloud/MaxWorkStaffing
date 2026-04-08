@@ -3,8 +3,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, Briefcase, Sparkles } from "lucide-react";
 
-import logo from "@/assets/logo.png";
-
 const benefits = [
   "Access your career dashboard",
   "Track jobs and applications",
@@ -24,7 +22,7 @@ export default function SignInPage() {
             aria-label="Go to CareerOS homepage"
             className="inline-flex">
             <Image
-              src={logo}
+              src="/public/CareerOSLogo.png.png"
               alt="CareerOS"
               width={180}
               height={45}
@@ -82,7 +80,7 @@ export default function SignInPage() {
               aria-label="Go to CareerOS homepage"
               className="inline-flex w-full justify-center">
               <Image
-                src={logo}
+                src="/public/CareerOSLogo.png.png"
                 alt="CareerOS"
                 width={150}
                 height={38}

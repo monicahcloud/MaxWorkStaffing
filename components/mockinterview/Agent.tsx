@@ -1,8 +1,9 @@
 "use client";
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
-import avator from "../../assets/ai-avatar.png";
+import React, { useEffect, useRef, useState } from "react";
 import user from "../../assets/jobseeker.jpg";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
@@ -23,40 +24,109 @@ interface SavedMessage {
   content: string;
 }
 
+interface AgentProps {
+  userName: string;
+  clerkId?: string;
+  interviewId: string;
+  questions?: string[];
+  imageUrl?: string;
+}
+
 const Agent = ({
   userName,
-  userId,
-  type,
+  clerkId,
   interviewId,
   questions,
   imageUrl,
 }: AgentProps) => {
   const router = useRouter();
+
+  // Core UI state
   const [isSpeaking, setIsSpeaking] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [hasGeneratedFeedback, setHasGeneratedFeedback] = useState(false);
   const [callStatus, setCallStatus] = useState<CallStatus>(CallStatus.INACTIVE);
   const [messages, setMessages] = useState<SavedMessage[]>([]);
-  const [localQuestions, setLocalQuestions] = useState<string[]>(
-    questions ?? []
-  );
-  const [localInterviewId, setLocalInterviewId] = useState<string | undefined>(
-    interviewId
-  );
 
-  console.log("in agent componet", userId);
+  // Refs used to avoid stale values inside event listeners
+  const messagesRef = useRef<SavedMessage[]>([]);
+  const hasStartedCallRef = useRef(false);
 
+  // Keep the ref synced with the latest transcript messages
   useEffect(() => {
-    const onCallStart = () => setCallStatus(CallStatus.ACTIVE);
-    const onCallEnd = () => setCallStatus(CallStatus.FINISHED);
-    const onMessage = (message: Message) => {
+    messagesRef.current = messages;
+  }, [messages]);
+
+  /**
+   * Derived state flags
+   * These make the JSX easier to read and prevent repeating the same conditions.
+   */
+  const isIdle = callStatus === CallStatus.INACTIVE;
+  const isConnecting = callStatus === CallStatus.CONNECTING;
+  const isActive = callStatus === CallStatus.ACTIVE;
+  const isFinished = callStatus === CallStatus.FINISHED;
+
+  // Start button should show when the interview is idle or previously finished
+  const canStart = isIdle || isFinished;
+
+  // Finish button should only show while the interview is live
+  const canFinish = isActive;
+
+  // Small status chip text
+  const statusLabel = isActive
+    ? "Live Now"
+    : isConnecting
+      ? "Connecting"
+      : isGenerating
+        ? "Processing"
+        : "Ready";
+
+  /**
+   * Register VAPI event listeners once when the component mounts.
+   */
+  useEffect(() => {
+    const onCallStart = () => {
+      console.log("VAPI: call-start");
+      hasStartedCallRef.current = true;
+      setCallStatus(CallStatus.ACTIVE);
+    };
+
+    const onCallEnd = () => {
+      console.log("VAPI: call-end");
+      console.log("Transcript messages captured:", messagesRef.current);
+      setCallStatus(CallStatus.FINISHED);
+    };
+
+    const onMessage = (message: any) => {
+      console.log("VAPI message:", message);
+
+      // Save only final transcript chunks
       if (message.type === "transcript" && message.transcriptType === "final") {
-        const newMessage = { role: message.role, content: message.transcript };
+        const newMessage: SavedMessage = {
+          role: message.role,
+          content: message.transcript,
+        };
+
         setMessages((prev) => [...prev, newMessage]);
       }
     };
-    const onSpeechStart = () => setIsSpeaking(true);
-    const onSpeechEnd = () => setIsSpeaking(false);
 
-    const onError = (error: Error) => console.log("Error", error);
+    const onSpeechStart = () => {
+      console.log("VAPI: speech-start");
+      setIsSpeaking(true);
+    };
+
+    const onSpeechEnd = () => {
+      console.log("VAPI: speech-end");
+      setIsSpeaking(false);
+    };
+
+    const onError = (error: Error) => {
+      console.error("VAPI error:", error);
+      setCallStatus(CallStatus.INACTIVE);
+      setIsGenerating(false);
+    };
+
     vapi.on("call-start", onCallStart);
     vapi.on("call-end", onCallEnd);
     vapi.on("message", onMessage);
@@ -74,192 +144,298 @@ const Agent = ({
     };
   }, []);
 
-  const handleGenerateFeedback = async (messages: SavedMessage[]) => {
-    console.log("Generate feedback here");
-
-    // create server action that generate feedback
-
-    // const { success, feedbackId: id } = await createFeedback({
-    //   interviewId: interviewId!,
-    //   userId: userId!,
-    //   transcript: messages,
-    // });
-    const result = await createFeedback({
-      interviewId: interviewId!,
-      userId: userId!,
-      transcript: messages,
-    });
-
-    if (result.success && result.feedbackId) {
-      router.push(`/interview/${interviewId}/feedback`);
-    } else {
-      console.error("Error saving feedback", result);
-      alert("Feedback generation failed. Please try again.");
+  /**
+   * Creates feedback after a completed interview.
+   * Only runs if we have a valid interview id and user id.
+   */
+  const handleGenerateFeedback = async (transcriptMessages: SavedMessage[]) => {
+    if (!interviewId || !clerkId) {
+      console.error(
+        "Missing interview ID or clerk ID for feedback generation.",
+      );
       router.push("/interview");
-    }
-  };
-
-  useEffect(() => {
-    console.log("isSpeaking:", isSpeaking);
-  }, [isSpeaking]);
-
-  useEffect(() => {
-    if (callStatus === CallStatus.FINISHED) {
-      if (type === "generate") {
-        router.push("/interview");
-      } else {
-        handleGenerateFeedback(messages);
-      }
-    }
-  }, [messages, callStatus, type, userId, router]);
-
-  const handleCall = async () => {
-    if (!userId) {
-      console.error("User ID is required to start the call.");
       return;
     }
 
-    setCallStatus(CallStatus.CONNECTING);
+    try {
+      setIsGenerating(true);
 
-    let generatedQuestions: string[] = localQuestions;
-    let newInterviewId: string | undefined = localInterviewId;
+      const result = await createFeedback({
+        interviewId,
+        clerkId,
+        transcript: transcriptMessages,
+      });
 
-    if (type === "generate") {
-      try {
-        const res = await fetch("/api/vapi/generate", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            type: "technical", // Optionally make dynamic
-            role: "Frontend Developer",
-            level: "Junior",
-            techstack: "React, TypeScript",
-            amount: 5,
-            userId,
-          }),
-        });
-
-        const data = await res.json();
-
-        if (!res.ok || !data.success) {
-          console.error("Interview generation failed:", data.error);
-          return;
-        }
-
-        generatedQuestions = data.interview.questions;
-        newInterviewId = data.interview.id;
-
-        setLocalQuestions(generatedQuestions);
-        setLocalInterviewId(newInterviewId);
-      } catch (err) {
-        console.error("Interview generation error:", err);
+      if (result.success && result.feedbackId) {
+        router.push(`/interview/${interviewId}/feedback`);
         return;
       }
 
-      await vapi.start(process.env.NEXT_PUBLIC_VAPI_WORKFLOW_ID!, {
-        variableValues: {
-          username: userName,
-          userid: userId,
-        },
-        clientMessages: [],
-        serverMessages: [],
-      });
-    } else {
-      let formattedQuestions = "";
-      if (localQuestions.length > 0) {
-        formattedQuestions = localQuestions.map((q) => `- ${q}`).join("\n");
-      }
-
-      await vapi.start(interviewer, {
-        variableValues: { questions: formattedQuestions },
-        clientMessages: [],
-        serverMessages: [],
-      });
+      console.error("Error saving feedback", result);
+      alert("Feedback generation failed. Please try again.");
+      router.push("/interview");
+    } catch (error) {
+      console.error("Unexpected feedback generation error:", error);
+      alert("Something went wrong while generating feedback.");
+      router.push("/interview");
+    } finally {
+      setIsGenerating(false);
     }
   };
 
-  const handleDisconnect = async () => {
+  /**
+   * After the call ends, only generate feedback if:
+   * - the call really started
+   * - feedback has not already been generated
+   * - at least one real user response exists
+   */
+  useEffect(() => {
+    if (callStatus !== CallStatus.FINISHED) return;
+    if (hasGeneratedFeedback) return;
+    if (!hasStartedCallRef.current) return;
+
+    const hasRealConversation = messages.some(
+      (msg) => msg.role === "user" && msg.content.trim().length > 0,
+    );
+
+    if (!hasRealConversation) {
+      console.warn(
+        "Call ended before any real interview response was captured.",
+      );
+      setCallStatus(CallStatus.INACTIVE);
+      return;
+    }
+
+    setHasGeneratedFeedback(true);
+    handleGenerateFeedback(messages);
+  }, [callStatus, hasGeneratedFeedback, messages]);
+
+  /**
+   * Starts the live VAPI interview session.
+   */
+  const handleCall = async () => {
+    if (!clerkId) {
+      console.error("Clerk ID is required to start the call.");
+      return;
+    }
+
+    // Reset state for a fresh session
+    setMessages([]);
+    setCallStatus(CallStatus.CONNECTING);
+    setHasGeneratedFeedback(false);
+    hasStartedCallRef.current = false;
+
+    try {
+      const formattedQuestions =
+        questions && questions.length > 0
+          ? questions.map((q) => `- ${q}`).join("\n")
+          : "";
+
+      console.log(
+        "Starting VAPI interview with questions:",
+        formattedQuestions,
+      );
+      console.log("User:", userName, clerkId);
+
+      await vapi.start(interviewer, {
+        variableValues: {
+          questions: formattedQuestions,
+          username: userName,
+          userid: clerkId,
+        },
+      });
+    } catch (err) {
+      console.error("Interview start error:", err);
+      setCallStatus(CallStatus.INACTIVE);
+    }
+  };
+
+  /**
+   * Ends the live interview session manually.
+   */
+  const handleDisconnect = () => {
+    console.log("User clicked finish interview");
     setCallStatus(CallStatus.FINISHED);
     vapi.stop();
   };
 
+  // Show only the latest transcript entry in the transcript box
   const latestMessage = messages[messages.length - 1]?.content;
-  const isCallInactiveOrFinished =
-    callStatus === CallStatus.INACTIVE || callStatus === CallStatus.FINISHED;
 
   return (
-    <>
-      <div className="flex flex-col sm:flex-row gap-5 items-center justify-center bg-gradient-to-b from-[#4B4D4F] to-[#4B4D4F33] w-full h-full px-4 py-6 rounded-lg">
-        {/* AI Interviewer Card */}
-        <div className="flex flex-col items-center gap-2 p-7 bg-gradient-to-b from-[#171532] to-[#08090D] rounded-lg border-2 sm:w-1/3 w-full border-primary-200/50">
-          <div className="relative size-[120px] rounded-full bg-gradient-to-l from-white to-[#CAC5FE] flex items-center justify-center">
-            {isSpeaking && (
-              <span className="absolute h-full w-full rounded-full bg-purple-200 opacity-75 animate-ping z-0" />
-            )}
-            <Image
-              src={avator}
-              alt="vapi"
-              width={65}
-              height={54}
-              className="relative z-10 object-cover"
-            />
+    <div className="space-y-6">
+      {/* Interviewer and candidate cards */}
+      <div className="rounded-3xl border border-white/10 bg-gradient-to-b from-[#4B4D4F]/30 to-[#4B4D4F10] p-4 md:p-6">
+        <div className="rounded-3xl border border-white/10 bg-gradient-to-b from-[#171532] to-[#08090D] p-5 text-white mb-5">
+          <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
+            <div className="space-y-2">
+              <p className="text-xs uppercase tracking-[0.25em] text-slate-400">
+                Interview Session
+              </p>
+
+              <h3 className="text-2xl font-semibold">
+                {isActive
+                  ? "You’re live in the interview"
+                  : isConnecting
+                    ? "Connecting your session"
+                    : isGenerating
+                      ? "Analyzing your responses"
+                      : "Start when you’re ready"}
+              </h3>
+
+              <p className="max-w-2xl text-sm  text-slate-300">
+                {isActive
+                  ? "The interview is currently in progress. When you are done, finish the session and your feedback report will be generated automatically."
+                  : isConnecting
+                    ? "Please wait while we connect you to the AI interviewer."
+                    : isGenerating
+                      ? "Please hold on while your personalized feedback report is being prepared."
+                      : " Click Start Interview below to begin your live interview session. The AI interviewer will lead the conversation and guide you through each question. Respond naturally and clearly. Once the  interview ends, your feedback report will be automatically."}
+              </p>
+            </div>
+
+            <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center">
+              {/* Start button shows when idle or previously finished */}
+              {canStart ? (
+                <Button
+                  onClick={handleCall}
+                  disabled={isGenerating || isConnecting}
+                  className="min-w-[220px] rounded-full bg-green-700 px-8 py-6 text-base font-semibold text-white shadow-[0_10px_30px_rgba(0,0,0,0.25)] transition-all duration-200 hover:scale-[1.02] hover:bg-green-600 disabled:cursor-not-allowed disabled:opacity-70">
+                  {isConnecting
+                    ? "Connecting..."
+                    : isGenerating
+                      ? "Processing..."
+                      : "Start Interview"}
+                </Button>
+              ) : canFinish ? (
+                <Button
+                  onClick={handleDisconnect}
+                  disabled={isGenerating}
+                  className="min-w-[220px] rounded-full bg-red-500 px-8 py-6 text-base font-semibold text-white shadow-[0_10px_30px_rgba(0,0,0,0.25)] transition-all duration-200 hover:scale-[1.02] hover:bg-red-400 disabled:cursor-not-allowed disabled:opacity-70">
+                  Finish Interview
+                </Button>
+              ) : null}
+
+              {/* Repeated compact status chip near controls */}
+              <div className="flex items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-slate-300">
+                <span
+                  className={cn(
+                    "mr-2 h-2.5 w-2.5 rounded-full",
+                    isActive
+                      ? "bg-emerald-400 animate-pulse"
+                      : isConnecting
+                        ? "bg-amber-400 animate-pulse"
+                        : isGenerating
+                          ? "bg-cyan-400 animate-pulse"
+                          : "bg-slate-500",
+                  )}
+                />
+                {statusLabel}
+              </div>
+            </div>
+          </div>
+        </div>{" "}
+        <div className="grid gap-4 md:grid-cols-2">
+          <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-b from-[#171532] to-[#08090D] p-8 text-white">
+            <div className="relative flex flex-col items-center text-center">
+              <div className="relative flex size-[132px] items-center justify-center rounded-full bg-gradient-to-l from-white to-[#CAC5FE]">
+                {isSpeaking && (
+                  <span className="absolute inset-0 rounded-full bg-purple-300/40 animate-ping" />
+                )}
+                <Image
+                  src="/ai-avatar.png"
+                  alt="AI interviewer"
+                  width={72}
+                  height={60}
+                  className="relative z-10 object-contain"
+                />
+              </div>
+
+              <p className="mt-6 text-xs uppercase tracking-[0.25em] text-slate-400">
+                AI Interviewer
+              </p>
+              <h3 className="mt-2 text-2xl font-semibold">
+                Live Interview Coach
+              </h3>
+              <p className="mt-3 max-w-sm text-sm leading-7 text-slate-300">
+                Answer naturally, stay clear and structured, and treat this like
+                a real interview conversation.
+              </p>
+            </div>
           </div>
 
-          <h3 className="text-white text-center pt-5">AI Interviewer</h3>
-        </div>
+          <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-b from-[#1A1C20] to-[#08090D] p-8 text-white">
+            <div className="relative flex flex-col items-center text-center">
+              <Image
+                src={imageUrl || user}
+                alt="user avatar"
+                width={132}
+                height={132}
+                className="size-[132px] rounded-full object-cover ring-2 ring-white/10"
+              />
 
-        {/* User Profile Card (hidden on small screens) */}
-        <div className="hidden sm:block bg-gradient-to-b from-[#4B4D4F] to-[#4B4D4F33] p-0.5 w-1/3 rounded-2xl">
-          <div className="flex flex-col gap-2 justify-center bg-gradient-to-b from-[#1A1C20] to-[#08090D] items-center p-7 rounded-2xl min-h-full">
-            <Image
-              src={imageUrl || user}
-              alt="user avatar"
-              width={540}
-              height={540}
-              className="object-cover rounded-full size-[120px]"
-            />
-            <h3 className="text-white text-center pt-5">{userName}</h3>
+              <p className="mt-6 text-xs uppercase tracking-[0.25em] text-slate-400">
+                Candidate
+              </p>
+              <h3 className="mt-2 text-2xl font-semibold">{userName}</h3>
+              <p className="mt-3 max-w-sm text-sm leading-7 text-slate-300">
+                Focus on clarity, confidence, and real-world examples. The goal
+                is progress, not perfection.
+              </p>
+            </div>
           </div>
         </div>
       </div>
 
-      {messages.length > 0 && (
-        <div className="bg-gradient-to-b from-[#4B4D4F] to-[#4B4D4F33] p-0.5 rounded-2xl w-full text-white">
-          <div className="bg-gradient-to-b from-[#1a1c209d] to-[#08090D] rounded-2xl  min-h-12 px-5 py-3 flex items-center justify-center">
-            <p
-              key={latestMessage}
-              className={cn(
-                " transition-opacity duration-500 opacity-0",
-                "animate-fadeIn opacity-100"
-              )}>
-              {latestMessage}
-            </p>
+      {/* Live transcript */}
+      <div className="rounded-3xl border border-white/10 bg-gradient-to-b from-[#4B4D4F]/30 to-[#4B4D4F10] p-4">
+        <div className="rounded-[1.4rem] border border-white/10 bg-gradient-to-b from-[#1a1c20d9] to-[#08090D] p-5 text-white">
+          <div className="mb-4 flex items-center justify-between gap-3">
+            <div>
+              <p className="text-xs uppercase tracking-[0.25em] text-slate-400">
+                Live Transcript
+              </p>
+              <h4 className="mt-1 text-lg font-semibold">Latest Response</h4>
+            </div>
+
+            <div className="flex items-center gap-2 text-sm text-slate-300">
+              <span
+                className={cn(
+                  "h-2.5 w-2.5 rounded-full",
+                  isSpeaking ? "bg-emerald-400 animate-pulse" : "bg-slate-500",
+                )}
+              />
+              <span>{isSpeaking ? "Speaking" : "Waiting"}</span>
+            </div>
           </div>
+
+          <div className="flex min-h-[110px] items-center rounded-2xl border border-white/5 bg-white/[0.03] px-4 py-4">
+            {messages.length > 0 ? (
+              <p
+                key={latestMessage}
+                className={cn(
+                  "text-base leading-8 text-slate-200 opacity-0 transition-opacity duration-500",
+                  "animate-fadeIn opacity-100",
+                )}>
+                {latestMessage}
+              </p>
+            ) : (
+              <p className="text-slate-400">
+                Your conversation transcript will appear here once the interview
+                begins.
+              </p>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Processing message after interview ends */}
+      {isGenerating && (
+        <div className="rounded-2xl border border-cyan-500/20 bg-cyan-500/5 px-4 py-3 text-center text-cyan-100">
+          Generating your feedback report...
         </div>
       )}
-
-      <div className="w-full flex justify-center">
-        {callStatus !== "ACTIVE" ? (
-          <Button
-            onClick={handleCall}
-            className="relative inline-block px-7 font-bold text-sm leading-5 text-white transition-colors  duration-150 bg-green-700 border border-transparent rounded-full shadow-sm focus:outline-none focus:shadow-2xl active:bg-success-200 hover:bg-success-200 min-w-28 cursor-pointer items-center justify-center overflow-visible;">
-            <span
-              className={cn(
-                "absolute animate-ping rounded-full opacity-75",
-                callStatus !== "CONNECTING" && "hidden"
-              )}
-            />
-            <span>{isCallInactiveOrFinished ? "Call" : "Say Hello"}</span>
-          </Button>
-        ) : (
-          <Button
-            onClick={handleDisconnect}
-            className="inline-block px-7 text-sm font-bold leading-5 text-white transition-colors duration-150 bg-red-500 text-center mx-auto border border-transparent rounded-full shadow-sm focus:outline-none focus:shadow-2xl active:bg-destructive-200 hover:bg-destructive-200 min-w-28;">
-            End
-          </Button>
-        )}
-      </div>
-    </>
+    </div>
   );
 };
 

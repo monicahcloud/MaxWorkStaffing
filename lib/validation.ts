@@ -13,11 +13,11 @@ export const personalInfoSchema = z.object({
     .refine(
       (file) =>
         !file || (file instanceof File && file.type.startsWith("image/")),
-      "Must be an image file"
+      "Must be an image file",
     )
     .refine(
       (file) => !file || file.size <= 1024 * 1024 * 4,
-      "File must be less than 4MB"
+      "File must be less than 4MB",
     ),
   firstName: optionalString,
   lastName: optionalString,
@@ -48,7 +48,7 @@ export const workExperienceSchema = z.object({
         status: optionalString,
         grade: optionalString,
         hours: optionalString,
-      })
+      }),
     )
     .optional(),
 });
@@ -66,7 +66,7 @@ export const educationSchema = z.object({
         startDate: optionalString,
         endDate: optionalString,
         location: optionalString,
-      })
+      }),
     )
     .optional(),
 });
@@ -97,7 +97,7 @@ export const techSkillSchema = z.object({
           ])
           .default("1")
           .transform((val) => (typeof val === "string" ? parseInt(val) : val)),
-      })
+      }),
     )
     .optional(),
 });
@@ -186,12 +186,13 @@ export const generateSkillsSchema = z.object({
 export type GenerateSkillsInput = z.infer<typeof generateSkillsSchema>;
 
 export const InterviewSchema = z.object({
-  type: z.string(),
-  role: z.string(),
-  level: z.string(),
-  techstack: z.string(),
-  amount: z.number(),
-  userId: z.string(),
+  role: z.string().trim().min(2, "Role is required"),
+  industry: z.string().trim().min(2, "Industry is required"),
+  level: z.string().trim().min(2, "Experience level is required"),
+  type: z.enum(["behavioral", "role-specific", "mixed", "leadership"]),
+  focusAreas: z.string().trim().optional().default(""),
+  amount: z.number().int().min(3).max(10),
+  clerkId: z.string().trim().min(1, "Clerk ID is required"),
 });
 
 export const feedbackSchema = z.object({
@@ -207,7 +208,7 @@ export const feedbackSchema = z.object({
       ]),
       score: z.number(),
       comment: z.string(),
-    })
+    }),
   ),
   strengths: z.array(z.string()),
   areasForImprovement: z.array(z.string()),
@@ -220,11 +221,11 @@ export const userInfoSchema = z.object({
     .refine(
       (file) =>
         !file || (file instanceof File && file.type.startsWith("image/")),
-      "Must be an image file"
+      "Must be an image file",
     )
     .refine(
       (file) => !file || file.size <= 1024 * 1024 * 4,
-      "File must be less than 4MB"
+      "File must be less than 4MB",
     ),
   firstName: optionalString,
   lastName: optionalString,

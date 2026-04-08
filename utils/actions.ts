@@ -9,7 +9,8 @@ import { Prisma } from "@prisma/client";
 import dayjs from "dayjs";
 import { generateObject } from "ai";
 import { feedbackSchema } from "@/lib/validation";
-import { openai } from "@ai-sdk/openai"; // or your OpenAI wrapper import
+import { openai } from "@ai-sdk/openai";
+import { getDbUserByClerkId } from "./auth-user";
 
 async function authenticateAndRedirect(): Promise<string> {
   const { userId } = await auth(); // Await the promise
@@ -23,7 +24,7 @@ async function authenticateAndRedirect(): Promise<string> {
 }
 
 export async function createJobAction(
-  values: CreateAndEditJobType
+  values: CreateAndEditJobType,
 ): Promise<JobType | null> {
   const clerkUserId = await authenticateAndRedirect();
 
@@ -142,7 +143,7 @@ export async function deleteJobAction(id: string): Promise<JobType | null> {
 
 export async function updateJobAction(
   id: string,
-  values: CreateAndEditJobType
+  values: CreateAndEditJobType,
 ): Promise<JobType | null> {
   const userId = await authenticateAndRedirect();
 
@@ -206,10 +207,13 @@ export async function getStatsAction(): Promise<{
         clerkId: userId, // replace userId with the actual clerkId
       },
     });
-    const statsObject = stats.reduce((acc, curr) => {
-      acc[curr.status] = curr._count.status;
-      return acc;
-    }, {} as Record<string, number>);
+    const statsObject = stats.reduce(
+      (acc, curr) => {
+        acc[curr.status] = curr._count.status;
+        return acc;
+      },
+      {} as Record<string, number>,
+    );
 
     const defaultStats = {
       Pending: 0,
@@ -256,7 +260,7 @@ export async function getChartsDataAction(): Promise<
 
     // Generate last 6 months in order
     const lastSixMonths = Array.from({ length: 6 }).map((_, i) =>
-      sixMonthsAgo.add(i, "month").format("MMM YY")
+      sixMonthsAgo.add(i, "month").format("MMM YY"),
     );
 
     const filledData = lastSixMonths.map((month) => ({
@@ -271,11 +275,13 @@ export async function getChartsDataAction(): Promise<
   }
 }
 
-export async function getInterviewsByUserId(
-  userId: string
+export async function getInterviewsByClerkId(
+  clerkId: string,
 ): Promise<Interview[]> {
+  const user = await getDbUserByClerkId(clerkId);
+
   const interviews = await prisma.interview.findMany({
-    where: { userId },
+    where: { userId: user.id },
     orderBy: { createdAt: "desc" },
   });
 
@@ -287,16 +293,15 @@ export async function getInterviewsByUserId(
 }
 
 export async function getLatestInterviews(
-  params: GetLatestInterviewsParams
+  params: GetLatestInterviewsParams,
 ): Promise<Interview[]> {
-  const { userId, limit = 20 } = params;
+  const { clerkId, limit = 20 } = params;
+
+  const user = await getDbUserByClerkId(clerkId);
 
   const interviews = await prisma.interview.findMany({
     where: {
-      finalized: true,
-      NOT: {
-        userId: userId,
-      },
+      userId: user.id,
     },
     orderBy: {
       createdAt: "desc",
@@ -326,13 +331,13 @@ export async function getInterviewById(id: string): Promise<Interview | null> {
 }
 
 export async function createFeedback(params: CreateFeedbackParams) {
-  const { interviewId, userId, transcript, feedbackId } = params;
+  const { interviewId, clerkId, transcript, feedbackId } = params;
 
   try {
     const formattedTranscript = transcript
       .map(
         (sentence: { role: string; content: string }) =>
-          `- ${sentence.role}: ${sentence.content}\n`
+          `- ${sentence.role}: ${sentence.content}\n`,
       )
       .join("");
 
@@ -340,7 +345,8 @@ export async function createFeedback(params: CreateFeedbackParams) {
       model: openai("gpt-4o-mini"),
       schema: feedbackSchema,
       prompt: `
-You are an AI interviewer analyzing a mock interview. Your task is to evaluate the candidate based on structured categories. Be thorough and detailed in your analysis. Don't be lenient with the candidate. If there are mistakes or areas for improvement, point them out.
+You are an AI interviewer analyzing a mock interview. Your task is to evaluate the candidate based on structured categories. Be thorough and detailed in your analysis. Do not be lenient with the candidate. If there are mistakes or areas for improvement, point them out.
+
 IMPORTANT:
 - Do NOT use '&' (ampersand). Always write "and".
 - Return only a valid JSON object matching the exact schema.
@@ -350,33 +356,27 @@ IMPORTANT:
   - "Problem Solving"
   - "Cultural Fit"
   - "Confidence and Clarity"
+
 Transcript:
 ${formattedTranscript}
 
 Please score the candidate from 0 to 100 in the following areas. Do not add categories other than the ones provided:
 
-- **Communication Skills**: Clarity, articulation, structured responses.
-- **Technical Knowledge**: Understanding of key concepts for the role.
-- **Problem-Solving**: Ability to analyze problems and propose solutions.
-- **Cultural & Role Fit**: Alignment with company values and job role.
-- **Confidence & Clarity**: Confidence in responses, engagement, and clarity.
+- Communication Skills: Clarity, articulation, structured responses.
+- Technical Knowledge: Understanding of key concepts for the role.
+- Problem Solving: Ability to analyze problems and propose solutions.
+- Cultural Fit: Alignment with company values and job role.
+- Confidence and Clarity: Confidence in responses, engagement, and clarity.
       `,
       system:
         "You are a professional interviewer analyzing a mock interview. Your task is to evaluate the candidate based on structured categories.",
     });
 
-    // 🔍 Look up the clerkId from the userId
-    const user = await prisma.user.findUnique({
-      where: { clerkId: userId }, // if you're passing Clerk ID
-      select: { id: true, clerkId: true },
-    });
-
-    if (!user) throw new Error("User not found");
-    console.log("Looking up user by clerkId:", userId);
+    const user = await getDbUserByClerkId(clerkId);
 
     const feedbackData = {
       interviewId,
-      userId: user.id, // ✅ use internal DB ID for `userId`
+      userId: user.id,
       clerkId: user.clerkId,
       totalScore: object.totalScore,
       categoryScores: object.categoryScores,
@@ -402,14 +402,16 @@ Please score the candidate from 0 to 100 in the following areas. Do not add cate
 }
 
 export async function getFeedbackByInterviewId(
-  params: GetFeedbackByInterviewIdParams
+  params: GetFeedbackByInterviewIdParams,
 ): Promise<Feedback | null> {
-  const { interviewId, userId } = params;
+  const { interviewId, clerkId } = params;
+
+  const user = await getDbUserByClerkId(clerkId);
 
   const feedback = await prisma.feedback.findFirst({
     where: {
       interviewId,
-      userId,
+      userId: user.id,
     },
   });
 

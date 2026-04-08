@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import Image from "next/image";
-import Logo from "../assets/logo.png";
 import { Button } from "@/components/ui/button";
 // import { useUser } from "@clerk/nextjs";
 import { Sparkles } from "lucide-react";
@@ -61,7 +60,7 @@ export default function FirstTimeModal({
         <div className="bg-black p-8 flex flex-col items-center relative overflow-hidden">
           <div className="absolute top-0 right-0 w-32 h-32 bg-red-600/20 blur-3xl rounded-full" />
           <Image
-            src={Logo}
+            src="/CareerOSLogo.png"
             alt="Logo"
             width={180}
             height={60}

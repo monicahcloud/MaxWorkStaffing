@@ -3,8 +3,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, CheckCircle2, Sparkles } from "lucide-react";
 
-import logo from "@/assets/logo.png";
-
 const benefits = [
   "Build polished resumes and cover letters",
   "Track jobs and application progress",
@@ -25,7 +23,7 @@ export default function SignUpPage() {
             aria-label="Go to CareerOS homepage"
             className="inline-flex">
             <Image
-              src={logo}
+              src="/public/CareerOSLogo.png"
               alt="CareerOS"
               width={180}
               height={45}
@@ -84,7 +82,7 @@ export default function SignUpPage() {
               aria-label="Go to CareerOS homepage"
               className="inline-flex w-full justify-center">
               <Image
-                src={logo}
+                src='/CareerOSLogo.png'
                 alt="CareerOS"
                 width={150}
                 height={38}

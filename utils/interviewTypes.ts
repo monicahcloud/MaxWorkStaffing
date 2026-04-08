@@ -18,6 +18,7 @@ type Feedback = {
 interface Interview {
   id: string;
   role: string;
+  industry?: string | null;
   level: string;
   questions: string[];
   techstack: string[];
@@ -30,7 +31,7 @@ interface Interview {
 
 interface CreateFeedbackParams {
   interviewId: string;
-  userId: string;
+  clerkId: string;
   transcript: { role: string; content: string }[];
   feedbackId?: string;
 }
@@ -43,6 +44,7 @@ interface User {
 
 interface InterviewCardProps {
   id?: string;
+  industry?: string | null;
   userId?: string;
   role: string;
   type: string;
@@ -52,7 +54,7 @@ interface InterviewCardProps {
 
 interface AgentProps {
   userName: string;
-  userId?: string;
+  clerkId: string;
   interviewId?: string;
   feedbackId?: string;
   type: "generate" | "interview";
@@ -67,11 +69,11 @@ interface RouteParams {
 
 interface GetFeedbackByInterviewIdParams {
   interviewId: string;
-  userId: string;
+  clerkId: string;
 }
 
 interface GetLatestInterviewsParams {
-  userId: string;
+  clerkId: string;
   limit?: number;
 }
 
@@ -92,6 +94,7 @@ type FormType = "sign-in" | "sign-up";
 interface InterviewFormProps {
   interviewId: string;
   role: string;
+  industry?: string | null;
   level: string;
   type: string;
   techstack: string[];
