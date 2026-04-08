@@ -14,7 +14,7 @@ export function Hero() {
       <div className="relative z-10 mx-auto max-w-7xl">
         <div className="flex flex-col items-center text-center">
           <Image
-            src="/public/CareerOSLogo.png"
+            src="/CareerOSLogo.png"
             alt="CareerOS"
             width={180}
             height={44}

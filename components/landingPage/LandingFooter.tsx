@@ -30,7 +30,7 @@ export function LandingFooter() {
       <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-10 px-6 md:flex-row">
         <div className="flex flex-col items-center gap-4 md:items-start">
           <Image
-            src="/public/CareerOSLogo.png"
+            src="/CareerOSLogo.png"
             alt="CareerOS"
             width={160}
             height={40}

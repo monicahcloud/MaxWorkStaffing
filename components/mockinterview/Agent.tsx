@@ -47,32 +47,27 @@ const Agent = ({
   const [hasGeneratedFeedback, setHasGeneratedFeedback] = useState(false);
   const [callStatus, setCallStatus] = useState<CallStatus>(CallStatus.INACTIVE);
   const [messages, setMessages] = useState<SavedMessage[]>([]);
+  const [liveTranscript, setLiveTranscript] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
-  // Refs used to avoid stale values inside event listeners
+  // Refs to avoid stale values inside event listeners
   const messagesRef = useRef<SavedMessage[]>([]);
   const hasStartedCallRef = useRef(false);
 
-  // Keep the ref synced with the latest transcript messages
+  // Keep transcript ref in sync
   useEffect(() => {
     messagesRef.current = messages;
   }, [messages]);
 
-  /**
-   * Derived state flags
-   * These make the JSX easier to read and prevent repeating the same conditions.
-   */
+  // Derived state flags
   const isIdle = callStatus === CallStatus.INACTIVE;
   const isConnecting = callStatus === CallStatus.CONNECTING;
   const isActive = callStatus === CallStatus.ACTIVE;
   const isFinished = callStatus === CallStatus.FINISHED;
 
-  // Start button should show when the interview is idle or previously finished
   const canStart = isIdle || isFinished;
-
-  // Finish button should only show while the interview is live
   const canFinish = isActive;
 
-  // Small status chip text
   const statusLabel = isActive
     ? "Live Now"
     : isConnecting
@@ -82,32 +77,44 @@ const Agent = ({
         : "Ready";
 
   /**
-   * Register VAPI event listeners once when the component mounts.
+   * Register Vapi listeners once.
    */
   useEffect(() => {
     const onCallStart = () => {
       console.log("VAPI: call-start");
       hasStartedCallRef.current = true;
       setCallStatus(CallStatus.ACTIVE);
+      setErrorMessage("");
     };
 
     const onCallEnd = () => {
       console.log("VAPI: call-end");
       console.log("Transcript messages captured:", messagesRef.current);
       setCallStatus(CallStatus.FINISHED);
+      setIsSpeaking(false);
+      setLiveTranscript("");
     };
 
     const onMessage = (message: any) => {
       console.log("VAPI message:", message);
 
-      // Save only final transcript chunks
-      if (message.type === "transcript" && message.transcriptType === "final") {
+      if (message.type !== "transcript") return;
+
+      // Show partial transcript live while the current speaker is talking
+      if (message.transcriptType === "partial") {
+        setLiveTranscript(message.transcript || "");
+        return;
+      }
+
+      // Persist final transcript chunks
+      if (message.transcriptType === "final") {
         const newMessage: SavedMessage = {
           role: message.role,
           content: message.transcript,
         };
 
         setMessages((prev) => [...prev, newMessage]);
+        setLiveTranscript("");
       }
     };
 
@@ -123,8 +130,13 @@ const Agent = ({
 
     const onError = (error: Error) => {
       console.error("VAPI error:", error);
+      setErrorMessage(
+        "The interview session could not start or continue properly. Please try again.",
+      );
       setCallStatus(CallStatus.INACTIVE);
       setIsGenerating(false);
+      setIsSpeaking(false);
+      setLiveTranscript("");
     };
 
     vapi.on("call-start", onCallStart);
@@ -145,8 +157,7 @@ const Agent = ({
   }, []);
 
   /**
-   * Creates feedback after a completed interview.
-   * Only runs if we have a valid interview id and user id.
+   * Create feedback once a real interview has actually happened.
    */
   const handleGenerateFeedback = async (transcriptMessages: SavedMessage[]) => {
     if (!interviewId || !clerkId) {
@@ -172,11 +183,11 @@ const Agent = ({
       }
 
       console.error("Error saving feedback", result);
-      alert("Feedback generation failed. Please try again.");
+      setErrorMessage("Feedback generation failed. Please try again.");
       router.push("/interview");
     } catch (error) {
       console.error("Unexpected feedback generation error:", error);
-      alert("Something went wrong while generating feedback.");
+      setErrorMessage("Something went wrong while generating feedback.");
       router.push("/interview");
     } finally {
       setIsGenerating(false);
@@ -185,8 +196,8 @@ const Agent = ({
 
   /**
    * After the call ends, only generate feedback if:
-   * - the call really started
-   * - feedback has not already been generated
+   * - the call truly started
+   * - feedback has not already been created
    * - at least one real user response exists
    */
   useEffect(() => {
@@ -202,6 +213,9 @@ const Agent = ({
       console.warn(
         "Call ended before any real interview response was captured.",
       );
+      setErrorMessage(
+        "The interview ended before it could begin properly. Please try again.",
+      );
       setCallStatus(CallStatus.INACTIVE);
       return;
     }
@@ -211,16 +225,19 @@ const Agent = ({
   }, [callStatus, hasGeneratedFeedback, messages]);
 
   /**
-   * Starts the live VAPI interview session.
+   * Start a fresh Vapi interview session.
    */
   const handleCall = async () => {
     if (!clerkId) {
       console.error("Clerk ID is required to start the call.");
+      setErrorMessage("You must be signed in to start the interview.");
       return;
     }
 
     // Reset state for a fresh session
     setMessages([]);
+    setLiveTranscript("");
+    setErrorMessage("");
     setCallStatus(CallStatus.CONNECTING);
     setHasGeneratedFeedback(false);
     hasStartedCallRef.current = false;
@@ -246,12 +263,13 @@ const Agent = ({
       });
     } catch (err) {
       console.error("Interview start error:", err);
+      setErrorMessage("We could not start the interview. Please try again.");
       setCallStatus(CallStatus.INACTIVE);
     }
   };
 
   /**
-   * Ends the live interview session manually.
+   * Manually end the interview session.
    */
   const handleDisconnect = () => {
     console.log("User clicked finish interview");
@@ -259,14 +277,15 @@ const Agent = ({
     vapi.stop();
   };
 
-  // Show only the latest transcript entry in the transcript box
+  // Latest completed transcript message
   const latestMessage = messages[messages.length - 1]?.content;
 
   return (
     <div className="space-y-6">
-      {/* Interviewer and candidate cards */}
+      {/* Main interview shell */}
       <div className="rounded-3xl border border-white/10 bg-gradient-to-b from-[#4B4D4F]/30 to-[#4B4D4F10] p-4 md:p-6">
-        <div className="rounded-3xl border border-white/10 bg-gradient-to-b from-[#171532] to-[#08090D] p-5 text-white mb-5">
+        {/* Top control and instruction area */}
+        <div className="mb-5 rounded-3xl border border-white/10 bg-gradient-to-b from-[#171532] to-[#08090D] p-5 text-white">
           <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
             <div className="space-y-2">
               <p className="text-xs uppercase tracking-[0.25em] text-slate-400">
@@ -275,7 +294,7 @@ const Agent = ({
 
               <h3 className="text-2xl font-semibold">
                 {isActive
-                  ? "You’re live in the interview"
+                  ? "You’re live with Thyri"
                   : isConnecting
                     ? "Connecting your session"
                     : isGenerating
@@ -283,40 +302,38 @@ const Agent = ({
                       : "Start when you’re ready"}
               </h3>
 
-              <p className="max-w-2xl text-sm  text-slate-300">
+              <p className="max-w-2xl text-sm text-slate-300">
                 {isActive
-                  ? "The interview is currently in progress. When you are done, finish the session and your feedback report will be generated automatically."
+                  ? "Thyri is leading the interview now. Wait for her to finish each question, then answer naturally. When you are ready to end the session, click Finish and Generate Feedback."
                   : isConnecting
-                    ? "Please wait while we connect you to the AI interviewer."
+                    ? "Please wait while we connect you to Thyri."
                     : isGenerating
                       ? "Please hold on while your personalized feedback report is being prepared."
-                      : " Click Start Interview below to begin your live interview session. The AI interviewer will lead the conversation and guide you through each question. Respond naturally and clearly. Once the  interview ends, your feedback report will be automatically."}
+                      : "Press Start with Thyri to begin. Thyri will introduce herself first. After she finishes speaking, answer out loud as if this were a real interview."}
               </p>
             </div>
 
             <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center">
-              {/* Start button shows when idle or previously finished */}
               {canStart ? (
                 <Button
                   onClick={handleCall}
                   disabled={isGenerating || isConnecting}
-                  className="min-w-[220px] rounded-full bg-green-700 px-8 py-6 text-base font-semibold text-white shadow-[0_10px_30px_rgba(0,0,0,0.25)] transition-all duration-200 hover:scale-[1.02] hover:bg-green-600 disabled:cursor-not-allowed disabled:opacity-70">
+                  className="min-w-[240px] rounded-full bg-green-700 px-8 py-6 text-base font-semibold text-white shadow-[0_10px_30px_rgba(0,0,0,0.25)] transition-all duration-200 hover:scale-[1.02] hover:bg-green-600 disabled:cursor-not-allowed disabled:opacity-70">
                   {isConnecting
                     ? "Connecting..."
                     : isGenerating
                       ? "Processing..."
-                      : "Start Interview"}
+                      : "Start with Thyri"}
                 </Button>
               ) : canFinish ? (
                 <Button
                   onClick={handleDisconnect}
                   disabled={isGenerating}
-                  className="min-w-[220px] rounded-full bg-red-500 px-8 py-6 text-base font-semibold text-white shadow-[0_10px_30px_rgba(0,0,0,0.25)] transition-all duration-200 hover:scale-[1.02] hover:bg-red-400 disabled:cursor-not-allowed disabled:opacity-70">
-                  Finish Interview
+                  className="min-w-[240px] rounded-full bg-red-500 px-8 py-6 text-base font-semibold text-white shadow-[0_10px_30px_rgba(0,0,0,0.25)] transition-all duration-200 hover:scale-[1.02] hover:bg-red-400 disabled:cursor-not-allowed disabled:opacity-70">
+                  Finish and Generate Feedback
                 </Button>
               ) : null}
 
-              {/* Repeated compact status chip near controls */}
               <div className="flex items-center justify-center rounded-full border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-slate-300">
                 <span
                   className={cn(
@@ -334,7 +351,23 @@ const Agent = ({
               </div>
             </div>
           </div>
-        </div>{" "}
+
+          {/* Quick usage instruction */}
+          <div className="mt-4 rounded-2xl border border-cyan-500/20 bg-cyan-500/5 px-4 py-3 text-sm text-cyan-100">
+            Wait for Thyri to finish speaking, then answer naturally. When you
+            are done with the interview, click{" "}
+            <span className="font-semibold">Finish and Generate Feedback</span>.
+          </div>
+
+          {/* Error state */}
+          {errorMessage && (
+            <div className="mt-4 rounded-2xl border border-rose-500/20 bg-rose-500/10 px-4 py-3 text-sm text-rose-100">
+              {errorMessage}
+            </div>
+          )}
+        </div>
+
+        {/* Interviewer and candidate cards */}
         <div className="grid gap-4 md:grid-cols-2">
           <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-b from-[#171532] to-[#08090D] p-8 text-white">
             <div className="relative flex flex-col items-center text-center">
@@ -352,14 +385,14 @@ const Agent = ({
               </div>
 
               <p className="mt-6 text-xs uppercase tracking-[0.25em] text-slate-400">
-                AI Interviewer
+                Thyri
               </p>
               <h3 className="mt-2 text-2xl font-semibold">
-                Live Interview Coach
+                AI Interview Coach
               </h3>
               <p className="mt-3 max-w-sm text-sm leading-7 text-slate-300">
-                Answer naturally, stay clear and structured, and treat this like
-                a real interview conversation.
+                Thyri will introduce herself first, then guide you through the
+                interview one question at a time.
               </p>
             </div>
           </div>
@@ -395,7 +428,7 @@ const Agent = ({
               <p className="text-xs uppercase tracking-[0.25em] text-slate-400">
                 Live Transcript
               </p>
-              <h4 className="mt-1 text-lg font-semibold">Latest Response</h4>
+              <h4 className="mt-1 text-lg font-semibold">Current Response</h4>
             </div>
 
             <div className="flex items-center gap-2 text-sm text-slate-300">
@@ -410,7 +443,11 @@ const Agent = ({
           </div>
 
           <div className="flex min-h-[110px] items-center rounded-2xl border border-white/5 bg-white/[0.03] px-4 py-4">
-            {messages.length > 0 ? (
+            {liveTranscript ? (
+              <p className="text-base leading-8 text-slate-200">
+                {liveTranscript}
+              </p>
+            ) : messages.length > 0 ? (
               <p
                 key={latestMessage}
                 className={cn(
@@ -421,15 +458,15 @@ const Agent = ({
               </p>
             ) : (
               <p className="text-slate-400">
-                Your conversation transcript will appear here once the interview
-                begins.
+                Thyri will introduce herself first. When she finishes speaking,
+                answer out loud. Your live transcript will appear here.
               </p>
             )}
           </div>
         </div>
       </div>
 
-      {/* Processing message after interview ends */}
+      {/* Feedback processing state */}
       {isGenerating && (
         <div className="rounded-2xl border border-cyan-500/20 bg-cyan-500/5 px-4 py-3 text-center text-cyan-100">
           Generating your feedback report...

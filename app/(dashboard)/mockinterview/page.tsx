@@ -37,33 +37,6 @@ const MockInterviewRoute = async () => {
         subtext="Create a mock interview tailored to your job, industry, and experience level — then jump straight into a live AI session with real-time interaction and coaching feedback."
       />
 
-      {/* ROLE SIGNALS */}
-      {/* <div className="text-center text-sm text-slate-400">
-        Try roles like:
-        <span className="text-white"> Marketing Manager</span>,{" "}
-        <span className="text-white"> Sales Associate</span>,{" "}
-        <span className="text-white"> Data Analyst</span>,{" "}
-        <span className="text-white"> Nurse</span>,{" "}
-        <span className="text-white"> Customer Support</span>,{" "}
-        <span className="text-white"> Frontend Developer</span>
-      </div> */}
-
-      {/* GUIDANCE */}
-      {/* <div className="rounded-3xl border border-white/10 bg-gradient-to-b from-[#171532] to-[#08090D] p-6 text-white">
-        <h3 className="text-xl font-semibold">How this works</h3>
-
-        <ul className="mt-4 space-y-2 text-sm leading-7 text-slate-300">
-          <li>• Choose your role, industry, and experience level</li>
-          <li>• Practice real interview questions tailored to your job</li>
-          <li>• Answer in real time with an AI interviewer</li>
-          <li>• Get a personalized coaching report instantly</li>
-        </ul>
-
-        <p className="mt-4 text-sm text-slate-400">
-          No matter your field — this interview adapts to your role.
-        </p>
-      </div> */}
-
       {/* FORM */}
       <MockInterviewSetupForm
         clerkId={user.id}

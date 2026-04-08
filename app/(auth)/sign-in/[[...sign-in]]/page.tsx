@@ -22,7 +22,7 @@ export default function SignInPage() {
             aria-label="Go to CareerOS homepage"
             className="inline-flex">
             <Image
-              src="/public/CareerOSLogo.png.png"
+              src="/CareerOSLogo.png.png"
               alt="CareerOS"
               width={180}
               height={45}
@@ -80,7 +80,7 @@ export default function SignInPage() {
               aria-label="Go to CareerOS homepage"
               className="inline-flex w-full justify-center">
               <Image
-                src="/public/CareerOSLogo.png.png"
+                src="/CareerOSLogo.png.png"
                 alt="CareerOS"
                 width={150}
                 height={38}

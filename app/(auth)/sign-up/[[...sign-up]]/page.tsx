@@ -23,7 +23,7 @@ export default function SignUpPage() {
             aria-label="Go to CareerOS homepage"
             className="inline-flex">
             <Image
-              src="/public/CareerOSLogo.png"
+              src="/CareerOSLogo.png"
               alt="CareerOS"
               width={180}
               height={45}
@@ -82,7 +82,7 @@ export default function SignUpPage() {
               aria-label="Go to CareerOS homepage"
               className="inline-flex w-full justify-center">
               <Image
-                src='/CareerOSLogo.png'
+                src="/CareerOSLogo.png"
                 alt="CareerOS"
                 width={150}
                 height={38}
