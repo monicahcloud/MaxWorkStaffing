@@ -103,6 +103,9 @@ const Page = async ({ params }: RouteParams) => {
           interviewId={interview.id}
           questions={interview.questions}
           imageUrl={user.imageUrl || ""}
+          role={interview.role}
+          level={interview.level}
+          industry={interview.industry || "general"}
         />
       </section>
     </div>

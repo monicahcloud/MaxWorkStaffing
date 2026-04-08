@@ -30,6 +30,9 @@ interface AgentProps {
   interviewId: string;
   questions?: string[];
   imageUrl?: string;
+  role?: string;
+  level?: string;
+  industry?: string;
 }
 
 const Agent = ({
@@ -38,6 +41,9 @@ const Agent = ({
   interviewId,
   questions,
   imageUrl,
+  role,
+  level,
+  industry,
 }: AgentProps) => {
   const router = useRouter();
 
@@ -97,7 +103,9 @@ const Agent = ({
 
     const onMessage = (message: any) => {
       console.log("VAPI message:", message);
-
+      console.log("Transcript role:", message.role);
+      console.log("Transcript type:", message.transcriptType);
+      console.log("Transcript text:", message.transcript);
       if (message.type !== "transcript") return;
 
       // Show partial transcript live while the current speaker is talking
@@ -205,21 +213,47 @@ const Agent = ({
     if (hasGeneratedFeedback) return;
     if (!hasStartedCallRef.current) return;
 
+    // const hasRealConversation = messages.some(
+    //   (msg) => msg.role === "user" && msg.content.trim().length > 0,
+    // );
     const hasRealConversation = messages.some(
-      (msg) => msg.role === "user" && msg.content.trim().length > 0,
+      (msg) => msg.content.trim().length > 0,
     );
 
+    // if (!hasRealConversation) {
+    //   console.warn(
+    //     "Call ended before any real interview response was captured.",
+    //   );
+    //   setErrorMessage(
+    //     "The interview ended before it could begin properly. Please try again.",
+    //   );
+    //   setCallStatus(CallStatus.INACTIVE);
+    //   return;
+    // }
     if (!hasRealConversation) {
       console.warn(
-        "Call ended before any real interview response was captured.",
+        "No transcript captured yet. Waiting briefly before failing...",
       );
-      setErrorMessage(
-        "The interview ended before it could begin properly. Please try again.",
-      );
-      setCallStatus(CallStatus.INACTIVE);
+
+      setTimeout(() => {
+        const updatedMessages = messagesRef.current;
+        const hasLateTranscript = updatedMessages.some(
+          (msg) => msg.content.trim().length > 0,
+        );
+
+        if (!hasLateTranscript) {
+          setErrorMessage(
+            "The interview ended before it could begin properly. Please try again.",
+          );
+          setCallStatus(CallStatus.INACTIVE);
+        } else {
+          setHasGeneratedFeedback(true);
+          handleGenerateFeedback(updatedMessages);
+        }
+      }, 1500);
+
       return;
     }
-
     setHasGeneratedFeedback(true);
     handleGenerateFeedback(messages);
   }, [callStatus, hasGeneratedFeedback, messages]);
@@ -254,11 +288,13 @@ const Agent = ({
       );
       console.log("User:", userName, clerkId);
 
-      await vapi.start(interviewer, {
+      await vapi.start(process.env.NEXT_PUBLIC_VAPI_ASSISTANT_ID!, {
         variableValues: {
           questions: formattedQuestions,
           username: userName,
-          userid: clerkId,
+          role: role || "candidate",
+          level: level || "mid-level",
+          industry: industry || "general",
         },
       });
     } catch (err) {
