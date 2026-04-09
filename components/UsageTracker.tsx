@@ -28,7 +28,7 @@ export function GlobalUsageTracker({
   return (
     <div className="space-y-5 p-4 rounded-3xl bg-slate-50 border border-slate-100">
       <div className="flex items-center gap-2 mb-2">
-        <Zap className="size-3 text-blue-600 fill-blue-600" />
+        <Zap className="size-3 text-primary fill-red-600" />
         <span className="text-[10px] font-black uppercase tracking-widest text-slate-900">
           Plan: {level === "7Day" ? "7-Day Trial" : level}
         </span>
@@ -71,9 +71,9 @@ export function GlobalUsageTracker({
 
         {/* Interviews */}
         <div className="space-y-1">
-          <div className="flex justify-between text-[9px] font-bold uppercase tracking-tighter text-blue-600">
+          <div className="flex justify-between text-[9px] font-bold uppercase tracking-tighter ">
             <span className="flex items-center gap-1.5">
-              <Mic className="size-3" /> Interviews
+              <Mic className="size-3  text-slate-400" /> Interviews
             </span>
             <span>
               {interviewCount} / {limits.interviews}
@@ -86,7 +86,7 @@ export function GlobalUsageTracker({
         </div>
       </div>
 
-      {(level === "free" || level === "7Day") && (
+      {(level === "free" || level === "7Day" || level === "monthly") && (
         <Link
           href="/billing"
           className="block w-full text-center py-2.5 bg-white border border-slate-200 text-slate-900 text-[9px] font-black uppercase tracking-widest rounded-xl hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all">

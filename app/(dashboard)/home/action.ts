@@ -9,17 +9,22 @@ import slugify from "slugify";
 export async function checkUserProgress() {
   const { userId } = await auth();
   if (!userId) throw new Error("Not authenticated");
+  
 
-  const [resumes, coverLetters, jobs] = await Promise.all([
+ 
+
+  const [resumes, coverLetters, jobs, feedback] = await Promise.all([
     prisma.resume.findFirst({ where: { clerkId: userId } }),
     prisma.coverLetter.findFirst({ where: { clerkId: userId } }),
     prisma.job.findFirst({ where: { clerkId: userId } }),
+    prisma.feedback.findFirst({ where: { clerkId: userId } }),
   ]);
 
   return {
     hasResume: !!resumes,
     hasCoverLetter: !!coverLetters,
     hasJob: !!jobs,
+    hasInterview: !!feedback,
   };
 }
 
@@ -54,7 +59,7 @@ Ensure at least 3 posts for each tag.
       "Failed to parse blog posts JSON:",
       error,
       "Raw response:",
-      text
+      text,
     );
     return;
   }

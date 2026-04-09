@@ -1,4 +1,4 @@
-// app/api/user-progress/route.ts
+// app/api/progress/route.ts
 import { checkUserProgress } from "@/app/(dashboard)/home/action";
 import { NextResponse } from "next/server";
 

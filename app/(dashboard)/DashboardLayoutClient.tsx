@@ -27,7 +27,6 @@ interface DashboardLayoutClientProps extends PropsWithChildren {
   shouldShowModal: boolean;
   userSubscriptionLevel: string;
   userStats: {
-    // NEW INTERFACE ADITION
     level: SubscriptionLevel;
     resumeCount: number;
     letterCount: number;

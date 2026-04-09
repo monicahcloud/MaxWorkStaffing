@@ -16,14 +16,14 @@ export default function ResumeProgress({ completed }: { completed: string[] }) {
       description: "Personalized Story",
     },
     {
-      id: "Job Tracker",
-      label: "Job Tracker",
-      description: "Active Leads",
-    },
-    {
       id: "Interview AI",
       label: "Interview AI",
       description: "AI Simulation",
+    },
+    {
+      id: "Job Tracker",
+      label: "Job Tracker",
+      description: "Active Leads",
     },
   ];
 
@@ -34,8 +34,8 @@ export default function ResumeProgress({ completed }: { completed: string[] }) {
       {/* Score Header */}
       <div className="flex justify-between items-end px-2">
         <div>
-          <p className="text-[10px] font-black text-red-600 uppercase tracking-[0.2em] mb-1">
-            Readiness Score
+          <p className="text-[10px] font-black text-primary uppercase tracking-[0.2em] mb-1">
+            Career Preparedness
           </p>
           <div className="flex items-baseline gap-1">
             <h2 className="text-4xl font-black text-black leading-none">

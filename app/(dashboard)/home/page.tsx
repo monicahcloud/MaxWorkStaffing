@@ -11,9 +11,9 @@ import { Sparkles, Newspaper, Search } from "lucide-react";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "Command Center | MaxResumeBuilder.com",
+  title: "Career OS - Your AI-Powered Career Dashboard",
   description:
-    "Your personalized dashboard for career intelligence, job search, and AI-powered resumes.",
+    "Your personalized dashboard for career intelligence, job search, AI mock interviews, and AI-powered resumes.",
   // ... rest of metadata
 };
 
