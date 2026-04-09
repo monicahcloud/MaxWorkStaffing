@@ -196,9 +196,13 @@ export async function parseResumeWithAI(
         strict: true,
         schema: {
           type: "object",
+          additionalProperties: false, // ✅ REQUIRED
+
           properties: {
             personalInfo: {
               type: "object",
+              additionalProperties: false, // ✅ REQUIRED
+
               properties: {
                 firstName: { type: "string" },
                 lastName: { type: "string" },
@@ -216,23 +220,31 @@ export async function parseResumeWithAI(
                 "address",
               ],
             },
+
             summary: { type: "string" },
-            skills: { type: "array", items: { type: "string" } },
+
+            skills: {
+              type: "array",
+              items: { type: "string" },
+            },
+
             workExperience: {
               type: "array",
               items: {
                 type: "object",
+                additionalProperties: false, // ✅ REQUIRED
+
                 properties: {
                   position: { type: "string" },
                   company: { type: "string" },
                   location: { type: "string" },
                   startDate: { type: "string" },
                   endDate: { type: "string" },
-                  responsibilities: { type: "string" }, // Flattened to string for Prisma
+                  responsibilities: { type: "string" },
                   accomplishments: { type: "string" },
-                  grade: { type: "string" }, // Federal Specific
-                  clearance: { type: "string" }, // Federal Specific
-                  hours: { type: "string" }, // Federal Specific
+                  grade: { type: "string" },
+                  clearance: { type: "string" },
+                  hours: { type: "string" },
                 },
                 required: [
                   "position",
@@ -248,10 +260,13 @@ export async function parseResumeWithAI(
                 ],
               },
             },
+
             education: {
               type: "array",
               items: {
                 type: "object",
+                additionalProperties: false, // ✅ REQUIRED
+
                 properties: {
                   degree: { type: "string" },
                   school: { type: "string" },
@@ -269,6 +284,7 @@ export async function parseResumeWithAI(
               },
             },
           },
+
           required: [
             "personalInfo",
             "summary",
