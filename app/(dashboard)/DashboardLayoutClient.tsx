@@ -39,7 +39,7 @@ export default function DashboardLayoutClient({
   children,
   shouldShowModal,
   userSubscriptionLevel,
-  userStats, // DESTRUCTURE STATS
+  userStats,
 }: DashboardLayoutClientProps) {
   const [open, setOpen] = useState(false);
 

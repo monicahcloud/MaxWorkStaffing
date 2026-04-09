@@ -19,7 +19,7 @@ export function GlobalUsageTracker({
   const limits = {
     resumes: level === "7Day" ? 3 : level === "free" ? 1 : Infinity,
     letters: level === "7Day" ? 3 : level === "free" ? 1 : Infinity,
-    interviews: level === "7Day" ? 1 : 20,
+    interviews: level === "7Day" ? 1 : level === "free" ? 1 : 20,
   };
 
   const calculateProgress = (count: number, limit: number) =>

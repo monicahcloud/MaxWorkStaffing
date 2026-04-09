@@ -157,7 +157,7 @@ async function page() {
       />
 
       {/* HERO */}
-      <section className="overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-b from-[#171532] to-[#08090D] px-6 py-8 text-white md:px-10 md:py-12">
+      <section className="overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-b from-[#171532] to-[#08090D] px-6 pt-8 text-white md:px-10 md:py-8">
         <div className="grid items-center gap-8 md:grid-cols-[1.1fr_0.9fr]">
           <div className="space-y-5">
             <div className="inline-flex items-center gap-2 rounded-full border border-cyan-500/20 bg-cyan-500/10 px-4 py-2 text-sm text-cyan-100">
@@ -215,7 +215,7 @@ async function page() {
           <h2 className="text-3xl font-semibold text-white">
             Completed Interviews
           </h2>
-          <p className="max-w-2xl text-slate-400 leading-7">
+          <p className="max-w-8xl text-center text-slate-400 leading-7">
             Reopen completed interview feedback, review past sessions, and
             delete interviews you no longer want to keep.
           </p>

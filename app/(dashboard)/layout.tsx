@@ -1,4 +1,3 @@
-// app/(dashboard)/Dashboardlayout.tsx
 import type { Metadata } from "next";
 import { PropsWithChildren } from "react";
 import { redirect } from "next/navigation";
@@ -34,10 +33,17 @@ export const metadata: Metadata = {
 };
 
 export default async function Dashboardlayout({ children }: PropsWithChildren) {
-  const { userId } = await auth();
-  if (!userId) redirect("/");
+  const { userId: clerkId } = await auth();
+  if (!clerkId) redirect("/");
 
-  // Fetch counts and subscription in parallel
+  // Get the actual DB user first
+  const dbUser = await prisma.user.findUnique({
+    where: { clerkId },
+    select: { id: true, clerkId: true },
+  });
+
+  if (!dbUser) redirect("/");
+
   const [
     isFirstTimeUser,
     userSubscriptionLevel,
@@ -45,18 +51,27 @@ export default async function Dashboardlayout({ children }: PropsWithChildren) {
     letterCount,
     interviewCount,
   ] = await Promise.all([
-    getUserMetadata(userId),
-    getUserSubscriptionLevel(userId),
-    prisma.resume.count({ where: { userId } }),
-    prisma.coverLetter.count({ where: { userId } }),
-    prisma.interview.count({ where: { userId } }),
+    getUserMetadata(clerkId),
+    getUserSubscriptionLevel(clerkId),
+
+    // Use the INTERNAL DB user id for these counts
+    prisma.resume.count({
+      where: { userId: clerkId },
+    }),
+
+    prisma.coverLetter.count({
+      where: { userId: clerkId },
+    }),
+
+    prisma.interview.count({
+      where: { userId: dbUser.id },
+    }),
   ]);
 
   if (isFirstTimeUser) {
-    await markUserAsReturning(userId);
+    await markUserAsReturning(clerkId);
   }
 
-  // Create the stats object to pass down
   const userStats = {
     level: userSubscriptionLevel as SubscriptionLevel,
     resumeCount,
@@ -68,8 +83,7 @@ export default async function Dashboardlayout({ children }: PropsWithChildren) {
     <DashboardLayoutClient
       shouldShowModal={isFirstTimeUser}
       userSubscriptionLevel={userSubscriptionLevel}
-      userStats={userStats} // NEW PROP
-    >
+      userStats={userStats}>
       {children}
     </DashboardLayoutClient>
   );

@@ -55,14 +55,14 @@ export const linkGroups: LinkGroup[] = [
         icon: <AppWindow className="w-4 h-4" />,
       },
       {
+        label: "AI Mock Interview",
+        href: "/interview",
+        icon: <MessageSquare className="w-4 h-4" />,
+      },
+      {
         label: "Job Tracker",
         href: "/addJob",
         icon: <Layers className="w-4 h-4" />,
-      },
-      {
-        label: "AI Mock Interview",
-        href: "/mockinterview",
-        icon: <MessageSquare className="w-4 h-4" />,
       },
     ],
   },
