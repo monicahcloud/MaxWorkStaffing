@@ -18,20 +18,6 @@ export default function SignUpPage() {
         <div className="absolute -right-25 -top-25 h-72 w-72 rounded-full bg-red-700/10 blur-[100px]" />
 
         <div className="relative z-10 flex w-full flex-col justify-between p-12 xl:p-16">
-          <Link
-            href="/"
-            aria-label="Go to CareerOS homepage"
-            className="inline-flex">
-            <Image
-              src="/CareerOSLogo.png"
-              alt="CareerOS"
-              width={180}
-              height={45}
-              className="h-auto w-auto"
-              priority
-            />
-          </Link>
-
           <div className="max-w-xl space-y-8">
             <div className="inline-flex items-center gap-2 rounded-full border border-red-500/20 bg-red-500/10 px-3 py-1 text-xs font-bold uppercase tracking-[0.18em] text-red-400">
               <Sparkles className="h-3.5 w-3.5" />
@@ -69,7 +55,7 @@ export default function SignUpPage() {
           </div>
 
           <div className="text-xs font-bold uppercase tracking-[0.2em] text-slate-500">
-            Join professionals building smarter careers.
+            © 2026 CareerOS
           </div>
         </div>
       </section>
@@ -93,9 +79,19 @@ export default function SignUpPage() {
           </div>
 
           <div className="mb-8 space-y-3 text-center lg:text-left">
-            <p className="text-xs font-bold uppercase tracking-[0.18em] text-red-600">
-              CareerOS
-            </p>
+            <Link
+              href="/"
+              aria-label="Go to CareerOS homepage"
+              className="inline-flex">
+              <Image
+                src="/CareerOSLogo.png"
+                alt="CareerOS"
+                width={180}
+                height={45}
+                className="h-auto w-auto"
+                priority
+              />
+            </Link>
 
             <h1 className="text-3xl font-black uppercase tracking-tight text-black sm:text-4xl">
               Create your account

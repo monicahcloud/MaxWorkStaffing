@@ -6,7 +6,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { ThemeProvider } from "@/components/theme-provider";
 import { queryClient } from "@/lib/react-query-client";
 import { NextStep, NextStepProvider } from "nextstepjs";
-import steps from "@/components/tourGuide/tour";
+import steps from "@/components/dashboard/tour";
 import { UserProgressProvider } from "@/components/UserProgressContext";
 
 export default function Providers({ children }: { children: React.ReactNode }) {

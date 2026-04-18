@@ -1,76 +1,132 @@
-// "use client";
+"use client";
 
-// import Image from "next/image";
-// import { useTransition, useState } from "react";
-// import { Card, CardContent, CardDescription } from "@/components/ui/card";
-// import { resumeTemplates } from "@/app/(dashboard)/resumebuilder/ResumeTemplate";
-// import { updateResumeType } from "./action";
-// import SectionTitle from "@/components/SectionTitle";
-// import LoadingModal from "./LoadingDialogue";
+import Image from "next/image";
+import { useTransition, useState } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardTitle,
+} from "@/components/ui/card";
+import SectionTitle from "@/components/SectionTitle";
+import LoadingModal from "./LoadingDialogue";
+import { setUploadedResumeTemplate } from "./action";
+import { Shield, Sparkles, Layers3 } from "lucide-react";
 
-// export default function ChooseTemplatePage({
-//   params,
-// }: {
-//   params: { id: string };
-// }) {
-//   const resumeId = params.id;
-//   const [isPending, startTransition] = useTransition();
-//   const [showModal, setShowModal] = useState(false);
+const templateOptions = [
+  {
+    title: "Chronological",
+    resumeType: "Chronological",
+    description: "Best for clear career progression and most standard resumes.",
+    image: "/templates/chronological.png",
+    icon: Sparkles,
+  },
+  {
+    title: "Combination",
+    resumeType: "Combination",
+    description: "Balances skills and work history for flexible positioning.",
+    image: "/templates/combination.png",
+    icon: Layers3,
+  },
+  {
+    title: "Federal",
+    resumeType: "Federal",
+    description: "Structured for government and federal resume requirements.",
+    image: "/templates/federal.png",
+    icon: Shield,
+  },
+] as const;
 
-//   const handleSelect = (resumeType: string) => {
-//     setShowModal(true);
+export default function ChooseTemplatePage({
+  params,
+  searchParams,
+}: {
+  params: { id: string };
+  searchParams?: { recommended?: string; federal?: string };
+}) {
+  const resumeId = params.id;
+  const [isPending, startTransition] = useTransition();
+  const [showModal, setShowModal] = useState(false);
 
-//     startTransition(async () => {
-//       const formData = new FormData();
-//       formData.append("resumeId", resumeId);
-//       formData.append("resumeType", resumeType);
+  const recommended =
+    searchParams?.recommended ||
+    (searchParams?.federal === "true" ? "Federal" : "Chronological");
 
-//       await updateResumeType(formData);
-//       // Server action handles redirect
-//     });
-//   };
+  const handleSelect = (resumeType: string) => {
+    setShowModal(true);
 
-//   return (
-//     <>
-//       {showModal && <LoadingModal />}
+    startTransition(async () => {
+      const formData = new FormData();
+      formData.append("resumeId", resumeId);
+      formData.append("resumeType", resumeType);
 
-//       <div className="px-4 sm:px-6 lg:px-8 templates">
-//         <SectionTitle
-//           text="Choose a Template"
-//           subtext="Create a brand new resume using your uploaded resume."
-//         />
-//       </div>
+      await setUploadedResumeTemplate(formData);
+    });
+  };
 
-//       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-4 sm:px-6 lg:px-8 py-8">
-//         {resumeTemplates.map((template) => (
-//           <button
-//             key={template.title}
-//             onClick={() => handleSelect(template.resumeType)}
-//             className="w-full"
-//             disabled={isPending}>
-//             <Card
-//               className={`cursor-pointer transition-all p-4 ${
-//                 isPending ? "opacity-60" : "hover:shadow-lg"
-//               }`}>
-//               <CardContent className="flex flex-col items-center gap-4">
-//                 <div className="relative w-full aspect-[3/4] max-w-[300px]">
-//                   <Image
-//                     src={template.image}
-//                     alt={template.title}
-//                     fill
-//                     className="rounded-lg object-contain"
-//                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-//                   />
-//                 </div>
-//                 <div className="w-full border-t border-gray-300" />
-//                 <CardDescription className="text-center text-sm sm:text-base">
-//                   {template.title}
-//                 </CardDescription>
-//               </CardContent>
-//             </Card>
-//           </button>
-//         ))}
-//       </div>
-//     </>
-//   );
-// }
+  return (
+    <>
+      {showModal && <LoadingModal />}
+
+      <div className="px-4 sm:px-6 lg:px-8 py-6">
+        <SectionTitle
+          text="Choose Your Template"
+          subtext="Select the template you want to use before entering the editor."
+        />
+      </div>
+
+      <div className="grid grid-cols-1 gap-6 px-4 pb-10 sm:grid-cols-2 lg:grid-cols-3 sm:px-6 lg:px-8">
+        {templateOptions.map((template) => {
+          const Icon = template.icon;
+          const isRecommended = template.resumeType === recommended;
+
+          return (
+            <button
+              key={template.title}
+              onClick={() => handleSelect(template.resumeType)}
+              className="w-full text-left"
+              disabled={isPending}>
+              <Card
+                className={`group relative overflow-hidden rounded-3xl border p-4 transition-all ${
+                  isPending
+                    ? "opacity-60"
+                    : "hover:-translate-y-1 hover:shadow-xl"
+                } ${isRecommended ? "border-blue-300 ring-2 ring-blue-100" : "border-slate-200"}`}>
+                {isRecommended && (
+                  <div className="absolute right-4 top-4 rounded-full bg-blue-50 px-3 py-1 text-[10px] font-black uppercase tracking-widest text-blue-600">
+                    Recommended
+                  </div>
+                )}
+
+                <CardContent className="flex flex-col gap-4 p-0">
+                  <div className="flex items-center gap-2 pt-2">
+                    <div className="rounded-xl bg-slate-100 p-2">
+                      <Icon className="h-4 w-4 text-slate-700" />
+                    </div>
+                    <CardTitle className="text-lg font-black uppercase tracking-tight">
+                      {template.title}
+                    </CardTitle>
+                  </div>
+
+                  <div className="relative aspect-[3/4] w-full overflow-hidden rounded-2xl border border-slate-100 bg-slate-50">
+                    <Image
+                      src={template.image}
+                      alt={template.title}
+                      fill
+                      className="object-contain"
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    />
+                  </div>
+
+                  <CardDescription className="text-sm leading-6 text-slate-500">
+                    {template.description}
+                  </CardDescription>
+                </CardContent>
+              </Card>
+            </button>
+          );
+        })}
+      </div>
+    </>
+  );
+}

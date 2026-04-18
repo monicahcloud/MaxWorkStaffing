@@ -16,8 +16,8 @@ export function Hero() {
           <Image
             src="/CareerOSLogo.png"
             alt="CareerOS"
-            width={180}
-            height={44}
+            width={280}
+            height={280}
             priority
             className="mb-8 h-auto w-auto"
           />
@@ -26,11 +26,11 @@ export function Hero() {
             The Operating System for Your Next Career
           </p>
 
-          <h1 className="max-w-5xl text-5xl font-black tracking-tighter text-black sm:text-6xl lg:text-8xl">
+          <h1 className="max-w-5xl text-3xl font-black tracking-tighter text-black sm:text-4xl lg:text-5xl">
             Build. Apply. <span className="text-red-600">Get Hired.</span>
           </h1>
 
-          <p className="mt-6 max-w-3xl text-lg leading-relaxed text-gray-600 sm:text-xl">
+          <p className="mt-6 max-w-3xl text-lg leading-relaxed text-gray-600 ">
             CareerOS gives you one place to build resumes and cover letters,
             track jobs and applications, prepare for interviews, and grow
             through career content every step of the way.

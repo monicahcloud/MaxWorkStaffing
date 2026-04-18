@@ -1,102 +1,62 @@
-// "use server";
+"use server";
 
-// import { redirect } from "next/navigation";
-// import prisma from "@/lib/prisma";
+import { redirect } from "next/navigation";
+import prisma from "@/lib/prisma";
+import { auth } from "@clerk/nextjs/server";
 
-// export async function updateResumeType(formData: FormData) {
-//   const resumeId = formData.get("resumeId")?.toString();
-//   const resumeType = formData.get("resumeType")?.toString();
+type ResumeType = "Chronological" | "Combination" | "Federal";
 
-//   if (!resumeId || !resumeType) {
-//     throw new Error("Missing resumeId or resumeType");
-//   }
+export async function setUploadedResumeTemplate(formData: FormData) {
+  const { userId } = await auth();
+  if (!userId) {
+    throw new Error("Unauthorized");
+  }
 
-//   const uploadedResume = await prisma.resume.findUnique({
-//     where: { id: resumeId },
-//   });
+  const resumeId = formData.get("resumeId")?.toString();
+  const resumeType = formData
+    .get("resumeType")
+    ?.toString() as ResumeType | null;
 
-//   if (!uploadedResume || !uploadedResume.rawTextContent) {
-//     throw new Error("Uploaded resume not found or missing raw text");
-//   }
+  if (!resumeId || !resumeType) {
+    throw new Error("Missing resumeId or resumeType");
+  }
 
-//   const pollForParsed = async (id: string, maxAttempts = 15) => {
-//     let attempts = 0;
-//     while (attempts < maxAttempts) {
-//       console.log(`🔍 Polling DB for parsed resume... Attempt ${attempts + 1}`);
-//       const data = await prisma.resume.findUnique({
-//         where: { id },
-//         include: { education: true, workExperience: true },
-//       });
+  const resume = await prisma.resume.findUnique({
+    where: { id: resumeId },
+    select: {
+      id: true,
+      clerkId: true,
+      userId: true,
+      parsed: true,
+      themeId: true,
+    },
+  });
 
-//       if (data?.parsed) {
-//         console.log("✅ Resume is parsed and ready.");
-//         return data;
-//       }
+  if (!resume) {
+    throw new Error("Resume not found");
+  }
 
-//       attempts++;
-//       await new Promise((resolve) => setTimeout(resolve, 2000));
-//     }
+  // Protect ownership. Your upload route stores clerkId directly.
+  if (resume.clerkId !== userId && resume.userId !== userId) {
+    throw new Error("Unauthorized");
+  }
 
-//     console.error("⏰ Resume parsing timed out.");
-//     throw new Error("Resume parsing timed out. Please try again later.");
-//   };
+  // Save the selected resume type + a sensible default theme
+  const nextThemeId =
+    resumeType === "Federal"
+      ? "federal-standard"
+      : resumeType === "Combination"
+        ? "combination-pro"
+        : "chronological-classic";
 
-//   const parsedData = await pollForParsed(resumeId);
-//   const newResume = await prisma.resume.create({
-//     data: {
-//       userId: uploadedResume.userId,
-//       user: { connect: { clerkId: uploadedResume.userId } },
+  await prisma.resume.update({
+    where: { id: resumeId },
+    data: {
+      resumeType,
+      themeId: nextThemeId,
+      updatedAt: new Date(),
+    },
+  });
 
-//       resumeTitle: parsedData.resumeTitle || "Untitled",
-//       resumeType,
-//       rawTextContent: uploadedResume.rawTextContent,
-//       summary: parsedData.summary || "",
-
-//       // Flattened personal info
-//       firstName: parsedData?.firstName,
-//       lastName: parsedData?.lastName,
-//       jobTitle: parsedData?.jobTitle,
-//       email: parsedData?.email,
-//       phone: parsedData?.phone,
-//       address: parsedData?.address,
-//       website: parsedData?.website,
-//       linkedin: parsedData?.linkedin,
-//       gitHub: parsedData?.gitHub,
-
-//       techSkills: {
-//         create: parsedData.skills?.map((s: string) => ({ name: s })) || [],
-//       },
-
-//       education: {
-//         create:
-//           parsedData.education?.map((edu) => ({
-//             description: edu.description,
-//             degree: edu.degree,
-//             school: edu.school,
-//             location: edu.location,
-//             createdAt: edu.createdAt,
-//             updatedAt: edu.updatedAt,
-//             startDate: edu.startDate ? new Date(edu.startDate) : undefined,
-//             endDate: edu.endDate ? new Date(edu.endDate) : undefined,
-//           })) || [],
-//       },
-
-//       workExperience: {
-//         create:
-//           parsedData.workExperience?.map((job) => {
-//             const { resumeId, id, ...jobInfo } = job;
-
-//             return {
-//               ...jobInfo,
-//               startDate: jobInfo.startDate
-//                 ? new Date(jobInfo.startDate)
-//                 : undefined,
-//               endDate: jobInfo.endDate ? new Date(jobInfo.endDate) : undefined,
-//             };
-//           }) || [],
-//       },
-//     },
-//   });
-
-//   redirect(`/editor?resumeId=${newResume.id}&resumeType=${resumeType}`);
-// }
+  redirect(`/editor?resumeId=${resumeId}&resumeType=${resumeType}`);
+}

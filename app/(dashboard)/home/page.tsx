@@ -1,5 +1,5 @@
 import { ResumeTools } from "@/components/ResumeTools";
-import ClientHome from "@/components/tourGuide/ClientHome";
+import ClientHome from "@/components/dashboard/ClientHome";
 import defaultImage from "@/public/blog/team.jpg";
 import prisma from "@/lib/prisma";
 import JobSearchWrapper from "../jobsearch/JobSearchWrapper";

@@ -42,6 +42,7 @@ function ResumeEditor({ resumeToEdit }: ResumeEditorProps) {
       return {
         ...mapped,
         themeId: validTheme.id,
+        resumeType: resumeTypeFromURL || mapped.resumeType || "",
       };
     }
 
@@ -50,7 +51,7 @@ function ResumeEditor({ resumeToEdit }: ResumeEditorProps) {
     return {
       resumeTitle: "",
       description: "",
-      resumeType: resumeTypeFromURL,
+      resumeType: resumeTypeFromURL || "",
       themeId: validTheme.id,
       showPhoto: true,
     };
