@@ -12,8 +12,8 @@ export function FinalCtaSection() {
 
           <div className="relative z-10 space-y-8">
             <h2 className="text-4xl font-black uppercase leading-none tracking-tighter text-white md:text-7xl">
-              Ready to stand out <br />
-              <span className="text-red-600">from the crowd?</span>
+              Ready to land that dream job  <br />
+              <span className="text-red-600">or your next promotion?</span>
             </h2>
 
             <p className="mx-auto max-w-xl text-lg font-medium text-slate-400">

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { PrimaryButton } from "./PrimaryButton";
 import { OutlineButton } from "./OutlineButton";
 import { SectionGridBackground } from "./SectionGridBackground";
-import dashboardMockup from "../../assets/LandingImg.jpg";
+import dashboardMockup from "../../assets/interviewhero.png";
 
 export function Hero() {
   return (
@@ -32,8 +32,8 @@ export function Hero() {
 
           <p className="mt-6 max-w-3xl text-lg leading-relaxed text-gray-600 ">
             CareerOS gives you one place to build resumes and cover letters,
-            track jobs and applications, prepare for interviews, and grow
-            through career content every step of the way.
+            apply for jobs using our unique job search engines, prepare for
+            interviews, and land my next career.
           </p>
 
           <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row">

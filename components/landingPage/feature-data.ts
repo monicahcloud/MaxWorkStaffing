@@ -42,13 +42,18 @@ export const featureCards = {
 export const secondaryTools = [
   {
     icon: Zap,
-    title: "AI Analysis",
+    title: "AI Resume Analysis",
     desc: "Pass the ATS with keyword suggestions powered by industry data.",
   },
   {
     icon: FileText,
-    title: "Smart Templates",
+    title: "Smart Resume and Cover Letter Templates",
     desc: "Clean, high-performance designs built for modern hiring software.",
+  },
+  {
+    icon: BarChart3,
+    title: "Job Search",
+    desc: "Never miss a follow-up with our intuitive application dashboard.",
   },
   {
     icon: BarChart3,

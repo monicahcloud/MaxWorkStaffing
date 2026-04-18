@@ -13,37 +13,36 @@ import { SectionGridBackground } from "./SectionGridBackground";
 const steps = [
   {
     number: "01",
-    title: "Build",
+    title: "Build Custom Resumes & Cover Letters",
     description:
-      "Create polished resumes and cover letters tailored to the roles you want.",
+      "Let our AI-powered tools help you create polished resumes and cover letters tailored to the roles you want.",
     icon: FileText,
   },
   {
     number: "02",
-    title: "Apply",
+    title: "Search & Apply for Jobs",
     description:
-      "Search opportunities and move through your applications with a clear process.",
+      "Search and apply for jobs with our unique job search engines that connect you to the best opportunities.",
     icon: Briefcase,
   },
   {
     number: "03",
-    title: "Track",
+    title: "Track Your Progress",
     description:
       "Keep up with jobs applied for, follow-ups, and progress in one organized dashboard.",
     icon: BarChart3,
   },
   {
     number: "04",
-    title: "Interview",
-    description:
-      "Prepare with structured tools and career guidance so you can show up ready.",
+    title: "Prepare for Interviews",
+    description: "Prepare with our AI-powered interview prep tools.",
     icon: MessageSquare,
   },
   {
     number: "05",
-    title: "Learn",
+    title: "Career Resources",
     description:
-      "Grow with career articles, insights, and guidance from the CareerOS blog.",
+      "Learn new skills, get career advice, and access exclusive content to help you grow in your career.",
     icon: BookOpen,
   },
 ];
@@ -58,18 +57,18 @@ export function HowItWorks() {
       <div className="relative z-10 mx-auto max-w-7xl">
         <div className="mx-auto max-w-3xl text-center">
           <p className="mb-4 text-xl font-bold uppercase  text-red-600">
-            How{" "}
+            How Does{" "}
             <span className="font-black uppercase tracking-tighter text-slate-900">
-              Career <span className="text-red-700"> OS</span>
+              Career <span className="text-red-700"> OS Work?</span>
             </span>
           </p>
 
           <h2 className="text-4xl font-black tracking-tighter text-black sm:text-5xl lg:text-6xl">
-            One system for every step of your next move.
+            One system for your next career move.
           </h2>
 
           <p className="mt-5 text-lg leading-relaxed text-neutral-600 sm:text-xl">
-            CareerOS helps you build stronger applications, stay organized, and
+            CareerOS helps you build stronger resumes, apply for jobs, and
             prepare with confidence from first draft to final interview.
           </p>
         </div>
